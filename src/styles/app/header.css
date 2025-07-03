@@ -1,0 +1,34 @@
+.horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw
+}
+
+header{
+    background-color: #b3b3b3;
+    height: 10vh;
+}
+
+h2 {
+    font-size: 2vw;
+}
+
+.logo{
+    font-size: 2vw;
+}
+
+.header-gap {
+    gap: 45vw
+}
+
+.search{
+    width: 5vw;
+    height: 2vw;
+    font-size: 1vw;
+    /* border-radius: 0; */
+}
+
+.icon-button{
+    font-size: 2vw;
+}
