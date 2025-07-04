@@ -1,0 +1,51 @@
+.cardGrid {
+  height: 75vh;
+  padding: 5vh 5vw;
+  display: grid;
+  grid-gap: 1em;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1.65fr 0.825fr 0.825fr 0.25fr 1.4fr;
+  /* grid-template-rows: 1.65fr 0.825fr 0.825fr 0.25fr; */
+  /* grid-template-rows: 18.15vh 9.075vh 9.075vh 2.75vh; */
+  /* grid-template-rows: 1fr 1fr 1fr; */
+}
+
+.problems {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.statistics {
+  grid-column: 1;
+  grid-row: 3 / span 3;
+}
+
+.tournaments {
+  grid-column: 2;
+  grid-row: 1 / -2;
+}
+
+.tournaments.nosaved {
+  grid-column: 2;
+  grid-row: 1 / -1;
+}
+
+.savedTournament {
+  grid-column: 2;
+  grid-row: -2;
+}
+
+.fights {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.people {
+  grid-column: 3;
+  grid-row: 2 / span 2;
+}
+
+.forOrganizators {
+  grid-column: 3;
+  grid-row: 4 / span 2;
+}

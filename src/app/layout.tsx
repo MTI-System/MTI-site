@@ -1,10 +1,9 @@
 import { IoLogoCodepen } from "react-icons/io"
 import { FaMoon } from "react-icons/fa"
 import { FaUserCircle } from "react-icons/fa"
-import "@/styles/app/header.css"
+import headerStyle from "@/styles/app/header.module.css"
+import footerStyle from "@/styles/app/footer.module.css"
 import "@/styles/app/main.css"
-import "@/styles/app/footer.css"
-import Link from 'next/link';
 
 function RootLayout({
   children,
@@ -14,29 +13,27 @@ function RootLayout({
   return (
     <html>
       <body>
-        <header className="horizontal header-gap">
-          <div className="horizontal">
+        <header className={headerStyle.header}>
+          <div className={headerStyle.rightContainer}>
             <IoLogoCodepen className={"logo"} />
             <h2>МТИ</h2>
-            <input placeholder="Тюф/Тюе" className="search"></input>
+            <div>Dropdown here...</div>{" "}
+            {
+              //TODO: make dropdown
+            }
+            {/* <input placeholder="Тюф/Тюе" className="search"></input> */}
           </div>
-          <div className="horizontal">
-            <input placeholder="Поиск" className="search"></input>
-            <FaMoon className="icon-button" />
-            <FaUserCircle className="icon-button" />
+          <div className={headerStyle.leftContainer}>
+            <input placeholder="Поиск" className={headerStyle.search}></input>
+            <FaMoon className={headerStyle.iconButton} />
+            <FaUserCircle className={headerStyle.iconButton} />
           </div>
         </header>
-          {children}
-        <footer>
-          <p>adsfs</p>
-        </footer>
+        <main>{children}</main>
+        <footer className={footerStyle.footer}></footer>
       </body>
     </html>
   )
-}
-
-function Loading(){
-return <h1>Loading...</h1>
 }
 
 export default RootLayout

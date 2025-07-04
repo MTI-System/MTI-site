@@ -1,6 +1,5 @@
-import TaskCard from "@/components/ui/TaskCard"
+import TaskCard from "@/components/sections/problems/TaskCard"
 import { Problem, ProblemList } from "@/types/problemAPI"
-
   
 
 async function TasksPage() {

@@ -1,0 +1,37 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #b3b3b3;
+    height: 10vh;
+}
+
+.rightContainer{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 22.5vw;
+}
+
+/* TODO: make dropdown */
+.rightContainer div{
+    width: auto;
+}
+
+
+.leftContainer{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 30vw;
+}
+
+.search{
+    width: 20vw;
+    height: 2vw;
+    font-size: 1vw;
+}
+
+.iconButton{
+    font-size: 2vw;
+}
