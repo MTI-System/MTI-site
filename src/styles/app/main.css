@@ -1,8 +1,9 @@
-body{
-  margin: 0
+@import "tailwindcss";
+
+* {
+  margin: 0;
 }
 
-.cardGrid{
-  display: grid;
-  margin: 2%
+main {
+  min-height: 85vh;
 }

@@ -1,11 +1,31 @@
 import ClickableCard from "@/components/ui/ClickableCard"
-
+import mainStyle from "@/styles/app/mainPage.module.css"
 
 export default function Home() {
   return (
-    <div className="cardGrid">
-      <ClickableCard className="Tournaments" href="/tournaments">Турниры</ClickableCard>
-      <ClickableCard className="Problems" href="/problems">Задачи</ClickableCard>
+    <div className={mainStyle.cardGrid}>
+      <ClickableCard className={mainStyle.problems} href="/problems">
+        Задачи
+      </ClickableCard>
+      <ClickableCard className={mainStyle.statistics} href="/underconstruction">
+        Статистика
+      </ClickableCard>
+      {/* TODO: understand how to correctly merge classes in next.js style modules */}
+      <ClickableCard className={mainStyle.tournaments + " " + mainStyle.nosaved} href="/underconstruction">
+        Турниры
+      </ClickableCard>
+      {/* <ClickableCard className={mainStyle.savedTournament} href="/underconstruction">
+        сохранённое
+      </ClickableCard> */}
+      <ClickableCard className={mainStyle.fights} href="/underconstruction">
+        Бои
+      </ClickableCard>
+      <ClickableCard className={mainStyle.people} href="/underconstruction">
+        Люди
+      </ClickableCard>
+      <ClickableCard className={mainStyle.forOrganizators} href="/underconstruction">
+        Организаторам
+      </ClickableCard>
     </div>
   )
 }
