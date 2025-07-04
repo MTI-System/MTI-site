@@ -8,7 +8,7 @@ export default function Home() {
         Задачи
       </ClickableCard>
       <ClickableCard className={mainStyle.statistics} href="/underconstruction">
-        статистика
+        Статистика
       </ClickableCard>
       {/* TODO: understand how to correctly merge classes in next.js style modules */}
       <ClickableCard className={mainStyle.tournaments + " " + mainStyle.nosaved} href="/underconstruction">

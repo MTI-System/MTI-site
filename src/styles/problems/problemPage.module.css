@@ -1,0 +1,19 @@
+.problemsContainer {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25em;
+  padding: 1.25rem 0;
+}
+.filters {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  gap: 1.25rem;
+}
+.filters .filter {
+  padding: 0.5rem 1rem;
+  border: 0.1rem #aaa dashed;
+}

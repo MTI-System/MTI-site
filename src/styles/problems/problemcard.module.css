@@ -1,0 +1,31 @@
+.problemCard {
+  width: 100%;
+  min-height: 5rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: row;
+}
+.problemContainer {
+  width: 100%;
+  padding: 1rem;
+}
+.problemTittle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: rgb(137, 58, 247);
+}
+.translation {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.5);
+  padding-top: 0.2rem;
+  padding-bottom: 1rem;
+}
+.problemText {
+  font-size: 1rem;
+}
+.tournamentsContainer {
+  min-width: 10%;
+  background-color: #eee;
+  border: 0.1rem #aaa dashed;
+}
