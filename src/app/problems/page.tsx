@@ -1,10 +1,11 @@
+import { PROBLEM_API } from "@/components/constants"
 import TaskCard from "@/components/ui/TaskCard"
 import { Problem, ProblemList } from "@/types/problemAPI"
 
   
 
 async function TasksPage() {
-  const response = await fetch(process.env.PROBLEM_API!!)
+  const response = await fetch(PROBLEM_API!!)
   const respJSON:ProblemList = await response.json()
   return (
     <div>

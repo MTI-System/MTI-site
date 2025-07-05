@@ -17,13 +17,17 @@ function RootLayout({
         <header className="horizontal header-gap">
           <div className="horizontal">
             <IoLogoCodepen className={"logo"} />
-            <h2>МТИ</h2>
+            <Link href={"/"}><h2>МТИ</h2></Link>
             <input placeholder="Тюф/Тюе" className="search"></input>
           </div>
           <div className="horizontal">
             <input placeholder="Поиск" className="search"></input>
-            <FaMoon className="icon-button" />
-            <FaUserCircle className="icon-button" />
+
+              <FaMoon className="icon-button" />
+
+            <Link href={"/profile"}>
+              <FaUserCircle className="icon-button" />
+            </Link>
           </div>
         </header>
           {children}
@@ -36,7 +40,7 @@ function RootLayout({
 }
 
 function Loading(){
-return <h1>Loading...</h1>
+  return <h1>Loading...</h1>
 }
 
 export default RootLayout
