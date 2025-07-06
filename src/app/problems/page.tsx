@@ -2,6 +2,7 @@ import ProblemCard from "@/components/sections/problems/ProblemCard"
 import { Problem, ProblemList } from "@/types/problemAPI"
 import style from "@/styles/problems/problemPage.module.css"
 import { PROBLEM_API } from "@/components/constants"
+import { connection } from "next/server"
 
 async function ProblemsPage() {
   const respJSON: ProblemList = await fetchProblems(1, "2025")
@@ -22,6 +23,7 @@ async function ProblemsPage() {
 }
 
 async function fetchProblems(tournament: number, year: string): Promise<ProblemList> {
+  await connection()
   try {
     const response = await fetch(
       PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`
