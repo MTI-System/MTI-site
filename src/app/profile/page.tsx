@@ -1,48 +1,52 @@
 "use client"
-import {useEffect, useState} from "react";
-import { redirect } from 'next/navigation'
-import {AUTH_API} from "@/components/constants";
-import {red} from "next/dist/lib/picocolors";
+import { useEffect, useState } from "react"
+import { AUTH_API } from "@/components/constants"
+import { useRouter } from "next/navigation"
 
 export default function ProfilePage() {
-    const [token, setToken] = useState<string|null>("");
-    const [profileData, setProfileData] = useState<User|null>(null);
+  const [token, setToken] = useState<string | null>(null)
+  const [profileData, setProfileData] = useState<User | null>(null)
+  const router = useRouter()
+  useEffect(() => {
+    const savedToken = localStorage.getItem("mti_auth_key")
+    console.log(savedToken)
+    if (!savedToken) {
+      router.push("/login")
+      return
+    }
+    setToken(savedToken)
+  }, [])
 
-
-    useEffect(() => {
-        if (token === ""){
-            setToken(localStorage.getItem("mti_auth_key"))
-        }
-    }, []);
-
-    useEffect(() => {
-        if (token === null){
-            redirect("/login")
-        }
-        if (token !== ""){
-            console.log("Token", token);
-            fetch(
-                AUTH_API + "check_auth", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
-                }
-            ).then(res => {
-                if (res.status == 401){
-                    localStorage.removeItem("mti_auth_key")
-                    redirect('/login')
-                }
-                return res.json()
-            }).then(data => {
-                setProfileData(data)
-            })
-        }
-    }, [token]);
-
-    return  (
-        <div>
-            <h1>{profileData?.username}</h1>
-        </div>
-    )
+  useEffect(() => {
+    if (token) {
+      console.log("Token", token)
+      fetch(AUTH_API + "check_auth", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+        .then((res) => {
+          if (res.status == 401) {
+            localStorage.removeItem("mti_auth_key")
+            return null
+          }
+          return res.json()
+        })
+        .then((data) => {
+          if (data) {
+            setProfileData(data)
+          } else {
+            router.push("/login")
+            return
+          }
+        })
+    }
+  }, [token])
+  return (
+    <div>
+      {!profileData && <h1>Loading ^_^</h1>}
+      {profileData && <h1>{profileData?.username}</h1>}
+    </div>
+  )
 }
