@@ -1,2 +1,2 @@
 export const AUTH_API = "https://auth.mofius-server.ru/api/"
-export const PROBLEM_API="https://testbackend.mofius-server.ru/api/problems/get_problems_by_tournament_type_and_year?tournamentTypeId=1&year=2025"
+export const PROBLEM_API = "https://testbackend.mofius-server.ru/api/problems/"
