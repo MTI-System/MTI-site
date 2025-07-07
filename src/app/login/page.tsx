@@ -1,6 +1,5 @@
 "use client"
 import { useEffect, useState } from "react"
-import { redirect } from "next/navigation"
 import { AUTH_API } from "@/components/constants"
 import { useRouter } from "next/navigation"
 

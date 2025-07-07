@@ -15,7 +15,6 @@ interface ProblemTranslation{
   problem_name: string
   problem_text: string
   problem_by: string  // TODO: Rename
-  problem_materials: ProblemMaterial[]
 }
 
 interface Problem {
@@ -24,6 +23,7 @@ interface Problem {
   year: number
   tournament_type: number
   problem_translations: ProblemTranslation[]
+  problem_materials: ProblemMaterial[]
 }
 
 type ProblemList = Problem[]
