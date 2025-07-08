@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import { redirect } from "next/navigation"
-import { AUTH_API } from "@/components/constants"
+import { AUTH_API } from "@/constants/APIEndpoints"
 import { useRouter } from "next/navigation"
 
 export default function LoginPage() {

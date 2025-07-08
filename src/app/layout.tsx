@@ -1,4 +1,6 @@
-import { IoLogoCodepen } from "react-icons/io"
+import { TournamentTypeProvider } from "@/context/app/TournamentContext"
+import TournamentTypeSelector from "@/components/sections/problems/app/TournamentTypeSelector"
+import GlobalSearch from "@/components/sections/problems/app/SearchBar"
 import { FaMoon } from "react-icons/fa"
 import { FaUserCircle } from "react-icons/fa"
 import headerStyle from "@/styles/app/header.module.css"
@@ -14,24 +16,25 @@ function RootLayout({
   return (
     <html>
       <body>
-        <header className={headerStyle.header}>
-          <div className={headerStyle.rightContainer}>
-            <IoLogoCodepen className={"logo"} />
-            <Link href={"/"}>
-              <h2>МТИ</h2>
-            </Link>
-            <input placeholder="Тюф/Тюе" className="search"></input>
-          </div>
-          <div className={headerStyle.rightContainer}>
-            <input placeholder="Поиск" className="search"></input>
-            <FaMoon className="icon-button" />
-            <Link href={"/profile"}>
-              <FaUserCircle className="icon-button" />
-            </Link>
-          </div>
-        </header>
-        <main>{children}</main>
-        <footer className={footerStyle.footer}></footer>
+        <TournamentTypeProvider>
+          <header className={headerStyle.header}>
+            <div className={headerStyle.rightContainer}>
+              <Link href={"/"}>
+                <h2>МТИ</h2>
+              </Link>
+              <TournamentTypeSelector className={headerStyle.dropdown} />
+            </div>
+            <div className={headerStyle.rightContainer}>
+              <GlobalSearch />
+              <FaMoon />
+              <Link href={"/profile"}>
+                <FaUserCircle />
+              </Link>
+            </div>
+          </header>
+          <main>{children}</main>
+          <footer className={footerStyle.footer}></footer>
+        </TournamentTypeProvider>
       </body>
     </html>
   )

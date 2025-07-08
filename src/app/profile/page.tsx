@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import { AUTH_API } from "@/components/constants"
+import { AUTH_API } from "@/constants/APIEndpoints"
 import { useRouter } from "next/navigation"
 
 export default function ProfilePage() {
@@ -11,7 +11,7 @@ export default function ProfilePage() {
     const savedToken = localStorage.getItem("mti_auth_key")
     console.log(savedToken)
     if (!savedToken) {
-      router.push("/login")
+      router.replace("/login")
       return
     }
     setToken(savedToken)
@@ -37,7 +37,7 @@ export default function ProfilePage() {
           if (data) {
             setProfileData(data)
           } else {
-            router.push("/login")
+            router.replace("/login")
             return
           }
         })

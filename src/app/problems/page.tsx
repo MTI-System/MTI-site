@@ -1,7 +1,7 @@
 import ProblemCard from "@/components/sections/problems/ProblemCard"
 import { Problem, ProblemList } from "@/types/problemAPI"
 import style from "@/styles/problems/problemPage.module.css"
-import { PROBLEM_API } from "@/components/constants"
+import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { connection } from "next/server"
 
 async function ProblemsPage() {
