@@ -1,0 +1,26 @@
+.loginContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.login {
+  background-color: red;
+  border-radius: 0.5rem;
+  height: 20rem;
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.loginButton {
+  width: 75%;
+  height: 10%;
+  background-color: white;
+  border-radius: 0.25rem;
+}

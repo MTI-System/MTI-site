@@ -1,4 +1,4 @@
-.clickableCard{
+.clickableCard {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,12 +9,13 @@
   box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.1);
   transition: all 250ms ease;
   font-size: 2.5rem;
-  font-family:'Segoe UI';
+  font-family: "Segoe UI";
   font-weight: bold;
   text-decoration: none;
-  color:black
+  color: black;
+  user-select: none;
 }
-.clickableCard:hover{
+.clickableCard:hover {
   background-color: rgba(0, 0, 0, 0.15);
   box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.15);
 }
