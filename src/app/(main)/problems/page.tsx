@@ -6,6 +6,7 @@ import { connection } from "next/server"
 
 async function ProblemsPage() {
   const respJSON: ProblemList = await fetchProblems(1, "2025")
+
   return (
     <div className="flex flex-col items-center bg-gray-100">
       <div className={style.problemsContainer}>
