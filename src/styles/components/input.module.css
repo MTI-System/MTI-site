@@ -18,9 +18,10 @@
   background-color: white;
 }
 
-.inputContainer input:focus {
+.inputContainer input {
   outline: none;
   border: none;
+  background-color: transparent;
 }
 
 .inputContainer svg {

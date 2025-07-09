@@ -1,6 +1,6 @@
 import { TournamentTypeProvider } from "@/context/app/TournamentContext"
-import TournamentTypeSelector from "@/components/sections/problems/app/TournamentTypeSelector"
-import GlobalSearch from "@/components/sections/problems/app/SearchBar"
+import TournamentTypeSelector from "@/components/sections/app/TournamentTypeSelector"
+import GlobalSearch from "@/components/sections/app/SearchBar"
 import { FaMoon } from "react-icons/fa"
 import { FaUserCircle } from "react-icons/fa"
 import headerStyle from "@/styles/app/header.module.css"
