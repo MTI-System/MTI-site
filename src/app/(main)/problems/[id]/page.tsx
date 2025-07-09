@@ -1,4 +1,4 @@
-import {PROBLEM_API} from "@/components/constants";
+import {PROBLEM_API} from "@/constants/APIEndpoints";
 import {json} from "node:stream/consumers";
 import {collectSegmentData} from "next/dist/server/app-render/collect-segment-data";
 import ProblemPage from "@/components/sections/problems/ProblemPage";

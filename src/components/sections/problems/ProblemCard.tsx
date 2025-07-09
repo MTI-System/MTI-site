@@ -8,7 +8,7 @@ export default function ProblemCard({ problem }: { problem: Problem }) {
     return (
       <div className={style.problemCard}>
         <div className={style.problemContainer}>
-          <Link href={"/problem/" + problem.id.toString()}
+          <Link href={"/problems/" + problem.id.toString()}
           onNavigate={
               (e)=>{
                 console.log("Navigate", e)
