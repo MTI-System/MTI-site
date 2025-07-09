@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import { AUTH_API } from "@/constants/APIEndpoints"
 import { useRouter } from "next/navigation"
+import { User, Right } from "@/types/authApi"
 
 export default function ProfilePage() {
   const [token, setToken] = useState<string | null>(null)
@@ -49,18 +50,19 @@ export default function ProfilePage() {
       {!profileData && <h1>Loading ^_^</h1>}
       {profileData && <h1>{profileData?.username}</h1>}
       <h2>Ваши права:</h2>
-      {profileData && profileData?.rights.map(
-        (right: Right)=>{
-          return (<p key={right.id}>{right.right_title}</p>)
-        }
-      )}
+      {profileData &&
+        profileData?.rights.map((right: Right) => {
+          return <p key={right.id}>{right.right_title}</p>
+        })}
 
-      <button onClick={
-        () => {
+      <button
+        onClick={() => {
           localStorage.removeItem("mti_auth_key")
           router.replace("/login")
-        }
-      }>Выйти из аккаунта</button>
+        }}
+      >
+        Выйти из аккаунта
+      </button>
     </div>
   )
 }
