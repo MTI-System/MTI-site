@@ -23,7 +23,7 @@ export default function Home() {
       <ClickableCard className={mainStyle.people} href="/underconstruction">
         Люди
       </ClickableCard>
-      <ClickableCard className={mainStyle.forOrganizators} href="/underconstruction">
+      <ClickableCard className={mainStyle.forOrganizators} href="/organization">
         Организаторам
       </ClickableCard>
     </div>
