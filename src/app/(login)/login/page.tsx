@@ -1,11 +1,11 @@
 "use client"
-import { useEffect, useState, FormEvent, useRef } from "react"
+import { useState, FormEvent, useRef, Suspense } from "react"
 import { AUTH_API } from "@/constants/APIEndpoints"
-import {useParams, useRouter, useSearchParams} from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa6"
 import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
-import * as sea from "node:sea";
+import Loading from "@/app/(main)/loading"
 
 enum FormState {
   AwaitLogin,
@@ -16,14 +16,21 @@ enum FormState {
   UnknownError,
 }
 
-export default function LoginPage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <LoginPage />
+    </Suspense>
+  )
+}
+
+function LoginPage() {
   const [formState, setFormState] = useState<FormState>(FormState.AwaitLogin)
   const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
 
   const searchParams = useSearchParams()
   const redirect = searchParams.get("redirect") ?? "profile"
-
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
