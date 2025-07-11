@@ -5,7 +5,7 @@ export interface User {
   rights: Right[]
 }
 
-interface Right{
+export interface Right{
   id: number
   right_title: string
   right_flag: string

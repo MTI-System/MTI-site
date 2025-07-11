@@ -1,20 +1,20 @@
-interface ProblemMaterialType{
+interface ProblemMaterialType {
   id: number
   logo_path: string
-  type_tittle: string
+  type_title: string
 }
-interface ProblemMaterial{
-    id: number
-    material_name: string
-    url: string
-    material_type: ProblemMaterialType
+interface ProblemMaterial {
+  id: number
+  material_name: string
+  url: string
+  material_type: ProblemMaterialType
 }
 
-interface ProblemTranslation{
+interface ProblemTranslation {
   id: number
   problem_name: string
   problem_text: string
-  problem_by: string  // TODO: Rename
+  problem_by: string // TODO: Rename
 }
 
 interface Problem {
@@ -28,4 +28,4 @@ interface Problem {
 
 type ProblemList = Problem[]
 
-export type {ProblemMaterialType, ProblemMaterial, ProblemTranslation, Problem, ProblemList}
+export type { ProblemMaterialType, ProblemMaterial, ProblemTranslation, Problem, ProblemList }

@@ -27,3 +27,13 @@
 .inputContainer svg {
   opacity: 0.5;
 }
+
+.title {
+  user-select: none;
+  opacity: 0.5;
+  font-size: 0.75rem;
+  transition: color 250ms ease;
+}
+.erroredTitle {
+  color: red;
+}
