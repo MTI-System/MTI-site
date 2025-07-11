@@ -8,7 +8,7 @@
 }
 
 .login {
-  background-color: red;
+  background-color: white;
   border-radius: 0.5rem;
   height: 20rem;
   width: 15rem;
@@ -16,11 +16,27 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  box-shadow: 0 0 1em 0.1em rgba(0, 0, 0, 0.5);
 }
 
 .loginButton {
   width: 75%;
   height: 10%;
-  background-color: white;
+  background-color: #f3f1ff;
+  border: 0.15em solid #696bff;
+  color: #696bff;
   border-radius: 0.25rem;
+  transition-property: background-color, color;
+  transition-duration: 250ms;
+  transition-timing-function: ease;
+}
+.loginButton:hover {
+  background-color: #696bff;
+  border: 0.15em solid #696bff;
+  color: #f3f1ff;
+}
+.loginButton:disabled {
+  background-color: #dddddd;
+  border: 0.15em solid #dddddd;
+  color: white;
 }

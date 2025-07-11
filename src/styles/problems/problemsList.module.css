@@ -1,0 +1,22 @@
+.errorCard {
+  width: 100%;
+  min-height: 5rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.errorCard h2 {
+  font-size: 2rem;
+  padding: 1rem;
+}
+.errorCard .errorLogo {
+  width: 5rem;
+  height: 5rem;
+  background-color: #ddd;
+  border: 0.1rem #888 dashed;
+}
+.errorCard p {
+  padding: 1rem;
+}
