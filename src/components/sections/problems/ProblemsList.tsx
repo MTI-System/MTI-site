@@ -7,7 +7,6 @@ import { connection } from "next/server"
 
 export default async function ProblemsList({ year }: { year: number }) {
   const respJSON: ProblemList = await fetchProblems("1", year)
-  console.log(1, year)
   return (
     <>
       {respJSON.map((problem: Problem, index: number) => (
