@@ -19,7 +19,7 @@ function ProfileMainPage({profileData}: { profileData: User }){
       <button onClick={
         () => {
           localStorage.removeItem("mti_auth_key")
-          router.replace("/login")
+          router.replace("/")
         }
       }>Выйти из аккаунта</button>
     </div>

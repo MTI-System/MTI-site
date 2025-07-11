@@ -8,6 +8,8 @@ import footerStyle from "@/styles/app/footer.module.css"
 import "@/styles/app/main.css"
 import Link from "next/link"
 
+
+
 function RootLayout({
   children,
 }: Readonly<{
