@@ -1,5 +1,5 @@
 import ProblemsList from "@/components/sections/problems/ProblemsList"
-import style from "@/styles/problems/problemPage.module.css"
+import style from "@/styles/problems/problemsList.module.css"
 import ProblemFilter from "@/components/sections/problems/ProblemsFilter"
 import { Suspense } from "react"
 

@@ -101,45 +101,6 @@ export default function LoginPage() {
           {formState === FormState.Loading ? "Loading..." : "Login"}
         </button>
       </form>
-      {/* <input
-        type={"text"}
-        placeholder={"Логин"}
-        onChange={(event) => {
-          setLoginText(event.target.value)
-        }}
-      />
-      <input
-        type={"password"}
-        placeholder={"Пароль"}
-        onChange={(event) => {
-          setPassText(event.target.value)
-        }}
-      />
-      <button
-        onClick={() => {
-          setLoginButtonState("Loading...")
-          const formData = new FormData()
-          formData.append("username", loginText)
-          formData.append("password", passText)
-          console.log(formData.get("username"))
-          fetch(AUTH_API + "login", {
-            method: "POST",
-            body: formData,
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data === false) {
-                alert("Не верные данные")
-                setLoginButtonState("Войти")
-              } else {
-                localStorage.setItem("mti_auth_key", data)
-                router.push("/profile")
-              }
-            })
-        }}
-      >
-        {loginButtonState}
-      </button> */}
     </div>
   )
 }
