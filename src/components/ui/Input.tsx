@@ -16,15 +16,15 @@ interface IconInputProps extends InputProps {
 export function IconInput({ icon, onChange, onEnter, disabled, ...rest }: IconInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   return (
-    <div className={style.inputWrapper}>
-      <div
-        className={style.inputContainer}
-        onMouseDown={(e) => {
-          e.preventDefault()
-          if (disabled) return
-          inputRef.current?.focus()
-        }}
-      >
+    <div
+      className={style.inputWrapper}
+      onMouseDown={(e) => {
+        e.preventDefault()
+        if (disabled) return
+        inputRef.current?.focus()
+      }}
+    >
+      <div className={style.inputContainer}>
         <Input onChange={onChange} onEnter={onEnter} ref={inputRef} disabled={disabled} {...rest} />
         {icon}
       </div>
@@ -48,10 +48,11 @@ export function Input({ onChange, onEnter, ref, ...rest }: InputProps) {
   )
 }
 
-export function TitledInput({ children, title }: { children: ReactNode; title: string }) {
+export function TitledInput({ children, title, isError }: { children: ReactNode; title: string; isError?: boolean }) {
+  const className = `${style.title} ${isError && style.erroredTitle}`
   return (
-    <div>
-      <p>{title}</p>
+    <div className={style.titledInputContainer}>
+      <p className={className}>{title}</p>
       {children}
     </div>
   )

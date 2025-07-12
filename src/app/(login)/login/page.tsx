@@ -1,11 +1,11 @@
 "use client"
-import { useEffect, useState, FormEvent, useRef } from "react"
+import { useState, FormEvent, useRef, Suspense } from "react"
 import { AUTH_API } from "@/constants/APIEndpoints"
-import {useParams, useRouter, useSearchParams} from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa6"
-import { IconInput } from "@/components/ui/Input"
+import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
-import * as sea from "node:sea";
+import Loading from "@/app/(main)/loading"
 
 enum FormState {
   AwaitLogin,
@@ -16,14 +16,21 @@ enum FormState {
   UnknownError,
 }
 
-export default function LoginPage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <LoginPage />
+    </Suspense>
+  )
+}
+
+function LoginPage() {
   const [formState, setFormState] = useState<FormState>(FormState.AwaitLogin)
   const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
 
   const searchParams = useSearchParams()
   const redirect = searchParams.get("redirect") ?? "profile"
-
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -70,57 +77,42 @@ export default function LoginPage() {
   return (
     <div className={style.loginContainer}>
       <form onSubmit={handleSubmit} className={style.login} ref={formRef}>
-        <IconInput
-          icon={<FaUser></FaUser>}
-          onEnter={handleEnter}
-          type="username"
-          name="username"
-          placeholder="email@example.xyz"
-          disabled={formState === FormState.Loading}
-          required
-        ></IconInput>
-        <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
-        <button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}></button>
+        <TitledInput
+          title={
+            formState === FormState.EmptyUsername
+              ? "Username can't be empty"
+              : formState === FormState.IncorrectData
+              ? "Incorrect username"
+              : "Username"
+          }
+          isError={formState === FormState.EmptyUsername || formState === FormState.IncorrectData}
+        >
+          <IconInput
+            icon={<FaUser></FaUser>}
+            onEnter={handleEnter}
+            type="username"
+            name="username"
+            placeholder="email@example.xyz"
+            disabled={formState === FormState.Loading}
+          ></IconInput>
+        </TitledInput>
+
+        <TitledInput
+          title={
+            formState === FormState.EmptyPassword
+              ? "Password field can't be empty"
+              : formState === FormState.IncorrectData
+              ? "Or password"
+              : "Password"
+          }
+          isError={formState === FormState.EmptyPassword || formState === FormState.IncorrectData}
+        >
+          <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
+        </TitledInput>
+        <button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
+          {formState === FormState.Loading ? "Loading..." : "Login"}
+        </button>
       </form>
-      {/* <input
-        type={"text"}
-        placeholder={"Логин"}
-        onChange={(event) => {
-          setLoginText(event.target.value)
-        }}
-      />
-      <input
-        type={"password"}
-        placeholder={"Пароль"}
-        onChange={(event) => {
-          setPassText(event.target.value)
-        }}
-      />
-      <button
-        onClick={() => {
-          setLoginButtonState("Loading...")
-          const formData = new FormData()
-          formData.append("username", loginText)
-          formData.append("password", passText)
-          console.log(formData.get("username"))
-          fetch(AUTH_API + "login", {
-            method: "POST",
-            body: formData,
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data === false) {
-                alert("Не верные данные")
-                setLoginButtonState("Войти")
-              } else {
-                localStorage.setItem("mti_auth_key", data)
-                router.push("/profile")
-              }
-            })
-        }}
-      >
-        {loginButtonState}
-      </button> */}
     </div>
   )
 }
@@ -133,14 +125,12 @@ function PasswordField({ onEnter, disabled }: { onEnter: (el: HTMLInputElement) 
         isHidden ? (
           <FaEyeSlash
             onClick={(e) => {
-              // e.stopPropagation()
               setIsHidden(false)
             }}
           />
         ) : (
           <FaEye
             onClick={(e) => {
-              // e.stopPropagation()
               setIsHidden(true)
             }}
           />
@@ -149,9 +139,8 @@ function PasswordField({ onEnter, disabled }: { onEnter: (el: HTMLInputElement) 
       onEnter={onEnter}
       type={isHidden ? "password" : "text"}
       name="password"
-      placeholder=""
+      placeholder="NameOfTheCat"
       disabled={disabled}
-      required
     ></IconInput>
   )
 }
