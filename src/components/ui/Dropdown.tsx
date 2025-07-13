@@ -26,7 +26,9 @@ export function StaticDropdown<ValueType>({
   const [isOpened, setIsOpened] = useState(false)
 
   const containerClassName = `${className ?? ""} ${style.dropdownContainer}`
-
+  useEffect(() => {
+    setSelectedOption(defaultSelection)
+  }, [defaultSelection])
   return (
     <div className={containerClassName}>
       <DropdownButton

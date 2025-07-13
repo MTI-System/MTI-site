@@ -1,21 +1,17 @@
 "use client"
-import { useRouter, usePathname, useSearchParams } from "next/navigation"
-import { startTransition } from "react"
 import { StaticDropdown } from "@/components/ui/Dropdown"
 import style from "@/styles/problems/problemsFilter.module.css"
+import useSearchParam from "@/hooks/useSearchParam"
+import { DEFAULT_YEAR } from "@/constants/DefaultProblemFilters"
 
-export default function ProblemFilter({ year }: { year: number }) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const search = useSearchParams()
+export default function ProblemFilters() {
+  return <YearFilter />
+}
 
-  function onChangeYear(newYear: number) {
-    const newParams = new URLSearchParams(search)
-    newParams.set("year", newYear.toString())
-    startTransition(() => {
-      router.replace(`${pathname}?${newParams.toString()}`)
-    })
-  }
+function YearFilter() {
+  const [yearParam, setYearParam] = useSearchParam("year")
+  let year = yearParam
+  if (!year) year = DEFAULT_YEAR.toString()
 
   return (
     <div className={style.filters}>
@@ -25,8 +21,14 @@ export default function ProblemFilter({ year }: { year: number }) {
           { displayName: "2025", value: 2025, active: true },
           { displayName: "2024", value: 2024, active: true },
         ]}
-        defaultSelection={{ displayName: year.toString(), value: year, active: true }}
-        onOptionSelect={onChangeYear}
+        defaultSelection={{
+          displayName: year,
+          value: parseInt(year),
+          active: true,
+        }}
+        onOptionSelect={(newValue) => {
+          setYearParam(newValue.toString())
+        }}
       ></StaticDropdown>
     </div>
   )
