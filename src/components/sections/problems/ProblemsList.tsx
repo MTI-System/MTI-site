@@ -4,9 +4,10 @@ import { Problem, ProblemList } from "@/types/problemAPI"
 import style from "@/styles/problems/problemsList.module.css"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { connection } from "next/server"
+import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 
-export default async function ProblemsList({ year }: { year: number }) {
-  const respJSON: ProblemList = await fetchProblems("1", year)
+export default async function ProblemsList({ year, tt }: { year: number; tt: string }) {
+  const respJSON: ProblemList = await fetchProblems((availableTournamentTypes.indexOf(tt) + 1).toString(), year)
   return (
     <>
       {respJSON.map((problem: Problem, index: number) => (
@@ -20,6 +21,7 @@ export default async function ProblemsList({ year }: { year: number }) {
 async function fetchProblems(tournament: string, year: number): Promise<ProblemList> {
   await connection()
   try {
+    console.log(`get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`)
     const response = await fetch(
       PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`
     )
