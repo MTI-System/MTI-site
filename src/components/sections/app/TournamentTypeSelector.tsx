@@ -22,6 +22,7 @@ export default function TournamentTypeSelector({ className }: { className?: stri
           : 0
       }
       className={className}
+      disabled={ttContextObject?.isLocked}
     ></StaticDropdown>
   )
 }
