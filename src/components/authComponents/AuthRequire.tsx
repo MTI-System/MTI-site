@@ -1,8 +1,9 @@
-import {ReactNode, useEffect, useState} from "react";
+"use client"
 import {User} from "@/types/authApi";
 import {useRouter} from "next/navigation";
 import {AUTH_API} from "@/constants/APIEndpoints";
 import Loading from "@/app/(main)/loading";
+import {ReactNode, useEffect, useState} from "react";
 
 function AuthRequire({children, redirect}: {children: any, redirect: string}) {
   const [token, setToken] = useState<string | null>(null)

@@ -1,0 +1,78 @@
+"use client"
+import BlueButton from "@/components/Default/BlueButton";
+import {useEffect, useState} from "react";
+import ModalDialog from "@/components/Dialogs/ModalDialog";
+import NewProblemForm from "@/components/Dialogs/Forms/NewProblemForm";
+import AcceptDialog from "@/components/Dialogs/Forms/AcceptDialog";
+import {User} from "@/types/authApi";
+import AuthRequire from "@/components/authComponents/AuthRequire";
+import {router} from "next/client";
+import {useRouter, useSearchParams} from "next/navigation";
+import {PROBLEM_API} from "@/constants/APIEndpoints";
+
+function AddNewProblem({userData}: { userData: User }) {
+  const [modalDialogState, setDialogState] = useState(0);
+  const [newProblemData, setNewProblemData] = useState<NewProblemFormData>();
+
+  const router = useRouter()
+  const [token, setToken] = useState<string | null>(null)
+  const [statusCode, setStatusCode] = useState<number>(200)
+  useEffect(() => {
+    const savedToken = localStorage.getItem("mti_auth_key")
+    if (!savedToken) {
+      router.push("/login" + "?redirect=" + "organization/problems")
+      return
+    }
+    setToken(savedToken)
+  }, [])
+
+  return (
+    <>
+      <div>
+        <BlueButton disabled={
+          userData.rights.map(right => right.right_flag == "ADD_PROBLEMS").every(x => !x)
+        } onClick={() => setDialogState(1)}>Добавить задачу</BlueButton>
+        {/*Форма для добавления задачи*/}
+        <ModalDialog isOpen={modalDialogState == 1} onClose={() => {
+        }}>
+          <NewProblemForm setModalState={setDialogState} setNewProblemData={setNewProblemData}/>
+        </ModalDialog>
+        {/*Подтверждение добавления*/}
+        <ModalDialog isOpen={modalDialogState == 2} onClose={() => {
+        }}>
+          <AcceptDialog onAccept={() => {
+            {
+              setDialogState(0)
+              const formData = new FormData()
+              formData.set("globalNumber", newProblemData!!.globalNumber.toString())
+              formData.set("year", newProblemData!!.year.toString())
+              formData.set("tournamentType", newProblemData!!.tournamentType.toString())
+              formData.set("firstTranslationName", newProblemData!!.firstTranslationName)
+              formData.set("firstTranslationText", newProblemData!!.firstTranslationText)
+              formData.set("firstTranslationBy", newProblemData!!.firstTranslationBy)
+              formData.set("authToken", token!!)
+              console.log(newProblemData!!.tournamentType.toString())
+
+              fetch(PROBLEM_API + "add_problem", {method: 'POST', body: formData}).then(
+                (res) => {
+                  setStatusCode(res.status)
+                }
+              )
+              if (statusCode != 200) {
+                console.log("ERRORRRR!!!!")
+              }
+              else {
+                console.log("ALL OK")
+              }
+            }
+          }} onDecline={() => {
+            setDialogState(0)
+          }}/>
+        </ModalDialog>
+      </div>
+    </>
+  )
+}
+
+
+  export default AddNewProblem
