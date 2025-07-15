@@ -1,7 +1,7 @@
 "use client"
 import {User} from "@/types/authApi";
-import AuthRequire from "@/components/authComponents/AuthRequire";
 import ProfileMainPage from "@/components/sections/profile/ProfileMainPage";
+import AuthRequire from "@/components/serviceComponents/authComponents/AuthRequire";
 
 export default function ProfilePage() {
   return (

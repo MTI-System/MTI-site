@@ -1,7 +1,7 @@
 "use client"
-import AuthRequire from "@/components/authComponents/AuthRequire";
 import OrganizationMenu from "@/components/sections/organizator/OrganizationMenu";
 import { User } from "@/types/authApi";
+import AuthRequire from "@/components/serviceComponents/authComponents/AuthRequire";
 
 function MainOrganizationInterface() {
   return (
