@@ -6,6 +6,8 @@ import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa6"
 import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
 import Loading from "@/app/(main)/loading"
+import cookies from "js-cookie"
+import { TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME, AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 
 enum FormState {
   AwaitLogin,
@@ -62,7 +64,7 @@ function LoginPage() {
         setFormState(FormState.IncorrectData)
         return
       }
-      localStorage.setItem("mti_auth_key", data)
+      cookies.set(AUTH_TOKEN_KEY_NAME, data)
       router.push("/" + redirect)
     } else {
       console.log("Error?")
