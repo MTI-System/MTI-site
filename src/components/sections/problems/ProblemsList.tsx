@@ -7,8 +7,8 @@ import { connection } from "next/server"
 import fetchProblems from "@/scripts/ApiFetchers";
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner";
 
-export default async function ProblemsList({ year }: { year: number }) {
-  const respJSON: ProblemList = await fetchProblems("1", year)
+export default async function ProblemsList({ year, tt }: { year: number; tt: string }) {
+  const respJSON: ProblemList = await fetchProblems((availableTournamentTypes.indexOf(tt) + 1).toString(), year)
   return (
     <>
       {respJSON.map((problem: Problem, index: number) => (

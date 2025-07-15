@@ -5,15 +5,24 @@ import { StaticDropdown } from "@/components/ui/Dropdown"
 import { useContext } from "react"
 
 export default function TournamentTypeSelector({ className }: { className?: string }) {
-  const ttContext = useContext(TournamentTypeContext)
+  const ttContextObject = useContext(TournamentTypeContext)
   return (
     <StaticDropdown
       options={availableTournamentTypes.map((tt) => {
         return { displayName: tt.toUpperCase(), value: tt, active: true }
       })}
-      onOptionSelect={(selectedValue) => ttContext?.updateType(selectedValue)}
-      defaultSelection={0}
+      onOptionSelect={(selectedValue) => ttContextObject?.updateValue(selectedValue)}
+      defaultSelection={
+        ttContextObject !== null
+          ? {
+              displayName: ttContextObject.value.toUpperCase(),
+              value: ttContextObject.value,
+              active: true,
+            }
+          : 0
+      }
       className={className}
+      disabled={ttContextObject?.isLocked}
     ></StaticDropdown>
   )
 }
