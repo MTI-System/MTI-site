@@ -1,10 +1,10 @@
 "use client"
-import AuthRequire from "@/components/authComponents/AuthRequire";
 import {User} from "@/types/authApi";
 import AddNewProblem from "@/components/sections/organizator/problems/AddNewProblem";
 import {Problem, ProblemList} from "@/types/problemAPI";
 import OrganizationProblemCard from "@/components/sections/organizator/problems/OrganizationProblemCard";
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner";
+import AuthRequire from "@/components/serviceComponents/authComponents/AuthRequire";
 
 function AuthorizedOrganizationProblemList({respJSON}: {respJSON: ProblemList}) {
   return (<AuthRequire redirect={"organization/problems"}>
