@@ -25,7 +25,7 @@ export function StaticDropdown<ValueType>({
   const [selectedOption, setSelectedOption] = useState<number | DropdownOption<ValueType>>(defaultSelection)
   const [isOpened, setIsOpened] = useState(false)
 
-  const containerClassName = `${className ?? ""} ${style.dropdownContainer}`
+  const containerClassName = `${className ?? ""} ${style.dropdownContainer} ${disabled && style.dropdownDisabled}`
   useEffect(() => {
     setSelectedOption(defaultSelection)
   }, [defaultSelection])
@@ -34,6 +34,7 @@ export function StaticDropdown<ValueType>({
       <DropdownButton
         selectedOption={typeof selectedOption === "number" ? options[selectedOption] : selectedOption}
         onClick={(e) => {
+          if (disabled) return
           setIsOpened((prev) => !prev)
         }}
         isOpened={isOpened}
@@ -42,7 +43,7 @@ export function StaticDropdown<ValueType>({
         options={options}
         onOptionSelect={(selection) => {
           setIsOpened(false)
-          if (!selection) return
+          if (!selection || disabled) return
           setSelectedOption(selection)
           onOptionSelect(selection.value)
         }}

@@ -10,8 +10,14 @@
   border-radius: 0.25rem;
   transition: background-color 250ms ease;
 }
+.dropdownContainer.dropdownDisabled .dropdownButton {
+  color: rgb(148, 148, 148);
+}
 .dropdownButton:hover {
   background-color: #e7e7e7;
+}
+.dropdownContainer.dropdownDisabled .dropdownButton:hover {
+  background-color: white;
 }
 .dropdownButton .arrowIcon {
   width: 2rem;
@@ -22,6 +28,9 @@
 }
 .dropdownButton:hover .arrowIcon {
   translate: 0 0.1em;
+}
+.dropdownContainer.dropdownDisabled .dropdownButton:hover .arrowIcon {
+  translate: 0;
 }
 .dropdownButton.buttonOpened .arrowIcon {
   rotate: 180deg;

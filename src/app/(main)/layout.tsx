@@ -7,8 +7,17 @@ import headerStyle from "@/styles/app/header.module.css"
 import footerStyle from "@/styles/app/footer.module.css"
 import "@/styles/app/main.css"
 import Link from "next/link"
+import type { Metadata } from "next";
 
-
+export const metadata: Metadata = {
+  title: {
+    template: "МТИ",
+    default: "МТИ - Менеджер Турнирной Информации",
+  },
+  verification: {
+    yandex: '0fe3e0637eabec96',
+  },
+}
 
 function RootLayout({
   children,
