@@ -26,14 +26,15 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
 
   const userAuth = await fetchPermissions(false, "")
   let isModerator = false
-  if (userAuth) {
-    isModerator = userAuth.rights.map(right => right.right_flag == "MODERATE_PROBLEMS_" + availableTournamentTypes.indexOf(tt) + 1).every(x => !x)
+  if (userAuth && userAuth.rights.length !== 0) {
+    isModerator = userAuth.rights.map(right => right.right_flag == "MODERATE_PROBLEMS_" + (availableTournamentTypes.indexOf(tt) + 1)).some(x=>x)
   }
-
+  console.log("user", userAuth, isModerator)
 
   return (
     <div className="flex flex-col items-center bg-gray-100">
       <div className={style.problemsContainer}>
+        <h2>Текущие задачи турнира {tt}</h2>
         <ProblemFilters />
         {year && tt && (
           <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>

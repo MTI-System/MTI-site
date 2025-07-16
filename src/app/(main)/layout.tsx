@@ -34,7 +34,7 @@ function RootLayout({
           <header className={headerStyle.header}>
             <div className={headerStyle.rightContainer}>
               <Link href={"/"}>
-                <h2>МТИ</h2>
+                <h1>МТИ</h1>
               </Link>
               <TournamentTypeSelector className={headerStyle.dropdown} />
             </div>
