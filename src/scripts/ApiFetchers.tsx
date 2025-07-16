@@ -3,6 +3,7 @@ import {connection} from "next/server";
 import {PROBLEM_API, AUTH_API} from "@/constants/APIEndpoints";
 import {User, Right} from "@/types/authApi"
 import { redirect } from "next/navigation";
+import {cookies} from "next/headers";
 
 async function fetchProblems(tournament: string, year: number): Promise<ProblemList | null> {
   await connection()
@@ -23,13 +24,23 @@ async function fetchProblems(tournament: string, year: number): Promise<ProblemL
 }
 
 
-async function fetchPermissions(token: string, isRedirect: boolean, redirectPath: string ): Promise<Right[] | null>{
+async function fetchPermissions(isRedirect: boolean, redirectPath: string ): Promise<User | null>{
   await connection()
+  const token = (await cookies()).get("mtiyt_auth_token")?.value
+  if (!token) {
+      if (isRedirect){
+        redirect(`login?redirect=${redirectPath}`)
+      }
+    return null
+  }
   try{
-    const response = await fetch(AUTH_API + `check_auth`, {
-      method: "POST",
-      headers: {"Authorization": "Bearer " + token}
-    })
+    console.log("Token token", token)
+    const response = await fetch(AUTH_API + "check_auth", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
     if (response.status != 200){
       console.log(`response error with status ${response.status}`)
       if (isRedirect){
@@ -38,7 +49,7 @@ async function fetchPermissions(token: string, isRedirect: boolean, redirectPath
       return null
     }
     const data: User = await response.json()
-    return data.rights
+    return data
   }catch (e){
     console.log(`Permissions fetching error: ${e}`)
 return null

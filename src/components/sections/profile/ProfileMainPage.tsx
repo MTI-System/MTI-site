@@ -1,7 +1,9 @@
-
+"use client"
 import { User } from "@/types/authApi"
 import { Right } from "@/types/authApi"
 import { useRouter } from "next/navigation"
+import cookies from "js-cookie";
+
 
 function ProfileMainPage({ profileData }: { profileData: User }) {
   const router = useRouter()
@@ -17,7 +19,7 @@ function ProfileMainPage({ profileData }: { profileData: User }) {
 
       <button
         onClick={() => {
-          localStorage.removeItem("mti_auth_key")
+          cookies.remove("mtiyt_auth_token");
           router.replace("/")
         }}
       >

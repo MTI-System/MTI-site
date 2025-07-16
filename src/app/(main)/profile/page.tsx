@@ -1,14 +1,12 @@
-"use client"
 import {User} from "@/types/authApi";
 import ProfileMainPage from "@/components/sections/profile/ProfileMainPage";
-import AuthRequire from "@/components/serviceComponents/authComponents/AuthRequire";
+import {fetchPermissions} from "@/scripts/ApiFetchers";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const userAuth = await fetchPermissions(true, "profile")
   return (
     <>
-      <AuthRequire redirect={"profile"}>
-        {(profileData: User)=><ProfileMainPage profileData={profileData}/>}
-      </AuthRequire>
+        <ProfileMainPage profileData={userAuth!!}/>
     </>
   )
 }

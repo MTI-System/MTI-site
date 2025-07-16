@@ -9,6 +9,8 @@ import { DEFAULT_YEAR } from "@/constants/DefaultProblemFilters"
 import { TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME,AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
 import {Right} from "@/types/authApi"
+import OrganizationProblemCard from "@/components/sections/organizator/problems/OrganizationProblemCard";
+import OrganizationProblemList from "@/components/sections/organizator/problems/OrganizationProblemList";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams
@@ -20,18 +22,23 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
     return
   }
   const year = sp.year ?? DEFAULT_YEAR
-  const authToken = cookie.get(AUTH_TOKEN_KEY_NAME)?.value
-  let premissionList: Right[]|null = null
-  if (authToken) premissionList = await fetchPermissions(authToken, true, "problems")
-  console.log("permissions list", premissionList)
-  console.log("token", authToken)
+
+
+  const userAuth = await fetchPermissions(false, "")
+  let isModerator = false
+  if (userAuth) {
+    isModerator = userAuth.rights.map(right => right.right_flag == "MODERATE_PROBLEMS_" + availableTournamentTypes.indexOf(tt) + 1).every(x => !x)
+  }
+
+
   return (
     <div className="flex flex-col items-center bg-gray-100">
       <div className={style.problemsContainer}>
         <ProblemFilters />
         {year && tt && (
           <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-            <ProblemsList year={year} tt={tt} canEdit={false}/>
+            {!isModerator && <ProblemsList year={year} tt={tt}/>}
+            {isModerator && <OrganizationProblemList year={year}/>}
           </Suspense>
         )}
       </div>

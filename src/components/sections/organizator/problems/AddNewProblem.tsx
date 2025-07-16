@@ -5,10 +5,10 @@ import ModalDialog from "@/components/Dialogs/ModalDialog";
 import NewProblemForm from "@/components/Dialogs/Forms/NewProblemForm";
 import AcceptDialog from "@/components/Dialogs/Forms/AcceptDialog";
 import {User} from "@/types/authApi";
-import AuthRequire from "@/components/authComponents/AuthRequire";
 import {router} from "next/client";
 import {useRouter, useSearchParams} from "next/navigation";
 import {PROBLEM_API} from "@/constants/APIEndpoints";
+import cookies from "js-cookie";
 
 function AddNewProblem({userData}: { userData: User }) {
   const [modalDialogState, setDialogState] = useState(0);
@@ -18,7 +18,8 @@ function AddNewProblem({userData}: { userData: User }) {
   const [token, setToken] = useState<string | null>(null)
   const [statusCode, setStatusCode] = useState<number>(200)
   useEffect(() => {
-    const savedToken = localStorage.getItem("mti_auth_key")
+    const savedToken = cookies.get("mtiyt_auth_token")?.valueOf()
+
     if (!savedToken) {
       router.push("/login" + "?redirect=" + "organization/problems")
       return
@@ -30,7 +31,7 @@ function AddNewProblem({userData}: { userData: User }) {
     <>
       <div>
         <BlueButton disabled={
-          userData.rights.map(right => right.right_flag == "ADD_PROBLEMS").every(x => !x)
+          userData.rights.map(right => right.right_flag == "MODERATE_PROBLEMS_1").every(x => !x)
         } onClick={() => setDialogState(1)}>Добавить задачу</BlueButton>
         {/*Форма для добавления задачи*/}
         <ModalDialog isOpen={modalDialogState == 1} onClose={() => {

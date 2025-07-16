@@ -8,6 +8,8 @@ import footerStyle from "@/styles/app/footer.module.css"
 import "@/styles/app/main.css"
 import Link from "next/link"
 import type { Metadata } from "next";
+import Loading from "@/app/(main)/loading";
+import {Suspense} from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
     default: "МТИ - Менеджер Турнирной Информации",
   },
   verification: {
-    yandex: '0fe3e0637eabec96',
+    yandex: 'aa838087dd1ef992',
   },
 }
 
@@ -27,7 +29,8 @@ function RootLayout({
   return (
     <html>
       <body>
-        <TournamentTypeProvider>
+        <Suspense fallback={<Loading/>}>
+          <TournamentTypeProvider>
           <header className={headerStyle.header}>
             <div className={headerStyle.rightContainer}>
               <Link href={"/"}>
@@ -46,6 +49,7 @@ function RootLayout({
           <main>{children}</main>
           <footer className={footerStyle.footer}></footer>
         </TournamentTypeProvider>
+        </Suspense>
       </body>
     </html>
   )

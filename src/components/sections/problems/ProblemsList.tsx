@@ -5,7 +5,7 @@ import {fetchProblems} from "@/scripts/ApiFetchers";
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner";
 import {availableTournamentTypes} from "@/constants/AvailableTournaments";
 
-export default async function ProblemsList({ year, tt, canEdit }: { year: number; tt: string, canEdit:boolean }) {
+export default async function ProblemsList({ year, tt }: { year: number; tt: string }) {
   const respJSON: ProblemList|null = await fetchProblems((availableTournamentTypes.indexOf(tt) + 1).toString(), year)
   
   return (

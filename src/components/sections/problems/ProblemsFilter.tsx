@@ -1,11 +1,15 @@
 "use client"
-import { StaticDropdown } from "@/components/ui/Dropdown"
+import {StaticDropdown} from "@/components/ui/Dropdown"
 import style from "@/styles/problems/problemsFilter.module.css"
 import useSearchParam from "@/hooks/useSearchParam"
-import { DEFAULT_YEAR } from "@/constants/DefaultProblemFilters"
+import {DEFAULT_YEAR} from "@/constants/DefaultProblemFilters"
+import {Suspense} from "react";
+import Loading from "@/app/(main)/loading";
 
 export default function ProblemFilters() {
-  return <YearFilter />
+  return <Suspense fallback={<Loading/>}>
+    <YearFilter/>
+  </Suspense>
 }
 
 function YearFilter() {
@@ -17,9 +21,9 @@ function YearFilter() {
     <div className={style.filters}>
       <StaticDropdown
         options={[
-          { displayName: "2026", value: 2026, active: true },
-          { displayName: "2025", value: 2025, active: true },
-          { displayName: "2024", value: 2024, active: true },
+          {displayName: "2026", value: 2026, active: true},
+          {displayName: "2025", value: 2025, active: true},
+          {displayName: "2024", value: 2024, active: true},
         ]}
         defaultSelection={{
           displayName: year,
