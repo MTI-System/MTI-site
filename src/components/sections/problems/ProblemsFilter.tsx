@@ -8,9 +8,7 @@ import Loading from "@/app/(main)/loading";
 import {PROBLEM_API} from "@/constants/APIEndpoints";
 
 export default function ProblemFilters({possibleYears}: {possibleYears: number[]}) {
-  return <Suspense fallback={<Loading/>}>
-    <YearFilter possibleYears={possibleYears}/>
-  </Suspense>
+  return <YearFilter possibleYears={possibleYears}/>
 }
 
 function YearFilter({possibleYears}: {possibleYears: number[]}) {

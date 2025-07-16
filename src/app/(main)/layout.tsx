@@ -11,6 +11,9 @@ import type { Metadata } from "next";
 import Loading from "@/app/(main)/loading";
 import {Suspense} from "react";
 import {FILES_SERVER} from "@/constants/APIEndpoints";
+import {headers} from "next/headers";
+import phoneUnavailable from "@/components/Errors/phoneUnavailable";
+import PhoneUnavailable from "@/components/Errors/phoneUnavailable";
 
 export const metadata: Metadata = {
   title: {
@@ -23,11 +26,16 @@ export const metadata: Metadata = {
 
 }
 
-function RootLayout({
+async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const head = await headers()
+
+  const isMobile = /Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(
+      head.get("user-agent")??"",
+    );
   return (
     <html>
     <head>
@@ -43,7 +51,7 @@ function RootLayout({
               </Link>
               <TournamentTypeSelector className={headerStyle.dropdown} />
             </div>
-            <div className={headerStyle.rightContainer}>
+            <div className={headerStyle.leftContainer}>
               <GlobalSearch />
               <FaMoon />
               <Link href={"/profile"}>
@@ -51,7 +59,11 @@ function RootLayout({
               </Link>
             </div>
           </header>
-          <main>{children}</main>
+            <main>
+              {isMobile && children}
+              {!isMobile && children}
+              {/*{!isMobile && <PhoneUnavailable />}*/}
+            </main>
           <footer className={footerStyle.footer}></footer>
         </TournamentTypeProvider>
         </Suspense>

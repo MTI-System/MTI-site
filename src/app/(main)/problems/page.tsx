@@ -9,6 +9,7 @@ import {TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/con
 import {fetchPermissions, fetchYears} from "@/scripts/ApiFetchers"
 import OrganizationProblemList from "@/components/sections/organizator/problems/OrganizationProblemList";
 import {PROBLEM_API} from "@/constants/APIEndpoints";
+import Loading from "@/app/(main)/loading";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams
@@ -35,12 +36,16 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
       <div className={style.problemsContainer}>
         <h2>Задачи на {availableTournamentTypes.find(val=>val.name===tt)?.longName}</h2>
         <ProblemFilters possibleYears={possibleYears}/>
+        <Suspense  fallback={<Loading/>}>
         {year && tt && (
-          <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-            {!isModerator && <ProblemsList year={year} tt={tt}/>}
-            {isModerator && <OrganizationProblemList tt={tt} year={year}/>}
-          </Suspense>
+          <div>
+             <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
+              {!isModerator && <ProblemsList year={year} tt={tt}/>}
+              {isModerator && <OrganizationProblemList tt={tt} year={year}/>}
+            </Suspense>
+          </div>
         )}
+          </Suspense>
       </div>
     </div>
   )
