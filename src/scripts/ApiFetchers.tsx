@@ -1,9 +1,11 @@
+"use server"
 import {ProblemList} from "@/types/problemAPI";
 import {connection} from "next/server";
 import {PROBLEM_API, AUTH_API} from "@/constants/APIEndpoints";
 import {User, Right} from "@/types/authApi"
 import { redirect } from "next/navigation";
 import {cookies} from "next/headers";
+import {router} from "next/client";
 
 async function fetchProblems(tournament: string, year: number): Promise<ProblemList | null> {
   await connection()
@@ -55,4 +57,29 @@ async function fetchPermissions(isRedirect: boolean, redirectPath: string ): Pro
 return null
   }
 }
-export {fetchProblems, fetchPermissions};
+
+
+async function deleteProblem(problem: number, tournamentTypeId: number): Promise<void> {
+  const token = (await cookies()).get("mtiyt_auth_token")?.value??""
+  const formData = new FormData()
+  formData.append("authToken", token)
+  formData.append("tournamentType", tournamentTypeId.toString())
+
+  await fetch(
+    PROBLEM_API + "delete_problem/" + problem.toString(),
+    {
+      method: "DELETE",
+      body: formData
+    }
+  ).then(r=>{
+    console.log(`Problem ${problem} delete with status ${r.status}`)
+  })
+
+}
+
+
+async function fetchYears(tournamentTypeId: number): Promise<number[]>{
+
+  return await fetch(PROBLEM_API + "years?tournamentTypeId="+tournamentTypeId.toString()).then(response => response.json())
+}
+export {fetchProblems, fetchPermissions, deleteProblem, fetchYears};

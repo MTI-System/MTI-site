@@ -12,7 +12,7 @@ async function ProblemPageMain({ params }: PageProps) {
   const problem: Problem = await problemRequest.json()
   if (problem === null) return <NotFound />
   return (
-    <TournamentTypeContextLock lockValue={AVAILABLE_TOURNAMENT_TYPES[problem.tournament_type - 1]}>
+    <TournamentTypeContextLock lockValue={AVAILABLE_TOURNAMENT_TYPES[problem.tournament_type - 1].name}>
       <ProblemPage problem={problem} />
     </TournamentTypeContextLock>
   )

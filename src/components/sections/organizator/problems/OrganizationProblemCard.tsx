@@ -3,8 +3,12 @@ import {Problem} from "@/types/problemAPI";
 import style from "@/styles/problems/problemcard.module.css";
 import Link from "next/link";
 import BlueButton from "@/components/Default/BlueButton";
+import cookies from "js-cookie";
+import {deleteProblem} from "@/scripts/ApiFetchers";
+import {useRouter} from "next/navigation";
 
-function OrganizationProblemCard({ problem }: { problem: Problem }){
+function OrganizationProblemCard({problem}: { problem: Problem }) {
+  const router = useRouter();
   return (
     <div className={style.problemCard}>
       <div className={style.problemContainer}>
@@ -12,7 +16,6 @@ function OrganizationProblemCard({ problem }: { problem: Problem }){
           href={"/problems/" + problem.id.toString()}
           onNavigate={(e) => {
             console.log("Navigate", e)
-            // cookieStore.set('current_task', 'lee')
           }}
         >
           <h2 className={style.problemTitle}>
@@ -22,7 +25,16 @@ function OrganizationProblemCard({ problem }: { problem: Problem }){
         <h5 className={style.translation}>Translation here...</h5>
         <p className={style.problemText}>{problem.problem_translations[0].problem_text}</p>
         <div>
-          <BlueButton>Удалить</BlueButton>
+          <BlueButton
+            onClick={
+            async () => {
+              await deleteProblem(problem.id, problem.tournament_type)
+              router.refresh()
+            }
+          }
+          >
+            Удалить
+          </BlueButton>
           <BlueButton>Редактировать</BlueButton>
         </div>
 

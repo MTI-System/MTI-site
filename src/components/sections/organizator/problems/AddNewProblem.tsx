@@ -5,10 +5,10 @@ import ModalDialog from "@/components/Dialogs/ModalDialog";
 import NewProblemForm from "@/components/Dialogs/Forms/NewProblemForm";
 import AcceptDialog from "@/components/Dialogs/Forms/AcceptDialog";
 import {User} from "@/types/authApi";
-import {router} from "next/client";
 import {useRouter, useSearchParams} from "next/navigation";
 import {PROBLEM_API} from "@/constants/APIEndpoints";
 import cookies from "js-cookie";
+import {availableTournamentTypes} from "@/constants/AvailableTournaments";
 
 function AddNewProblem({userData}: { userData: User }) {
   const [modalDialogState, setDialogState] = useState(0);
@@ -27,16 +27,20 @@ function AddNewProblem({userData}: { userData: User }) {
     setToken(savedToken)
   }, [])
 
+  const searchParams = useSearchParams()
+  const tt =  searchParams.get("tt") ?? undefined
+  const year =  Number(searchParams.get("year")?? 2025)
+  const tournamentTypeId = availableTournamentTypes.find(val=>val.name===tt)?.id??1
   return (
     <>
       <div>
         <BlueButton disabled={
-          userData.rights.map(right => right.right_flag == "MODERATE_PROBLEMS_1").every(x => !x)
+          userData.rights.map(right => right.right_flag == "MODERATE_PROBLEMS_"+tournamentTypeId.toString()).every(x => !x)
         } onClick={() => setDialogState(1)}>Добавить задачу</BlueButton>
         {/*Форма для добавления задачи*/}
         <ModalDialog isOpen={modalDialogState == 1} onClose={() => {
         }}>
-          <NewProblemForm setModalState={setDialogState} setNewProblemData={setNewProblemData}/>
+          <NewProblemForm setModalState={setDialogState} setNewProblemData={setNewProblemData} currentTournamentType={tournamentTypeId} currentYear={year}/>
         </ModalDialog>
         {/*Подтверждение добавления*/}
         <ModalDialog isOpen={modalDialogState == 2} onClose={() => {
@@ -63,6 +67,7 @@ function AddNewProblem({userData}: { userData: User }) {
                 console.log("ERRORRRR!!!!")
               }
               else {
+                router.refresh()
                 console.log("ALL OK")
               }
             }

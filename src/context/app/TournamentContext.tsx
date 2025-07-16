@@ -5,7 +5,7 @@ import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import { TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
 import useSearchParam from "@/hooks/useSearchParam"
 
-type TournamentType = (typeof availableTournamentTypes)[number]
+type TournamentType = string//(typeof availableTournamentTypes)[number]
 
 interface tournamentTypeValue {
   value: TournamentType
@@ -15,13 +15,13 @@ interface tournamentTypeValue {
 }
 
 const isTournamentType = (value: string): value is TournamentType =>
-  availableTournamentTypes.includes(value as TournamentType)
+  availableTournamentTypes.find((val)=>val.name === value) != undefined
 
 export const TournamentTypeContext = createContext<tournamentTypeValue | null>(null)
 
 export function TournamentTypeProvider({ children }: { children: React.ReactNode }) {
   const [spTournamentType, setSPTournamentType] = useSearchParam(TOURNAMENT_TYPE_SEARCH_PARAM_NAME)
-  const [tournamentType, setTournamentType] = useState<TournamentType>(availableTournamentTypes[0])
+  const [tournamentType, setTournamentType] = useState<TournamentType>(availableTournamentTypes[0].name)
   const [isLocked, setIsLocked] = useState(false)
   console.log(isLocked)
 

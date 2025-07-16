@@ -5,26 +5,28 @@ import useSearchParam from "@/hooks/useSearchParam"
 import {DEFAULT_YEAR} from "@/constants/DefaultProblemFilters"
 import {Suspense} from "react";
 import Loading from "@/app/(main)/loading";
+import {PROBLEM_API} from "@/constants/APIEndpoints";
 
-export default function ProblemFilters() {
+export default function ProblemFilters({possibleYears}: {possibleYears: number[]}) {
   return <Suspense fallback={<Loading/>}>
-    <YearFilter/>
+    <YearFilter possibleYears={possibleYears}/>
   </Suspense>
 }
 
-function YearFilter() {
+function YearFilter({possibleYears}: {possibleYears: number[]}) {
   const [yearParam, setYearParam] = useSearchParam("year")
   let year = yearParam
-  if (!year) year = DEFAULT_YEAR.toString()
+  if (!year) year = possibleYears[0].toString()
 
+  // const yearsArray = fetchYears()
+  // setYearParam(year)
   return (
     <div className={style.filters}>
       <StaticDropdown
-        options={[
-          {displayName: "2026", value: 2026, active: true},
-          {displayName: "2025", value: 2025, active: true},
-          {displayName: "2024", value: 2024, active: true},
-        ]}
+        options={
+        possibleYears.map(year => {
+          return ({displayName: year.toString(), value: year, active: true})
+        })}
         defaultSelection={{
           displayName: year,
           value: parseInt(year),
@@ -37,3 +39,5 @@ function YearFilter() {
     </div>
   )
 }
+
+

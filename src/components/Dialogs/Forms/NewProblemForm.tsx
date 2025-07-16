@@ -2,13 +2,17 @@ import {StaticDropdown} from "@/components/ui/Dropdown";
 import {availableTournamentTypes} from "@/constants/AvailableTournaments";
 import BlueButton from "@/components/Default/BlueButton";
 
-function NewProblemForm({setModalState, setNewProblemData}: {
+function NewProblemForm({setModalState, setNewProblemData, currentTournamentType, currentYear}: {
   setModalState: (state: number) => void,
-  setNewProblemData: (state: NewProblemFormData) => void
-}) {
+  setNewProblemData: (state: NewProblemFormData) => void ,
+  currentTournamentType: number,
+  currentYear: number
+                        }
+) {
+
   const newProblemData: NewProblemFormData = {
-    tournamentType: 1,
-    year: 2025,
+    tournamentType: currentTournamentType,
+    year: currentYear,
     globalNumber: 1,
     firstTranslationName: "",
     firstTranslationText: "",
@@ -22,11 +26,11 @@ function NewProblemForm({setModalState, setNewProblemData}: {
         <p>Тип турнира</p>
         <StaticDropdown
           options={availableTournamentTypes.map((tt) => {
-            return {displayName: tt.toUpperCase(), value: tt, active: true};
+            return {displayName: tt.name.toUpperCase(), value: tt.name, active: true};
           })}
-          defaultSelection={0}
+          defaultSelection={availableTournamentTypes.findIndex(val=>val.id===currentTournamentType)}
           onOptionSelect={function (selection: string): void {
-            newProblemData.tournamentType = availableTournamentTypes.indexOf(selection) + 1
+            newProblemData.tournamentType = availableTournamentTypes.find((val)=>val.name===selection)?.id??0
           }}></StaticDropdown>
 
         <p>Сезон задачи</p>
@@ -34,7 +38,7 @@ function NewProblemForm({setModalState, setNewProblemData}: {
                onChange={(event) => {
                  newProblemData.year = Number(event.target.value)
                }
-          } defaultValue={2025}/>
+          } defaultValue={currentYear}/>
 
         <p>Номер задачи в списке</p>
         <input type={"number"}
@@ -62,6 +66,7 @@ function NewProblemForm({setModalState, setNewProblemData}: {
                onChange={(event) => {
                  newProblemData.firstTranslationBy = event.target.value
                }}
+               defaultValue={"Официальный перевод"}
         />
 
       </div>

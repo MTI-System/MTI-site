@@ -10,7 +10,7 @@ async function AuthorizedOrganizationProblemList({respJSON}: {respJSON: ProblemL
     <>
         <AddNewProblem userData={userAuth!!}/>
         {respJSON.map((problem: Problem, index: number) => (
-          <OrganizationProblemCard problem={problem} key={index + 1}></OrganizationProblemCard>
+          <OrganizationProblemCard problem={problem} key={index + 1}/>
         ))}
         {respJSON.length === 0 && <FetchingErrorBanner/>}
       </>

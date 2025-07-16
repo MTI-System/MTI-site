@@ -10,6 +10,7 @@ import Link from "next/link"
 import type { Metadata } from "next";
 import Loading from "@/app/(main)/loading";
 import {Suspense} from "react";
+import {FILES_SERVER} from "@/constants/APIEndpoints";
 
 export const metadata: Metadata = {
   title: {
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
   verification: {
     yandex: 'aa838087dd1ef992',
   },
+
 }
 
 function RootLayout({
@@ -28,9 +30,12 @@ function RootLayout({
 }>) {
   return (
     <html>
-      <body>
-        <Suspense fallback={<Loading/>}>
-          <TournamentTypeProvider>
+    <head>
+      <link rel="shortcut icon" href={FILES_SERVER + "favicon.svg"}/>
+    </head>
+    <body>
+    <Suspense fallback={<Loading/>}>
+      <TournamentTypeProvider>
           <header className={headerStyle.header}>
             <div className={headerStyle.rightContainer}>
               <Link href={"/"}>

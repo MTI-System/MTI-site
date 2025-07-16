@@ -9,7 +9,7 @@ export default function TournamentTypeSelector({ className }: { className?: stri
   return (
     <StaticDropdown
       options={availableTournamentTypes.map((tt) => {
-        return { displayName: tt.toUpperCase(), value: tt, active: true }
+        return { displayName: tt.name.toUpperCase(), value: tt.name, active: true }
       })}
       onOptionSelect={(selectedValue) => ttContextObject?.updateValue(selectedValue)}
       defaultSelection={
