@@ -1,34 +1,60 @@
 .problemCard {
-  width: 100%;
-  min-height: 5rem;
-  background-color: #fff;
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: row;
-  margin-top: 1vh;
+    width: 100%;
+    min-height: 5rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1vh;
 }
-.problemContainer {
-  width: 100%;
-  padding: 1rem;
+
+@media (max-width: 600px) {
+    .problemContainer {
+        width: 90vw;
+        padding: 1rem;
+    }
+
+    .problemTitle {
+        font-size: 6vw;
+        font-weight: bold;
+        color: rgb(137, 58, 247);
+    }
+
+    .problemText {
+        font-size: 4vw;
+    }
 }
-.problemTitle {
-  font-size: 2rem;
-  font-weight: bold;
-  color: rgb(137, 58, 247);
+
+@media (min-width: 600px) {
+    .problemContainer {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .problemTitle {
+        font-size: 2rem;
+        font-weight: bold;
+        color: rgb(137, 58, 247);
+    }
+
+    .problemText {
+        font-size: 1rem;
+    }
 }
+
+
 .translation {
-  font-size: 0.75rem;
-  color: rgba(0, 0, 0, 0.5);
-  padding-top: 0.2rem;
-  padding-bottom: 1rem;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.5);
+    padding-top: 0.2rem;
+    padding-bottom: 1rem;
 }
-.problemText {
-  font-size: 1rem;
-}
+
+
 .tournamentsContainer {
-  min-width: 10%;
-  background-color: #eee;
-  border: 0.1rem #aaa dashed;
+    min-width: 10%;
+    background-color: #eee;
+    border: 0.1rem #aaa dashed;
 }
 
 

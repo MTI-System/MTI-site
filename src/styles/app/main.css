@@ -1,17 +1,27 @@
 @import "tailwindcss";
 
 * {
-  margin: 0;
+    margin: 0;
 }
 
 main {
-  min-height: 85vh;
+    min-height: 85vh;
 }
-h1{
-  text-align: center;
-  font-weight: bold;
-  font-size: 3vw;
 
+@media (min-width: 600px) {
+    h1 {
+        text-align: center;
+        font-weight: bold;
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 600px) {
+    h1 {
+        text-align: center;
+        font-weight: bold;
+        font-size: 5vw;
+    }
 }
 
 

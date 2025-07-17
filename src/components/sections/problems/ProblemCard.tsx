@@ -22,7 +22,7 @@ export default function ProblemCard({ problem }: { problem: Problem }) {
         <h5 className={style.translation}>Translation here...</h5>
         <p className={style.problemText}>{problem.problem_translations[0].problem_text}</p>
       </div>
-      <div className={style.tournamentsContainer}>Tournaments here...</div>
+      {/*<div className={style.tournamentsContainer}>Tournaments here...</div>*/}
     </div>
   )
 }
