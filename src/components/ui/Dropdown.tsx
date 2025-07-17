@@ -109,7 +109,6 @@ function DropdownButton<ValueType>({
   return (
     <div className={className} onClick={onClick}>
       <DropdownOption  option={selectedOption}></DropdownOption>
-
       <FaChevronDown className={style.arrowIcon}></FaChevronDown>
     </div>
   )

@@ -33,11 +33,7 @@ async function RootLayout({
                           }: Readonly<{
   children: React.ReactNode
 }>) {
-  const head = await headers()
 
-  const isMobile = /Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(
-    head.get("user-agent") ?? "",
-  );
   return (
     <html>
     <head>
@@ -67,31 +63,29 @@ async function RootLayout({
       />
     </head>
     <body>
-      <Suspense fallback={<Loading/>}>
-        <TournamentTypeProvider>
-          <header className={headerStyle.header}>
-            <div className={headerStyle.rightContainer}>
-              <Link href={"/"}>
-                <h1>МТИ</h1>
-              </Link>
-              <TournamentTypeSelector className={headerStyle.dropdown}/>
-            </div>
-            <div className={headerStyle.leftContainer}>
-              <GlobalSearch  />
-              <FaMoon className={iconStyle.icons}/>
-              <Link href={"/profile"}>
-                <FaUserCircle className={iconStyle.icons}/>
-              </Link>
-            </div>
-          </header>
-          <main>
-            {isMobile && children}
-            {!isMobile && children}
-            {/*{!isMobile && <PhoneUnavailable />}*/}
-          </main>
-          <footer className={footerStyle.footer}></footer>
-        </TournamentTypeProvider>
-      </Suspense>
+    <Suspense fallback={<Loading/>}>
+      <TournamentTypeProvider>
+        <header className={headerStyle.header}>
+          <div className={headerStyle.rightContainer}>
+            <Link href={"/"}>
+              <h1>МТИ</h1>
+            </Link>
+            <TournamentTypeSelector className={headerStyle.dropdown}/>
+          </div>
+          <div className={headerStyle.leftContainer}>
+            <GlobalSearch/>
+            <FaMoon className={iconStyle.icons}/>
+            <Link href={"/profile"}>
+              <FaUserCircle className={iconStyle.icons}/>
+            </Link>
+          </div>
+        </header>
+        <main>
+          {children}
+        </main>
+        <footer className={footerStyle.footer}></footer>
+      </TournamentTypeProvider>
+    </Suspense>
     </body>
     </html>
   )

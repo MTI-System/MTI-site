@@ -6,6 +6,7 @@ import { useContext } from "react"
 
 export default function TournamentTypeSelector({ className }: { className?: string }) {
   const ttContextObject = useContext(TournamentTypeContext)
+
   return (
     <StaticDropdown
       options={availableTournamentTypes.map((tt) => {
