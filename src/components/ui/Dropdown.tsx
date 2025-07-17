@@ -2,6 +2,7 @@
 import style from "@/styles/components/dropdown.module.css"
 import { FaChevronDown } from "react-icons/fa"
 import { useState, useRef, useEffect } from "react"
+import iconStyle from "@/styles/icons.module.css"
 
 interface DropdownOption<ValueType> {
   displayName: string
@@ -107,7 +108,8 @@ function DropdownButton<ValueType>({
   const className = `${style.dropdownButton} ${isOpened && style.buttonOpened}`
   return (
     <div className={className} onClick={onClick}>
-      <DropdownOption option={selectedOption}></DropdownOption>
+      <DropdownOption  option={selectedOption}></DropdownOption>
+
       <FaChevronDown className={style.arrowIcon}></FaChevronDown>
     </div>
   )
@@ -123,7 +125,7 @@ function DropdownOption<ValueType>({ option, onClick }: { option: DropdownOption
         onClick()
       }}
     >
-      {option.displayName}
+      <p className={style.dropdownText}>{option.displayName}</p>
     </div>
   )
 }

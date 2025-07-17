@@ -20,7 +20,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
     redirect(`/problems?${TOURNAMENT_TYPE_SEARCH_PARAM_NAME}=${tt}`, RedirectType.replace)
     return
   }
-  console.log(availableTournamentTypes.find(val=>val.name===tt)?.id??1)
   const possibleYears = await fetchYears(availableTournamentTypes.find(val=>val.name===tt)?.id??1)
   const year = sp.year ?? possibleYears[0]
 

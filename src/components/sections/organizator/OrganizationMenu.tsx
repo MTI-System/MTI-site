@@ -5,7 +5,6 @@ import LockedClickableCard from "@/components/ui/LockedClickableCard";
 
 function OrganizationMenu({profileData}: { profileData: User }){
   const right_flags = profileData.rights.map(it=>it.right_flag)
-  console.log(checkPermissions(right_flags, ["ADD_PROBLEMS", "ADD_PROBLEM_MATERIALS"]))
   return (
     <div className={mainStyle.cardGrid}>
       {/*{checkPermissions(right_flags, ["ADD_PROBLEMS", "ADD_PROBLEM_MATERIALS", "DELETE_PROBLEMS"]) &&*/}

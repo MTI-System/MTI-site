@@ -56,7 +56,6 @@ function AddNewProblem({userData}: { userData: User }) {
               formData.set("firstTranslationText", newProblemData!!.firstTranslationText)
               formData.set("firstTranslationBy", newProblemData!!.firstTranslationBy)
               formData.set("authToken", token!!)
-              console.log(newProblemData!!.tournamentType.toString())
 
               fetch(PROBLEM_API + "add_problem", {method: 'POST', body: formData}).then(
                 (res) => {

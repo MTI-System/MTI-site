@@ -20,8 +20,10 @@
   background-color: white;
 }
 .dropdownButton .arrowIcon {
-  width: 2rem;
-  height: 1rem;
+  /*width: 2rem;*/
+  /*height: 1rem;*/
+  margin-right: 1vw;
+  font-size: 1vw;
   transition-property: translate rotate;
   transition-duration: 250ms;
   transition-timing-function: ease;
@@ -41,6 +43,11 @@
 .dropdownButton .dropdownOption:hover {
   background-color: transparent;
 }
+
+.dropdownText{
+  font-size: 1vw;
+}
+
 .dropdownMenu {
   display: none;
   left: 0;

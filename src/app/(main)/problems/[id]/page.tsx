@@ -4,6 +4,7 @@ import { Problem } from "@/types/problemAPI"
 import NotFound from "@/components/sections/problems/problemPage/NotFound"
 import { TournamentTypeContextLock } from "@/context/app/TournamentContext"
 import { availableTournamentTypes as AVAILABLE_TOURNAMENT_TYPES } from "@/constants/AvailableTournaments"
+import {Suspense} from "react";
 
 async function ProblemPageMain({ params }: PageProps) {
   const { id } = await params
@@ -13,7 +14,7 @@ async function ProblemPageMain({ params }: PageProps) {
   if (problem === null) return <NotFound />
   return (
     <TournamentTypeContextLock lockValue={AVAILABLE_TOURNAMENT_TYPES[problem.tournament_type - 1].name}>
-      <ProblemPage problem={problem} />
+        <ProblemPage problem={problem} />
     </TournamentTypeContextLock>
   )
 }

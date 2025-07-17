@@ -29,9 +29,7 @@ export function TournamentTypeProvider({ children }: { children: React.ReactNode
     if (!isTournamentType(newType)) return false
     setTournamentType(newType)
     if (noSave || isLocked) return true
-    console.log(`Cookie set ${newType}`)
     cookies.set(TOURNAMENT_TYPE_KEY_NAME, newType)
-    console.log(spTournamentType)
     if (spTournamentType) setSPTournamentType(newType)
     return true
   }
@@ -40,8 +38,6 @@ export function TournamentTypeProvider({ children }: { children: React.ReactNode
     if (isLocked) return
     const savedTournamentType = cookies.get(TOURNAMENT_TYPE_KEY_NAME)
     if (spTournamentType && spTournamentType !== savedTournamentType) {
-      console.log(spTournamentType)
-      console.log("Non cookie tournament type set")
       updateType(spTournamentType, true)
       return
     }

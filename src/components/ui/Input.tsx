@@ -1,6 +1,7 @@
 "use client"
 import { ChangeEvent, InputHTMLAttributes, ReactNode, RefObject, useRef } from "react"
 import style from "@/styles/components/input.module.css"
+import headerStyle from "@/styles/app/header.module.css"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
@@ -25,7 +26,7 @@ export function IconInput({ icon, onChange, onEnter, disabled, ...rest }: IconIn
       }}
     >
       <div className={style.inputContainer}>
-        <Input onChange={onChange} onEnter={onEnter} ref={inputRef} disabled={disabled} {...rest} />
+        <Input className={headerStyle.search} onChange={onChange} onEnter={onEnter} ref={inputRef} disabled={disabled} {...rest} />
         {icon}
       </div>
     </div>

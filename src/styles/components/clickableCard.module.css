@@ -14,6 +14,7 @@
   text-decoration: none;
   color: black;
   user-select: none;
+
 }
 .clickableCard:hover {
   background-color: rgba(0, 0, 0, 0.15);
