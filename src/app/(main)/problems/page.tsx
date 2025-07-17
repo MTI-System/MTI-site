@@ -35,16 +35,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
       <div className={style.problemsContainer}>
         <h2>Задачи на {availableTournamentTypes.find(val=>val.name===tt)?.longName}</h2>
         <ProblemFilters possibleYears={possibleYears}/>
-        <Suspense  fallback={<Loading/>}>
-        {year && tt && (
-          <div>
+          {year && tt && (
              <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
               {!isModerator && <ProblemsList year={year} tt={tt}/>}
               {isModerator && <OrganizationProblemList tt={tt} year={year}/>}
             </Suspense>
-          </div>
-        )}
-          </Suspense>
+          )}
       </div>
     </div>
   )

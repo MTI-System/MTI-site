@@ -67,31 +67,31 @@ async function RootLayout({
       />
     </head>
     <body>
-    <Suspense fallback={<Loading/>}>
-      <TournamentTypeProvider>
-        <header className={headerStyle.header}>
-          <div className={headerStyle.rightContainer}>
-            <Link href={"/"}>
-              <h1>МТИ</h1>
-            </Link>
-            <TournamentTypeSelector className={headerStyle.dropdown}/>
-          </div>
-          <div className={headerStyle.leftContainer}>
-            <GlobalSearch  />
-            <FaMoon className={iconStyle.icons}/>
-            <Link href={"/profile"}>
-              <FaUserCircle className={iconStyle.icons}/>
-            </Link>
-          </div>
-        </header>
-        <main>
-          {isMobile && children}
-          {!isMobile && children}
-          {/*{!isMobile && <PhoneUnavailable />}*/}
-        </main>
-        <footer className={footerStyle.footer}></footer>
-      </TournamentTypeProvider>
-    </Suspense>
+      <Suspense fallback={<Loading/>}>
+        <TournamentTypeProvider>
+          <header className={headerStyle.header}>
+            <div className={headerStyle.rightContainer}>
+              <Link href={"/"}>
+                <h1>МТИ</h1>
+              </Link>
+              <TournamentTypeSelector className={headerStyle.dropdown}/>
+            </div>
+            <div className={headerStyle.leftContainer}>
+              <GlobalSearch  />
+              <FaMoon className={iconStyle.icons}/>
+              <Link href={"/profile"}>
+                <FaUserCircle className={iconStyle.icons}/>
+              </Link>
+            </div>
+          </header>
+          <main>
+            {isMobile && children}
+            {!isMobile && children}
+            {/*{!isMobile && <PhoneUnavailable />}*/}
+          </main>
+          <footer className={footerStyle.footer}></footer>
+        </TournamentTypeProvider>
+      </Suspense>
     </body>
     </html>
   )
