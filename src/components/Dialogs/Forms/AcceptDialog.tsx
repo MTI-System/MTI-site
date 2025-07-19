@@ -1,17 +1,23 @@
-import BlueButton from "@/components/Default/BlueButton";
+import Button from "@/components/ui/Button"
 
-function AcceptDialog(
-  {onAccept, onDecline}:
-  {
-    onAccept: Function,
-    onDecline: Function
-  }
-) {
+function AcceptDialog({ onAccept, onDecline }: { onAccept: Function; onDecline: Function }) {
   return (
     <div>
       <h1>Accept</h1>
-      <BlueButton onClick={() => {onAccept()}}>Подтвердить</BlueButton>
-      <BlueButton onClick={() => {onDecline()}}>Отменить</BlueButton>
+      <Button
+        onClick={() => {
+          onAccept()
+        }}
+      >
+        Подтвердить
+      </Button>
+      <Button
+        onClick={() => {
+          onDecline()
+        }}
+      >
+        Отменить
+      </Button>
     </div>
   )
 }

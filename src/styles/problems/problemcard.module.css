@@ -1,7 +1,7 @@
 .problemCard {
   width: 100%;
   min-height: 5rem;
-  background-color: #fff;
+  background-color: var(--bg-color);
   border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
@@ -17,7 +17,7 @@
   .problemTitle {
     font-size: 6vw;
     font-weight: bold;
-    color: rgb(137, 58, 247);
+    color: var(--accent-color);
   }
 
   .problemText {
@@ -34,7 +34,7 @@
   .problemTitle {
     font-size: 2rem;
     font-weight: bold;
-    color: rgb(137, 58, 247);
+    color: var(--accent-color);
   }
 
   .problemText {
@@ -70,9 +70,9 @@
   min-width: 4rem;
 }
 .editButtons svg {
-  color: rgba(137, 58, 247, 0.75);
+  color: var(--accent-color);
   transition: color 250ms ease;
 }
 .editButtons svg:hover {
-  color: rgb(137, 58, 247);
+  color: var(--accent-hover-color);
 }

@@ -1,5 +1,5 @@
 "use client"
-import BlueButton from "@/components/Default/BlueButton"
+import Button from "@/components/ui/Button"
 import { FaPlus } from "react-icons/fa6"
 import style from "@/styles/problems/problemForms.module.css"
 import { FormEvent, useRef, useState } from "react"
@@ -45,10 +45,10 @@ export function AddProblem({ isShown }: { isShown: boolean; targetTTID: number; 
           <textarea name="problemtext"></textarea>
         </TitledInput>
         <div className={style.confirmContainer}>
-          <BlueButton type="submit" className={style.confirmationButton}>
+          <Button type="submit" className={style.confirmationButton}>
             Создать задачу
-          </BlueButton>
-          <BlueButton
+          </Button>
+          <Button
             type="button"
             className={style.editOnOtherPageButton}
             onClick={() => {
@@ -57,7 +57,7 @@ export function AddProblem({ isShown }: { isShown: boolean; targetTTID: number; 
             }}
           >
             Добавить материалы
-          </BlueButton>
+          </Button>
         </div>
       </form>
     </div>

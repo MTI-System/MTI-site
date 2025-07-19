@@ -7,7 +7,12 @@ import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
 import Loading from "@/app/(main)/loading"
 import cookies from "js-cookie"
-import { TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME, AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
+import {
+  TOURNAMENT_TYPE_KEY_NAME,
+  TOURNAMENT_TYPE_SEARCH_PARAM_NAME,
+  AUTH_TOKEN_KEY_NAME,
+} from "@/constants/CookieKeys"
+import Button from "@/components/ui/Button"
 
 enum FormState {
   AwaitLogin,
@@ -111,9 +116,9 @@ function LoginPage() {
         >
           <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
         </TitledInput>
-        <button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
+        <Button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
           {formState === FormState.Loading ? "Loading..." : "Login"}
-        </button>
+        </Button>
       </form>
     </div>
   )

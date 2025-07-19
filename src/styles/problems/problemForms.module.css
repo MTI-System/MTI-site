@@ -5,17 +5,17 @@
   border-radius: 1rem;
   transition: opacity 1s ease, height 1s ease, color 250ms ease, background-color 250ms ease;
   overflow: hidden;
-  background-color: #f3f1ff;
-  border: 0.15em solid #696bff;
-  color: #696bff;
+  background-color: var(--accent-light-color);
+  border: 0.15em solid var(--accent-color);
+  color: var(--accent-color);
 }
 .addButton:hover {
-  background-color: #696bff;
-  border: 0.15em solid #696bff;
-  color: #f3f1ff;
+  background-color: var(--accent-color);
+  border: 0.15em solid var(--accent-color);
+  color: var(--accent-light-color);
 }
 .expandedButton {
-  height: 50vh;
+  height: 30rem;
   background-color: transparent;
 }
 .hiddenButton {
@@ -24,7 +24,7 @@
 }
 .expandedButton:hover {
   background-color: transparent;
-  color: #696bff;
+  color: var(--accent-color);
 }
 .plusContaner {
   width: 100%;
@@ -41,15 +41,15 @@
   translate: calc(50% - 2rem);
 }
 .plusContaner svg {
-  transition: filter 250ms ease, padding 1s ease, rotate 1s ease;
+  transition: filter 250ms ease, color 250ms ease, padding 1s ease, rotate 1s ease;
   rotate: 0deg;
 }
 .expandedButton .plusContaner svg {
   rotate: 405deg;
 }
 .expandedButton .plusContaner svg:hover {
-  color: #575aff;
-  filter: drop-shadow(0 0 0.1em #575aff69);
+  color: var(--accent-hover-color);
+  filter: drop-shadow(0 0 0.1em var(--accent-hover-color));
 }
 
 .newProblemform {
@@ -97,7 +97,7 @@
   padding: 1.5rem 0;
 }
 .textInput textarea {
-  height: 25vh;
+  height: 10rem;
   overflow-y: scroll;
   text-align: start;
 }
@@ -108,7 +108,7 @@
   align-items: center;
   flex-direction: row;
   width: 80%;
-  height: 5vh;
+  height: 4rem;
 }
 
 .confirmContainer button {

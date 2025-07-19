@@ -8,7 +8,7 @@
 }
 
 .login {
-  background-color: white;
+  background-color: var(--bg-color);
   border-radius: 0.5rem;
   height: 20rem;
   width: 15rem;
@@ -22,21 +22,4 @@
 .loginButton {
   width: 75%;
   height: 10%;
-  background-color: #f3f1ff;
-  border: 0.15em solid #696bff;
-  color: #696bff;
-  border-radius: 0.25rem;
-  transition-property: background-color, color;
-  transition-duration: 250ms;
-  transition-timing-function: ease;
-}
-.loginButton:hover {
-  background-color: #696bff;
-  border: 0.15em solid #696bff;
-  color: #f3f1ff;
-}
-.loginButton:disabled {
-  background-color: #dddddd;
-  border: 0.15em solid #dddddd;
-  color: white;
 }

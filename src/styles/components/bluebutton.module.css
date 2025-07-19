@@ -1,21 +1,21 @@
-.blueButton {
-  width: 75%;
-  height: 10%;
-  background-color: #f3f1ff;
-  border: 0.15em solid #696bff;
-  color: #696bff;
+.button {
+  --main-color: var(--accent-color);
+  --main-light-color: var(--accent-light-color);
+  background-color: var(--main-light-color);
+  border: 0.15em solid var(--main-color);
+  color: var(--main-color);
   border-radius: 0.25rem;
   transition-property: background-color, color;
   transition-duration: 250ms;
   transition-timing-function: ease;
 }
-.blueButton:hover {
-  background-color: #696bff;
-  border: 0.15em solid #696bff;
-  color: #f3f1ff;
+.button:hover {
+  background-color: var(--main-color);
+  border: 0.15em solid var(--main-color);
+  color: var(--main-light-color);
 }
-.blueButton:disabled {
-  background-color: #dddddd;
-  border: 0.15em solid #dddddd;
-  color: white;
+.button:disabled {
+  background-color: var(--inactive-color);
+  border: 0.15em solid var(--inactive-color);
+  color: var(--bg-color);
 }
