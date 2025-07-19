@@ -1,0 +1,118 @@
+.addButton {
+  width: 100%;
+  font-size: 2rem;
+  height: 3rem;
+  border-radius: 1rem;
+  transition: opacity 1s ease, height 1s ease, color 250ms ease, background-color 250ms ease;
+  overflow: hidden;
+  background-color: #f3f1ff;
+  border: 0.15em solid #696bff;
+  color: #696bff;
+}
+.addButton:hover {
+  background-color: #696bff;
+  border: 0.15em solid #696bff;
+  color: #f3f1ff;
+}
+.expandedButton {
+  height: 50vh;
+  background-color: transparent;
+}
+.hiddenButton {
+  height: 0;
+  opacity: 0;
+}
+.expandedButton:hover {
+  background-color: transparent;
+  color: #696bff;
+}
+.plusContaner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 2.4rem;
+  transition: height 1s ease, translate 1s ease;
+}
+
+.expandedButton .plusContaner {
+  height: 5rem;
+  translate: calc(50% - 2rem);
+}
+.plusContaner svg {
+  transition: filter 250ms ease, padding 1s ease, rotate 1s ease;
+  rotate: 0deg;
+}
+.expandedButton .plusContaner svg {
+  rotate: 405deg;
+}
+.expandedButton .plusContaner svg:hover {
+  color: #575aff;
+  filter: drop-shadow(0 0 0.1em #575aff69);
+}
+
+.newProblemform {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+.newProblemform input,
+.newProblemform textarea {
+  outline: none;
+  border: 0.15rem rgba(0, 0, 0, 0.164) solid;
+  background-color: transparent;
+  width: 100%;
+  transition: border 250ms ease;
+  resize: none;
+  border-radius: 0.5rem;
+}
+.newProblemform input:focus,
+.newProblemform textarea:focus {
+  border: 0.15rem rgba(0, 0, 0, 0.397) solid;
+}
+
+.numberAndTitleContainer {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.numberInput {
+  width: 10%;
+}
+.titleInput {
+  width: 87.5%;
+}
+.textInput {
+  width: 80%;
+  font-size: 1rem;
+  color: black;
+  padding: 1.5rem 0;
+}
+.textInput textarea {
+  height: 25vh;
+  overflow-y: scroll;
+  text-align: start;
+}
+
+.confirmContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+  width: 80%;
+  height: 5vh;
+}
+
+.confirmContainer button {
+  width: 45%;
+  height: 100%;
+  border-radius: 1rem;
+}

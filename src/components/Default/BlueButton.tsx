@@ -1,11 +1,14 @@
 import style from "@/styles/components/bluebutton.module.css"
-import {ButtonHTMLAttributes, PropsWithChildren} from "react";
+import { ButtonHTMLAttributes, PropsWithChildren } from "react"
 
-type BlueButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>>;
+type BlueButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>>
 
 function BlueButton({ children, className = "", ...rest }: BlueButtonProps) {
-  return(
-    <button className={style.blueButton} {...rest}>{children}</button>
+  const cls = `${style.blueButton} ${className}`
+  return (
+    <button className={cls} {...rest}>
+      {children}
+    </button>
   )
 }
 
