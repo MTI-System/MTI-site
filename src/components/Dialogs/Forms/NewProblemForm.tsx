@@ -1,6 +1,6 @@
 import { StaticDropdown } from "@/components/ui/Dropdown"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import Button from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 
 function NewProblemForm({
   setModalState,

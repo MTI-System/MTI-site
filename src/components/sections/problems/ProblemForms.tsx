@@ -1,5 +1,5 @@
 "use client"
-import Button from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 import { FaPlus } from "react-icons/fa6"
 import style from "@/styles/problems/problemForms.module.css"
 import { FormEvent, useRef, useState } from "react"

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/animejs": "^3.1.13",
     "animejs": "^4.0.2",
     "clsx": "^2.1.1",
     "js-cookie": "^3.0.5",

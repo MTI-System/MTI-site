@@ -1,5 +1,5 @@
 "use client"
-import Button from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 import { useEffect, useState } from "react"
 import ModalDialog from "@/components/Dialogs/ModalDialog"
 import NewProblemForm from "@/components/Dialogs/Forms/NewProblemForm"

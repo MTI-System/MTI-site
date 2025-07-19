@@ -1,12 +1,12 @@
 import { Problem } from "@/types/problemAPI"
 import style from "@/styles/problems/problemPage.module.css"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
-import Button from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 
 async function ProblemPage({ problem }: { problem: Problem }) {
-  const userAuth = await fetchPermissions(false, "")
+  const userAuth = await fetchPermissions()
   let isModerator = false
   if (userAuth && userAuth.rights.length !== 0) {
     isModerator = userAuth.rights

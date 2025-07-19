@@ -12,7 +12,7 @@ import {
   TOURNAMENT_TYPE_SEARCH_PARAM_NAME,
   AUTH_TOKEN_KEY_NAME,
 } from "@/constants/CookieKeys"
-import Button from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 
 enum FormState {
   AwaitLogin,

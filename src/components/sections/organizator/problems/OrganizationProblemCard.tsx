@@ -2,7 +2,7 @@
 import { Problem } from "@/types/problemAPI"
 import style from "@/styles/problems/problemcard.module.css"
 import Link from "next/link"
-import Button from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 import cookies from "js-cookie"
 import { deleteProblem } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"

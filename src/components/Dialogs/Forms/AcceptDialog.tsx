@@ -1,4 +1,4 @@
-import Button from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 
 function AcceptDialog({ onAccept, onDecline }: { onAccept: Function; onDecline: Function }) {
   return (

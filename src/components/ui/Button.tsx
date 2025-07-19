@@ -1,24 +1,83 @@
-import styleModule from "@/styles/components/bluebutton.module.css"
-import { ButtonHTMLAttributes, CSSProperties, PropsWithChildren } from "react"
+"use client"
+import styleModule from "@/styles/components/button.module.css"
+import { animate, createScope, Scope } from "animejs"
+import clsx from "clsx"
+import { ButtonHTMLAttributes, CSSProperties, PropsWithChildren, useEffect, useRef } from "react"
 
-type CSSVariableStyle = React.CSSProperties & {
+type CSSVariableStyle = CSSProperties & {
   "--main-color"?: string
   "--main-light-color"?: string
 }
-type BlueButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> & {
+type ButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> & {
   style?: CSSVariableStyle
 }
 /**
- * Features prestyled button. You can change colors using **style** parameter by providing CSS variables:
+ * Prestyled button. You can change colors using **style** parameter by providing CSS variables:
  * **--main-color** and **--main-light-color**
  */
-function Button({ children, className = "", style, ...rest }: BlueButtonProps) {
-  const cls = `${styleModule.button} ${className}`
+export function Button({ children, className = "", style, ...rest }: ButtonProps) {
   return (
-    <button className={cls} style={style} {...rest}>
+    <button className={clsx(styleModule.button, className)} style={style} {...rest}>
       {children}
     </button>
   )
 }
+type HoldButtonProps = ButtonProps & {
+  holdTimeout?: number
+  onConfirm?: () => void
+}
 
-export default Button
+/**
+ * Button that user should hold to confirm action
+ */
+export function HoldButton({
+  children,
+  className = "",
+  style,
+  onConfirm,
+  holdTimeout = 1000,
+  ...rest
+}: HoldButtonProps) {
+  const target = useRef<HTMLButtonElement>(null)
+  const scope = useRef<Scope>(null)
+  useEffect(() => {
+    scope.current = createScope({ root: target }).add((self) => {
+      const confirmationAnim = animate(`.${styleModule.holdOverlay}`, {
+        left: ["-100%", 0],
+        ease: "outCubic",
+        duration: holdTimeout,
+        autoplay: false,
+        onComplete: (a) => {
+          if (a.backwards || !onConfirm) return
+          onConfirm()
+        },
+      })
+      self.add("caPlay", () => {
+        confirmationAnim.play()
+      })
+      self.add("caReverse", () => {
+        confirmationAnim.reverse()
+      })
+    })
+    return () => scope.current?.revert()
+  }, [])
+  return (
+    <button
+      className={clsx(styleModule.button, styleModule.holdButton, className)}
+      onMouseDown={() => {
+        if (!scope.current) return
+        scope.current.methods.caPlay()
+      }}
+      onMouseUp={() => {
+        if (!scope.current) return
+        scope.current.methods.caReverse()
+      }}
+      style={style}
+      ref={target}
+      {...rest}
+    >
+      <div className={styleModule.holdOverlay}></div>
+      {children}
+    </button>
+  )
+}
