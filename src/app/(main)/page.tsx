@@ -1,7 +1,9 @@
 import ClickableCard from "@/components/ui/ClickableCard"
 import mainStyle from "@/styles/app/mainPage.module.css"
+import {store} from "next/dist/build/output/store";
 
 export default function Home() {
+
   return (
     <div>
       <h1>Менеджер Турнирной Информации!</h1>

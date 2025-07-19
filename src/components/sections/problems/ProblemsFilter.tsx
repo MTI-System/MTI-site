@@ -6,15 +6,16 @@ import {DEFAULT_YEAR} from "@/constants/DefaultProblemFilters"
 import {Suspense} from "react";
 import Loading from "@/app/(main)/loading";
 import {PROBLEM_API} from "@/constants/APIEndpoints";
+import {useAppDispatch, useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
+import {setYear} from "@/redux_stores/YearSlice";
 
 export default function ProblemFilters({possibleYears}: {possibleYears: number[]}) {
   return <YearFilter possibleYears={possibleYears}/>
 }
 
 function YearFilter({possibleYears}: {possibleYears: number[]}) {
-  const [yearParam, setYearParam] = useSearchParam("year")
-  let year = yearParam
-  if (!year) year = possibleYears[0].toString()
+  const year = useAppSelector(state => state.year.year)
+  const  dispatcher = useAppDispatch()
 
   // const yearsArray = fetchYears()
   // setYearParam(year)
@@ -26,12 +27,12 @@ function YearFilter({possibleYears}: {possibleYears: number[]}) {
           return ({displayName: year.toString(), value: year, active: true})
         })}
         defaultSelection={{
-          displayName: year,
-          value: parseInt(year),
+          displayName: year.toString(),
+          value: year,
           active: true,
         }}
         onOptionSelect={(newValue) => {
-          setYearParam(newValue.toString())
+          dispatcher(setYear(newValue))
         }}
       ></StaticDropdown>
     </div>

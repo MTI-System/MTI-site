@@ -8,8 +8,7 @@ import {Suspense} from "react"
 import {TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys"
 import {fetchPermissions, fetchYears} from "@/scripts/ApiFetchers"
 import OrganizationProblemList from "@/components/sections/organizator/problems/OrganizationProblemList";
-import {PROBLEM_API} from "@/constants/APIEndpoints";
-import Loading from "@/app/(main)/loading";
+
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams

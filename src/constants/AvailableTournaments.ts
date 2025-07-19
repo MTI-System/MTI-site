@@ -1,4 +1,4 @@
-export const availableTournamentTypes = [
+export const availableTournamentTypes: TournamentTyprIntarface[] = [
   {
     id: 1,
     name: "ТЮФ",

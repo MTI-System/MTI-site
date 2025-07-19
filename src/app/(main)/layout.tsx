@@ -1,4 +1,3 @@
-import {TournamentTypeProvider} from "@/context/app/TournamentContext"
 import TournamentTypeSelector from "@/components/sections/app/TournamentTypeSelector"
 import GlobalSearch from "@/components/sections/app/SearchBar"
 import {FaMoon} from "react-icons/fa"
@@ -16,6 +15,11 @@ import phoneUnavailable from "@/components/Errors/phoneUnavailable";
 import PhoneUnavailable from "@/components/Errors/phoneUnavailable";
 import Script from "next/script";
 import iconStyle from "@/styles/icons.module.css"
+import {store} from "next/dist/build/output/store";
+import {Provider} from 'react-redux'
+import StoreProvider from "@/components/Redux/StoreProvider";
+import ReduxTestComponent from "@/components/Redux/ReduxTestComponent";
+import SearchParamsUpdator from "@/components/SearchParamsUpdator";
 
 export const metadata: Metadata = {
   title: {
@@ -33,6 +37,7 @@ async function RootLayout({
                           }: Readonly<{
   children: React.ReactNode
 }>) {
+
 
   return (
     <html>
@@ -63,29 +68,31 @@ async function RootLayout({
       />
     </head>
     <body>
-    <Suspense fallback={<Loading/>}>
-      <TournamentTypeProvider>
-        <header className={headerStyle.header}>
-          <div className={headerStyle.rightContainer}>
-            <Link href={"/"}>
-              <h1>МТИ</h1>
-            </Link>
-            <TournamentTypeSelector className={headerStyle.dropdown}/>
-          </div>
-          <div className={headerStyle.leftContainer}>
-            <GlobalSearch/>
-            <FaMoon className={iconStyle.icons}/>
-            <Link href={"/profile"}>
-              <FaUserCircle className={iconStyle.icons}/>
-            </Link>
-          </div>
-        </header>
-        <main>
-          {children}
-        </main>
-        <footer className={footerStyle.footer}></footer>
-      </TournamentTypeProvider>
-    </Suspense>
+    <StoreProvider>
+      <ReduxTestComponent/>
+      <header className={headerStyle.header}>
+        <div className={headerStyle.rightContainer}>
+          <Link href={"/"}>
+            <h1>МТИ</h1>
+          </Link>
+          <TournamentTypeSelector className={headerStyle.dropdown}/>
+        </div>
+        <div className={headerStyle.leftContainer}>
+          <GlobalSearch/>
+          <FaMoon className={iconStyle.icons}/>
+          <Link href={"/profile"}>
+            <FaUserCircle className={iconStyle.icons}/>
+          </Link>
+        </div>
+      </header>
+      <main>
+        {children}
+      </main>
+      <footer className={footerStyle.footer}></footer>
+      <Suspense fallback={"Load search params"}>
+        <SearchParamsUpdator/>
+      </Suspense>
+    </StoreProvider>
     </body>
     </html>
   )
