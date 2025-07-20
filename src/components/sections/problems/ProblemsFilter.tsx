@@ -1,17 +1,13 @@
 "use client"
-import {StaticDropdown} from "@/components/ui/Dropdown"
+import { StaticDropdown } from "@/components/ui/Dropdown"
 import style from "@/styles/problems/problemsFilter.module.css"
 import useSearchParam from "@/hooks/useSearchParam"
-import {DEFAULT_YEAR} from "@/constants/DefaultProblemFilters"
-import {Suspense} from "react";
-import Loading from "@/app/(main)/loading";
-import {PROBLEM_API} from "@/constants/APIEndpoints";
 
-export default function ProblemFilters({possibleYears}: {possibleYears: number[]}) {
-  return <YearFilter possibleYears={possibleYears}/>
+export default function ProblemFilters({ possibleYears }: { possibleYears: number[] }) {
+  return <YearFilter possibleYears={possibleYears} />
 }
 
-function YearFilter({possibleYears}: {possibleYears: number[]}) {
+function YearFilter({ possibleYears }: { possibleYears: number[] }) {
   const [yearParam, setYearParam] = useSearchParam("year")
   let year = yearParam
   if (!year) year = possibleYears[0].toString()
@@ -21,9 +17,8 @@ function YearFilter({possibleYears}: {possibleYears: number[]}) {
   return (
     <div className={style.filters}>
       <StaticDropdown
-        options={
-        possibleYears.map(year => {
-          return ({displayName: year.toString(), value: year, active: true})
+        options={possibleYears.map((year) => {
+          return { displayName: year.toString(), value: year, active: true }
         })}
         defaultSelection={{
           displayName: year,
@@ -37,5 +32,3 @@ function YearFilter({possibleYears}: {possibleYears: number[]}) {
     </div>
   )
 }
-
-

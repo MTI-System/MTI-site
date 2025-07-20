@@ -18,7 +18,7 @@
 }
 
 main {
-  min-height: calc(100vh - var(--main-text-color));
+  min-height: calc(100vh - var(--nav-header-height));
 }
 
 @media (min-width: 600px) {

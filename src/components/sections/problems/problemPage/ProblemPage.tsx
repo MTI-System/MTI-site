@@ -1,7 +1,7 @@
 import { Problem } from "@/types/problemAPI"
 import style from "@/styles/problems/problemPage.module.css"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/Buttons"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 

@@ -40,6 +40,7 @@ export function HoldButton({
 }: HoldButtonProps) {
   const target = useRef<HTMLButtonElement>(null)
   const scope = useRef<Scope>(null)
+  const isDisabled = rest.disabled ?? false
   useEffect(() => {
     scope.current = createScope({ root: target }).add((self) => {
       const confirmationAnim = animate(`.${styleModule.holdOverlay}`, {
@@ -61,6 +62,9 @@ export function HoldButton({
     })
     return () => scope.current?.revert()
   }, [])
+  useEffect(() => {
+    if (isDisabled && scope.current) scope.current.methods.caReverse()
+  }, [isDisabled])
   return (
     <button
       className={clsx(styleModule.button, styleModule.holdButton, className)}

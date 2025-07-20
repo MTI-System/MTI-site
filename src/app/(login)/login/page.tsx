@@ -7,12 +7,8 @@ import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
 import Loading from "@/app/(main)/loading"
 import cookies from "js-cookie"
-import {
-  TOURNAMENT_TYPE_KEY_NAME,
-  TOURNAMENT_TYPE_SEARCH_PARAM_NAME,
-  AUTH_TOKEN_KEY_NAME,
-} from "@/constants/CookieKeys"
-import { Button } from "@/components/ui/Button"
+import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
+import { Button } from "@/components/ui/Buttons"
 
 enum FormState {
   AwaitLogin,
@@ -70,7 +66,7 @@ function LoginPage() {
         return
       }
       cookies.set(AUTH_TOKEN_KEY_NAME, data)
-      router.push("/" + redirect)
+      router.replace("/" + redirect)
     } else {
       console.log("Error?")
       setFormState(FormState.UnknownError)

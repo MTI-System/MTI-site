@@ -56,18 +56,22 @@ async function fetchPermissions(redirectPath?: string): Promise<User | null> {
   }
 }
 
-async function deleteProblem(problem: number, tournamentTypeId: number): Promise<void> {
+async function deleteProblem(problem: number, tournamentTypeId: number): Promise<boolean> {
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
   const formData = new FormData()
   formData.append("authToken", token)
   formData.append("tournamentType", tournamentTypeId.toString())
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 5000)
 
-  await fetch(PROBLEM_API + "delete_problem/" + problem.toString(), {
+  const r = await fetch(PROBLEM_API + "delete_problem/" + problem.toString(), {
     method: "DELETE",
     body: formData,
-  }).then((r) => {
-    console.log(`Problem ${problem} delete with status ${r.status}`)
+    signal: controller.signal,
   })
+  clearTimeout(timeoutId)
+  console.log(`Problem ${problem} delete with status ${r.status}`)
+  return r.ok
 }
 
 async function fetchYears(tournamentTypeId: number): Promise<number[]> {
