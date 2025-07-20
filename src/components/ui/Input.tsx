@@ -1,6 +1,8 @@
 "use client"
 import { ChangeEvent, InputHTMLAttributes, ReactNode, RefObject, useRef } from "react"
 import style from "@/styles/components/input.module.css"
+import headerStyle from "@/styles/app/header.module.css"
+import clsx from "clsx"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
@@ -25,7 +27,14 @@ export function IconInput({ icon, onChange, onEnter, disabled, ...rest }: IconIn
       }}
     >
       <div className={style.inputContainer}>
-        <Input onChange={onChange} onEnter={onEnter} ref={inputRef} disabled={disabled} {...rest} />
+        <Input
+          className={headerStyle.search}
+          onChange={onChange}
+          onEnter={onEnter}
+          ref={inputRef}
+          disabled={disabled}
+          {...rest}
+        />
         {icon}
       </div>
     </div>
@@ -48,11 +57,20 @@ export function Input({ onChange, onEnter, ref, ...rest }: InputProps) {
   )
 }
 
-export function TitledInput({ children, title, isError }: { children: ReactNode; title: string; isError?: boolean }) {
-  const className = `${style.title} ${isError && style.erroredTitle}`
+export function TitledInput({
+  children,
+  title,
+  isError,
+  className,
+}: {
+  children: ReactNode
+  title: string
+  isError?: boolean
+  className?: string
+}) {
   return (
-    <div className={style.titledInputContainer}>
-      <p className={className}>{title}</p>
+    <div className={clsx(style.titledInputContainer, className)}>
+      <p className={clsx(style.title, { [style.erroredTitle]: isError })}>{title}</p>
       {children}
     </div>
   )

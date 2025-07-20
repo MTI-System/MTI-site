@@ -2,7 +2,7 @@
 import { usePathname, useSearchParams, useRouter } from "next/navigation"
 import { useEffect, useState, useTransition } from "react"
 
-export default function useSearchParam(searchParamName: string): [string | null, (newValue: string) => void] {
+export default function useSearchParam(searchParamName: string): [boolean, string | null, (newValue: string) => void] {
   const searchParams = useSearchParams()
   const path = usePathname()
   const router = useRouter()
@@ -12,6 +12,7 @@ export default function useSearchParam(searchParamName: string): [string | null,
     setParamValue(newValue)
     const newParams = new URLSearchParams(searchParams.toString())
     newParams.set(searchParamName, newValue)
+
     startTransition(() => {
       router.replace(`${path}?${newParams.toString()}`)
     })
@@ -19,5 +20,5 @@ export default function useSearchParam(searchParamName: string): [string | null,
   useEffect(() => {
     setParamValue(searchParams.get(searchParamName))
   }, [searchParams.get(searchParamName)])
-  return [paramValue, updateParam]
+  return [isPending, paramValue, updateParam]
 }

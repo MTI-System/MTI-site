@@ -1,4 +1,3 @@
-"use server"
 import OrganizationProblemPage from "@/components/sections/organizator/problems/OrganizationProblemPage";
 
 export default async function editProblems({searchParams}: { searchParams: Promise<{ year: number; tt: string }> }) {

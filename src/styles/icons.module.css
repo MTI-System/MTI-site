@@ -1,0 +1,8 @@
+.icons {
+    @media (min-width: 600px) {
+        font-size: 1.5vw;
+    }
+    @media (max-width: 600px) {
+        font-size: 5vw;
+    }
+}

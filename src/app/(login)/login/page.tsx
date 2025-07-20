@@ -6,6 +6,9 @@ import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa6"
 import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
 import Loading from "@/app/(main)/loading"
+import cookies from "js-cookie"
+import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
+import { Button } from "@/components/ui/Buttons"
 
 enum FormState {
   AwaitLogin,
@@ -62,8 +65,8 @@ function LoginPage() {
         setFormState(FormState.IncorrectData)
         return
       }
-      localStorage.setItem("mti_auth_key", data)
-      router.push("/" + redirect)
+      cookies.set(AUTH_TOKEN_KEY_NAME, data)
+      router.replace("/" + redirect)
     } else {
       console.log("Error?")
       setFormState(FormState.UnknownError)
@@ -109,9 +112,9 @@ function LoginPage() {
         >
           <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
         </TitledInput>
-        <button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
+        <Button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
           {formState === FormState.Loading ? "Loading..." : "Login"}
-        </button>
+        </Button>
       </form>
     </div>
   )

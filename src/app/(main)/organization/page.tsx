@@ -1,14 +1,11 @@
-"use client"
-import OrganizationMenu from "@/components/sections/organizator/OrganizationMenu";
-import { User } from "@/types/authApi";
-import AuthRequire from "@/components/serviceComponents/authComponents/AuthRequire";
+import OrganizationMenu from "@/components/sections/organizator/OrganizationMenu"
+import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
+import cookies from "js-cookie"
+import { fetchPermissions } from "@/scripts/ApiFetchers"
 
-function MainOrganizationInterface() {
-  return (
-    <AuthRequire redirect={"organization"}>
-      {(authInfo: User) => <OrganizationMenu profileData={authInfo} />}
-    </AuthRequire>
-  )
+async function MainOrganizationInterface() {
+  const userAuth = await fetchPermissions("organization")
+  return <OrganizationMenu profileData={userAuth!!} />
 }
 
 export default MainOrganizationInterface

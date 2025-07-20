@@ -2,13 +2,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 10rem;
-  min-height: 5rem;
+  min-width: 5vw;
+  min-height: 12vh;
   border-radius: 0.5rem;
   background-color: rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.1);
   transition: all 250ms ease;
-  font-size: 2.5rem;
+  @media (max-width: 600px) {
+    font-size: 10vw;
+  }
+  @media (min-width: 600px) {
+    font-size: 3vw;
+  }
+
   font-family: "Segoe UI";
   font-weight: bold;
   text-decoration: none;
