@@ -13,18 +13,14 @@ export default function SearchParamsUpdator(){
   const searchParams = useSearchParams()
   const pathname     = usePathname()
   const router = useRouter()
+
   useEffect(()=>{
     const params = new URLSearchParams(searchParams.toString())
     params.set("tt", tt)
     params.set("year", year.toString())
     const next = `${pathname}?${params.toString()}`
     if (next !== `${pathname}?${searchParams}`) {
-      // router.replace(next)
-
-      //ЭКСПЕРИМЕНТ
-      router.prefetch(next)
       router.replace(next)
-      //ЭКСПЕРИМЕНТ
     }
     console.log("update", tt, year)
   }, [tt, year, pathname, searchParams, router, startTransition])

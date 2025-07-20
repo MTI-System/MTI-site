@@ -69,7 +69,6 @@ async function RootLayout({
     </head>
     <body>
     <StoreProvider>
-      <ReduxTestComponent/>
       <header className={headerStyle.header}>
         <div className={headerStyle.rightContainer}>
           <Link href={"/"}>
