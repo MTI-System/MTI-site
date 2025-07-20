@@ -7,7 +7,8 @@ import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
 import Loading from "@/app/(main)/loading"
 import cookies from "js-cookie"
-import { TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME, AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
+import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
+import { Button } from "@/components/ui/Buttons"
 
 enum FormState {
   AwaitLogin,
@@ -65,7 +66,7 @@ function LoginPage() {
         return
       }
       cookies.set(AUTH_TOKEN_KEY_NAME, data)
-      router.push("/" + redirect)
+      router.replace("/" + redirect)
     } else {
       console.log("Error?")
       setFormState(FormState.UnknownError)
@@ -111,9 +112,9 @@ function LoginPage() {
         >
           <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
         </TitledInput>
-        <button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
+        <Button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
           {formState === FormState.Loading ? "Loading..." : "Login"}
-        </button>
+        </Button>
       </form>
     </div>
   )

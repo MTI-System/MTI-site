@@ -1,15 +1,12 @@
-import style from "@/styles/problems/problemsList.module.css";
-import ProblemFilter from "@/components/sections/problems/ProblemsFilter";
-import OrganizationProblemList from "@/components/sections/organizator/problems/OrganizationProblemList";
-import {ReactNode, Suspense} from "react";
-import {TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys";
-import {cookies} from "next/headers";
-import {availableTournamentTypes} from "@/constants/AvailableTournaments";
-import {redirect, RedirectType} from "next/navigation";
-import {DEFAULT_YEAR} from "@/constants/DefaultProblemFilters";
-import ProblemFilters from "@/components/sections/problems/ProblemsFilter";
-import ProblemsList from "@/components/sections/problems/ProblemsList";
-import {fetchYears} from "@/scripts/ApiFetchers";
+import style from "@/styles/problems/problemsList.module.css"
+import OrganizationProblemList from "@/components/sections/organizator/problems/OrganizationProblemList"
+import { ReactNode, Suspense } from "react"
+import { TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
+import { cookies } from "next/headers"
+import { availableTournamentTypes } from "@/constants/AvailableTournaments"
+import { redirect, RedirectType } from "next/navigation"
+import ProblemFilters from "@/components/sections/problems/ProblemsFilter"
+import { fetchYears } from "@/scripts/ApiFetchers"
 
 async function OrganizationProblemPage({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams
@@ -20,8 +17,7 @@ async function OrganizationProblemPage({ searchParams }: { searchParams: Promise
     redirect(`/organization/problems?${TOURNAMENT_TYPE_SEARCH_PARAM_NAME}=${tt}`, RedirectType.replace)
   }
 
-
-  const possibleYears = await fetchYears(availableTournamentTypes.find(val=>val.name===tt)?.id??1)
+  const possibleYears = await fetchYears(availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1)
   const year = sp.year ?? possibleYears[0]
 
   return (
@@ -30,22 +26,21 @@ async function OrganizationProblemPage({ searchParams }: { searchParams: Promise
         <ProblemFilters possibleYears={possibleYears} />
         {year && tt && (
           <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-            <OrganizationProblemList tt={tt} year={year}/>
+            <OrganizationProblemList tt={tt} year={year} />
           </Suspense>
         )}
       </div>
     </div>
   )
 
-
-    //   return (<TestComp>
-    //   <div className="flex flex-col items-center bg-gray-100">
-    //     <div className={style.problemsContainer}>
-    //       <ProblemFilter />
-    //
-    //     </div>
-    //   </div>
-    // </TestComp>)
+  //   return (<TestComp>
+  //   <div className="flex flex-col items-center bg-gray-100">
+  //     <div className={style.problemsContainer}>
+  //       <ProblemFilter />
+  //
+  //     </div>
+  //   </div>
+  // </TestComp>)
 }
 
-export default OrganizationProblemPage;
+export default OrganizationProblemPage

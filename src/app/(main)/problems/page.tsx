@@ -8,6 +8,9 @@ import {Suspense} from "react"
 import {TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys"
 import {fetchPermissions, fetchYears} from "@/scripts/ApiFetchers"
 import OrganizationProblemList from "@/components/sections/organizator/problems/OrganizationProblemList";
+import {PROBLEM_API} from "@/constants/APIEndpoints";
+import Loading from "@/app/(main)/loading";
+import { AddProblem } from "@/components/sections/problems/ProblemForms"
 
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
@@ -21,9 +24,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
   }
   const possibleYears = await fetchYears(availableTournamentTypes.find(val=>val.name===tt)?.id??1)
   const year = sp.year ?? possibleYears[0]
+  const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
 
 
-  const userAuth = await fetchPermissions(false, "")
+  const userAuth = await fetchPermissions()
   let isModerator = false
   if (userAuth && userAuth.rights.length !== 0) {
     isModerator = userAuth.rights.map(right => right.right_flag == "MODERATE_PROBLEMS_" + (availableTournamentTypes.find((val)=>val.name===tt)?.id)).some(x=>x)
@@ -32,17 +36,18 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
   return (
     <div className="flex flex-col items-center bg-gray-100">
       <div className={style.problemsContainer}>
-        <h2>Задачи на {availableTournamentTypes.find(val=>val.name===tt)?.longName}</h2>
-        <ProblemFilters possibleYears={possibleYears}/>
-          {year && tt && (
-             <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-              {!isModerator && <ProblemsList year={year} tt={tt}/>}
-              {isModerator && <OrganizationProblemList tt={tt} year={year}/>}
-            </Suspense>
-          )}
+        <h2>Задачи на {availableTournamentTypes.find((val) => val.name === tt)?.longName}</h2>
+        {year && tt && (
+          <ProblemFilters possibleYears={possibleYears}>
+            <>
+              <AddProblem targetTTID={ttid} targetYear={year} />
+              <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
+                <ProblemsList year={year} tt={tt} />
+              </Suspense>
+            </>
+          </ProblemFilters>
+        )}
       </div>
     </div>
   )
 }
-
-

@@ -2,11 +2,13 @@
 import { User } from "@/types/authApi"
 import { Right } from "@/types/authApi"
 import { useRouter } from "next/navigation"
-import cookies from "js-cookie";
-
+import cookies from "js-cookie"
+import { useContext } from "react"
+import { AuthContext } from "@/context/app/AuthContext"
 
 function ProfileMainPage({ profileData }: { profileData: User }) {
   const router = useRouter()
+  const authObject = useContext(AuthContext)
   return (
     <div>
       {!profileData && <h1>Loading ^_^</h1>}
@@ -19,7 +21,8 @@ function ProfileMainPage({ profileData }: { profileData: User }) {
 
       <button
         onClick={() => {
-          cookies.remove("mtiyt_auth_token");
+          cookies.remove("mtiyt_auth_token")
+          authObject?.logout()
           router.replace("/")
         }}
       >

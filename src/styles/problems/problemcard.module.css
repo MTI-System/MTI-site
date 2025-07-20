@@ -1,61 +1,105 @@
 .problemCard {
-    width: 100%;
-    min-height: 5rem;
-    background-color: #fff;
-    border-radius: 0.5rem;
-    display: flex;
-    flex-direction: row;
-    margin-top: 1vh;
+  width: 100%;
+  min-height: 5rem;
+  background-color: var(--bg-color);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  margin-top: 1vh;
 }
 
 @media (max-width: 600px) {
-    .problemContainer {
-        width: 90vw;
-        padding: 1rem;
-    }
+  .problemContainer {
+    width: 90vw;
+    padding: 1rem;
+  }
 
-    .problemTitle {
-        font-size: 6vw;
-        font-weight: bold;
-        color: rgb(137, 58, 247);
-    }
+  .problemTitle {
+    font-size: 6vw;
+    font-weight: bold;
+    color: var(--accent-color);
+  }
 
-    .problemText {
-        font-size: 4vw;
-    }
+  .problemText {
+    font-size: 4vw;
+  }
 }
 
 @media (min-width: 600px) {
-    .problemContainer {
-        width: 100%;
-        padding: 1rem;
-    }
+  .problemContainer {
+    width: 100%;
+    padding: 1rem;
+  }
 
-    .problemTitle {
-        font-size: 2rem;
-        font-weight: bold;
-        color: rgb(137, 58, 247);
-    }
+  .problemTitle {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+  }
 
-    .problemText {
-        font-size: 1rem;
-    }
+  .problemText {
+    font-size: 1rem;
+  }
 }
-
 
 .translation {
-    font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.5);
-    padding-top: 0.2rem;
-    padding-bottom: 1rem;
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.5);
+  padding-top: 0.2rem;
+  padding-bottom: 1rem;
 }
-
 
 .tournamentsContainer {
-    min-width: 10%;
-    background-color: #eee;
-    border: 0.1rem #aaa dashed;
+  min-width: 10%;
+  background-color: #eee;
+  border: 0.1rem #aaa dashed;
 }
 
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
 
-
+.editButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 1.3rem;
+  min-width: 4rem;
+}
+.editButtons svg {
+  color: var(--accent-color);
+  transition: color 250ms ease;
+}
+.editButtons svg:hover {
+  color: var(--accent-hover-color);
+}
+.errormessage {
+  color: rgb(252, 71, 71);
+  font-size: 0.9rem;
+}
+.deletionModalInfoContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  height: 100%;
+}
+.deletionModalInfoContainer .warningIcon {
+  font-size: 30vh;
+  fill: rgb(214, 174, 174);
+}
+.deletionModalInfoContainer .buttonsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 80%;
+  height: 8rem;
+}
+.deletionModalInfoContainer .buttonsContainer button {
+  height: 3rem;
+}
