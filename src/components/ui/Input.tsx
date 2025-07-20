@@ -28,7 +28,6 @@ export function IconInput({ icon, onChange, onEnter, disabled, ...rest }: IconIn
     >
       <div className={style.inputContainer}>
         <Input
-          className={headerStyle.search}
           onChange={onChange}
           onEnter={onEnter}
           ref={inputRef}

@@ -1,4 +1,4 @@
 .footer {
-  background-color: rgb(87, 87, 87);
+  background-color: var(--alt-bg);
   height: 5vh;
 }

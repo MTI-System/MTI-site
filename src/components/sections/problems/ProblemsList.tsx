@@ -13,23 +13,7 @@ export default async function ProblemsList({ year, tt }: { year: number; tt: str
     availableTournamentTypes.find((value) => value.name === tt)!!.id.toString(),
     year
   )
-  // const respJSON: ProblemList | null = [
-  //   {
-  //     id: 1,
-  //     global_number: 1,
-  //     year: 2024,
-  //     tournament_type: 1,
-  //     problem_translations: [{ id: 1, problem_name: "TMP", problem_text: "Some lorem ipsum", problem_by: "" }],
-  //     problem_materials: [],
-  //   },
-  // ]
   const userAuth = await fetchPermissions()
-  // const userAuth: User = {
-  //   user_id: 1,
-  //   username: "test_user1",
-  //   email: "example@gmail.com",
-  //   rights: [{ id: 1, right_title: "edit", right_flag: "MODERATE_PROBLEMS_1" }],
-  // }
   let isEditable = false
   if (userAuth && userAuth.rights.length !== 0) {
     isEditable = userAuth.rights

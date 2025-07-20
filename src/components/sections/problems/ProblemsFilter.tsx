@@ -6,7 +6,7 @@ import {ReactNode, Suspense} from "react";
 import Loading from "@/app/(main)/loading";
 import {PROBLEM_API} from "@/constants/APIEndpoints";
 import {useAppDispatch, useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
-import {setYear} from "@/redux_stores/YearSlice";
+import {setYear} from "@/redux_stores/SearchParamsSlice";
 
 export default function ProblemFilters({children, possibleYears}: { children: ReactNode; possibleYears: number[] }) {
   return <YearFilter possibleYears={possibleYears}>
@@ -15,11 +15,10 @@ export default function ProblemFilters({children, possibleYears}: { children: Re
 }
 
 function YearFilter({children, possibleYears}: { children: ReactNode; possibleYears: number[] }) {
-  const year = useAppSelector(state => state.year.year)
+  const year = useAppSelector(state => state.searchParams.year)
   const dispatcher = useAppDispatch()
-  const isPending = false
-  // const yearsArray = fetchYears()
-  // setYearParam(year)
+  const isPending = useAppSelector(state => state.system.isPending)
+
   return (
     <>
       <div className={style.filters}>
@@ -36,9 +35,11 @@ function YearFilter({children, possibleYears}: { children: ReactNode; possibleYe
           onOptionSelect={(newValue) => {
             dispatcher(setYear(newValue))
           }}
+          disabled={isPending}
         ></StaticDropdown>
       </div>
       {!isPending && children}
+      {isPending && <Loading />}
     </>
   )
 }

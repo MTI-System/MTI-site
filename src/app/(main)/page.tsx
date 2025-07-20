@@ -6,7 +6,6 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Менеджер Турнирной Информации!</h1>
       <div className={mainStyle.cardGrid}>
         <ClickableCard className={mainStyle.problems} href="/problems">
           Задачи

@@ -24,8 +24,17 @@ interface Problem {
   tournament_type: number
   problem_translations: ProblemTranslation[]
   problem_materials: ProblemMaterial[]
+  problem_sections: ProblemSection[]
+
+}
+
+interface ProblemSection{
+  id: number,
+  title: string,
+  icon_src: string,
+  tile_color: string,
 }
 
 type ProblemList = Problem[]
 
-export type { ProblemMaterialType, ProblemMaterial, ProblemTranslation, Problem, ProblemList }
+export type { ProblemMaterialType, ProblemMaterial, ProblemTranslation, Problem, ProblemList, ProblemSection }
