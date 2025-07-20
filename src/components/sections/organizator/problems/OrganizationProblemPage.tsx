@@ -23,7 +23,7 @@ async function OrganizationProblemPage({ searchParams }: { searchParams: Promise
   return (
     <div className="flex flex-col items-center bg-gray-100">
       <div className={style.problemsContainer}>
-        <ProblemFilters possibleYears={possibleYears} />
+        {/*<ProblemFilters possibleYears={possibleYears} />*/}
         {year && tt && (
           <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
             <OrganizationProblemList tt={tt} year={year} />

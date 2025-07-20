@@ -45,7 +45,7 @@ export default async function ProblemsList({ year, tt }: { year: number; tt: str
       {/* {isEditable && <AddProblem isShown={isEditable} />} */}
       {respJSON &&
         respJSON.map((problem: Problem, index: number) => (
-          <ProblemCard problem={problem} isEdiatable={isEditable} key={index + 1}></ProblemCard>
+          <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>
         ))}
       {respJSON === null && <FetchingErrorBanner />}
     </>

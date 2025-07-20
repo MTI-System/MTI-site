@@ -11,7 +11,7 @@ import Modal from "@/components/ui/Modals"
 import { Button, HoldButton } from "@/components/ui/Buttons"
 import { IoWarningSharp } from "react-icons/io5"
 
-export default function ProblemCard({ problem, isEdiatable }: { problem: Problem; isEdiatable: boolean }) {
+export default function ProblemCard({ problem, isEditable }: { problem: Problem; isEditable: boolean }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const delModalState = useState(false)
@@ -24,7 +24,7 @@ export default function ProblemCard({ problem, isEdiatable }: { problem: Problem
               {problem.global_number}.{problem.problem_translations[0].problem_name}
             </h2>
           </Link>
-          {isEdiatable && (
+          {isEditable && (
             <>
               <div className={style.editButtons}>
                 <Link href={"/underconstruction"}>

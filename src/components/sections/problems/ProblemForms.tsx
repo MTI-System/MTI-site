@@ -15,6 +15,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
+    console.log("OBJ", authObject)
     if (!authObject) return
     const hasPermission = authObject.rights
       .map((right) => right.right_flag == "MODERATE_PROBLEMS_" + targetTTID)
@@ -31,21 +32,8 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     const formData = new FormData(form)
     formData.set("year", targetYear.toString())
     formData.set("tournamentType", targetTTID.toString())
-    // formData.set("firstTranslationName", newProblemData!!.firstTranslationName)
-    // formData.set("firstTranslationText", newProblemData!!.firstTranslationText)
-    // formData.set("firstTranslationBy", newProblemData!!.firstTranslationBy)
     formData.set("authToken", authObject.token)
-    // TODO: implement form sending logic
 
-    // fetch(PROBLEM_API + "add_problem", { method: "POST", body: formData }).then((res) => {
-    //   setStatusCode(res.status)
-    // })
-    // if (statusCode != 200) {
-    //   console.log("ERRORRRR!!!!")
-    // } else {
-    //   router.refresh()
-    //   console.log("ALL OK")
-    // }
   }
 
   return (

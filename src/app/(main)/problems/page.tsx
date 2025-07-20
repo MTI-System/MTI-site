@@ -27,20 +27,14 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
   const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
 
 
-  const userAuth = await fetchPermissions()
-  let isModerator = false
-  if (userAuth && userAuth.rights.length !== 0) {
-    isModerator = userAuth.rights.map(right => right.right_flag == "MODERATE_PROBLEMS_" + (availableTournamentTypes.find((val)=>val.name===tt)?.id)).some(x=>x)
-  }
-
   return (
     <div className="flex flex-col items-center bg-gray-100">
       <div className={style.problemsContainer}>
         <h2>Задачи на {availableTournamentTypes.find((val) => val.name === tt)?.longName}</h2>
+        <AddProblem targetTTID={ttid} targetYear={year} />
         {year && tt && (
           <ProblemFilters possibleYears={possibleYears}>
             <>
-              <AddProblem targetTTID={ttid} targetYear={year} />
               <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
                 <ProblemsList year={year} tt={tt} />
               </Suspense>

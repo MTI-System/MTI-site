@@ -20,6 +20,8 @@ import {Provider} from 'react-redux'
 import StoreProvider from "@/components/Redux/StoreProvider";
 import ReduxTestComponent from "@/components/Redux/ReduxTestComponent";
 import SearchParamsUpdator from "@/components/SearchParamsUpdator";
+import {AuthProvider} from "@/context/app/AuthContext";
+import ProfilePicture from "@/components/sections/app/Profile";
 
 export const metadata: Metadata = {
   title: {
@@ -69,28 +71,28 @@ async function RootLayout({
     </head>
     <body>
     <StoreProvider>
-      <header className={headerStyle.header}>
-        <div className={headerStyle.rightContainer}>
-          <Link href={"/"}>
-            <h1>МТИ</h1>
-          </Link>
-          <TournamentTypeSelector className={headerStyle.dropdown}/>
-        </div>
-        <div className={headerStyle.leftContainer}>
-          <GlobalSearch/>
-          <FaMoon className={iconStyle.icons}/>
-          <Link href={"/profile"}>
-            <FaUserCircle className={iconStyle.icons}/>
-          </Link>
-        </div>
-      </header>
-      <main>
-        {children}
-      </main>
-      <footer className={footerStyle.footer}></footer>
-      <Suspense fallback={"Load search params"}>
-        <SearchParamsUpdator/>
-      </Suspense>
+      <AuthProvider>
+        <header className={headerStyle.header}>
+          <div className={headerStyle.rightContainer}>
+            <Link href={"/"}>
+              <h1>МТИ</h1>
+            </Link>
+            <TournamentTypeSelector className={headerStyle.dropdown}/>
+          </div>
+          <div className={headerStyle.leftContainer}>
+            <GlobalSearch/>
+            <FaMoon className={iconStyle.icons}/>
+            <ProfilePicture className={iconStyle.icons}/>
+          </div>
+        </header>
+        <main>
+          {children}
+        </main>
+        <footer className={footerStyle.footer}></footer>
+        <Suspense fallback={"Load search params"}>
+          <SearchParamsUpdator/>
+        </Suspense>
+      </AuthProvider>
     </StoreProvider>
     </body>
     </html>
