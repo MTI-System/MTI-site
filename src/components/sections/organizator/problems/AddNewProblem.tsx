@@ -43,14 +43,7 @@ function AddNewProblem({ userData }: { userData: User }) {
           Добавить задачу
         </Button>
         {/*Форма для добавления задачи*/}
-        <ModalDialog isOpen={modalDialogState == 1} onClose={() => {}}>
-          <NewProblemForm
-            setModalState={setDialogState}
-            setNewProblemData={setNewProblemData}
-            currentTournamentType={tournamentTypeId}
-            currentYear={year}
-          />
-        </ModalDialog>
+
         {/*Подтверждение добавления*/}
         <ModalDialog isOpen={modalDialogState == 2} onClose={() => {}}>
           <AcceptDialog

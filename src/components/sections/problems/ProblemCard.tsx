@@ -13,6 +13,7 @@ import {IoWarningSharp} from "react-icons/io5"
 import ProblemSection from "@/components/sections/problems/ProblemSection";
 import ProblemSectionComponent from "@/components/sections/problems/ProblemSection";
 import {FILES_SERVER} from "@/constants/APIEndpoints";
+import SectionsList from "@/components/sections/problems/SectionsList";
 
 export default function ProblemCard({problem, isEditable}: { problem: Problem; isEditable: boolean }) {
   const router = useRouter()
@@ -57,14 +58,7 @@ export default function ProblemCard({problem, isEditable}: { problem: Problem; i
         </div>
         <h5 className={style.translation}>Translation here...</h5>
         <h3>Разделы физики:</h3>
-        <div className={style.sectionsList}>
-          {problem.problem_sections.map(section => {
-            return <ProblemSectionComponent key={section.id} section={section}/>
-          })}
-          {problem.problem_sections.length == 0 && (
-            <ProblemSectionComponent section={{id: 0, title: "Не определено", "icon_src":  "forbidden.svg", tile_color: "#AAAAAA"}}/>
-          )}
-        </div>
+        <SectionsList problem={problem} isModerator={isEditable}/>
 
 
         <p className={style.problemText}>{problem.problem_translations[0].problem_text}</p>

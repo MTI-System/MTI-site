@@ -21,7 +21,7 @@ export default async function Page({searchParams}: { searchParams: Promise<{ yea
   const possibleYears = await fetchYears(availableTournamentTypes.find(val => val.name === tt)?.id ?? 1)
   const year = sp.year ?? possibleYears[0]
   const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
-
+  // console.log("REDNDER", year, tt)
 
   return (
     <>

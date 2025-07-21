@@ -7,7 +7,7 @@ interface SystemState {
 
 const initialState: SystemState = {
   theme: 'light',
-  isPending: true,
+  isPending: false,
 }
 
 export const SystemSlice = createSlice({
