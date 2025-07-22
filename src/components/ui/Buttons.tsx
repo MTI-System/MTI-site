@@ -68,11 +68,11 @@ export function HoldButton({
   return (
     <button
       className={clsx(styleModule.button, styleModule.holdButton, className)}
-      onMouseDown={() => {
-        if (!scope.current) return
+      onPointerDown={() => {
+        if (!scope.current || rest.disabled) return
         scope.current.methods.caPlay()
       }}
-      onMouseUp={() => {
+      onPointerUp={() => {
         if (!scope.current) return
         scope.current.methods.caReverse()
       }}

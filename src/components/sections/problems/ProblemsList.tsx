@@ -4,10 +4,6 @@ import { Problem, ProblemList } from "@/types/problemAPI"
 import { fetchPermissions, fetchProblems } from "@/scripts/ApiFetchers"
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import { AddProblem } from "./ProblemForms"
-import { cookies } from "next/headers"
-import { User } from "@/types/authApi"
-
 export default async function ProblemsList({ year, tt }: { year: number; tt: string }) {
   const respJSON: ProblemList | null = await fetchProblems(
     availableTournamentTypes.find((value) => value.name === tt)!!.id.toString(),
@@ -26,7 +22,6 @@ export default async function ProblemsList({ year, tt }: { year: number; tt: str
 
   return (
     <>
-      {/* {isEditable && <AddProblem isShown={isEditable} />} */}
       {respJSON &&
         respJSON.map((problem: Problem, index: number) => (
           <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>

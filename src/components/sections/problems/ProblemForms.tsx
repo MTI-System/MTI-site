@@ -2,17 +2,21 @@
 import { Button } from "@/components/ui/Buttons"
 import { FaPlus } from "react-icons/fa6"
 import style from "@/styles/problems/problemForms.module.css"
-import { FormEvent, useContext, useEffect, useRef, useState } from "react"
+import { FormEvent, useEffect, useRef, useState } from "react"
 import clsx from "clsx"
 import { Input, TitledInput } from "@/components/ui/Input"
-import {useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
+import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { PROBLEM_API } from "@/constants/APIEndpoints"
+import { useRouter } from "next/navigation"
 
 export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; targetYear: number }) {
-  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
-  const auth = useAppSelector(state => state.auth.authInfo)
-  const token = useAppSelector(state => state.auth.token)
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
+  const router = useRouter()
+  const auth = useAppSelector((state) => state.auth.authInfo)
+  const token = useAppSelector((state) => state.auth.token)
   const [isShown, setIsShown] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
@@ -25,14 +29,23 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await handletaskCreation(e.currentTarget)
+    setIsLoading(true)
+    const isok = await handletaskCreation(e.currentTarget)
+    setIsLoading(false)
+    if (isok) {
+      router.refresh()
+    }
   }
   const handletaskCreation = async (form: HTMLFormElement) => {
     if (!isAuthenticated) return
     const formData = new FormData(form)
     formData.set("year", targetYear.toString())
     formData.set("tournamentType", targetTTID.toString())
+    formData.set("firstTranslationBy", "Оффициальный перевод")
     formData.set("authToken", token)
+    const resp = await fetch(PROBLEM_API + "add_problem", { method: "POST", body: formData })
+    if (resp.ok) form.reset()
+    return resp.ok
   }
 
   return (
@@ -52,25 +65,29 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
       <form className={style.newProblemform} ref={formRef} onSubmit={handleSubmit}>
         <div className={style.numberAndTitleContainer}>
           <TitledInput title="№" className={style.numberInput}>
-            <Input type="globalNumber" />
+            <Input name="globalNumber" type="number" min={1} />
           </TitledInput>
           <TitledInput title="Title" className={style.titleInput}>
-            <Input type="problemTitle" />
+            <Input name="firstTranslationName" />
           </TitledInput>
         </div>
         <TitledInput title="Problem text" className={style.textInput}>
-          <textarea name="problemtext"></textarea>
+          <textarea name="firstTranslationText"></textarea>
         </TitledInput>
         <div className={style.confirmContainer}>
-          <Button type="submit" className={style.confirmationButton}>
+          <Button type="submit" className={style.confirmationButton} disabled={isLoading}>
             Создать задачу
           </Button>
           <Button
             type="button"
             className={style.editOnOtherPageButton}
-            onClick={() => {
+            disabled={isLoading}
+            onClick={async () => {
               if (!formRef.current) return
-              handletaskCreation(formRef.current)
+              setIsLoading(true)
+              const isok = await handletaskCreation(formRef.current)
+              setIsLoading(false)
+              if (isok) router.push("/underconstruction")
             }}
           >
             Добавить материалы
