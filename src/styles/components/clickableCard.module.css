@@ -5,8 +5,8 @@
 
   min-width: 5vw;
   min-height: 12vh;
-  padding: 1vw 0vw 0vw 2vw;
 
+  overflow: hidden;
   border-radius: var(--block-radius);
   background-color: var(--alt-bg);
   border-width: var(--border-width);

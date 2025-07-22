@@ -21,10 +21,10 @@ function NewProblemForm({
         <p>Тип турнира</p>
         <StaticDropdown
           options={
-            [{displayName: "Механика", value: '4', active: true},
-              {displayName: "Оптика", value: '5', active: true},
-            {displayName: "Термодинамика", value: '6', active: true},
-            {displayName: "Магнетизм", value: '7', active: true}]
+            [{displayName: "Механика", value: '1', active: true},
+              {displayName: "Оптика", value: '2', active: true},
+            {displayName: "Термодинамика", value: '3', active: true},
+            {displayName: "Магнетизм", value: '4', active: true}]
           }
           defaultSelection={0}
           onOptionSelect={function (selection: string): void {
