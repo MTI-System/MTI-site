@@ -79,4 +79,16 @@ async function fetchYears(tournamentTypeId: number): Promise<number[]> {
     response.json()
   )
 }
-export { fetchProblems, fetchPermissions, deleteProblem, fetchYears }
+
+async function fetchAddSectionToTask(problem_id: string, sectionId: string){
+  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+  const formData = new FormData()
+  formData.set("token", token)
+  formData.set("problem", problem_id)
+  formData.set("section", sectionId)
+  await fetch(PROBLEM_API + "add_section",  {
+    method: "POST",
+    body: formData,
+  })
+}
+export { fetchProblems, fetchPermissions, deleteProblem, fetchYears, fetchAddSectionToTask }

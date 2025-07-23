@@ -1,93 +1,44 @@
-import { StaticDropdown } from "@/components/ui/Dropdown"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import { Button } from "@/components/ui/Buttons"
+import {StaticDropdown} from "@/components/ui/Dropdown"
+import {availableTournamentTypes} from "@/constants/AvailableTournaments"
+import {Button} from "@/components/ui/Buttons"
+import {fetchAddSectionToTask} from "@/scripts/ApiFetchers";
 
 function NewProblemForm({
-  setModalState,
-  setNewProblemData,
-  currentTournamentType,
-  currentYear,
-}: {
-  setModalState: (state: number) => void
-  setNewProblemData: (state: NewProblemFormData) => void
-  currentTournamentType: number
-  currentYear: number
+                          setModalState,
+                          problemId
+                        }: {
+  setModalState: (state: number) => void,
+  problemId: number
 }) {
-  const newProblemData: NewProblemFormData = {
-    tournamentType: currentTournamentType,
-    year: currentYear,
-    globalNumber: 1,
-    firstTranslationName: "",
-    firstTranslationText: "",
-    firstTranslationBy: "",
+  const newProblemData: { newSection: string } = {
+    newSection: "4"
   }
   return (
     <div>
       <Button onClick={() => setModalState(0)}>Назад</Button>
       <div>
-        <h1>Добавить новую задачу</h1>
+        <h1>Добавить новый тип задачи</h1>
         <p>Тип турнира</p>
         <StaticDropdown
-          options={availableTournamentTypes.map((tt) => {
-            return { displayName: tt.name.toUpperCase(), value: tt.name, active: true }
-          })}
-          defaultSelection={availableTournamentTypes.findIndex((val) => val.id === currentTournamentType)}
+          options={
+            [{displayName: "Механика", value: '1', active: true},
+              {displayName: "Оптика", value: '2', active: true},
+            {displayName: "Термодинамика", value: '3', active: true},
+            {displayName: "Магнетизм", value: '4', active: true}]
+          }
+          defaultSelection={0}
           onOptionSelect={function (selection: string): void {
-            newProblemData.tournamentType = availableTournamentTypes.find((val) => val.name === selection)?.id ?? 0
+            newProblemData.newSection = selection
           }}
         ></StaticDropdown>
 
-        <p>Сезон задачи</p>
-        <input
-          type={"number"}
-          onChange={(event) => {
-            newProblemData.year = Number(event.target.value)
-          }}
-          defaultValue={currentYear}
-        />
-
-        <p>Номер задачи в списке</p>
-        <input
-          type={"number"}
-          onChange={(event) => {
-            newProblemData.globalNumber = Number(event.target.value)
-          }}
-          defaultValue={1}
-          min={1}
-        />
-
-        <p>Название задачи в официальном переводе</p>
-        <input
-          type={"text"}
-          onChange={(event) => {
-            newProblemData.firstTranslationName = event.target.value
-          }}
-        />
-
-        <p>Условие в официальном переводе</p>
-        <textarea
-          onChange={(event) => {
-            newProblemData.firstTranslationText = event.target.value
-          }}
-        />
-
-        <p>Название официального перевода</p>
-        <input
-          type={"text"}
-          onChange={(event) => {
-            newProblemData.firstTranslationBy = event.target.value
-          }}
-          defaultValue={"Официальный перевод"}
-        />
+        <Button onClick={()=>{
+          setModalState(0);
+          (async ()=>{
+            await fetchAddSectionToTask(problemId.toString(), newProblemData.newSection)
+          })()
+        }}>Добавить</Button>
       </div>
-      <Button
-        onClick={() => {
-          setModalState(2)
-          setNewProblemData(newProblemData)
-        }}
-      >
-        Добавить
-      </Button>
     </div>
   )
 }

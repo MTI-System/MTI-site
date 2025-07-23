@@ -18,10 +18,10 @@ import iconStyle from "@/styles/icons.module.css"
 import {store} from "next/dist/build/output/store";
 import {Provider} from 'react-redux'
 import StoreProvider from "@/components/Redux/StoreProvider";
-import ReduxTestComponent from "@/components/Redux/ReduxTestComponent";
 import SearchParamsUpdator from "@/components/SearchParamsUpdator";
-import {AuthProvider} from "@/context/app/AuthContext";
 import ProfilePicture from "@/components/sections/app/Profile";
+import InitRedux from "@/components/Redux/InitRedux";
+import {fetchPermissions} from "@/scripts/ApiFetchers";
 
 export const metadata: Metadata = {
   title: {
@@ -40,11 +40,10 @@ async function RootLayout({
   children: React.ReactNode
 }>) {
 
-
   return (
     <html>
     <head>
-      <link rel="shortcut icon" href={FILES_SERVER + "favicon.svg"}/>
+      <link rel="shortcut icon" href={FILES_SERVER + "favicon1.ico"}/>
       <Script
         id="yandex-metrika"
         strategy="afterInteractive"
@@ -71,28 +70,24 @@ async function RootLayout({
     </head>
     <body>
     <StoreProvider>
-      <AuthProvider>
-        <header className={headerStyle.header}>
-          <div className={headerStyle.rightContainer}>
-            <Link href={"/"}>
-              <h1>МТИ</h1>
-            </Link>
-            <TournamentTypeSelector className={headerStyle.dropdown}/>
-          </div>
-          <div className={headerStyle.leftContainer}>
-            <GlobalSearch/>
-            <FaMoon className={iconStyle.icons}/>
-            <ProfilePicture className={iconStyle.icons}/>
-          </div>
-        </header>
-        <main>
-          {children}
-        </main>
-        <footer className={footerStyle.footer}></footer>
-        <Suspense fallback={"Load search params"}>
-          <SearchParamsUpdator/>
-        </Suspense>
-      </AuthProvider>
+      <InitRedux/>
+      <header className={headerStyle.header}>
+        <div className={headerStyle.leftContainer}>
+          <Link href={"/"}>
+            <h1>МТИ</h1>
+          </Link>
+          <TournamentTypeSelector className={headerStyle.dropdown}/>
+        </div>
+        <div className={headerStyle.rightContainer}>
+          <GlobalSearch/>
+          <FaMoon className={iconStyle.icons}/>
+          <ProfilePicture className={iconStyle.icons}/>
+        </div>
+      </header>
+      <main>
+        {children}
+      </main>
+      <footer className={footerStyle.footer}></footer>
     </StoreProvider>
     </body>
     </html>

@@ -1,33 +1,27 @@
 "use client"
-import {StaticDropdown} from "@/components/ui/Dropdown"
+import { StaticDropdown } from "@/components/ui/Dropdown"
 import style from "@/styles/problems/problemsFilter.module.css"
-import useSearchParam from "@/hooks/useSearchParam"
-import {ReactNode, Suspense} from "react";
-import Loading from "@/app/(main)/loading";
-import {PROBLEM_API} from "@/constants/APIEndpoints";
-import {useAppDispatch, useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
-import {setYear} from "@/redux_stores/YearSlice";
+import { ReactNode, Suspense } from "react"
+import Loading from "@/app/(main)/loading"
+import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { setYear } from "@/redux_stores/SearchParamsSlice"
 
-export default function ProblemFilters({children, possibleYears}: { children: ReactNode; possibleYears: number[] }) {
-  return <YearFilter possibleYears={possibleYears}>
-    {children}
-  </YearFilter>
+export default function ProblemFilters({ children, possibleYears }: { children: ReactNode; possibleYears: number[] }) {
+  return <YearFilter possibleYears={possibleYears}>{children}</YearFilter>
 }
 
-function YearFilter({children, possibleYears}: { children: ReactNode; possibleYears: number[] }) {
-  const year = useAppSelector(state => state.year.year)
+function YearFilter({ children, possibleYears }: { children: ReactNode; possibleYears: number[] }) {
+  const year = useAppSelector((state) => state.searchParams.year)
   const dispatcher = useAppDispatch()
-  const isPending = false
-  // const yearsArray = fetchYears()
-  // setYearParam(year)
+  const isPending = useAppSelector((state) => state.system.isPending)
+
   return (
     <>
       <div className={style.filters}>
         <StaticDropdown
-          options={
-            possibleYears.map(year => {
-              return ({displayName: year.toString(), value: year, active: true})
-            })}
+          options={possibleYears.map((year) => {
+            return { displayName: year.toString(), value: year, active: true }
+          })}
           defaultSelection={{
             displayName: year.toString(),
             value: year,
@@ -36,11 +30,11 @@ function YearFilter({children, possibleYears}: { children: ReactNode; possibleYe
           onOptionSelect={(newValue) => {
             dispatcher(setYear(newValue))
           }}
+          disabled={isPending}
         ></StaticDropdown>
       </div>
       {!isPending && children}
+      {isPending && <Loading />}
     </>
   )
 }
-
-

@@ -3,10 +3,12 @@ import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import { StaticDropdown } from "@/components/ui/Dropdown"
 import { useContext } from "react"
 import {useAppDispatch, useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
-import {setTT} from "@/redux_stores/TournamentTypeSlice";
+import {setTT} from "@/redux_stores/SearchParamsSlice";
 
 export default function TournamentTypeSelector({ className }: { className?: string }) {
-  const tt = useAppSelector(state => state.tt.tt)
+  const tt = useAppSelector(state => state.searchParams.tt)
+  const isPending = useAppSelector(state => state.system.isPending)
+
   const  dispatcher = useAppDispatch()
   return (
     <StaticDropdown
@@ -24,7 +26,7 @@ export default function TournamentTypeSelector({ className }: { className?: stri
           : 0
       }
       className={className}
-      disabled={false}
+      disabled={isPending}
     ></StaticDropdown>
   )
 }

@@ -1,13 +1,15 @@
 import {createSlice, configureStore, PayloadAction} from '@reduxjs/toolkit'
 import {useDispatch, useSelector, useStore} from "react-redux";
-import {ttSlice} from "@/redux_stores/TournamentTypeSlice";
-import {yearSlice} from "@/redux_stores/YearSlice";
+import {SPSlice} from "@/redux_stores/SearchParamsSlice";
+import {AuthSlice} from "@/redux_stores/AuthSlice";
+import {SystemSlice} from "@/redux_stores/SystemSlice";
 
 export default function makeStore() {
   return configureStore({
     reducer: {
-      tt: ttSlice.reducer,
-      year: yearSlice.reducer,
+      searchParams: SPSlice.reducer,
+      auth: AuthSlice.reducer,
+      system: SystemSlice.reducer,
     }
   })
 }

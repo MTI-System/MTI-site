@@ -10,13 +10,15 @@ import { Dispatch, SetStateAction, useState, useTransition } from "react"
 import Modal from "@/components/ui/Modals"
 import { Button, HoldButton } from "@/components/ui/Buttons"
 import { IoWarningSharp } from "react-icons/io5"
+import SectionsList from "@/components/sections/problems/SectionsList"
+import clsx from "clsx"
 
 export default function ProblemCard({ problem, isEditable }: { problem: Problem; isEditable: boolean }) {
   const router = useRouter()
-  const [isPending, startTransition] = useTransition()
+  const [isPendingDeletion, startTransition] = useTransition()
   const delModalState = useState(false)
   return (
-    <div className={style.problemCard}>
+    <div className={clsx(style.problemCard, { [style.cardPendingDeletion]: isPendingDeletion })}>
       <div className={style.problemContainer}>
         <div className={style.titleContainer}>
           <Link href={"/problems/" + problem.id.toString()}>
@@ -53,6 +55,8 @@ export default function ProblemCard({ problem, isEditable }: { problem: Problem;
           )}
         </div>
         <h5 className={style.translation}>Translation here...</h5>
+        <h3>Разделы физики:</h3>
+        <SectionsList problem={problem} isModerator={isEditable} />
         <p className={style.problemText}>{problem.problem_translations[0].problem_text}</p>
       </div>
       {problem.problem_translations.length > 1 && <div className={style.tournamentsContainer}>Tournaments here...</div>}
@@ -75,7 +79,7 @@ function DeletionConfirmationModal({
   const [isOpen, setIsOpen] = openState
   const [isError, setIsError] = useState(false)
   return (
-    <Modal openState={openState}>
+    <Modal openState={openState} preventClose={isLoading}>
       <div className={style.deletionModalInfoContainer}>
         <h1>Удалить задачу?</h1>
         <IoWarningSharp className={style.warningIcon} />

@@ -6,3 +6,8 @@ interface NewProblemFormData{
     firstTranslationText: string,
     firstTranslationBy: string
 }
+
+interface LoginFormData {
+    login: string,
+    password: string
+}

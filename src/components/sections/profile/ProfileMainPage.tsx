@@ -4,11 +4,13 @@ import { Right } from "@/types/authApi"
 import { useRouter } from "next/navigation"
 import cookies from "js-cookie"
 import { useContext } from "react"
-import { AuthContext } from "@/context/app/AuthContext"
+import {useAppDispatch, useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
+import {setAuth} from "@/redux_stores/AuthSlice";
 
 function ProfileMainPage({ profileData }: { profileData: User }) {
+  const dispatch = useAppDispatch()
+
   const router = useRouter()
-  const authObject = useContext(AuthContext)
   return (
     <div>
       {!profileData && <h1>Loading ^_^</h1>}
@@ -22,7 +24,7 @@ function ProfileMainPage({ profileData }: { profileData: User }) {
       <button
         onClick={() => {
           cookies.remove("mtiyt_auth_token")
-          authObject?.logout()
+          dispatch(setAuth(null))
           router.replace("/")
         }}
       >

@@ -8,19 +8,28 @@ export default function Modal({
   children,
   openState,
   onClose,
+  preventClose,
 }: {
   children: ReactNode
   openState: [boolean, Dispatch<SetStateAction<boolean>>]
   onClose?: () => void
+  preventClose?: boolean
 }) {
   const [isOpen, setIsOpen] = openState
   const onOpenInternal = () => {}
-  const onCloseInternal = () => {}
-  useEffect(() => {}, [isOpen])
+  const onCloseInternal = () => {
+    if (onClose) onClose()
+  }
+  useEffect(() => {
+    if (!isOpen) return
+    onOpenInternal()
+  }, [isOpen])
   return (
     <div
       className={clsx(style.overlay, { [style.open]: isOpen })}
       onClick={() => {
+        if (preventClose) return
+        onCloseInternal()
         setIsOpen(false)
       }}
     >
