@@ -11,11 +11,11 @@ export default function ProfilePicture({ className }: { className: string }) {
   const path = usePathname()
   return isAuthenticated ? (
     <Link href={"/profile"}>
-      <FaUserCircle className={className} />
+      <FaUserCircle style={{width: "100%", height: "50%"}} className={className} />
     </Link>
   ) : (
     <Link href={`/login?redirect=${path.slice(1)}`}>
-      <FaSignInAlt className={className} />
+      <FaSignInAlt style={{width: "100%", height: "50%"}} className={className} />
     </Link>
   )
 }

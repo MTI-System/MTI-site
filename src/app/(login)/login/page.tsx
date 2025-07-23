@@ -9,6 +9,8 @@ import Loading from "@/app/(main)/loading"
 import cookies from "js-cookie"
 import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 import { Button } from "@/components/ui/Buttons"
+import LogoWithTT from "@/components/sections/app/LogoWithTT";
+import '@fontsource/roboto-mono'
 
 enum FormState {
   AwaitLogin,
@@ -80,6 +82,7 @@ function LoginPage() {
   return (
     <div className={style.loginContainer}>
       <form onSubmit={handleSubmit} className={style.login} ref={formRef}>
+        <LogoWithTT logoSize={"5vw"} margin={"-6vh"}/>
         <TitledInput
           title={
             formState === FormState.EmptyUsername
@@ -90,6 +93,7 @@ function LoginPage() {
           }
           isError={formState === FormState.EmptyUsername || formState === FormState.IncorrectData}
         >
+
           <IconInput
             icon={<FaUser></FaUser>}
             onEnter={handleEnter}

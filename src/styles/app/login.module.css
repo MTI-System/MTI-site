@@ -2,16 +2,17 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   align-content: center;
+  background-color:  var(--main-bg);
 }
 
 .login {
-  background-color: var(--bg-color);
-  border-radius: 0.5rem;
-  height: 20rem;
-  width: 15rem;
+  background-color: var(--alt-bg);
+  border-radius: 0 var(--block-radius) var(--block-radius) 0;
+  height: 98%;
+  width: 40vw;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
