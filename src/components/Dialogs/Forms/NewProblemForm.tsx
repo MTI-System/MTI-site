@@ -1,4 +1,4 @@
-import { StaticDropdown } from "@/components/ui/Dropdown"
+import { TextDropdown } from "@/components/ui/Dropdown"
 import { Button } from "@/components/ui/Buttons"
 import { fetchAddSectionToTask } from "@/scripts/ApiFetchers"
 
@@ -12,7 +12,7 @@ function NewProblemForm({ setModalState, problemId }: { setModalState: (state: n
       <div>
         <h1>Добавить новый тип задачи</h1>
         <p>Тип турнира</p>
-        <StaticDropdown
+        <TextDropdown
           options={[
             { displayName: "Механика", value: "1", active: true },
             { displayName: "Оптика", value: "2", active: true },
@@ -23,7 +23,7 @@ function NewProblemForm({ setModalState, problemId }: { setModalState: (state: n
           onOptionSelect={function (selection: string): void {
             newProblemData.newSection = selection
           }}
-        ></StaticDropdown>
+        ></TextDropdown>
 
         <Button
           onClick={() => {

@@ -1,5 +1,5 @@
 "use client"
-import { StaticDropdown } from "@/components/ui/Dropdown"
+import { TextDropdown } from "@/components/ui/Dropdown"
 import style from "@/styles/problems/problemsFilter.module.css"
 import { ReactNode } from "react"
 import Loading from "@/app/(main)/loading"
@@ -22,7 +22,7 @@ function YearFilter({ children, possibleYears }: { children: ReactNode; possible
   return (
     <>
       <div className={style.filters}>
-        <StaticDropdown
+        <TextDropdown
           options={possibleYears.map((year) => {
             return { displayName: year.toString(), value: year, active: true }
           })}
@@ -35,7 +35,7 @@ function YearFilter({ children, possibleYears }: { children: ReactNode; possible
             dispatcher(setYear(newValue))
           }}
           disabled={isPending}
-        ></StaticDropdown>
+        ></TextDropdown>
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
       {!isPending && children}
