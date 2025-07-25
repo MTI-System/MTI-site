@@ -12,7 +12,9 @@ import { Button, HoldButton } from "@/components/ui/Buttons"
 import { IoWarningSharp } from "react-icons/io5"
 import clsx from "clsx"
 import { PiGlobeLight } from "react-icons/pi"
-import SectionsList from "./SectionsList"
+import ProblemSectionComponent from "@/components/sections/problems/ProblemSection";
+import ModalDialog from "@/components/Dialogs/ModalDialog";
+import NewProblemForm from "@/components/Dialogs/Forms/NewProblemForm";
 
 // export default function ProblemCard({ problem, isEditable }: { problem: Problem; isEditable: boolean }) {
 //   const [isPendingDeletion, startTransition] = useTransition()
@@ -180,5 +182,27 @@ function DeletionConfirmationModal({
         </div>
       </div>
     </Modal>
+  )
+}
+
+
+function SectionsList({ problem, isModerator }: { problem: Problem; isModerator: boolean }) {
+  const [modalDialogState, setDialogState] = useState(0)
+  return (
+    <div className={style.sectionsList}>
+      {problem.problem_sections.map((section) => {
+        return <ProblemSectionComponent key={section.id} section={section} />
+      })}
+      {problem.problem_sections.length == 0 && (
+        <ProblemSectionComponent
+          section={{ id: 0, title: "Не определено", icon_src: "forbidden.svg", tile_color: "#AAAAAA" }}
+        />
+      )}
+      {isModerator && <Button onClick={() => setDialogState(1)}>Добавить</Button>}
+
+      <ModalDialog isOpen={modalDialogState == 1} onClose={() => {}}>
+        <NewProblemForm setModalState={setDialogState} problemId={problem.id} />
+      </ModalDialog>
+    </div>
   )
 }

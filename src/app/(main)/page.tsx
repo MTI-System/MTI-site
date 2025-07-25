@@ -8,6 +8,7 @@ export default function Home() {
 
   return (
     <div>
+      {/*<video src={"https://files.mofius-server.ru/media/get/AQPUtp1tpdS06ThMCbWYoHohuk19_muVSo55Nqu5VSwfkPXd3SC2z_BTPcPFCDZ.mp4"} controls></video>*/}
       <div className={mainStyle.cardGrid}>
         <ClickableCard className={mainStyle.problems} href="/problems">
           <div className={mainStyle.cardMainDiv}>

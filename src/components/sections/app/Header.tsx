@@ -21,8 +21,8 @@ export default function Header() {
           <div>
             <Link href={"/"}>
               <h1>МТИ</h1>
-              <TournamentTypeSelector className={headerStyle.dropdown}/>
             </Link>
+            <TournamentTypeSelector className={headerStyle.dropdown}/>
           </div>
         </div>
         <div className={headerStyle.rightContainer}>

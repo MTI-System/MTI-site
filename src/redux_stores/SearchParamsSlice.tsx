@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import cookies from "js-cookie";
 import {TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys";
-
+// import cookies from "next/headers"
 interface SPState {
-  tt: string,
+  tt: string|null,
   year: number
 }
 
 const initialState: SPState = {
-  tt: "ТЮФ",
+  tt: null,
   year: 2026
 }
 

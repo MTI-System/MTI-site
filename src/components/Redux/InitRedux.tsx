@@ -18,13 +18,10 @@ export default function InitRedux() {
     console.log("INIT REDUX FROM COOKIES")
     const tt = cookies.get(TOURNAMENT_TYPE_KEY_NAME)
     const token = cookies.get("mtiyt_auth_token")
-
-
     const getAuth = async () => {
       const user = await fetchPermissions()
       setAuthState(user)
     }
-    getAuth()
 
     if (tt) {
       dispatch(setTT(tt))
@@ -32,6 +29,7 @@ export default function InitRedux() {
     if (token) {
       dispatch(setToken(token))
     }
+    getAuth()
   }, [dispatch])
 
   useEffect(() => {
