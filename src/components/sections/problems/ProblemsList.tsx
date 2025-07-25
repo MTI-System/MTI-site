@@ -22,7 +22,7 @@ export default async function ProblemsList({ year, tt }: { year: number; tt: str
 
   return (
     <>
-      {respJSON &&
+      {respJSON !== null &&
         respJSON.map((problem: Problem, index: number) => (
           <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>
         ))}
