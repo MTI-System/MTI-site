@@ -1,52 +1,49 @@
+/* main */
 .problemCard {
   width: 100%;
   min-height: 5rem;
   background-color: var(--alt-bg);
-  border-radius: 0.5rem;
+  border-radius: 1rem;
+  border: var(--border-width) var(--border-color) solid;
   display: flex;
-  flex-direction: row;
-  margin-top: 1vw;
+  flex-direction: column;
 }
-
-.sectionsList {
-  display: flex;
-  border-radius: 0.5vw;
-  gap: 1vw;
+.cardPendingDeletion {
+  opacity: 0.25;
 }
-
-.problemContainer {
+/* header */
+.cardHeader {
   width: 100%;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: var(--border-width) var(--border-color) solid;
 }
-
-.problemTitle {
-  font-size: var(--main-header-text);
-  font-weight: bold;
-  color: var(--primary-accent);
-}
-
-.problemText {
-  font-size: 1rem;
-}
-
-.translation {
-  font-size: 0.75rem;
-  color: rgba(0, 0, 0, 0.5);
-  padding-top: 0.2rem;
-  padding-bottom: 1rem;
-}
-
-.tournamentsContainer {
-  min-width: 10%;
-  background-color: #eee;
-  border: 0.1rem #aaa dashed;
-}
-
 .titleContainer {
+  font-size: 1.5rem;
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  width: 100%;
+  padding: 0.5rem 0;
+}
+.problemTitle {
+  color: var(--main-text-color);
+}
+.translationContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.translationContainer svg {
+  fill: var(--alt-text);
+}
+.translationSelector {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+.translationName {
+  color: var(--alt-text);
 }
 
 .editButtons {
@@ -65,7 +62,13 @@
 .editButtons svg:hover {
   color: var(--accent-hover-color);
 }
+/* Text */
+.textContainer {
+  width: 100%;
+  padding: 0.5rem 1rem;
+}
 
+/* modals */
 .errormessage {
   color: rgb(252, 71, 71);
   font-size: 0.9rem;
@@ -97,7 +100,15 @@
 .deletionModalInfoContainer .buttonsContainer button {
   height: 3rem;
 }
+.sectionListContainer {
+  padding: 0.5rem 1rem;
+}
+.sectionListContainer h3 {
+  color: var(--alt-text);
+}
 
-.cardPendingDeletion {
-  opacity: 0.25;
+.sectionsList {
+  display: flex;
+  border-radius: 0.5vw;
+  gap: 1vw;
 }

@@ -1,10 +1,9 @@
 import ClickableCard from "@/components/ui/ClickableCard"
 import mainStyle from "@/styles/app/mainPage.module.css"
-import {store} from "next/dist/build/output/store";
-import {Button} from "@/components/ui/Buttons";
+import { store } from "next/dist/build/output/store"
+import { Button } from "@/components/ui/Buttons"
 
 export default function Home() {
-
   return (
     <div>
       <div className={mainStyle.cardGrid}>
@@ -24,11 +23,9 @@ export default function Home() {
               <p className={mainStyle.footerText}>Очень подробная статистика</p>
             </div>
           </div>
-
         </ClickableCard>
         {/* TODO: understand how to correctly merge classes in next.js style modules */}
         <ClickableCard className={mainStyle.tournaments + " " + mainStyle.nosaved} href="/underconstruction">
-
           <div className={mainStyle.cardMainDiv}>
             <h2 className={mainStyle.cardHeader}>Турниры</h2>
             <div className={mainStyle.cardFooter}>
@@ -46,11 +43,10 @@ export default function Home() {
         <ClickableCard className={mainStyle.people} href="/underconstruction">
           <h2 className={mainStyle.cardHeader}>Люди</h2>
         </ClickableCard>
-        <ClickableCard className={mainStyle.forOrganizators} href="/organization">
+        <ClickableCard className={mainStyle.forOrganizators} href="/underconstruction">
           <h2 className={mainStyle.cardHeader}>Организаторам</h2>
         </ClickableCard>
       </div>
     </div>
-
   )
 }
