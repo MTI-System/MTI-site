@@ -5,7 +5,7 @@ import style from "@/styles/problems/problemsList.module.css"
 import { Suspense } from "react"
 import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
 import { fetchYears } from "@/scripts/ApiFetchers"
-import SearchParamsUpdator from "@/components/SearchParamsUpdator"
+import SearchParamsUpdator from "@/components/service/SearchParamsUpdator"
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams

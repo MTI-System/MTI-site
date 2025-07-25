@@ -38,10 +38,26 @@ import SectionsList from "./SectionsList"
 // }
 
 export default function ProblemCard({ problem, isEditable }: { problem: Problem; isEditable: boolean }) {
-  const [selectedTrnslation, setSTrnslation] = useState(0)
   const [isPendingDeletion, startTransition] = useTransition()
   return (
     <div className={clsx(style.problemCard, { [style.cardPendingDeletion]: isPendingDeletion })}>
+      <ProblemCardContent problem={problem} isEditable={isEditable} startTransition={startTransition} />
+    </div>
+  )
+}
+
+export function ProblemCardContent({
+  problem,
+  isEditable,
+  startTransition,
+}: {
+  problem: Problem
+  isEditable: boolean
+  startTransition?: (trh: () => void) => void
+}) {
+  const [selectedTrnslation, setTrnslation] = useState(0)
+  return (
+    <>
       <div className={style.cardHeader}>
         <div className={style.titleContainer}>
           <Link href={"/problems/" + problem.id.toString()}>
@@ -49,7 +65,7 @@ export default function ProblemCard({ problem, isEditable }: { problem: Problem;
               {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
             </h2>
           </Link>
-          {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
+          {startTransition && <EditButtons startTransition={startTransition} problem={problem} />}
         </div>
         <div className={style.translationContainer}>
           <PiGlobeLight />
@@ -65,7 +81,7 @@ export default function ProblemCard({ problem, isEditable }: { problem: Problem;
         <h3>Разделы физики:</h3>
         <SectionsList problem={problem} isModerator={isEditable} />
       </div>
-    </div>
+    </>
   )
 }
 
