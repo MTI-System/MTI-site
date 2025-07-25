@@ -1,4 +1,52 @@
 .footer {
-  background-color: var(--alt-bg);
-  height: 5vh;
+    background-color: var(--alt-bg);
+    /*height: 5vh;*/
+}
+
+.linkItem {
+    color: var(--alt-text);
+    font-weight: bold;
+    font-size: 1.5vw;
+}
+
+.gridDiv {
+    grid-template-columns: 35% 35% 20%;
+    display: grid;
+}
+
+.mainBioFooter {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: start;
+    align-items: center;
+    gap: 2vw;
+    margin-left: 7vw;
+}
+
+.mainBioHeaderText {
+    font-family: 'Roboto Mono';
+    font-weight: bold;
+    font-size: var(--main-header-text);
+    color: var(--main-text-color);
+}
+
+.ttBioHeaderText {
+    font-family: 'Roboto Mono';
+    font-weight: bold;
+    font-size: var(--main-header-text);
+    color: var(--main-text-color);
+    margin-top: -2vh;
+}
+
+.commonBioText{
+  color: var(--alt-text);
+  font-size: 0.85vw;
+}
+
+.footerOl{
+  justify-self: center;
+  align-items: center;
+  padding-top: 1.7vh;
+  padding-bottom: 1.7vh;
 }

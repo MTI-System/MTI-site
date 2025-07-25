@@ -1,40 +1,68 @@
 .inputWrapper {
-  padding: 0.2em;
-  border-radius: 0.25rem;
-  border: 0.1em solid rgba(0, 0, 0, 0.25);
-  transition: background-color 250ms ease;
-  background-color: rgba(255, 255, 255, 0.6);
-  cursor: text;
+    font-size: 1.5vw;
+    font-weight: bold;
+    font-family:  'Roboto Mono';
+    /*width: 80%;*/
+    /*border: 0.1em solid rgba(0, 0, 0, 0.25);*/
+    /*transition: background-color 250ms ease;*/
+    /*background-color: rgba(255, 255, 255, 0.6);*/
+    /*cursor: text;*/
+
 }
+
+
 .inputContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+
 }
+
+.titledInputContainer {
+    padding: 0.7vw;
+    padding-left: 2vw;
+    width: 35vw;
+    margin: 3vh;
+    border-width: var(--border-width);
+    border-radius: var(--block-radius);
+    border-color: var(--border-color);
+    background-color: var(--alt-card-bg);
+}
+
+.titledInputContainer:hover{
+    background-color: var(--hover-color);
+}
+
 .inputWrapper:hover {
-  background-color: rgba(255, 255, 255, 0.8);
+    /*background-color: rgba(255, 255, 255, 0.8);*/
 }
+
 .inputWrapper:focus-within {
-  background-color: white;
+    /*background-color: white;*/
 }
 
 .inputContainer input {
-  outline: none;
-  border: none;
-  background-color: transparent;
-  width: 100%;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    width: 100%;
 }
 
 .inputContainer svg {
-  opacity: 0.5;
+    opacity: 0.5;
 }
 
 .title {
-  user-select: none;
-  opacity: 0.5;
-  font-size: 0.75rem;
-  transition: color 250ms ease;
+    user-select: none;
+    /*opacity: 0.5;*/
+    font-size: 1vw;
+    /*transition: color 250ms ease;*/
+    color: var(--main-text-color);
+    font-family:   'Roboto Mono';
+    font-weight:  bold;
 }
+
 .erroredTitle {
-  color: red;
+    color: red;
 }
