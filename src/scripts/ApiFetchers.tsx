@@ -2,10 +2,9 @@
 import { ProblemList } from "@/types/problemAPI"
 import { connection } from "next/server"
 import { PROBLEM_API, AUTH_API } from "@/constants/APIEndpoints"
-import { User, Right } from "@/types/authApi"
+import { User } from "@/types/authApi"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
-import { router } from "next/client"
 
 async function fetchProblems(tournament: string, year: number): Promise<ProblemList | null> {
   await connection()
@@ -80,13 +79,13 @@ async function fetchYears(tournamentTypeId: number): Promise<number[]> {
   )
 }
 
-async function fetchAddSectionToTask(problem_id: string, sectionId: string){
+async function fetchAddSectionToTask(problem_id: string, sectionId: string) {
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
   const formData = new FormData()
   formData.set("token", token)
   formData.set("problem", problem_id)
   formData.set("section", sectionId)
-  await fetch(PROBLEM_API + "add_section",  {
+  await fetch(PROBLEM_API + "add_section", {
     method: "POST",
     body: formData,
   })

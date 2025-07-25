@@ -11,17 +11,13 @@ import Loading from "@/app/(main)/loading";
 import {Suspense} from "react";
 import {FILES_SERVER} from "@/constants/APIEndpoints";
 import {headers} from "next/headers";
-import phoneUnavailable from "@/components/Errors/phoneUnavailable";
-import PhoneUnavailable from "@/components/Errors/phoneUnavailable";
 import Script from "next/script";
 import iconStyle from "@/styles/icons.module.css"
-import {store} from "next/dist/build/output/store";
-import {Provider} from 'react-redux'
-import StoreProvider from "@/components/Redux/StoreProvider";
-import SearchParamsUpdator from "@/components/SearchParamsUpdator";
-import ProfilePicture from "@/components/sections/app/Profile";
-import InitRedux from "@/components/Redux/InitRedux";
-import {fetchPermissions} from "@/scripts/ApiFetchers";
+import StoreProvider from "@/components/Redux/StoreProvider"
+import ProfilePicture from "@/components/sections/app/Profile"
+import InitRedux from "@/components/Redux/InitRedux"
+import Header from "@/components/sections/app/Header";
+import Footer from "@/components/sections/app/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -71,23 +67,11 @@ async function RootLayout({
     <body>
     <StoreProvider>
       <InitRedux/>
-      <header className={headerStyle.header}>
-        <div className={headerStyle.leftContainer}>
-          <Link href={"/"}>
-            <h1>МТИ</h1>
-          </Link>
-          <TournamentTypeSelector className={headerStyle.dropdown}/>
-        </div>
-        <div className={headerStyle.rightContainer}>
-          <GlobalSearch/>
-          <FaMoon className={iconStyle.icons}/>
-          <ProfilePicture className={iconStyle.icons}/>
-        </div>
-      </header>
+        <Header/>
       <main>
         {children}
       </main>
-      <footer className={footerStyle.footer}></footer>
+      <Footer/>
     </StoreProvider>
     </body>
     </html>

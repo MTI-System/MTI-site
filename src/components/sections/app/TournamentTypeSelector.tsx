@@ -1,21 +1,23 @@
 "use client"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import { StaticDropdown } from "@/components/ui/Dropdown"
-import { useContext } from "react"
-import {useAppDispatch, useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
-import {setTT} from "@/redux_stores/SearchParamsSlice";
+import { TextDropdown } from "@/components/ui/Dropdown"
+import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { setTT } from "@/redux_stores/SearchParamsSlice"
+import {useEffect} from "react";
 
 export default function TournamentTypeSelector({ className }: { className?: string }) {
-  const tt = useAppSelector(state => state.searchParams.tt)
-  const isPending = useAppSelector(state => state.system.isPending)
-
-  const  dispatcher = useAppDispatch()
+  const tt = useAppSelector((state) => state.searchParams.tt)
+  const isPending = useAppSelector((state) => state.system.isPending)
+  const dispatcher = useAppDispatch()
+  useEffect(() => {
+    console.log("tt", tt)
+  }, [tt])
   return (
-    <StaticDropdown
+    <TextDropdown
       options={availableTournamentTypes.map((tt) => {
         return { displayName: tt.name.toUpperCase(), value: tt.name, active: true }
       })}
-      onOptionSelect={(selectedValue) => (dispatcher(setTT(selectedValue)))}
+      onOptionSelect={(selectedValue) => dispatcher(setTT(selectedValue!!))}
       defaultSelection={
         tt !== null
           ? {
@@ -23,10 +25,14 @@ export default function TournamentTypeSelector({ className }: { className?: stri
               value: tt,
               active: true,
             }
-          : 0
+          : {
+            displayName: "???",
+            value: tt,
+            active: false,
+          }
       }
       className={className}
       disabled={isPending}
-    ></StaticDropdown>
+    ></TextDropdown>
   )
 }

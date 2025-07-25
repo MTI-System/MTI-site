@@ -15,7 +15,7 @@
 
     /*Blocks*/
     --block-radius: 1.5vw;
-    --border-width:0.1vw;
+    --border-width: 0.1vw;
 
     /*defaults*/
     --default-padding: 2vw;
@@ -32,6 +32,10 @@
     --card-cta-bar-color: #0A0A0A22;
     --main-bg: #E5E5E5;
     --alt-text: #7D8590;
+    --alt-card-bg: #ffffff;
+
+    --button-alt-color: #3849FF33;
+    --text-primary-accent: #3849FF;
 
     /*Fonts*/
     @media (min-width: 600px) {
@@ -52,6 +56,7 @@
 /*        --hover-color: #0A0A0A;*/
 /*        --border-color: #2C2C2C;*/
 /*        --alt-bg: #1A1A1A;*/
+/*        --alt-card-bg: #1E1E1E;*/
 /*    }*/
 /*}*/
 

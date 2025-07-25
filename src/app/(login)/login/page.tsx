@@ -1,14 +1,16 @@
 "use client"
-import { useState, FormEvent, useRef, Suspense } from "react"
-import { AUTH_API } from "@/constants/APIEndpoints"
-import { useRouter, useSearchParams } from "next/navigation"
-import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa6"
-import { IconInput, TitledInput } from "@/components/ui/Input"
+import {useState, FormEvent, useRef, Suspense} from "react"
+import {AUTH_API} from "@/constants/APIEndpoints"
+import {useRouter, useSearchParams} from "next/navigation"
+import {FaUser, FaEye, FaEyeSlash} from "react-icons/fa6"
+import {IconInput, TitledInput} from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
 import Loading from "@/app/(main)/loading"
 import cookies from "js-cookie"
-import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
-import { Button } from "@/components/ui/Buttons"
+import {AUTH_TOKEN_KEY_NAME} from "@/constants/CookieKeys"
+import {Button} from "@/components/ui/Buttons"
+import LogoWithTT from "@/components/sections/app/LogoWithTT";
+import '@fontsource/roboto-mono'
 
 enum FormState {
   AwaitLogin,
@@ -21,8 +23,8 @@ enum FormState {
 
 export default function Page() {
   return (
-    <Suspense fallback={<Loading />}>
-      <LoginPage />
+    <Suspense fallback={<Loading/>}>
+      <LoginPage/>
     </Suspense>
   )
 }
@@ -72,6 +74,7 @@ function LoginPage() {
       setFormState(FormState.UnknownError)
     }
   }
+
   function handleEnter() {
     if (!formRef.current) return
     handleLogin(formRef.current)
@@ -79,48 +82,56 @@ function LoginPage() {
 
   return (
     <div className={style.loginContainer}>
-      <form onSubmit={handleSubmit} className={style.login} ref={formRef}>
-        <TitledInput
-          title={
-            formState === FormState.EmptyUsername
-              ? "Username can't be empty"
-              : formState === FormState.IncorrectData
-              ? "Incorrect username"
-              : "Username"
-          }
-          isError={formState === FormState.EmptyUsername || formState === FormState.IncorrectData}
-        >
-          <IconInput
-            icon={<FaUser></FaUser>}
-            onEnter={handleEnter}
-            type="username"
-            name="username"
-            placeholder="email@example.xyz"
-            disabled={formState === FormState.Loading}
-          ></IconInput>
-        </TitledInput>
+      <div className={style.login}>
+        <LogoWithTT logoSize={"9vh"} margin={"-6vh"}/>
+        <div className={style.infoDiv}>
+          <h2 className={style.infoHeader}>ВОЙТИ В АККАУНТ</h2>
+          <p className={style.infoText}>Войдите в аккаунт, чтобы получить доступ к функциям организаторов</p>
+        </div>
+        <form className={style.formStyle} onSubmit={handleSubmit} ref={formRef}>
+          <TitledInput
+            title={
+              formState === FormState.EmptyUsername
+                ? "Username can't be empty"
+                : formState === FormState.IncorrectData
+                  ? "Incorrect username"
+                  : "Username"
+            }
+            isError={formState === FormState.EmptyUsername || formState === FormState.IncorrectData}
+          >
+            <IconInput
+              icon={<></>}
+              onEnter={handleEnter}
+              type="username"
+              name="username"
+              placeholder="email@example.xyz"
+              disabled={formState === FormState.Loading}
+            ></IconInput>
+          </TitledInput>
 
-        <TitledInput
-          title={
-            formState === FormState.EmptyPassword
-              ? "Password field can't be empty"
-              : formState === FormState.IncorrectData
-              ? "Or password"
-              : "Password"
-          }
-          isError={formState === FormState.EmptyPassword || formState === FormState.IncorrectData}
-        >
-          <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
-        </TitledInput>
-        <Button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
-          {formState === FormState.Loading ? "Loading..." : "Login"}
-        </Button>
-      </form>
+          <TitledInput
+            title={
+              formState === FormState.EmptyPassword
+                ? "Password field can't be empty"
+                : formState === FormState.IncorrectData
+                  ? "Or password"
+                  : "Password"
+            }
+            isError={formState === FormState.EmptyPassword || formState === FormState.IncorrectData}
+          >
+            <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading}/>
+          </TitledInput>
+          <Button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
+            {formState === FormState.Loading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
+          </Button>
+        </form>
+      </div>
+
     </div>
   )
 }
 
-function PasswordField({ onEnter, disabled }: { onEnter: (el: HTMLInputElement) => void; disabled: boolean }) {
+function PasswordField({onEnter, disabled}: { onEnter: (el: HTMLInputElement) => void; disabled: boolean }) {
   const [isHidden, setIsHidden] = useState(true)
   return (
     <IconInput

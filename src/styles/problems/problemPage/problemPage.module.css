@@ -6,12 +6,12 @@
   align-items: center;
   gap: 1.25em;
   padding: 1.25rem;
-  background-color: #ddd;
+  background-color: var(--main-bg);
 }
 .problemContainer {
   width: 100%;
   max-width: 100rem;
-  background-color: white;
+  background-color: var(--alt-bg);
   border-radius: 0.5rem;
   overflow: hidden;
 }

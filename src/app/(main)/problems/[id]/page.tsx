@@ -2,8 +2,6 @@ import { PROBLEM_API } from "@/constants/APIEndpoints"
 import ProblemPage from "@/components/sections/problems/problemPage/ProblemPage"
 import { Problem } from "@/types/problemAPI"
 import NotFound from "@/components/sections/problems/problemPage/NotFound"
-import { availableTournamentTypes as AVAILABLE_TOURNAMENT_TYPES } from "@/constants/AvailableTournaments"
-import {Suspense} from "react";
 
 async function ProblemPageMain({ params }: PageProps) {
   const { id } = await params
@@ -11,9 +9,7 @@ async function ProblemPageMain({ params }: PageProps) {
   if (problemRequest.status === 404) return <NotFound />
   const problem: Problem = await problemRequest.json()
   if (problem === null) return <NotFound />
-  return (
-    <ProblemPage problem={problem} />
-  )
+  return <ProblemPage problem={problem} />
 }
 
 export default ProblemPageMain

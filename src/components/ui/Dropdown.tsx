@@ -1,31 +1,37 @@
 "use client"
 import style from "@/styles/components/dropdown.module.css"
 import { FaChevronDown } from "react-icons/fa"
-import { useState, useRef, useEffect } from "react"
-import iconStyle from "@/styles/icons.module.css"
+import { useState, useRef, useEffect, ReactNode } from "react"
 
 interface DropdownOption<ValueType> {
-  displayName: string
+  displayElement: ReactNode
   value: ValueType
   active: boolean
 }
 
-export function StaticDropdown<ValueType>({
-  options,
-  onOptionSelect,
-  defaultSelection,
-  className,
-  disabled,
-}: {
+interface DropdownParams<ValueType> {
   options: DropdownOption<ValueType>[]
   onOptionSelect: (selection: ValueType) => void
   defaultSelection: number | DropdownOption<ValueType>
   className?: string
   disabled?: boolean
-}) {
+}
+
+type TextOption<ValueType> = { displayName: string; value: ValueType; active: boolean }
+interface TextDropdownParams<ValueType> extends Omit<DropdownParams<ValueType>, "options" | "defaultSelection"> {
+  options: TextOption<ValueType>[]
+  defaultSelection: number | TextOption<ValueType>
+}
+
+export function Dropdown<ValueType>({
+  options,
+  onOptionSelect,
+  defaultSelection,
+  className,
+  disabled,
+}: DropdownParams<ValueType>) {
   const [selectedOption, setSelectedOption] = useState<number | DropdownOption<ValueType>>(defaultSelection)
   const [isOpened, setIsOpened] = useState(false)
-
   const containerClassName = `${className ?? ""} ${style.dropdownContainer} ${disabled && style.dropdownDisabled}`
   useEffect(() => {
     setSelectedOption(defaultSelection)
@@ -52,6 +58,18 @@ export function StaticDropdown<ValueType>({
       />
     </div>
   )
+}
+
+export function TextDropdown<ValueType>({ options, defaultSelection, ...rest }: TextDropdownParams<ValueType>) {
+  const option2TextOption = (option: TextOption<ValueType>) => ({
+    value: option.value,
+    active: option.active,
+    displayElement: <p className={style.dropdownText}>{option.displayName}</p>,
+  })
+  const optionList = options.map(option2TextOption)
+  const defaultSel =
+    typeof defaultSelection === "number" ? optionList[defaultSelection] : option2TextOption(defaultSelection)
+  return <Dropdown options={optionList} defaultSelection={defaultSel} {...rest} />
 }
 
 function DropdownMenu<ValueType>({
@@ -108,8 +126,8 @@ function DropdownButton<ValueType>({
   const className = `${style.dropdownButton} ${isOpened && style.buttonOpened}`
   return (
     <div className={className} onClick={onClick}>
-      <DropdownOption  option={selectedOption}></DropdownOption>
-      <FaChevronDown className={style.arrowIcon}></FaChevronDown>
+      <DropdownOption option={selectedOption} />
+      <FaChevronDown className={style.arrowIcon} />
     </div>
   )
 }
@@ -124,7 +142,7 @@ function DropdownOption<ValueType>({ option, onClick }: { option: DropdownOption
         onClick()
       }}
     >
-      <p className={style.dropdownText}>{option.displayName}</p>
+      {option.displayElement}
     </div>
   )
 }
