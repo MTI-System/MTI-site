@@ -16,6 +16,8 @@ import iconStyle from "@/styles/icons.module.css"
 import StoreProvider from "@/components/Redux/StoreProvider"
 import ProfilePicture from "@/components/sections/app/Profile"
 import InitRedux from "@/components/Redux/InitRedux"
+import Header from "@/components/sections/app/Header";
+import Footer from "@/components/sections/app/Footer";
 
 export const metadata: Metadata = {
   title: {
