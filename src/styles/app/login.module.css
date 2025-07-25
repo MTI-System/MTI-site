@@ -38,6 +38,10 @@
     font-weight: bold;
 }
 
+.loginButton:hover{
+    background-color: var(--alt-bg);
+}
+
 .infoDiv {
     border-width: var(--border-width);
     border-radius: var(--block-radius);
