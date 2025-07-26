@@ -12,9 +12,9 @@ import { Button, HoldButton } from "@/components/ui/Buttons"
 import { IoWarningSharp } from "react-icons/io5"
 import clsx from "clsx"
 import { PiGlobeLight } from "react-icons/pi"
-import ProblemSectionComponent from "@/components/sections/problems/ProblemSection";
-import ModalDialog from "@/components/Dialogs/ModalDialog";
-import NewProblemForm from "@/components/Dialogs/Forms/NewProblemForm";
+import ProblemSectionComponent from "@/components/sections/problems/ProblemSection"
+import ModalDialog from "@/components/Dialogs/ModalDialog"
+import NewProblemForm from "@/components/Dialogs/Forms/NewProblemForm"
 
 // export default function ProblemCard({ problem, isEditable }: { problem: Problem; isEditable: boolean }) {
 //   const [isPendingDeletion, startTransition] = useTransition()
@@ -67,7 +67,7 @@ export function ProblemCardContent({
               {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
             </h2>
           </Link>
-          {startTransition && <EditButtons startTransition={startTransition} problem={problem} />}
+          {startTransition && isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
         </div>
         <div className={style.translationContainer}>
           <PiGlobeLight />
@@ -184,7 +184,6 @@ function DeletionConfirmationModal({
     </Modal>
   )
 }
-
 
 function SectionsList({ problem, isModerator }: { problem: Problem; isModerator: boolean }) {
   const [modalDialogState, setDialogState] = useState(0)

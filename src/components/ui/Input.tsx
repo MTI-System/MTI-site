@@ -1,48 +1,77 @@
 "use client"
-import { ChangeEvent, InputHTMLAttributes, ReactNode, RefObject, useRef } from "react"
+import {
+  ChangeEvent,
+  cloneElement,
+  createContext,
+  forwardRef,
+  InputHTMLAttributes,
+  ReactElement,
+  ReactNode,
+  RefObject,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react"
 import style from "@/styles/components/input.module.css"
-import headerStyle from "@/styles/app/header.module.css"
 import clsx from "clsx"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   onEnter?: (el: HTMLInputElement) => void
-  ref?: RefObject<HTMLInputElement | null>
 }
 
 interface IconInputProps extends InputProps {
   icon: ReactNode
   disabled?: boolean
 }
-
-export function IconInput({ icon, onChange, onEnter, disabled, ...rest }: IconInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  return (
-    <div
-      className={style.inputWrapper}
-      onMouseDown={(e) => {
-        e.preventDefault()
-        if (disabled) return
-        inputRef.current?.focus()
-      }}
-    >
-      <div className={style.inputContainer}>
-        <Input
-          className={style.inputWrapper}
-          onChange={onChange}
-          onEnter={onEnter}
-          ref={inputRef}
-          disabled={disabled}
-          {...rest}
-        />
-        {icon}
-      </div>
-    </div>
-  )
+type FocusContextType = {
+  register: (ref: RefObject<HTMLInputElement | null>) => void
 }
+const FocusContext = createContext<FocusContextType | null>(null)
+const useFocusRegistration = () => {
+  const ctx = useContext(FocusContext)
+  if (!ctx) return null
+  return ctx.register
+}
+export const IconInput = forwardRef<HTMLInputElement, IconInputProps>(
+  ({ icon, onChange, onEnter, disabled, ...rest }, ref) => {
+    const inputRef = useRef<HTMLInputElement>(null)
+    useImperativeHandle(ref, () => inputRef.current as HTMLInputElement)
+    return (
+      <div
+        className={style.inputWrapper}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          if (disabled) return
+          inputRef.current?.focus()
+        }}
+      >
+        <div className={style.inputContainer}>
+          <Input
+            className={style.inputWrapper}
+            onChange={onChange}
+            onEnter={onEnter}
+            ref={inputRef}
+            disabled={disabled}
+            {...rest}
+          />
+          {icon}
+        </div>
+      </div>
+    )
+  }
+)
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ onChange, onEnter, ...rest }, ref) => {
+  const registerFocus = useFocusRegistration()
+  const inputRef = useRef<HTMLInputElement>(null)
+  useImperativeHandle(ref, () => inputRef.current as HTMLInputElement)
 
-export function Input({ onChange, onEnter, ref, ...rest }: InputProps) {
-  const inputRef = ref ? ref : useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (registerFocus) registerFocus(inputRef)
+  }, [registerFocus])
+
   return (
     <input
       ref={inputRef}
@@ -55,7 +84,9 @@ export function Input({ onChange, onEnter, ref, ...rest }: InputProps) {
       {...rest}
     />
   )
-}
+})
+
+type AllowedInputs = ReactElement<typeof Input> | ReactElement<typeof IconInput>
 
 export function TitledInput({
   children,
@@ -63,15 +94,29 @@ export function TitledInput({
   isError,
   className,
 }: {
-  children: ReactNode
+  children: AllowedInputs
   title: string
   isError?: boolean
   className?: string
 }) {
+  const inputRef = useRef<HTMLInputElement>(null)
   return (
-    <div className={clsx(style.titledInputContainer, className)}>
+    <div
+      className={clsx(style.titledInputContainer, className)}
+      onClick={() => {
+        inputRef.current?.focus()
+      }}
+    >
       <p className={clsx(style.title, { [style.erroredTitle]: isError })}>{title}</p>
-      {children}
+      <FocusContext
+        value={{
+          register: (ref: RefObject<HTMLInputElement | null>) => {
+            inputRef.current = ref?.current
+          },
+        }}
+      >
+        {children}
+      </FocusContext>
     </div>
   )
 }

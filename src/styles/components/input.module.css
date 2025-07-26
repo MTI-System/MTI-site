@@ -1,68 +1,52 @@
 .inputWrapper {
-    font-size: 1.5vw;
-    font-weight: bold;
-    font-family:  'Roboto Mono';
-    /*width: 80%;*/
-    /*border: 0.1em solid rgba(0, 0, 0, 0.25);*/
-    /*transition: background-color 250ms ease;*/
-    /*background-color: rgba(255, 255, 255, 0.6);*/
-    /*cursor: text;*/
-
+  font-size: 1.5vw;
+  font-weight: bold;
+  font-family: "Roboto Mono";
 }
 
-
 .inputContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
 }
 
 .titledInputContainer {
-    padding: 0.7vw;
-    padding-left: 2vw;
-    width: 35vw;
-    margin: 3vh;
-    border-width: var(--border-width);
-    border-radius: var(--block-radius);
-    border-color: var(--border-color);
-    background-color: var(--alt-card-bg);
+  padding: 0.7vw;
+  padding-left: 2vw;
+  width: 35vw;
+  border-width: var(--border-width);
+  border-radius: var(--block-radius);
+  border-color: var(--border-color);
+  background-color: var(--alt-card-bg);
+  transition: background-color 250ms ease;
+  cursor: text;
 }
 
-.titledInputContainer:hover{
-    background-color: var(--hover-color);
-}
-
-.inputWrapper:hover {
-    /*background-color: rgba(255, 255, 255, 0.8);*/
-}
-
-.inputWrapper:focus-within {
-    /*background-color: white;*/
+.titledInputContainer:hover {
+  background-color: var(--hover-color);
 }
 
 .inputContainer input {
-    outline: none;
-    border: none;
-    background-color: transparent;
-    width: 100%;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  width: 100%;
 }
 
 .inputContainer svg {
-    opacity: 0.5;
+  opacity: 0.5;
+  cursor: pointer;
 }
 
 .title {
-    user-select: none;
-    /*opacity: 0.5;*/
-    font-size: 1vw;
-    /*transition: color 250ms ease;*/
-    color: var(--main-text-color);
-    font-family:   'Roboto Mono';
-    font-weight:  bold;
+  user-select: none;
+  font-size: 1vw;
+  color: var(--main-text-color);
+  font-family: "Roboto Mono";
+  font-weight: bold;
 }
 
 .erroredTitle {
-    color: red;
+  color: red;
 }
