@@ -33,8 +33,13 @@ export default function SearchParamsUpdator() {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString())
-    params.set("tt", tt)
-    params.set("year", year.toString())
+    if(tt){
+      params.set("tt", tt)
+    }
+    if (year){
+      params.set("year", year.toString())
+    }
+
     const next = `${pathname}?${params.toString()}`
     if (next !== `${pathname}?${searchParams}`) {
       startTransition(() => {
