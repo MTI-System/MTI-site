@@ -10,6 +10,7 @@
   align-items: center;
   align-content: center;
   display: none;
+  z-index: 10;
 }
 
 .overlay.open {
