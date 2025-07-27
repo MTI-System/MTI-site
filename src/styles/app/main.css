@@ -13,8 +13,8 @@
   --inactive-color: #dddddd;
 
   /*Blocks*/
-  --block-radius: 1.5vw;
-  --border-width: 0.1vw;
+  --block-radius: 1.5rem;
+  --border-width: 0.1rem;
 
   /*defaults*/
   --default-padding: 2vw;
