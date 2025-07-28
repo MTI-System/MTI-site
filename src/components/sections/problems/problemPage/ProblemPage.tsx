@@ -21,6 +21,7 @@ async function ProblemPage({ problem }: { problem: Problem }) {
     (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "video"
   )
 
+
   return (
     <div className={style.pageRoot}>
       <div className={style.main}>
