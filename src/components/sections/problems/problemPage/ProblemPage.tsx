@@ -15,10 +15,10 @@ async function ProblemPage({ problem }: { problem: Problem }) {
       .some((x) => x)
   }
   const allMaterials = problem.problem_materials
-  const primaryGifMaterial = allMaterials.filter((mat) => mat.material_type.type_title === "primaryImg")
+  const primaryGifMaterial = allMaterials.filter((mat) => mat.material_type.type_title === "PRIMARY_GIF")
   const primaryVideoMaterial = allMaterials.find((mat) => mat.material_type.type_title === "video")
   const listOfMaterials = allMaterials.filter(
-    (mat) => mat.material_type.type_title !== "primaryImg" && mat.material_type.type_title !== "video"
+    (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "video"
   )
 
   return (
@@ -30,8 +30,9 @@ async function ProblemPage({ problem }: { problem: Problem }) {
           </div>
           {primaryGifMaterial.length > 0 && (
             <div className={style.gifContainer}>
-              <ExpandableImage className={style.gif} src={primaryGifMaterial[0].url} />
-              <ExpandableImage className={style.gif} src={primaryGifMaterial[1].url} />
+              {primaryGifMaterial.map((gifMaterial, index) => (
+                <ExpandableImage className={style.gif} src={FILES_SERVER + gifMaterial.url} key={index + 1} />
+              ))}
             </div>
           )}
         </div>
