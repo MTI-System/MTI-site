@@ -58,6 +58,10 @@
 /*    }*/
 /*}*/
 
+/*body{*/
+/*  min-width: 900px;*/
+/*}*/
+
 * {
   font-family: "Roboto mono", monospace;
   color: var(--main-text-color);
@@ -66,6 +70,9 @@
 main {
   min-height: calc(100vh - var(--nav-header-height));
   background-color: var(--main-bg);
+  /*justify-content: start;*/
+  /*justify-items: flex-start;*/
+  /*overflow: scroll;*/
 }
 
 h1 {
