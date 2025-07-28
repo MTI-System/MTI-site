@@ -48,18 +48,6 @@
   }
 }
 
-/*@media (prefers-color-scheme: dark) {*/
-/*    :root {*/
-/*        --card-cta-bar-color: #0A0A0A66;*/
-/*        --main-bg: #0A0A0A;*/
-/*        --main-text-color: #E6EDF3;*/
-/*        --hover-color: #0A0A0A;*/
-/*        --border-color: #2C2C2C;*/
-/*        --alt-bg: #1A1A1A;*/
-/*        --alt-card-bg: #1E1E1E;*/
-/*    }*/
-/*}*/
-
 /*body{*/
 /*  min-width: 900px;*/
 /*}*/
@@ -67,6 +55,16 @@
 * {
   font-family: "Roboto mono", monospace;
   color: var(--main-text-color);
+}
+
+body[data-theme="dark"] {
+  --card-cta-bar-color: #0a0a0a66;
+  --main-bg: #0a0a0a;
+  --main-text-color: #e6edf3;
+  --hover-color: #0a0a0a;
+  --border-color: #2c2c2c;
+  --alt-bg: #1a1a1a;
+  --alt-card-bg: #1e1e1e;
 }
 
 main {

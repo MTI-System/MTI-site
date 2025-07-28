@@ -12,7 +12,7 @@
     "@fontsource/roboto-mono": "^5.2.6",
     "@reduxjs/toolkit": "^2.8.2",
     "@types/animejs": "^3.1.13",
-    "animejs": "^4.1.1",
+    "animejs": "^4.1.2",
     "clsx": "^2.1.1",
     "js-cookie": "^3.0.5",
     "next": "15.3.5",

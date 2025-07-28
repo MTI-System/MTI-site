@@ -1,6 +1,6 @@
 .cardGrid {
   height: 85vh;
-  width: 100vw;
+  width: 100%;
   padding: 2vh 5vw 1vw 5vw;
   justify-content: center;
   justify-self: center;
