@@ -8,6 +8,9 @@
   transition-property: background-color, color;
   transition-duration: 250ms;
   transition-timing-function: ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 2%;
 }
 .button:hover {
   background-color: var(--main-color);

@@ -13,8 +13,8 @@
   --inactive-color: #dddddd;
 
   /*Blocks*/
-  --block-radius: 1.5rem;
-  --border-width: 0.1rem;
+  --block-radius: 2rem;
+  --border-width: 1px;
 
   /*defaults*/
   --default-padding: 2vw;
@@ -36,13 +36,15 @@
   --text-primary-accent: #3849ff;
 
   /*Fonts*/
-  @media (min-width: 600px) {
-    --main-header-text: 2vw;
-    --medium-text: 1vw;
+  @media (min-width: 700px) {
+    --main-header-text: 2.3rem;
+    --medium-text: 1.5rem;
   }
-  @media (max-width: 600px) {
-    --main-header-text: 3vw;
-    --medium-text: 2vw;
+  @media (max-width: 700px) {
+    --main-header-text: 1.5rem;
+    --medium-text: 1.2rem;
+    /* --main-header-text: 3vw;
+    --medium-text: 2vw; */
   }
 }
 
@@ -70,6 +72,7 @@
 main {
   min-height: calc(100vh - var(--nav-header-height));
   background-color: var(--main-bg);
+  /* width: var(--main-container-size) */
   /*justify-content: start;*/
   /*justify-items: flex-start;*/
   /*overflow: scroll;*/
