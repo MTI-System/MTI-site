@@ -1,47 +1,46 @@
 .header {
-    /*position: fixed;*/
-    /*width:  100%;*/
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--alt-bg);
-    height: var(--nav-header-height);
+  /*position: fixed;*/
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--alt-bg);
+  height: var(--nav-header-height);
 }
 
 .leftContainer {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    width: 40vw;
-    padding-left: var(--default-padding);
-    gap: var(--default-gap);
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 40vw;
+  padding-left: var(--default-padding);
+  gap: var(--default-gap);
 }
 
 .leftContainer h2 {
-    padding: 1em;
+  padding: 1em;
 }
 
 .leftContainer .dropdown {
-    /*width: 8rem;*/
+  /*width: 8rem;*/
 }
 
 .headerRoundButton {
-    width: 3vw;
-    height: 3vw;
-    background-color: var(--alt-bg);
-    border-color: var(--border-color);
-    border-width: var(--border-width);
+  width: 3vw;
+  height: 3vw;
+  --main-light-color: var(--alt-bg) !important;
+  --main-color: var(--border-color) !important;
 }
 
 .rightContainer {
-    display: flex;
-    justify-content: right;
-    align-items: center;
-    gap: var(--default-gap);
-    padding-right: var(--default-padding);
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  gap: var(--default-gap);
+  padding-right: var(--default-padding);
 }
 
-.headerIconInButton{
-    width: 100%;
-    height: 50%;
+.headerIconInButton {
+  width: 100%;
+  height: 50%;
 }

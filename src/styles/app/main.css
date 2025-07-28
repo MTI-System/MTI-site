@@ -1,81 +1,83 @@
 @import "tailwindcss";
 /*@import "@/styles/Constants.css";*/
 :root {
-    /* Globals: dimensions */
-    --nav-header-height: 10vh;
-    /* Globals: colors */
-    --bg-color: white;
-    /*--main-text-color: black;*/
-    --placeholder-text-color: rgba(0, 0, 0, 0.25);
-    --accent-color: #696bff;
-    --accent-hover-color: #9294ff;
-    --accent-light-color: #f3f1ff;
-    --inactive-color: #dddddd;
+  /* Globals: dimensions */
+  --nav-header-height: 10vh;
+  /* Globals: colors */
+  --bg-color: white;
+  /*--main-text-color: black;*/
+  --placeholder-text-color: rgba(0, 0, 0, 0.25);
+  --accent-color: #696bff;
+  --accent-hover-color: #9294ff;
+  --accent-light-color: #f3f1ff;
+  --inactive-color: #dddddd;
 
+  /*Blocks*/
+  --block-radius: 2rem;
+  --border-width: 1px;
 
-    /*Blocks*/
-    --block-radius: 1.5vw;
-    --border-width: 0.1vw;
+  /*defaults*/
+  --default-padding: 2vw;
+  --default-gap: 1vw;
 
-    /*defaults*/
-    --default-padding: 2vw;
-    --default-gap: 1vw;
+  /*Colors*/
+  --text-on-accent: #e6edf3;
+  --primary-accent: #1e2ede;
+  --border-color: #b2b2b2;
+  --main-text-color: #212519;
+  --alt-bg: #ffffff;
+  --hover-color: #e2e2e2;
+  --card-cta-bar-color: #0a0a0a22;
+  --main-bg: #e5e5e5;
+  --alt-text: #7d8590;
+  --alt-card-bg: #ffffff;
 
+  --button-alt-color: #dcdfff;
+  --text-primary-accent: #3849ff;
 
-    /*Colors*/
-    --text-on-accent: #E6EDF3;
-    --primary-accent: #1E2EDE;
-    --border-color: #B2B2B2;
-    --main-text-color: #212519;
-    --alt-bg: #FFFFFF;
-    --hover-color: #e2e2e2;
-    --card-cta-bar-color: #0A0A0A22;
-    --main-bg: #E5E5E5;
-    --alt-text: #7D8590;
-    --alt-card-bg: #ffffff;
-
-    --button-alt-color: #3849FF33;
-    --text-primary-accent: #3849FF;
-
-    /*Fonts*/
-    @media (min-width: 600px) {
-        --main-header-text: 2vw;
-        --medium-text: 1vw;
-    }
-    @media (max-width: 600px) {
-        --main-header-text: 3vw;
-        --medium-text: 2vw;
-    }
+  /*Fonts*/
+  @media (min-width: 700px) {
+    --main-header-text: 2.3rem;
+    --medium-text: 1.5rem;
+  }
+  @media (max-width: 700px) {
+    --main-header-text: 1.5rem;
+    --medium-text: 1.2rem;
+    /* --main-header-text: 3vw;
+    --medium-text: 2vw; */
+  }
 }
 
-/*@media (prefers-color-scheme: dark) {*/
-/*    :root {*/
-/*        --card-cta-bar-color: #0A0A0A66;*/
-/*        --main-bg: #0A0A0A;*/
-/*        --main-text-color: #E6EDF3;*/
-/*        --hover-color: #0A0A0A;*/
-/*        --border-color: #2C2C2C;*/
-/*        --alt-bg: #1A1A1A;*/
-/*        --alt-card-bg: #1E1E1E;*/
-/*    }*/
+/*body{*/
+/*  min-width: 900px;*/
 /*}*/
 
-
 * {
-    font-family: Roboto;
-    color: var(--main-text-color);
+  font-family: "Roboto mono", monospace;
+  color: var(--main-text-color);
+}
 
+body[data-theme="dark"] {
+  --card-cta-bar-color: #0a0a0a66;
+  --main-bg: #0a0a0a;
+  --main-text-color: #e6edf3;
+  --hover-color: #0a0a0a;
+  --border-color: #2c2c2c;
+  --alt-bg: #1a1a1a;
+  --alt-card-bg: #1e1e1e;
 }
 
 main {
-    min-height: calc(100vh - var(--nav-header-height));
-    background-color: var(--main-bg);
+  min-height: calc(100vh - var(--nav-header-height));
+  background-color: var(--main-bg);
+  /* width: var(--main-container-size) */
+  /*justify-content: start;*/
+  /*justify-items: flex-start;*/
+  /*overflow: scroll;*/
 }
 
 h1 {
-    text-align: center;
-    font-weight: bold;
-    font-size: var(--main-header-text);
+  text-align: center;
+  font-weight: bold;
+  font-size: var(--main-header-text);
 }
-
-

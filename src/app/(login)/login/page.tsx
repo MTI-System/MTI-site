@@ -1,16 +1,16 @@
 "use client"
-import {useState, FormEvent, useRef, Suspense} from "react"
-import {AUTH_API} from "@/constants/APIEndpoints"
-import {useRouter, useSearchParams} from "next/navigation"
-import {FaUser, FaEye, FaEyeSlash} from "react-icons/fa6"
-import {IconInput, TitledInput} from "@/components/ui/Input"
+import { useState, FormEvent, useRef, Suspense } from "react"
+import { AUTH_API } from "@/constants/APIEndpoints"
+import { useRouter, useSearchParams } from "next/navigation"
+import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa6"
+import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
 import Loading from "@/app/(main)/loading"
 import cookies from "js-cookie"
-import {AUTH_TOKEN_KEY_NAME} from "@/constants/CookieKeys"
-import {Button} from "@/components/ui/Buttons"
-import LogoWithTT from "@/components/sections/app/LogoWithTT";
-import '@fontsource/roboto-mono'
+import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
+import { Button } from "@/components/ui/Buttons"
+import LogoWithTT from "@/components/sections/app/LogoWithTT"
+import "@fontsource/roboto-mono"
 
 enum FormState {
   AwaitLogin,
@@ -23,8 +23,8 @@ enum FormState {
 
 export default function Page() {
   return (
-    <Suspense fallback={<Loading/>}>
-      <LoginPage/>
+    <Suspense fallback={<Loading />}>
+      <LoginPage />
     </Suspense>
   )
 }
@@ -83,7 +83,7 @@ function LoginPage() {
   return (
     <div className={style.loginContainer}>
       <div className={style.login}>
-        <LogoWithTT logoSize={"9vh"} margin={"-6vh"}/>
+        <LogoWithTT logoSize={"9vh"} margin={"-6vh"} />
         <div className={style.infoDiv}>
           <h2 className={style.infoHeader}>ВОЙТИ В АККАУНТ</h2>
           <p className={style.infoText}>Войдите в аккаунт, чтобы получить доступ к функциям организаторов</p>
@@ -94,8 +94,8 @@ function LoginPage() {
               formState === FormState.EmptyUsername
                 ? "Username can't be empty"
                 : formState === FormState.IncorrectData
-                  ? "Incorrect username"
-                  : "Username"
+                ? "Incorrect username"
+                : "Username"
             }
             isError={formState === FormState.EmptyUsername || formState === FormState.IncorrectData}
           >
@@ -114,24 +114,28 @@ function LoginPage() {
               formState === FormState.EmptyPassword
                 ? "Password field can't be empty"
                 : formState === FormState.IncorrectData
-                  ? "Or password"
-                  : "Password"
+                ? "Or password"
+                : "Password"
             }
             isError={formState === FormState.EmptyPassword || formState === FormState.IncorrectData}
           >
-            <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading}/>
+            <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
           </TitledInput>
-          <Button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
+          <Button
+            type="submit"
+            className={style.loginButton}
+            style={{ "--main-light-color": "var(--button-alt-color)" }}
+            disabled={formState === FormState.Loading}
+          >
             {formState === FormState.Loading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
           </Button>
         </form>
       </div>
-
     </div>
   )
 }
 
-function PasswordField({onEnter, disabled}: { onEnter: (el: HTMLInputElement) => void; disabled: boolean }) {
+function PasswordField({ onEnter, disabled }: { onEnter: (el: HTMLInputElement) => void; disabled: boolean }) {
   const [isHidden, setIsHidden] = useState(true)
   return (
     <IconInput

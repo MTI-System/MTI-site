@@ -1,23 +1,12 @@
-import TournamentTypeSelector from "@/components/sections/app/TournamentTypeSelector"
-import GlobalSearch from "@/components/sections/app/SearchBar"
-import {FaMoon} from "react-icons/fa"
-import {FaUserCircle} from "react-icons/fa"
-import headerStyle from "@/styles/app/header.module.css"
-import footerStyle from "@/styles/app/footer.module.css"
 import "@/styles/app/main.css"
-import Link from "next/link"
-import type {Metadata} from "next";
-import Loading from "@/app/(main)/loading";
-import {Suspense} from "react";
-import {FILES_SERVER} from "@/constants/APIEndpoints";
-import {headers} from "next/headers";
-import Script from "next/script";
-import iconStyle from "@/styles/icons.module.css"
+import type { Metadata } from "next"
+import { FILES_SERVER } from "@/constants/APIEndpoints"
+import Script from "next/script"
 import StoreProvider from "@/components/Redux/StoreProvider"
-import ProfilePicture from "@/components/sections/app/Profile"
-import InitRedux from "@/components/Redux/InitRedux"
-import Header from "@/components/sections/app/Header";
-import Footer from "@/components/sections/app/Footer";
+import Header from "@/components/sections/app/Header"
+import Footer from "@/components/sections/app/Footer"
+import { cookies } from "next/headers"
+import LayoutComponent from "@/components/sections/app/Layout"
 
 export const metadata: Metadata = {
   title: {
@@ -25,26 +14,24 @@ export const metadata: Metadata = {
     default: "МТИ - Менеджер Турнирной Информации",
   },
   verification: {
-    yandex: 'aa838087dd1ef992',
+    yandex: "aa838087dd1ef992",
   },
-
 }
 
 async function RootLayout({
-                            children,
-                          }: Readonly<{
+  children,
+}: Readonly<{
   children: React.ReactNode
 }>) {
-
   return (
     <html>
-    <head>
-      <link rel="shortcut icon" href={FILES_SERVER + "favicon1.ico"}/>
-      <Script
-        id="yandex-metrika"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
+      <head>
+        <link rel="shortcut icon" href={FILES_SERVER + "favicon1.ico"} />
+        <Script
+          id="yandex-metrika"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
               (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){
                 (m[i].a=m[i].a||[]).push(arguments)}
               ;m[i].l=1*new Date();
@@ -61,19 +48,16 @@ async function RootLayout({
                 webvisor:true
               });
             `,
-        }}
-      />
-    </head>
-    <body>
-    <StoreProvider>
-      <InitRedux/>
-        <Header/>
-      <main>
-        {children}
-      </main>
-      <Footer/>
-    </StoreProvider>
-    </body>
+          }}
+        />
+      </head>
+      <StoreProvider theme={(await cookies()).get("theme")?.value ?? "light"}>
+        <LayoutComponent>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </LayoutComponent>
+      </StoreProvider>
     </html>
   )
 }

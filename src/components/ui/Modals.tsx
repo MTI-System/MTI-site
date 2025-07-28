@@ -27,7 +27,8 @@ export default function Modal({
   return (
     <div
       className={clsx(style.overlay, { [style.open]: isOpen })}
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation()
         if (preventClose) return
         onCloseInternal()
         setIsOpen(false)

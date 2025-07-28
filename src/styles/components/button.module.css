@@ -1,23 +1,25 @@
 .button {
   --main-color: var(--primary-accent);
   --main-light-color: var(--alt-bg);
-  /*background-color: var(--main-light-color);*/
-  /*border: 0.15em solid var(--main-color);*/
-  /*color: var(--main-color);*/
+  background-color: var(--main-light-color);
+  border: var(--border-width) solid var(--main-color);
+  color: var(--main-color);
   border-radius: var(--block-radius);
   transition-property: background-color, color;
   transition-duration: 250ms;
   transition-timing-function: ease;
-
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 2%;
 }
 .button:hover {
-  /*background-color: var(--main-color);*/
-  /*border: 0.15em solid var(--main-color);*/
-  /*color: var(--main-light-color);*/
+  background-color: var(--main-color);
+  border: var(--border-width) solid var(--main-color);
+  color: var(--main-light-color);
 }
 .button:disabled {
   background-color: var(--inactive-color);
-  border: 0.15em solid var(--inactive-color);
+  border: var(--border-width) solid var(--inactive-color);
   color: var(--bg-color);
 }
 .holdButton {

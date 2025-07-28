@@ -4,6 +4,7 @@ import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { Button } from "@/components/ui/Buttons"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { ProblemCardContent } from "../ProblemCard"
+import { ExpandableImage } from "@/components/ui/Images"
 
 async function ProblemPage({ problem }: { problem: Problem }) {
   const userAuth = await fetchPermissions()
@@ -14,23 +15,30 @@ async function ProblemPage({ problem }: { problem: Problem }) {
       .some((x) => x)
   }
   const allMaterials = problem.problem_materials
-  const primaryGifMaterial = allMaterials.find((mat) => mat.material_type.type_title === "primaryImg")
+  const primaryGifMaterial = allMaterials.filter((mat) => mat.material_type.type_title === "PRIMARY_GIF")
   const primaryVideoMaterial = allMaterials.find((mat) => mat.material_type.type_title === "video")
   const listOfMaterials = allMaterials.filter(
-    (mat) => mat.material_type.type_title !== "gif" && mat.material_type.type_title !== "video"
+    (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "video"
   )
+
 
   return (
     <div className={style.pageRoot}>
-      <div className={style.problemContainer}>
+      <div className={style.main}>
         <div className={style.problemWithGif}>
-          <div className={style.problemWithTournamets}>
+          <div className={style.problem}>
             <ProblemCardContent problem={problem} isEditable={false} />
-            <div className={style.tournamentsContainer}>Tournaments here...</div>
           </div>
-          <div className={style.gifContainer}>Optional GIF here...</div>
+          {primaryGifMaterial.length > 0 && (
+            <div className={style.gifContainer}>
+              {primaryGifMaterial.map((gifMaterial, index) => (
+                <ExpandableImage className={style.gif} src={FILES_SERVER + gifMaterial.url} key={index + 1} />
+              ))}
+            </div>
+          )}
         </div>
         <div className={style.primaryVideoContainer}>
+          <h2 className={style.videoTitle}>Видео</h2>
           <div className={style.tmpVideo}>Video here...</div>
         </div>
         <div className={style.filesContainer}>

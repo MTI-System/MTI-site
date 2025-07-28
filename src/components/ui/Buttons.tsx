@@ -43,6 +43,7 @@ export function HoldButton({
   const isDisabled = rest.disabled ?? false
   useEffect(() => {
     scope.current = createScope({ root: target }).add((self) => {
+      if (!self) return
       const confirmationAnim = animate(`.${styleModule.holdOverlay}`, {
         left: ["-100%", 0],
         ease: "outCubic",
