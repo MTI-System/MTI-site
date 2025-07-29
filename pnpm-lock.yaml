@@ -8,7 +8,10 @@ importers:
 
   .:
     dependencies:
-      '@fontsource/roboto-mono':
+      '@fontsource-variable/roboto-flex':
+        specifier: ^5.2.6
+        version: 5.2.6
+      '@fontsource-variable/roboto-mono':
         specifier: ^5.2.6
         version: 5.2.6
       '@reduxjs/toolkit':
@@ -83,8 +86,11 @@ packages:
   '@emnapi/runtime@1.4.5':
     resolution: {integrity: sha512-++LApOtY0pEEz1zrd9vy1/zXVaVJJ/EbAF3u0fXIzPJEDtnITsBGbbK0EkM72amhl/R5b+5xx0Y/QhcVOpuulg==}
 
-  '@fontsource/roboto-mono@5.2.6':
-    resolution: {integrity: sha512-fLCa3zs9XruKE8Fdbq0UWB0wqTi5dzi09QsnW7HgTwwnSVDZ3nH+X7Qg7l0yeIZs+E472cKE3RUD21ZnaXk4Zg==}
+  '@fontsource-variable/roboto-flex@5.2.6':
+    resolution: {integrity: sha512-8jUDGkb6gRUexJkdUz1GThB9fshF7ENe/vVmtf+nz2MxQZZsrrYT92tST3xM+xf/BnoqL6yRkGdv9zNITiyYCw==}
+
+  '@fontsource-variable/roboto-mono@5.2.6':
+    resolution: {integrity: sha512-U9iAWyACe0BkE8CpzBvvQnGSoFKXwuVmwC2zT3u66xe5EXfGsWmKtem+4xQHgvXazC6wq/m3hPJ5jjqgIkkTUQ==}
 
   '@img/sharp-darwin-arm64@0.34.3':
     resolution: {integrity: sha512-ryFMfvxxpQRsgZJqBd4wsttYQbCxsJksrv9Lw/v798JcQ8+w84mBWuXwl+TT0WJ/WrYOLaYpwQXi3sA9nTIaIg==}
@@ -708,7 +714,9 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@fontsource/roboto-mono@5.2.6': {}
+  '@fontsource-variable/roboto-flex@5.2.6': {}
+
+  '@fontsource-variable/roboto-mono@5.2.6': {}
 
   '@img/sharp-darwin-arm64@0.34.3':
     optionalDependencies:

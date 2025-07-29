@@ -2,7 +2,7 @@
 import { TextDropdown } from "@/components/ui/Dropdown"
 import style from "@/styles/problems/problemsFilter.module.css"
 import { ReactNode } from "react"
-import Loading from "@/app/(main)/loading"
+import Loading from "@/app/loading"
 import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { setYear } from "@/redux_stores/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
