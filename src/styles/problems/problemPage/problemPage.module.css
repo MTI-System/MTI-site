@@ -22,7 +22,6 @@
 }
 .problem {
   width: 100%;
-  min-height: 15em;
   display: flex;
   flex-direction: column;
 }
@@ -31,6 +30,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  gap: 1.5vh;
 }
 .gifContainer {
   background-color: #eee;
