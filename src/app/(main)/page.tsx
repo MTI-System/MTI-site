@@ -1,8 +1,6 @@
 import ClickableCard from "@/components/ui/ClickableCard"
 import mainStyle from "@/styles/app/mainPage.module.css"
-import { store } from "next/dist/build/output/store"
 import { Button } from "@/components/ui/Buttons"
-import "@fontsource/roboto-mono"
 import clsx from "clsx"
 
 export default function Home() {

@@ -45,17 +45,23 @@
 .gif {
   height: 100%;
 }
-.primaryVideoContainer {
+.contentContainer {
   width: calc(100% - 2rem);
   border: var(--border-width) var(--border-color) solid;
   border-radius: var(--block-radius);
   overflow: hidden;
 }
-.videoTitle {
+.containerTitle {
   padding: 0.5rem 1rem;
   font-size: 2rem;
   font-weight: bold;
   border-bottom: var(--border-width) var(--border-color) solid;
+}
+.nothingMessage {
+  width: 100%;
+  text-align: center;
+  padding: 1rem 0;
+  background-color: var(--main-bg);
 }
 .tmpVideo {
   background-color: #ddd;
@@ -63,6 +69,10 @@
   height: 30rem;
   text-align: center;
 }
-.filesContainer {
-  width: calc(100% - 2rem);
+.materialContainer {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
