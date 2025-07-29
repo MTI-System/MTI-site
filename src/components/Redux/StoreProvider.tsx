@@ -3,10 +3,10 @@ import { useRef } from "react"
 import { Provider } from "react-redux"
 import makeStore, { AppStore } from "@/redux_stores/tournamentTypeRedixStore"
 
-export default function StoreProvider({ children, theme }: { children: React.ReactNode; theme: string }) {
+export default function StoreProvider({ children, theme, tt }: { children: React.ReactNode; theme: string; tt: string }) {
   const storeRef = useRef<AppStore | null>(null)
   if (!storeRef.current) {
-    storeRef.current = makeStore(theme)
+    storeRef.current = makeStore(theme, tt)
   }
   return <Provider store={storeRef.current}>{children}</Provider>
 }

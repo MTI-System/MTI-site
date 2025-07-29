@@ -15,7 +15,6 @@ export default function TournamentTypeSelector({ className }: { className?: stri
   }, [tt])
   return (
     <>
-      <p>{theme}</p>
       <TextDropdown
         options={availableTournamentTypes.map((tt) => {
           return { displayName: tt.name.toUpperCase(), value: tt.name, active: true }

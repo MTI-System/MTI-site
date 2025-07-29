@@ -10,6 +10,7 @@ import SearchParamsUpdator from "@/components/service/SearchParamsUpdator"
 export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams
   let tt = sp[TOURNAMENT_TYPE_SEARCH_PARAM_NAME] ?? undefined
+  console.log("tt", tt)
 
   const possibleYears = await fetchYears(availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1)
   const year = sp.year ?? possibleYears[0]

@@ -23,9 +23,12 @@ enum FormState {
 
 export default function Page() {
   return (
-    <Suspense fallback={<Loading />}>
-      <LoginPage />
-    </Suspense>
+    <>
+
+      <Suspense fallback={<Loading />}>
+        <LoginPage />
+      </Suspense>
+    </>
   )
 }
 

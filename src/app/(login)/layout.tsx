@@ -1,4 +1,5 @@
 import "@/styles/app/main.css"
+import LayoutComponent from "@/components/sections/app/Layout";
 
 export default function RootLayout({
   children,
@@ -6,8 +7,6 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html>
-      <body>{children}</body>
-    </html>
+      <LayoutComponent>{children}</LayoutComponent>
   )
 }
