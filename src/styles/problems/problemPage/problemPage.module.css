@@ -27,15 +27,15 @@
   flex-direction: column;
 }
 .problemWithGif {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 .gifContainer {
   background-color: #eee;
-  border: 0.1rem #aaa dashed;
-  padding: 1rem;
-  height: 40vh;
+  padding: 0 1rem;
+  height: 30vh;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -43,7 +43,7 @@
   gap: 1vw;
 }
 .gif {
-  height: 90%;
+  height: 100%;
 }
 .primaryVideoContainer {
   width: calc(100% - 2rem);
