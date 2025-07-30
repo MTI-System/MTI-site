@@ -1,7 +1,7 @@
+import style from "@/styles/routes/(main)/problems/page.module.css"
 import ProblemFilters from "@/components/sections/problems/ProblemsFilter"
 import ProblemsList from "@/components/sections/problems/ProblemsList"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import style from "@/styles/problems/problemsList.module.css"
 import { Suspense } from "react"
 import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
 import { fetchYears } from "@/scripts/ApiFetchers"

@@ -1,5 +1,5 @@
 import { FILES_SERVER } from "@/constants/APIEndpoints"
-import style from "@/styles/components/fileEmbeddings.module.css"
+import style from "@/styles/components/ui/Files/fileEmbeddings.module.css"
 
 enum EmbeddingIconState {
   default,

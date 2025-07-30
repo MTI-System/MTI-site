@@ -2,7 +2,7 @@
 import { FaEdit } from "react-icons/fa"
 import { MdDeleteOutline } from "react-icons/md"
 import { Problem } from "@/types/problemAPI"
-import style from "@/styles/problems/problemCard.module.css"
+import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { deleteProblem } from "@/scripts/ApiFetchers"

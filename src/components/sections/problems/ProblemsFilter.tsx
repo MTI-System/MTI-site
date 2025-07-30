@@ -1,6 +1,6 @@
 "use client"
 import { TextDropdown } from "@/components/ui/Dropdown"
-import style from "@/styles/problems/problemsFilter.module.css"
+import style from "@/styles/components/sections/problems/problemsFilter.module.css"
 import { ReactNode } from "react"
 import Loading from "@/app/loading"
 import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"

@@ -1,4 +1,4 @@
-import headerStyle from "@/styles/app/header.module.css"
+import headerStyle from "@/styles/components/sections/app/header.module.css"
 import Link from "next/link"
 import TournamentTypeSelector from "@/components/sections/app/TournamentTypeSelector"
 import { FaMoon } from "react-icons/fa"

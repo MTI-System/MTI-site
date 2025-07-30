@@ -1,12 +1,12 @@
+import style from "@/styles/components/sections/problems/[id]/problemPage.module.css"
 import { Problem } from "@/types/problemAPI"
-import style from "@/styles/problems/problemPage/problemPage.module.css"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { Button } from "@/components/ui/Buttons"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { ProblemCardContent } from "../ProblemCard"
-import { ExpandableImage } from "@/components/ui/Images"
+import { ExpandableImage } from "@/components/ui/Files/Images"
 import { ReactNode } from "react"
-import UniversalEmbedding from "@/components/ui/FileEmbeddings"
+import UniversalEmbedding from "@/components/ui/Files/FileEmbeddings"
 
 async function ProblemPage({ problem }: { problem: Problem }) {
   const userAuth = await fetchPermissions()

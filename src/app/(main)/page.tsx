@@ -1,5 +1,5 @@
+import mainStyle from "@/styles//routes/(main)/mainPage.module.css"
 import ClickableCard from "@/components/ui/ClickableCard"
-import mainStyle from "@/styles/app/mainPage.module.css"
 import { Button } from "@/components/ui/Buttons"
 import clsx from "clsx"
 

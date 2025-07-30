@@ -1,7 +1,7 @@
 "use client"
 
 import { Dispatch, MouseEvent, ReactNode, SetStateAction, useEffect } from "react"
-import style from "@/styles/components/modals.module.css"
+import style from "@/styles/components/ui/modals.module.css"
 import clsx from "clsx"
 import { FaTimes } from "react-icons/fa"
 

@@ -1,0 +1,18 @@
+.problemPage {
+  background-color: var(--main-bg);
+  display: flex;
+  justify-content: center;
+}
+
+.problemsContainer {
+  width: 80%;
+  background-color: var(--main-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25vh;
+  padding: 1.25rem 0;
+  @media (max-width: 700px) {
+    width: 95%;
+  }
+}

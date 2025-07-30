@@ -1,10 +1,10 @@
 "use client"
+import style from "@/styles/routes/(login)/login.module.css"
 import { useState, FormEvent, useRef, Suspense } from "react"
 import { AUTH_API } from "@/constants/APIEndpoints"
 import { useRouter, useSearchParams } from "next/navigation"
 import { FaEye, FaEyeSlash } from "react-icons/fa6"
 import { IconInput, TitledInput } from "@/components/ui/Input"
-import style from "@/styles/app/login.module.css"
 import Loading from "@/app/loading"
 import cookies from "js-cookie"
 import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
@@ -23,7 +23,6 @@ enum FormState {
 export default function Page() {
   return (
     <>
-
       <Suspense fallback={<Loading />}>
         <LoginPage />
       </Suspense>

@@ -4,7 +4,7 @@ import { Problem, ProblemList } from "@/types/problemAPI"
 import { fetchPermissions, fetchProblems } from "@/scripts/ApiFetchers"
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import { redirect } from "next/navigation"
+
 export default async function ProblemsList({ year, tt }: { year: number; tt: string }) {
   const ttid = availableTournamentTypes.find((value) => value.name === tt)?.id.toString()
   const respJSON: ProblemList | null = ttid ? await fetchProblems(ttid, year) : null

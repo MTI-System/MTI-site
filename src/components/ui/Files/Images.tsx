@@ -1,9 +1,9 @@
 "use client"
-import style from "@/styles/components/images.module.css"
+import style from "@/styles/components/ui/Files/images.module.css"
 import clsx from "clsx"
 import { ImgHTMLAttributes, useState } from "react"
 import { FaMagnifyingGlass } from "react-icons/fa6"
-import Modal from "./Modals"
+import Modal from "../Modals"
 
 interface ExpandableImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   className?: string

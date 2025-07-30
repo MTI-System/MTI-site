@@ -1,5 +1,5 @@
 "use client"
-import style from "@/styles/components/dropdown.module.css"
+import style from "@/styles/components/ui/dropdown.module.css"
 import { FaChevronDown } from "react-icons/fa"
 import { useState, useRef, useEffect, ReactNode } from "react"
 import clsx from "clsx"
