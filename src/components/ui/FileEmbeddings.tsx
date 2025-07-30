@@ -49,6 +49,7 @@ function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, iconState
           {extension}
         </p>
       )}
+      {iconState !== EmbeddingIconState.default && <></>}
     </div>
   )
 }

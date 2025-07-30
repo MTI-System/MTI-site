@@ -22,7 +22,6 @@ async function ProblemPage({ problem }: { problem: Problem }) {
   const listOfMaterials = allMaterials.filter(
     (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "video"
   )
-  console.log(listOfMaterials)
   return (
     <div className={style.pageRoot}>
       <div className={style.main}>
@@ -54,21 +53,6 @@ async function ProblemPage({ problem }: { problem: Problem }) {
                     extension="PDF"
                     extensionColor="red"
                   />
-                  // <div key={material.id}>
-                  //   <a href={FILES_SERVER + material.url}>
-                  //     <img
-                  //       src={FILES_SERVER + material.material_type.logo_path}
-                  //       style={{ width: "10vw", height: "10vw" }}
-                  //       alt={"pdf"}
-                  //     />
-                  //     <p>{material.material_name}</p>
-                  //   </a>
-                  //   {material.material_type.type_title === "pdf" && (
-                  //     <a href={FILES_SERVER + material.url} target="_blank">
-                  //       <Button>Скачать</Button>
-                  //     </a>
-                  //   )}
-                  // </div>
                 )
               })}
             </div>
