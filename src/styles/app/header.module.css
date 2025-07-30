@@ -21,15 +21,14 @@
   padding: 1em;
 }
 
-.leftContainer .dropdown {
-  /*width: 8rem;*/
-}
-
 .headerRoundButton {
   width: 3vw;
   height: 3vw;
-  --main-light-color: var(--alt-bg) !important;
-  --main-color: var(--border-color) !important;
+  --main-color: var(--main-text-color) !important;
+}
+.headerRoundButton:hover {
+  background-color: var(--alt-bg) !important;
+  color: var(--alt-text) !important;
 }
 
 .rightContainer {

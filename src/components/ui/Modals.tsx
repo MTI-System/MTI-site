@@ -1,8 +1,9 @@
 "use client"
 
-import { Dispatch, ReactNode, SetStateAction, useEffect } from "react"
+import { Dispatch, MouseEvent, ReactNode, SetStateAction, useEffect } from "react"
 import style from "@/styles/components/modals.module.css"
 import clsx from "clsx"
+import { FaTimes } from "react-icons/fa"
 
 export default function Modal({
   children,
@@ -17,7 +18,10 @@ export default function Modal({
 }) {
   const [isOpen, setIsOpen] = openState
   const onOpenInternal = () => {}
-  const onCloseInternal = () => {
+  const onCloseInternal = (e: MouseEvent) => {
+    e.stopPropagation()
+    if (preventClose) return
+    setIsOpen(false)
     if (onClose) onClose()
   }
   useEffect(() => {
@@ -25,21 +29,21 @@ export default function Modal({
     onOpenInternal()
   }, [isOpen])
   return (
-    <div
-      className={clsx(style.overlay, { [style.open]: isOpen })}
-      onClick={(e) => {
-        e.stopPropagation()
-        if (preventClose) return
-        onCloseInternal()
-        setIsOpen(false)
-      }}
-    >
+    <div className={clsx(style.overlay, { [style.open]: isOpen })} onClick={onCloseInternal}>
       <div
         className={style.contentContainer}
         onClick={(e) => {
           e.stopPropagation()
         }}
       >
+        <button
+          className={style.modalCloseButton}
+          aria-label="Close modal"
+          disabled={preventClose}
+          onClick={onCloseInternal}
+        >
+          <FaTimes />
+        </button>
         {children}
       </div>
     </div>

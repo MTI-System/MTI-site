@@ -48,11 +48,7 @@
   }
 }
 
-/*body{*/
-/*  min-width: 900px;*/
-/*}*/
-
-* {
+body {
   font-family: "Roboto Mono Variable", monospace;
   color: var(--main-text-color);
 }
