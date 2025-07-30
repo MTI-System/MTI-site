@@ -4,7 +4,7 @@ import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { Button } from "@/components/ui/Buttons"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { ProblemCardContent } from "../ProblemCard"
-import { ExpandableImage } from "@/components/ui/Files/Images"
+import { ExpandableImage } from "@/components/ui/Files/ImageEmbeddings"
 import { ReactNode } from "react"
 import UniversalEmbedding from "@/components/ui/Files/FileEmbeddings"
 

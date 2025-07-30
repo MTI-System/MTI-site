@@ -22,7 +22,6 @@
 
   /*Colors*/
   --text-on-accent: #e6edf3;
-  --primary-accent: #1e2ede;
   --border-color: #b2b2b2;
   --main-text-color: #212519;
   --alt-bg: #ffffff;
@@ -33,7 +32,13 @@
   --alt-card-bg: #ffffff;
 
   --button-alt-color: #dcdfff;
+  /* Accent colors */
+  --primary-accent: #1e2ede;
+  --alt-primary-accent: #dcdfff;
   --text-primary-accent: #3849ff;
+
+  --wsrning-accent: #fc4747ff;
+  --alt-warning-accent: #fff0f0ff;
 
   /*Fonts*/
   @media (min-width: 700px) {
