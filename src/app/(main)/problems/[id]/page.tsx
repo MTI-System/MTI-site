@@ -6,7 +6,7 @@ import NotFound from "@/components/sections/problems/problemPage/NotFound"
 async function ProblemPageMain({ params }: PageProps) {
   const { id } = await params
   const problemRequest = await fetch(PROBLEM_API + "get_problem_by_global_id/" + id.toString())
-  if (problemRequest.status === 404) return <NotFound />
+  if (!problemRequest.ok) return <NotFound />
   const problem: Problem = await problemRequest.json()
   if (problem === null) return <NotFound />
   return <ProblemPage problem={problem} />

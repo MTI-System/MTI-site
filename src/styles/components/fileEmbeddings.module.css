@@ -1,0 +1,57 @@
+.embeddingContainer {
+  max-width: 30vw;
+  border: var(--border-width) var(--border-color) solid;
+  border-radius: calc(var(--block-radius) / 2);
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.iconContainer {
+  width: 2.5rem;
+  height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.textContainer {
+  width: calc(100% - 2.5rem);
+}
+
+.embeddingName {
+  display: block;
+  font-weight: 400;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.embeddingSize {
+  color: var(--alt-text);
+  font-family: "Roboto Flex Variable", monospace;
+}
+
+.iconContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-shrink: 0;
+}
+.extensionTitle {
+  position: absolute;
+  bottom: 25%;
+  text-align: center;
+  font-family: "Roboto Flex Variable";
+  font-size: 0.8rem;
+  font-weight: bold;
+  line-height: 100%;
+  padding: 0.05rem;
+  background-color: var(--alt-bg);
+  border: calc(var(--border-width) * 2) var(--border-color) solid;
+  border-radius: 0.3rem;
+}

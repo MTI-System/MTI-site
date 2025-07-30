@@ -1,126 +1,123 @@
 .dropdownContainer {
-    position: relative;
-    width: 5vw;
-    height: 3vh;
-
+  position: relative;
 }
 
 .dropdownButton {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--alt-bg);
-    border-radius: 0.25rem;
-    transition: background-color 250ms ease;
-    /*padding-left: 0.5vw;*/
-    padding-right: 0.5vw;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--alt-bg);
+  border-radius: 0.25rem;
+  transition: background-color 250ms ease;
+  /*padding-left: 0.5vw;*/
+  padding-right: 0.5vw;
 }
 
-.dropdownContainer.dropdownDisabled .dropdownButton {
-    color: rgb(148, 148, 148);
+.dropdownContainer.dropdownDisabled .dropdownText {
+  color: rgb(148, 148, 148);
+}
+.dropdownContainer.dropdownDisabled .arrowIcon * {
+  color: rgb(148, 148, 148);
 }
 
 .dropdownButton:hover {
-    background-color: var(--hover-color);
+  background-color: var(--hover-color);
 }
 
 .dropdownContainer.dropdownDisabled .dropdownButton:hover {
-    background-color: var(--hover-color);
+  background-color: var(--hover-color);
 }
 
 .dropdownButton .arrowIcon {
-    /*margin-right: 1vw;*/
-    font-size: var(--medium-text);
-    transition-property: translate rotate;
-    transition-duration: 250ms;
-    transition-timing-function: ease;
+  /*margin-right: 1vw;*/
+  font-size: calc(var(--medium-text) * 0.8);
+  transition-property: translate rotate;
+  transition-duration: 250ms;
+  transition-timing-function: ease;
 }
 
 .dropdownButton:hover .arrowIcon {
-    translate: 0 0.1em;
+  translate: 0 0.1em;
 }
 
 .dropdownContainer.dropdownDisabled .dropdownButton:hover .arrowIcon {
-    translate: 0;
+  translate: 0;
 }
 
 .dropdownButton.buttonOpened .arrowIcon {
-    rotate: 180deg;
+  rotate: 180deg;
 }
 
 .dropdownButton.buttonOpened:hover .arrowIcon {
-    translate: 0 -0.1em;
+  translate: 0 -0.1em;
 }
 
 .dropdownButton .dropdownOption:hover {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .dropdownText {
-    font-size: 1vw;
-    padding-left: 0.5vw;
-    padding-right: 0.5vw;
+  font-size: var(--medium-text);
+  padding-left: 0.5vw;
+  padding-right: 0.5vw;
 }
 
 .dropdownMenu {
-    display: none;
-    left: 0;
-    top: calc(100% + 0.3em);
-    animation: 250ms both appearence;
-    animation-play-state: paused;
-    width: 100%;
-    background-color: var(--alt-bg);
-    box-shadow: 0 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2);
-    border-radius: 0.25rem;
-    overflow: hidden;
-    z-index: 2;
-
+  display: none;
+  left: 0;
+  top: calc(100% + 0.3em);
+  animation: 250ms both appearence;
+  animation-play-state: paused;
+  width: 100%;
+  background-color: var(--alt-bg);
+  box-shadow: 0 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  z-index: 2;
 }
 
-
 @keyframes appearence {
-    0% {
-        opacity: 0;
-        transform: translateY(-1em);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(-1em);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fading {
-    0% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-1em);
-    }
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-1em);
+  }
 }
 
 .dropdownMenu.menuAppearing {
-    /* animation: 250ms forwards appearence; */
-    animation-direction: normal;
-    animation-play-state: running;
-    display: block;
+  /* animation: 250ms forwards appearence; */
+  animation-direction: normal;
+  animation-play-state: running;
+  display: block;
 }
 
 .dropdownMenu.menuFading {
-    animation: 250ms both fading;
+  animation: 250ms both fading;
 }
 
 .dropdownOption {
-    /*padding: 0.25em 1em;*/
-    transition: background-color 250ms ease;
-    user-select: none;
-
+  /*padding: 0.25em 1em;*/
+  transition: background-color 250ms ease;
+  user-select: none;
 }
 
 .dropdownOption:hover {
-    background-color: var(--hover-color);
+  background-color: var(--hover-color);
 }

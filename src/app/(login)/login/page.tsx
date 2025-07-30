@@ -2,15 +2,14 @@
 import { useState, FormEvent, useRef, Suspense } from "react"
 import { AUTH_API } from "@/constants/APIEndpoints"
 import { useRouter, useSearchParams } from "next/navigation"
-import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa6"
+import { FaEye, FaEyeSlash } from "react-icons/fa6"
 import { IconInput, TitledInput } from "@/components/ui/Input"
 import style from "@/styles/app/login.module.css"
-import Loading from "@/app/(main)/loading"
+import Loading from "@/app/loading"
 import cookies from "js-cookie"
 import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 import { Button } from "@/components/ui/Buttons"
 import LogoWithTT from "@/components/sections/app/LogoWithTT"
-import "@fontsource/roboto-mono"
 
 enum FormState {
   AwaitLogin,
