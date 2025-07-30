@@ -2,6 +2,7 @@
 import style from "@/styles/components/dropdown.module.css"
 import { FaChevronDown } from "react-icons/fa"
 import { useState, useRef, useEffect, ReactNode } from "react"
+import clsx from "clsx";
 
 interface DropdownOption<ValueType> {
   displayElement: ReactNode
@@ -32,12 +33,13 @@ export function Dropdown<ValueType>({
 }: DropdownParams<ValueType>) {
   const [selectedOption, setSelectedOption] = useState<number | DropdownOption<ValueType>>(defaultSelection)
   const [isOpened, setIsOpened] = useState(false)
-  const containerClassName = `${className ?? ""} ${style.dropdownContainer} ${disabled && style.dropdownDisabled}`
+  console.log(disabled)
+  const containerClassName = `${className ?? ""} ${style.dropdownContainer}`
   useEffect(() => {
     setSelectedOption(defaultSelection)
   }, [defaultSelection])
   return (
-    <div className={containerClassName}>
+    <div className={clsx(containerClassName)}>
       <DropdownButton
         selectedOption={typeof selectedOption === "number" ? options[selectedOption] : selectedOption}
         onClick={(e) => {

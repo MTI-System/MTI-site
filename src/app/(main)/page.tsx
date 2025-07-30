@@ -4,10 +4,12 @@ import { store } from "next/dist/build/output/store"
 import { Button } from "@/components/ui/Buttons"
 import "@fontsource/roboto-mono"
 import clsx from "clsx"
+import UnlockTournamentType from "@/components/Redux/UnlockTournamentType";
 
 export default function Home() {
   return (
     <div>
+      <UnlockTournamentType/>
       {/*<video src={"https://files.mofius-server.ru/media/get/AQPUtp1tpdS06ThMCbWYoHohuk19_muVSo55Nqu5VSwfkPXd3SC2z_BTPcPFCDZ.mp4"} controls></video>*/}
       <div className={mainStyle.cardGrid}>
         <ClickableCard className={clsx(mainStyle.card, mainStyle.problems)} href="/problems">

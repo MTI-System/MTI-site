@@ -18,7 +18,8 @@ export default function makeStore(theme: string, tt: string) {
       },
       searchParams: {
         tt: tt,
-        year: 2026
+        year: 2026,
+        isTTLocked: false,
       }
     },
   })

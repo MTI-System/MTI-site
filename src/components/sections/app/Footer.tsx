@@ -12,15 +12,15 @@ export default function Footer() {
               12345 Антарктида, Где то</p>
 
           </div>
-          <ol className={footerStyle.footerOl}>
-            <li className={footerStyle.linkItem}>Политика</li>
-            <li className={footerStyle.linkItem}>Контакты</li>
-            <li className={footerStyle.linkItem}>Помощь</li>
+          <ol className={footerStyle.leftFooterOl}>
+            <li className={footerStyle.linkItem}>Профиль</li>
+            <li className={footerStyle.linkItem}>Задачи</li>
+            <li className={footerStyle.linkItem}>Турниры</li>
           </ol>
-          <ol className={footerStyle.footerOl}>
-            <li className={footerStyle.linkItem}>FAQ</li>
-            <li className={footerStyle.linkItem}>Аккаунт</li>
-            <li className={footerStyle.linkItem}>Что-то</li>
+          <ol className={footerStyle.rightFooterOl}>
+            <li className={footerStyle.linkItem}>Бои</li>
+            <li className={footerStyle.linkItem}>Люди</li>
+            <li className={footerStyle.linkItem}>Статистика</li>
           </ol>
 
         </div>

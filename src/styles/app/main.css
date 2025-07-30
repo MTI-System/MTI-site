@@ -2,7 +2,7 @@
 /*@import "@/styles/Constants.css";*/
 :root {
   /* Globals: dimensions */
-  --nav-header-height: 10vh;
+  --nav-header-height: 6rem;
   /* Globals: colors */
   --bg-color: white;
   /*--main-text-color: black;*/
@@ -18,7 +18,7 @@
 
   /*defaults*/
   --default-padding: 2vw;
-  --default-gap: 1vw;
+  --default-gap: 1rem;
 
   /*Colors*/
   --text-on-accent: #e6edf3;
