@@ -7,7 +7,11 @@
   min-height: 12vh;
 
   overflow: hidden;
-  border-radius: var(--block-radius);
+  border-radius: 1vw;
+  @media (max-width: 1200px) {
+    border-radius: var(--block-radius);
+  }
+
   background-color: var(--alt-bg);
   border-width: var(--border-width);
   border-color: var(--border-color);

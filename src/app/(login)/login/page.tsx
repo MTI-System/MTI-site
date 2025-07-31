@@ -84,7 +84,7 @@ function LoginPage() {
   return (
     <div className={style.loginContainer}>
       <div className={style.login}>
-        <LogoWithTT logoSize={"9vh"} margin={"-6vh"} />
+        <LogoWithTT logoSize={"7rem"} margin={"-4rem"} />
         <div className={style.infoDiv}>
           <h2 className={style.infoHeader}>ВОЙТИ В АККАУНТ</h2>
           <p className={style.infoText}>Войдите в аккаунт, чтобы получить доступ к функциям организаторов</p>
