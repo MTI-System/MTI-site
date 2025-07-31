@@ -6,7 +6,7 @@ import {setTT} from "@/redux_stores/SearchParamsSlice"
 import {useEffect} from "react"
 import cookies from "js-cookie";
 import {TOURNAMENT_TYPE_KEY_NAME} from "@/constants/CookieKeys";
-import headerStyle from "@/styles/app/header.module.css"
+import headerStyle from "@/styles/components/sections/app/header.module.css"
 
 export default function TournamentTypeSelector({className}: { className?: string }) {
   const tt = useAppSelector((state) => state.searchParams.tt)
