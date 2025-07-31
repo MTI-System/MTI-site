@@ -7,6 +7,7 @@ import { ProblemCardContent } from "../ProblemCard"
 import { ExpandableImage } from "@/components/ui/Files/ImageEmbeddings"
 import { ReactNode } from "react"
 import UniversalEmbedding from "@/components/ui/Files/FileEmbeddings"
+import { RiFileAddLine } from "react-icons/ri"
 
 async function ProblemPage({ problem }: { problem: Problem }) {
   const userAuth = await fetchPermissions()
@@ -55,10 +56,15 @@ async function ProblemPage({ problem }: { problem: Problem }) {
                   />
                 )
               })}
+              {isModerator && (
+                <Button className={style.addMaterialButton}>
+                  <RiFileAddLine className={style.addIcon} />
+                  <h4 className={style.addTitle}>Добавить материал</h4>
+                </Button>
+              )}
             </div>
           )}
         </ContentContainer>
-        <div className={style.filesContainer}>{isModerator && <Button>Добавить материал</Button>}</div>
       </div>
     </div>
   )
