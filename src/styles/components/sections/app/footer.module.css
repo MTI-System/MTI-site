@@ -37,14 +37,14 @@
 }
 
 .mainBioHeaderText {
-    font-family: 'Roboto Mono';
+    /*font-family: 'Roboto Mono';*/
     font-weight: bold;
     font-size: var(--main-header-text);
     color: var(--main-text-color);
 }
 
 .ttBioHeaderText {
-    font-family: 'Roboto Mono';
+    /*font-family: 'Roboto Mono';*/
     font-weight: bold;
     font-size: var(--main-header-text);
     color: var(--main-text-color);

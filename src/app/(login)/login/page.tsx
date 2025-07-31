@@ -10,6 +10,8 @@ import cookies from "js-cookie"
 import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 import { Button } from "@/components/ui/Buttons"
 import LogoWithTT from "@/components/sections/app/LogoWithTT"
+import {setAuth, setToken} from "@/redux_stores/AuthSlice";
+import {useAppDispatch} from "@/redux_stores/tournamentTypeRedixStore";
 
 enum FormState {
   AwaitLogin,
@@ -37,6 +39,7 @@ function LoginPage() {
 
   const searchParams = useSearchParams()
   const redirect = searchParams.get("redirect") ?? "profile"
+  const dispatcher = useAppDispatch()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -68,6 +71,8 @@ function LoginPage() {
         setFormState(FormState.IncorrectData)
         return
       }
+      dispatcher(setToken(data))
+      // dispatcher(setAuth())
       cookies.set(AUTH_TOKEN_KEY_NAME, data)
       router.replace("/" + redirect)
     } else {
