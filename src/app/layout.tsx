@@ -1,6 +1,6 @@
 import "@fontsource-variable/roboto-mono"
 import "@fontsource-variable/roboto-flex"
-import "@/styles/routes/(main)/main.css"
+import "@/styles/main.css"
 import type { Metadata } from "next"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import Script from "next/script"

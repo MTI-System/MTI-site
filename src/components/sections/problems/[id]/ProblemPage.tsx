@@ -8,6 +8,7 @@ import { ExpandableImage } from "@/components/ui/Files/ImageEmbeddings"
 import { ReactNode } from "react"
 import UniversalEmbedding from "@/components/ui/Files/FileEmbeddings"
 import { RiFileAddLine } from "react-icons/ri"
+import UniversalPlayer from "@/components/ui/Files/VideoEmbedding"
 
 async function ProblemPage({ problem }: { problem: Problem }) {
   const userAuth = await fetchPermissions()
@@ -19,9 +20,9 @@ async function ProblemPage({ problem }: { problem: Problem }) {
   }
   const allMaterials = problem.problem_materials
   const primaryGifMaterial = allMaterials.filter((mat) => mat.material_type.type_title === "PRIMARY_GIF")
-  const primaryVideoMaterial = allMaterials.find((mat) => mat.material_type.type_title === "video")
+  const primaryVideoMaterial = allMaterials.find((mat) => mat.material_type.type_title === "VIDEO")
   const listOfMaterials = allMaterials.filter(
-    (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "video"
+    (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "VIDEO"
   )
   return (
     <div className={style.pageRoot}>
@@ -38,9 +39,14 @@ async function ProblemPage({ problem }: { problem: Problem }) {
             </div>
           )}
         </div>
-        <ContentContainer containerTitle="Видео">
-          <div className={style.tmpVideo}>Video here...</div>
-        </ContentContainer>
+        {primaryVideoMaterial && (
+          <ContentContainer containerTitle="Видео">
+            <div className={style.videoContainer}>
+              <UniversalPlayer embedding={primaryVideoMaterial} />
+            </div>
+            {/* <div className={style.tmpVideo}>Video here...</div> */}
+          </ContentContainer>
+        )}
         <ContentContainer containerTitle="Материалы">
           {listOfMaterials.length <= 0 && <p className={style.nothingMessage}>У этой задачи пока нет материалов</p>}
           {listOfMaterials.length > 0 && (

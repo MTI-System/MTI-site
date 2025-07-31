@@ -1,0 +1,4 @@
+.videoContainer {
+  border-radius: var(--block-radius);
+  overflow: hidden;
+}
