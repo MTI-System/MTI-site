@@ -1,7 +1,6 @@
 .inputWrapper {
   font-size: 1.5vw;
   font-weight: bold;
-  font-family: "Roboto Mono";
 }
 
 .inputContainer {
@@ -43,7 +42,6 @@
   user-select: none;
   font-size: 1vw;
   color: var(--main-text-color);
-  font-family: "Roboto Mono";
   font-weight: bold;
 }
 

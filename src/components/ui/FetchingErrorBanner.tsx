@@ -1,4 +1,4 @@
-import style from "@/styles/problems/problemsList.module.css";
+import style from "@/styles/components/sections/problems/FetchingError.module.css"
 
 function FetchingErrorBanner() {
   return (
@@ -10,4 +10,4 @@ function FetchingErrorBanner() {
   )
 }
 
-export default FetchingErrorBanner;
+export default FetchingErrorBanner

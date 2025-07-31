@@ -13,7 +13,7 @@ import {
   useImperativeHandle,
   useRef,
 } from "react"
-import style from "@/styles/components/input.module.css"
+import style from "@/styles/components/ui/input.module.css"
 import clsx from "clsx"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {

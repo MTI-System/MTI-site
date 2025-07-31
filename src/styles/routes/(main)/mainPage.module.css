@@ -29,7 +29,6 @@
 }
 .upHeaderDescription {
   padding: 1rem 0vw 0vw 2rem;
-  font-family: "Roboto Mono";
   color: var(--alt-text);
 
   font-size: 1.2rem;

@@ -1,16 +1,17 @@
 "use client"
+import style from "@/styles/routes/(login)/login.module.css"
 import { useState, FormEvent, useRef, Suspense } from "react"
 import { AUTH_API } from "@/constants/APIEndpoints"
 import { useRouter, useSearchParams } from "next/navigation"
-import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa6"
+import { FaEye, FaEyeSlash } from "react-icons/fa6"
 import { IconInput, TitledInput } from "@/components/ui/Input"
-import style from "@/styles/app/login.module.css"
-import Loading from "@/app/(main)/loading"
+import Loading from "@/app/loading"
 import cookies from "js-cookie"
 import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 import { Button } from "@/components/ui/Buttons"
 import LogoWithTT from "@/components/sections/app/LogoWithTT"
-import "@fontsource/roboto-mono"
+import {setAuth, setToken} from "@/redux_stores/AuthSlice";
+import {useAppDispatch} from "@/redux_stores/tournamentTypeRedixStore";
 
 enum FormState {
   AwaitLogin,
@@ -23,9 +24,11 @@ enum FormState {
 
 export default function Page() {
   return (
-    <Suspense fallback={<Loading />}>
-      <LoginPage />
-    </Suspense>
+    <>
+      <Suspense fallback={<Loading />}>
+        <LoginPage />
+      </Suspense>
+    </>
   )
 }
 
@@ -36,6 +39,7 @@ function LoginPage() {
 
   const searchParams = useSearchParams()
   const redirect = searchParams.get("redirect") ?? "profile"
+  const dispatcher = useAppDispatch()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -67,6 +71,8 @@ function LoginPage() {
         setFormState(FormState.IncorrectData)
         return
       }
+      dispatcher(setToken(data))
+      // dispatcher(setAuth())
       cookies.set(AUTH_TOKEN_KEY_NAME, data)
       router.replace("/" + redirect)
     } else {
@@ -83,7 +89,7 @@ function LoginPage() {
   return (
     <div className={style.loginContainer}>
       <div className={style.login}>
-        <LogoWithTT logoSize={"9vh"} margin={"-6vh"} />
+        <LogoWithTT logoSize={"7rem"} margin={"-4rem"} />
         <div className={style.infoDiv}>
           <h2 className={style.infoHeader}>ВОЙТИ В АККАУНТ</h2>
           <p className={style.infoText}>Войдите в аккаунт, чтобы получить доступ к функциям организаторов</p>

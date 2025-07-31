@@ -21,15 +21,35 @@
   padding: 1em;
 }
 
-.leftContainer .dropdown {
-  /*width: 8rem;*/
+
+.hoverTextContainer {
+  display: flex;
+  /*position: relative;*/
+}
+.hoverText {
+  display: none;
+}
+.dropdown:hover + .hoverText {
+  left: 12vw;
+  font-size: 1rem;
+  background-color: #b3b3b3;
+  border-radius: 1rem;
+  padding: 1vw;
+  position: absolute;
+  display: block;
 }
 
+
+
+
 .headerRoundButton {
-  width: 3vw;
-  height: 3vw;
-  --main-light-color: var(--alt-bg) !important;
-  --main-color: var(--border-color) !important;
+  width: 4rem;
+  height: 4rem;
+  --main-color: var(--main-text-color) !important;
+}
+.headerRoundButton:hover {
+  background-color: var(--alt-bg) !important;
+  color: var(--alt-text) !important;
 }
 
 .rightContainer {

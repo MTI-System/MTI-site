@@ -2,7 +2,7 @@
 /*@import "@/styles/Constants.css";*/
 :root {
   /* Globals: dimensions */
-  --nav-header-height: 10vh;
+  --nav-header-height: 6rem;
   /* Globals: colors */
   --bg-color: white;
   /*--main-text-color: black;*/
@@ -18,11 +18,10 @@
 
   /*defaults*/
   --default-padding: 2vw;
-  --default-gap: 1vw;
+  --default-gap: 1rem;
 
   /*Colors*/
   --text-on-accent: #e6edf3;
-  --primary-accent: #1e2ede;
   --border-color: #b2b2b2;
   --main-text-color: #212519;
   --alt-bg: #ffffff;
@@ -33,7 +32,13 @@
   --alt-card-bg: #ffffff;
 
   --button-alt-color: #dcdfff;
+  /* Accent colors */
+  --primary-accent: #1e2ede;
+  --alt-primary-accent: #dcdfff;
   --text-primary-accent: #3849ff;
+
+  --wsrning-accent: #fc4747ff;
+  --alt-warning-accent: #fff0f0ff;
 
   /*Fonts*/
   @media (min-width: 700px) {
@@ -48,12 +53,8 @@
   }
 }
 
-/*body{*/
-/*  min-width: 900px;*/
-/*}*/
-
-* {
-  font-family: "Roboto mono", monospace;
+body {
+  font-family: "Roboto Mono Variable", monospace;
   color: var(--main-text-color);
 }
 

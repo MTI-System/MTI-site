@@ -18,10 +18,29 @@
 }
 
 .contentContainer {
+  position: relative;
   background-color: var(--bg-color);
   border-radius: 2rem;
   box-shadow: 0 0 0.3em 0.1em rgba(0, 0, 0, 0.25);
   max-width: 80vw;
   max-height: 80vh;
   padding: 3rem;
+  overflow: scroll;
+}
+
+.modalCloseButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1.5rem;
+  line-height: 100%;
+  color: var(--main-text-color);
+  transition: color 250ms ease;
+  cursor: pointer;
+}
+.modalCloseButton[disabled] {
+  color: var(--alt-text);
+}
+.modalCloseButton:hover {
+  color: var(--alt-text);
 }

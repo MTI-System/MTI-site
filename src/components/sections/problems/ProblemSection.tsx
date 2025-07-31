@@ -1,5 +1,5 @@
 import { ProblemSection } from "@/types/problemAPI"
-import style from "@/styles/problems/problemSection.module.css"
+import style from "@/styles/components/sections/problems/problemSection.module.css"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 
 export default function ProblemSectionComponent({ section }: { section: ProblemSection }) {

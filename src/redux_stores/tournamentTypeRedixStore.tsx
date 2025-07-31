@@ -4,7 +4,7 @@ import { SPSlice } from "@/redux_stores/SearchParamsSlice"
 import { AuthSlice } from "@/redux_stores/AuthSlice"
 import { SystemSlice } from "@/redux_stores/SystemSlice"
 
-export default function makeStore(theme: string) {
+export default function makeStore(theme: string, tt: string, token: string) {
   return configureStore({
     reducer: {
       searchParams: SPSlice.reducer,
@@ -16,6 +16,16 @@ export default function makeStore(theme: string) {
         theme: theme,
         isPending: false,
       },
+      searchParams: {
+        tt: tt,
+        year: 2026,
+        isTTLocked: false,
+      },
+      auth: {
+        token: token,
+        isAuthenticated: token.length > 0,
+        authInfo: null
+      }
     },
   })
 }

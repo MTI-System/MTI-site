@@ -1,5 +1,5 @@
 "use client"
-import styleModule from "@/styles/components/button.module.css"
+import styleModule from "@/styles/components/ui/button.module.css"
 import { animate, createScope, Scope } from "animejs"
 import clsx from "clsx"
 import { ButtonHTMLAttributes, CSSProperties, PropsWithChildren, useEffect, useRef } from "react"

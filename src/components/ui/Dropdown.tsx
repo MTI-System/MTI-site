@@ -1,7 +1,8 @@
 "use client"
-import style from "@/styles/components/dropdown.module.css"
+import style from "@/styles/components/ui/dropdown.module.css"
 import { FaChevronDown } from "react-icons/fa"
 import { useState, useRef, useEffect, ReactNode } from "react"
+import clsx from "clsx"
 
 interface DropdownOption<ValueType> {
   displayElement: ReactNode
@@ -32,12 +33,11 @@ export function Dropdown<ValueType>({
 }: DropdownParams<ValueType>) {
   const [selectedOption, setSelectedOption] = useState<number | DropdownOption<ValueType>>(defaultSelection)
   const [isOpened, setIsOpened] = useState(false)
-  const containerClassName = `${className ?? ""} ${style.dropdownContainer} ${disabled && style.dropdownDisabled}`
   useEffect(() => {
     setSelectedOption(defaultSelection)
   }, [defaultSelection])
   return (
-    <div className={containerClassName}>
+    <div className={clsx(style.dropdownContainer, className, { [style.dropdownDisabled]: disabled })}>
       <DropdownButton
         selectedOption={typeof selectedOption === "number" ? options[selectedOption] : selectedOption}
         onClick={(e) => {
@@ -133,10 +133,9 @@ function DropdownButton<ValueType>({
 }
 
 function DropdownOption<ValueType>({ option, onClick }: { option: DropdownOption<ValueType>; onClick?: () => void }) {
-  const className = `${style.dropdownOption} ${!option.active ? style.optionDisabled : ""}`
   return (
     <div
-      className={className}
+      className={clsx(style.dropdownOption, { [style.dropdownDisabled]: !option.active })}
       onClick={() => {
         if (!option.active || !onClick) return
         onClick()

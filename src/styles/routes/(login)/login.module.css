@@ -38,7 +38,6 @@
   border-color: var(--primary-accent);
   color: var(--text-primary-accent);
   font-size: 2vw;
-  font-family: "Roboto Mono", serif;
   font-weight: bold;
 }
 
@@ -59,7 +58,6 @@
 .infoHeader {
   text-align: center;
   font-weight: bold;
-  font-family: "Roboto Mono";
   font-size: 2vw;
 }
 
@@ -68,6 +66,5 @@
   text-align: center;
   font-size: 1vw;
   line-height: 2.5vh;
-  font-family: "Roboto Mono", serif;
   color: var(--alt-text);
 }

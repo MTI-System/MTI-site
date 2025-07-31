@@ -1,7 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/Buttons"
 import { FaPlus } from "react-icons/fa6"
-import style from "@/styles/problems/problemForms.module.css"
+import style from "@/styles/components/sections/problems/problemForms.module.css"
 import { FormEvent, useEffect, useRef, useState } from "react"
 import clsx from "clsx"
 import { Input, TitledInput } from "@/components/ui/Input"

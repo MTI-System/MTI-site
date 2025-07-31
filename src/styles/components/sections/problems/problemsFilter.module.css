@@ -1,0 +1,13 @@
+.filters {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 1.25rem;
+}
+.filtersTitle {
+  font-size: 2rem;
+  font-weight: bold;
+}

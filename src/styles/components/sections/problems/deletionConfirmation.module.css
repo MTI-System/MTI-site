@@ -1,0 +1,48 @@
+.deletionModalInfoContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  gap: 1.5vh;
+  width: 100%;
+  max-width: 30vw;
+  height: 100%;
+  text-align: center;
+}
+
+.warningBlock {
+  width: 100%;
+  padding: 1rem;
+  border-left: 1rem var(--wsrning-accent) solid;
+  background-color: var(--alt-warning-accent);
+  color: var(--wsrning-accent);
+  font-weight: 1.25rem;
+  font-weight: lighter;
+  text-align: left;
+}
+
+.warningHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.8rem;
+  width: 15rem;
+}
+
+.deletionModalInfoContainer .buttonsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.deletionModalInfoContainer .buttonsContainer button {
+  font-size: 1.8rem;
+  height: 4rem;
+  width: 15rem;
+  border-radius: 1.5 rem;
+}

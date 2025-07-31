@@ -1,0 +1,82 @@
+.footer {
+    background-color: var(--alt-bg);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    /*height: 5vh;*/
+}
+
+.linkItem {
+    color: var(--alt-text);
+    font-weight: bold;
+    font-size: 1.7rem;
+}
+
+.gridDiv {
+    display: grid;
+    grid-template-columns: 35% 35% 20%;
+    @media (max-width: 1200px) {
+        grid-template-columns: 50% 50%;
+        grid-template-rows: 50% 50%;
+    }
+}
+
+.mainBioFooter {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: start;
+    align-items: center;
+    gap: 2vw;
+    margin-left: 7vw;
+    @media (max-width: 1200px) {
+        grid-row: 1;
+        grid-column: 1 / 3;
+        margin-left: 0px;
+        justify-content: center;
+    }
+}
+
+.mainBioHeaderText {
+    /*font-family: 'Roboto Mono';*/
+    font-weight: bold;
+    font-size: var(--main-header-text);
+    color: var(--main-text-color);
+}
+
+.ttBioHeaderText {
+    /*font-family: 'Roboto Mono';*/
+    font-weight: bold;
+    font-size: var(--main-header-text);
+    color: var(--main-text-color);
+    margin-top: -2vh;
+}
+
+.commonBioText {
+    color: var(--alt-text);
+    font-size: 1rem;
+}
+
+.rightFooterOl {
+    justify-self: center;
+    align-items: center;
+    padding-top: 1.7vh;
+    padding-bottom: 1.7vh;
+    @media (max-width: 1200px) {
+        align-items: start;
+        justify-self: start;
+        margin-left: 1rem;
+    }
+}
+
+.leftFooterOl {
+    justify-self: center;
+    align-items: center;
+    padding-top: 1.7vh;
+    padding-bottom: 1.7vh;
+    @media (max-width: 1200px) {
+        align-items: end;
+        justify-self: end;
+        margin-right: 1rem;
+    }
+}
+
