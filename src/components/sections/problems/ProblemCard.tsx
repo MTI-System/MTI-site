@@ -6,7 +6,7 @@ import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { deleteProblem } from "@/scripts/ApiFetchers"
-import { useState, useTransition } from "react"
+import { useCallback, useState, useTransition } from "react"
 import { Button } from "@/components/ui/Buttons"
 import clsx from "clsx"
 import { PiGlobeLight } from "react-icons/pi"
@@ -14,29 +14,6 @@ import ProblemSectionComponent from "@/components/sections/problems/ProblemSecti
 import ModalDialog from "@/components/Dialogs/ModalDialog"
 import NewProblemForm from "@/components/Dialogs/Forms/NewProblemForm"
 import DeletionConfirmationModal from "./DeletionConfirmationModal"
-
-// export default function ProblemCard({ problem, isEditable }: { problem: Problem; isEditable: boolean }) {
-//   const [isPendingDeletion, startTransition] = useTransition()
-//   return (
-//     <div className={clsx(style.problemCard, { [style.cardPendingDeletion]: isPendingDeletion })}>
-//       <div className={style.problemContainer}>
-//         <div className={style.titleContainer}>
-//           <Link href={"/problems/" + problem.id.toString()}>
-//             <h2 className={style.problemTitle}>
-//               {problem.global_number}.{problem.problem_translations[0].problem_name}
-//             </h2>
-//           </Link>
-//           {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
-//         </div>
-//         <h5 className={style.translation}>Translation here...</h5>
-//         <h3>Разделы физики:</h3>
-//         <SectionsList problem={problem} isModerator={isEditable} />
-//         <p className={style.problemText}>{problem.problem_translations[0].problem_text}</p>
-//       </div>
-//       {problem.problem_translations.length > 1 && <div className={style.tournamentsContainer}>Tournaments here...</div>}
-//     </div>
-//   )
-// }
 
 export default function ProblemCard({ problem, isEditable }: { problem: Problem; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
@@ -95,6 +72,7 @@ function EditButtons({
 }) {
   const router = useRouter()
   const delModalState = useState(false)
+
   return (
     <>
       <div className={style.editButtons}>
@@ -103,15 +81,17 @@ function EditButtons({
         </Link>
         <MdDeleteOutline
           onClick={() => {
+            console.log(problem)
             delModalState[1](true)
           }}
         />
       </div>
       <DeletionConfirmationModal
         problem_global_number={problem.global_number}
-        problem_tile={problem.problem_translations[0].problem_name}
+        problem_title={problem.problem_translations[0].problem_name}
         openState={delModalState}
         onConfirm={async () => {
+          console.log(problem)
           const s = await deleteProblem(problem.id, problem.tournament_type)
           if (!s) throw new Error("Deletion has failed")
           console.log("Delete fetch completed")

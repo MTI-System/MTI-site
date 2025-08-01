@@ -1,31 +1,35 @@
 "use client"
 import style from "@/styles/components/sections/problems/deletionConfirmation.module.css"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import Modal from "@/components/ui/Modals"
-import { IoWarningSharp } from "react-icons/io5"
 import { Button, HoldButton } from "@/components/ui/Buttons"
 import { PiWarningBold } from "react-icons/pi"
 
 export default function DeletionConfirmationModal({
   openState,
   problem_global_number,
-  problem_tile,
+  problem_title,
   onConfirm,
 }: {
   openState: [boolean, Dispatch<SetStateAction<boolean>>]
   problem_global_number: number
-  problem_tile: string
+  problem_title: string
   onConfirm: () => Promise<void>
 }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = openState
   const [isError, setIsError] = useState(false)
+
+  useEffect(() => {
+    if (!isOpen) setIsError(false)
+  }, [isOpen])
+
   return (
     <Modal openState={openState} preventClose={isLoading}>
       <div className={style.deletionModalInfoContainer}>
         <h1>Удалить задачу?</h1>
         <p>
-          Вы действительно хотите удалить задачу №{problem_global_number} - {problem_tile}?
+          Вы действительно хотите удалить задачу №{problem_global_number} - {problem_title}?
         </p>
         <div className={style.warningBlock}>
           <div className={style.warningHeader}>
@@ -44,6 +48,7 @@ export default function DeletionConfirmationModal({
             onClick={() => {
               if (isLoading) return
               setIsOpen(false)
+              setIsError(false)
             }}
             disabled={isLoading}
           >

@@ -62,7 +62,7 @@ export function HoldButton({
       })
     })
     return () => scope.current?.revert()
-  }, [])
+  }, [onConfirm])
   useEffect(() => {
     if (isDisabled && scope.current) scope.current.methods.caReverse()
   }, [isDisabled])

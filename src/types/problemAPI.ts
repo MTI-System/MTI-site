@@ -1,23 +1,26 @@
-interface ProblemMaterialType {
+import { z } from "zod"
+
+export interface ProblemMaterialType {
   id: number
   logo_path: string
   type_title: string
 }
-interface ProblemMaterial {
+export interface ProblemMaterial {
   id: number
   material_name: string
   url: string
   material_type: ProblemMaterialType
 }
 
-interface ProblemTranslation {
-  id: number
-  problem_name: string
-  problem_text: string
-  problem_by: string // TODO: Rename
-}
+export const ProblemTranslationSchema = z.object({
+  id: z.number(),
+  problem_name: z.string(),
+  problem_text: z.string(),
+  problem_by: z.string(),
+})
+export type ProblemTranslation = z.infer<typeof ProblemTranslationSchema>
 
-interface Problem {
+export interface Problem {
   id: number
   global_number: number
   year: number
@@ -25,16 +28,15 @@ interface Problem {
   problem_translations: ProblemTranslation[]
   problem_materials: ProblemMaterial[]
   problem_sections: ProblemSection[]
-
 }
 
-interface ProblemSection{
-  id: number,
-  title: string,
-  icon_src: string,
-  tile_color: string,
-}
+export const ProblemSectionschema = z.object({
+  id: z.number(),
+  title: z.string(),
+  icon_src: z.string(),
+  tile_color: z.string().length(7).startsWith("#"),
+})
 
-type ProblemList = Problem[]
+export type ProblemSection = z.infer<typeof ProblemSectionschema>
 
-export type { ProblemMaterialType, ProblemMaterial, ProblemTranslation, Problem, ProblemList, ProblemSection }
+export type ProblemList = Problem[]
