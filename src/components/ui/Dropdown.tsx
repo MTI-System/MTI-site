@@ -105,7 +105,7 @@ function DropdownMenu<ValueType>({
 
   return (
     <div className={style.dropdownMenu} style={{ position: "absolute" }} ref={menuRef}>
-      {!options && <p>No options</p>}
+      {(!options || options.length == 0) && <p className={style.dropdownText}>No options</p>}
       {options &&
         options.map((option, index) => (
           <DropdownOption option={option} onClick={() => onOptionSelect(option)} key={index + 1}></DropdownOption>
@@ -123,9 +123,8 @@ function DropdownButton<ValueType>({
   onClick: (e: React.MouseEvent) => void
   isOpened: boolean
 }) {
-  const className = `${style.dropdownButton} ${isOpened && style.buttonOpened}`
   return (
-    <div className={className} onClick={onClick}>
+    <div className={clsx(style.dropdownButton, { [style.buttonOpened]: isOpened })} onClick={onClick}>
       <DropdownOption option={selectedOption} />
       <FaChevronDown className={style.arrowIcon} />
     </div>
