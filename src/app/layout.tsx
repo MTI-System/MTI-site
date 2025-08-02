@@ -7,6 +7,7 @@ import Script from "next/script"
 import {cookies} from "next/headers"
 import StoreProvider from "@/components/Redux/StoreProvider"
 import LayoutComponent from "@/components/sections/app/Layout"
+import ThemeUpdator from "@/components/service/ThemeUpdator";
 
 export const metadata: Metadata = {
   title: {
@@ -54,6 +55,7 @@ export default async function Template({children}: { children: React.ReactNode }
       theme={cookiesStore.get("theme")?.value ?? "light"}
       token={cookiesStore.get("mtiyt_auth_token")?.value ?? ""}
     >
+      <ThemeUpdator/>
       <LayoutComponent>{children}</LayoutComponent>
     </StoreProvider>
     </html>
