@@ -47,6 +47,7 @@
 .headerRoundButton:hover {
   background-color: var(--alt-bg) !important;
   color: var(--alt-text) !important;
+  --main-color: var(--alt-text) !important;
 }
 
 .rightContainer {
