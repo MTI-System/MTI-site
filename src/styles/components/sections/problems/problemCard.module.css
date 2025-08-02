@@ -55,8 +55,8 @@
 }
 
 .editButtons svg {
-  color: var(--accent-color);
-  transition: color 250ms ease;
+  color: var(--primary-accent);
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
 }
 
 .editButtons svg:hover {
@@ -89,7 +89,10 @@
 .addNewSectionDropdown {
   height: 100%;
   width: 15rem;
-  transition: opacity 250ms ease;
+  transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+}
+.addNewSectionDropdown > div[style] {
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
 }
 .addNewSectionDropdown > div:not([style]) {
   background-color: var(--bg-color) !important;
@@ -101,7 +104,11 @@
 }
 
 .addNewSectionDropdown > div:not([style]):hover {
-  background-color: hsl(from var(--bg-color) h s calc(l - 2.5)) !important;
+  background-color: hsl(from var(--bg-color) h s calc(l - 5)) !important;
+}
+
+body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
+  background-color: hsl(from var(--bg-color) h s calc(l + 5)) !important;
 }
 
 .addSectionOptionContainer {

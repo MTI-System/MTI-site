@@ -96,7 +96,7 @@
   display: flex;
   align-content: center;
   background-color: var(--card-cta-bar-color);
-  outline: var(--border-width) solid var(--border-color);
+  border-top: var(--border-width) solid var(--border-color);
   justify-content: flex-start;
 
   @media (max-width: 1200px) {

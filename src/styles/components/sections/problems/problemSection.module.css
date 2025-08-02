@@ -10,7 +10,7 @@
   padding: 0.5vh 1vw;
   border-radius: 10rem;
   font-weight: bold;
-  transition: opacity 250ms ease;
+  transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease;
 }
 .sectionCard.deletionPending {
   opacity: 0.5;

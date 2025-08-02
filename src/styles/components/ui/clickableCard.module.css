@@ -8,21 +8,21 @@
 
   overflow: hidden;
   border-radius: 1vw;
-  @media (max-width: 1200px) {
-    border-radius: var(--block-radius);
-  }
 
   background-color: var(--alt-bg);
   border-width: var(--border-width);
   border-color: var(--border-color);
 
   box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.1);
-  transition: background-color 250ms ease, box-shadow 250ms ease;
+  transition: background-color 250ms ease, box-shadow 250ms ease, color 250ms ease, border-color 250ms ease;
 
   font-size: var(--main-header-text);
   font-weight: bold;
   color: var(--main-text-color);
   user-select: none;
+  @media (max-width: 1200px) {
+    border-radius: var(--block-radius);
+  }
 }
 .clickableCard:hover {
   background-color: var(--hover-color);

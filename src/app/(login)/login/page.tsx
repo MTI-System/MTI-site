@@ -10,8 +10,8 @@ import cookies from "js-cookie"
 import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 import { Button } from "@/components/ui/Buttons"
 import LogoWithTT from "@/components/sections/app/LogoWithTT"
-import {setAuth, setToken} from "@/redux_stores/AuthSlice";
-import {useAppDispatch} from "@/redux_stores/tournamentTypeRedixStore";
+import { setAuth, setToken } from "@/redux_stores/AuthSlice"
+import { useAppDispatch } from "@/redux_stores/tournamentTypeRedixStore"
 
 enum FormState {
   AwaitLogin,
@@ -127,12 +127,7 @@ function LoginPage() {
           >
             <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
           </TitledInput>
-          <Button
-            type="submit"
-            className={style.loginButton}
-            style={{ "--main-light-color": "var(--button-alt-color)" }}
-            disabled={formState === FormState.Loading}
-          >
+          <Button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
             {formState === FormState.Loading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
           </Button>
         </form>

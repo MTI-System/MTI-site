@@ -14,25 +14,25 @@
   gap: 0.5rem;
   background-color: var(--alt-bg);
   border-radius: 0.25rem;
-  transition: background-color 250ms ease;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
   padding: 0.5rem;
 }
 
 .dropdownContainer.dropdownDisabled .dropdownButton {
-  background-color: #b3b3b3;
+  background-color: var(--inactive-color);
 }
 .dropdownButton:hover {
   background-color: var(--hover-color);
 }
 
 .dropdownContainer.dropdownDisabled .dropdownButton:hover {
-  background-color: #b3b3b3;
+  background-color: var(--inactive-color);
 }
 
 .dropdownButton .arrowIcon {
   /*margin-right: 1vw;*/
   font-size: calc(var(--medium-text) / 1.3);
-  transition-property: translate rotate;
+  transition-property: translate rotate color background-color border-color;
   transition-duration: 250ms;
   transition-timing-function: ease;
 }
@@ -70,6 +70,7 @@
   animation-play-state: paused;
   width: 100%;
   background-color: var(--alt-bg);
+  border: var(--border-width) var(--border-color) solid;
   box-shadow: 0 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
   overflow: hidden;
@@ -111,7 +112,7 @@
 
 .dropdownOption {
   /*padding: 0.25em 1em;*/
-  transition: background-color 250ms ease;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
   user-select: none;
 }
 

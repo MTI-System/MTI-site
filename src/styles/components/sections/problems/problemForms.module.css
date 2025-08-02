@@ -5,26 +5,26 @@
   border-radius: 1rem;
   transition: opacity 500ms ease, height 500ms ease, color 250ms ease, background-color 250ms ease;
   overflow: hidden;
-  background-color: var(--accent-light-color);
-  border: 0.15em solid var(--accent-color);
-  color: var(--accent-color);
+  background-color: var(--alt-primary-accent);
+  border: 0.15em solid var(--primary-accent);
+  color: var(--primary-accent);
 }
 .addButton:hover {
-  background-color: var(--accent-color);
-  border: 0.15em solid var(--accent-color);
-  color: var(--accent-light-color);
+  background-color: var(--primary-accent);
+  border: 0.15em solid var(--primary-accent);
+  color: var(--alt-primary-accent);
 }
 .expandedButton {
   height: 30rem;
-  background-color: transparent;
+  background-color: var(--alt-bg);
 }
 .hiddenButton {
   height: 0;
   opacity: 0;
 }
 .expandedButton:hover {
-  background-color: transparent;
-  color: var(--accent-color);
+  background-color: var(--alt-bg);
+  color: var(--primary-accent);
 }
 .plusContaner {
   width: 100%;
@@ -33,7 +33,8 @@
   align-items: center;
   align-content: center;
   height: 2.4rem;
-  transition: height 500ms ease, translate 500ms ease;
+  transition: height 500ms ease, translate 500ms ease, color 250ms ease, background-color 250ms ease,
+    border-color 250ms ease;
 }
 
 .expandedButton .plusContaner {
@@ -41,7 +42,8 @@
   translate: calc(50% - 2rem);
 }
 .plusContaner svg {
-  transition: filter 250ms ease, color 250ms ease, padding 500ms ease, rotate 500ms ease;
+  transition: filter 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease,
+    padding 500ms ease, rotate 500ms ease;
   rotate: 0deg;
 }
 .expandedButton .plusContaner svg {
@@ -65,7 +67,7 @@
   border: 0.15rem rgba(0, 0, 0, 0.164) solid;
   background-color: transparent;
   width: 100%;
-  transition: border 250ms ease;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
   resize: none;
   border-radius: 0.5rem;
 }

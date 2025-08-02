@@ -21,7 +21,6 @@
   padding: 1em;
 }
 
-
 .hoverTextContainer {
   display: flex;
   /*position: relative;*/
@@ -32,20 +31,18 @@
 .dropdown:hover + .hoverText {
   left: 12vw;
   font-size: 1rem;
-  background-color: #b3b3b3;
+  background-color: var(--inactive-color);
   border-radius: 1rem;
   padding: 1vw;
   position: absolute;
   display: block;
 }
 
-
-
-
 .headerRoundButton {
   width: 4rem;
   height: 4rem;
   --main-color: var(--main-text-color) !important;
+  --main-light-color: var(--alt-bg) !important;
 }
 .headerRoundButton:hover {
   background-color: var(--alt-bg) !important;
