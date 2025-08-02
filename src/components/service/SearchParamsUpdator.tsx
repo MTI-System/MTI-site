@@ -4,6 +4,7 @@ import {startTransition, useEffect, useTransition} from "react";
 import {usePathname, useSearchParams, useRouter} from "next/navigation";
 import {setTT, setYear} from "@/redux_stores/SearchParamsSlice";
 import {setIsPending} from "@/redux_stores/SystemSlice";
+import cookie from 'js-cookie';
 
 export default function SearchParamsUpdator() {
   const tt = useAppSelector(state => state.searchParams.tt)
@@ -48,6 +49,8 @@ export default function SearchParamsUpdator() {
     }
     console.log("update", tt, year)
   }, [tt, year, pathname, searchParams, router, startTransition])
+
+
 
   return <></>
 }

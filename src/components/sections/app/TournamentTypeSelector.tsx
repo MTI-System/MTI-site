@@ -4,17 +4,30 @@ import { TextDropdown } from "@/components/ui/Dropdown"
 import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { setTT } from "@/redux_stores/SearchParamsSlice"
 import { useEffect } from "react"
+import {setTheme} from "@/redux_stores/SystemSlice";
 
 export default function TournamentTypeSelector({ className }: { className?: string }) {
   const tt = useAppSelector((state) => state.searchParams.tt)
   const theme = useAppSelector((state) => state.system.theme)
   const isPending = useAppSelector((state) => state.system.isPending)
   const dispatcher = useAppDispatch()
-  useEffect(() => {
-    console.log("tt", tt)
-  }, [tt])
+  // useEffect(() => {
+  //   console.log("tt", tt)
+  // }, [tt])
   return (
     <>
+      <button onClick={
+        ()=>{
+          if (theme == "light"){
+            dispatcher(setTheme("dark"))
+          }
+          else{
+            dispatcher(setTheme("light"))
+          }
+        }
+      }>
+        Сменить тему
+      </button>
       <TextDropdown
         options={availableTournamentTypes.map((tt) => {
           return { displayName: tt.name.toUpperCase(), value: tt.name, active: true }

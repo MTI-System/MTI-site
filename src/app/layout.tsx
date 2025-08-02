@@ -7,6 +7,7 @@ import Script from "next/script"
 import { cookies } from "next/headers"
 import StoreProvider from "@/components/Redux/StoreProvider"
 import LayoutComponent from "@/components/sections/app/Layout"
+import ThemeUpdator from "@/components/service/ThemeUpdator";
 
 export const metadata: Metadata = {
   title: {
@@ -49,10 +50,12 @@ export default async function Template({ children }: { children: React.ReactNode
           }}
         />
       </head>
+
       <StoreProvider
         tt={cookiesStore.get("mtiyt_tournamentType")?.value ?? "ТЮФ"}
         theme={cookiesStore.get("theme")?.value ?? "light"}
       >
+        <ThemeUpdator/>
         <LayoutComponent>{children}</LayoutComponent>
       </StoreProvider>
     </html>
