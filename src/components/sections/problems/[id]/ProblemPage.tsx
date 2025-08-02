@@ -1,5 +1,5 @@
 import style from "@/styles/components/sections/problems/[id]/problemPage.module.css"
-import { Problem } from "@/types/problemAPI"
+import { ProblemInterface } from "@/types/problemAPI"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { Button } from "@/components/ui/Buttons"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
@@ -10,7 +10,7 @@ import UniversalEmbedding from "@/components/ui/Files/FileEmbeddings"
 import { RiFileAddLine } from "react-icons/ri"
 import UniversalPlayer from "@/components/ui/Files/VideoEmbedding"
 
-async function ProblemPage({ problem }: { problem: Problem }) {
+async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const userAuth = await fetchPermissions()
   let isModerator = false
   if (userAuth && userAuth.rights.length !== 0) {

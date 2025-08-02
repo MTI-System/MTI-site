@@ -11,7 +11,7 @@
 }
 .expandButtonContainer {
   background-color: rgba(0, 0, 0, 0.1);
-  transition: opacity 250ms ease;
+  transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease;
   opacity: 0;
   position: absolute;
   width: 100%;

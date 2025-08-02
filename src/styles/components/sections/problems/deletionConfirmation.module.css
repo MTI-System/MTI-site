@@ -14,9 +14,9 @@
 .warningBlock {
   width: 100%;
   padding: 1rem;
-  border-left: 1rem var(--wsrning-accent) solid;
+  border-left: 1rem var(--warning-accent) solid;
   background-color: var(--alt-warning-accent);
-  color: var(--wsrning-accent);
+  color: var(--warning-accent);
   font-weight: 1.25rem;
   font-weight: lighter;
   text-align: left;

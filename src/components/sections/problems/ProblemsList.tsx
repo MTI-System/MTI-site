@@ -1,13 +1,13 @@
 "use server"
 import ProblemCard from "@/components/sections/problems/ProblemCard"
-import { Problem, ProblemList } from "@/types/problemAPI"
+import { ProblemInterface, ProblemListInterface } from "@/types/problemAPI"
 import { fetchPermissions, fetchProblems } from "@/scripts/ApiFetchers"
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 
 export default async function ProblemsList({ year, tt }: { year: number; tt: string }) {
   const ttid = availableTournamentTypes.find((value) => value.name === tt)?.id.toString()
-  const respJSON: ProblemList | null = ttid ? await fetchProblems(ttid, year) : null
+  const respJSON: ProblemListInterface | null = ttid ? await fetchProblems(ttid, year) : null
   const userAuth = await fetchPermissions()
   let isEditable = false
   if (userAuth && userAuth.rights.length !== 0) {
@@ -22,7 +22,7 @@ export default async function ProblemsList({ year, tt }: { year: number; tt: str
   return (
     <>
       {respJSON !== null &&
-        respJSON.map((problem: Problem, index: number) => (
+        respJSON.map((problem: ProblemInterface, index: number) => (
           <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>
         ))}
       {respJSON === null && <FetchingErrorBanner />}

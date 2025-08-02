@@ -1,40 +1,38 @@
 .dropdownContainer {
   position: relative;
+  width: 100%;
+  height: 1.5rem;
 }
 
 .dropdownButton {
-  display: flex;
-  flex-direction: row;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
   background-color: var(--alt-bg);
   border-radius: 0.25rem;
-  transition: background-color 250ms ease;
-  /*padding-left: 0.5vw;*/
-  padding-right: 0.5vw;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  padding: 0.5rem;
 }
 
-.dropdownContainer.dropdownDisabled .dropdownText {
-  color: rgb(148, 148, 148);
+.dropdownContainer.dropdownDisabled .dropdownButton {
+  background-color: var(--inactive-color);
 }
-.dropdownContainer.dropdownDisabled .arrowIcon * {
-  color: rgb(148, 148, 148);
-}
-
 .dropdownButton:hover {
   background-color: var(--hover-color);
 }
 
 .dropdownContainer.dropdownDisabled .dropdownButton:hover {
-  background-color: var(--hover-color);
+  background-color: var(--inactive-color);
 }
 
 .dropdownButton .arrowIcon {
   /*margin-right: 1vw;*/
-  font-size: calc(var(--medium-text) * 0.8);
-  transition-property: translate rotate;
+  font-size: calc(var(--medium-text) / 1.3);
+  transition-property: translate rotate color background-color border-color;
   transition-duration: 250ms;
   transition-timing-function: ease;
 }
@@ -60,9 +58,8 @@
 }
 
 .dropdownText {
-  font-size: var(--medium-text);
-  padding-left: 0.5vw;
-  padding-right: 0.5vw;
+  font-size: 1rem;
+  text-align: center;
 }
 
 .dropdownMenu {
@@ -73,6 +70,7 @@
   animation-play-state: paused;
   width: 100%;
   background-color: var(--alt-bg);
+  border: var(--border-width) var(--border-color) solid;
   box-shadow: 0 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
   overflow: hidden;
@@ -114,7 +112,7 @@
 
 .dropdownOption {
   /*padding: 0.25em 1em;*/
-  transition: background-color 250ms ease;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
   user-select: none;
 }
 
