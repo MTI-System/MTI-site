@@ -30,11 +30,11 @@ export default function ThemeSwitchingButton({ className }: { className: string 
         autoplay: false,
       })
       const raysAnim = animate(`.${style.sunRays}`, {
-        scale: { to: 0.3, ease: "inOutCubic", duration: 800 },
-        translateX: { to: -27, ease: "inOutCubic", duration: 800 },
-        translateY: { to: -13, ease: "inOutCubic", duration: 800 },
-        rotate: { to: 180, duration: 350, ease: "inOutSine" },
-        opacity: { to: 0, delay: 350, duration: 200, ease: "linear" },
+        scale: { from: 1, to: 0.3, ease: "inOutCubic", duration: 800 },
+        translateX: { from: 0, to: -27, ease: "inOutCubic", duration: 800 },
+        translateY: { from: 0, to: -13, ease: "inOutCubic", duration: 800 },
+        rotate: { from: 0, to: 180, duration: 350, ease: "inOutSine" },
+        opacity: { from: 1, to: 0, delay: 350, duration: 200, ease: "linear" },
         delay: 200,
         autoplay: false,
       })
@@ -47,10 +47,10 @@ export default function ThemeSwitchingButton({ className }: { className: string 
         autoplay: false,
       })
       const starsAnim = animate(`.${style.stars}`, {
-        scale: { to: 0.3, ease: "inOutCubic", duration: 800 },
-        translateX: { to: -27, ease: "inOutCubic", duration: 800 },
-        translateY: { to: -13, ease: "inOutCubic", duration: 800 },
-        opacity: { to: 1, delay: 350, duration: 200, ease: "linear" },
+        scale: { from: 1, to: 0.3, ease: "inOutCubic", duration: 800 },
+        translateX: { from: 0, to: -27, ease: "inOutCubic", duration: 800 },
+        translateY: { from: 0, to: -13, ease: "inOutCubic", duration: 800 },
+        opacity: { from: 0, to: 1, delay: 350, duration: 200, ease: "linear" },
         delay: 200,
         autoplay: false,
       })
@@ -77,7 +77,6 @@ export default function ThemeSwitchingButton({ className }: { className: string 
           animations.forEach((anim) => {
             anim.reverse()
           })
-        targetRef.current?.classList.remove(style.toDark)
       })
     })
     scopeRef.current.methods.init()

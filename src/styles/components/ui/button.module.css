@@ -5,7 +5,7 @@
   border: var(--border-width) solid var(--main-color);
   color: var(--main-color);
   border-radius: var(--block-radius);
-  transition-property: background-color color border-color;
+  transition-property: background-color, color, border-color;
   transition-duration: 250ms;
   transition-timing-function: ease;
   overflow: hidden;
