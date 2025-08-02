@@ -86,3 +86,44 @@
   border-radius: 0.5vw;
   gap: 1vw;
 }
+.addNewSectionDropdown {
+  height: 100%;
+  width: 15rem;
+  transition: opacity 250ms ease;
+}
+.addNewSectionDropdown > div:not([style]) {
+  background-color: var(--bg-color) !important;
+  border: var(--border-width) var(--border-color) solid;
+  color: var(--border-color);
+  font-weight: bold;
+  border-radius: 10rem;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+}
+
+.addNewSectionDropdown > div:not([style]):hover {
+  background-color: hsl(from var(--bg-color) h s calc(l - 2.5)) !important;
+}
+
+.addSectionOptionContainer {
+  padding: 0.25rem;
+}
+.addNewSectionDropdown > div:not([style]) .addSectionOptionContainer {
+  padding: 0;
+}
+.addNewSectionDropdown > div:not([style]) .addSectionOptionContainer div {
+  border: none;
+  background: none;
+  padding: 0 0.25rem;
+}
+
+.defaultOption {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+}

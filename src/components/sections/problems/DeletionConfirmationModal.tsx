@@ -55,7 +55,7 @@ export default function DeletionConfirmationModal({
             Отмена
           </Button>
           <HoldButton
-            style={{ "--main-color": "var(--wsrning-accent)", "--main-light-color": "var(--alt-warning-accent)" }}
+            style={{ "--main-color": "var(--warning-accent)", "--main-light-color": "var(--alt-warning-accent)" }}
             onConfirm={() => {
               if (isLoading) return
               setIsLoading(true)

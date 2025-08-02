@@ -1,5 +1,5 @@
 "use server"
-import { ProblemList } from "@/types/problemAPI"
+import { ProblemListInterface } from "@/types/problemAPI"
 import { connection } from "next/server"
 import { PROBLEM_API, AUTH_API } from "@/constants/APIEndpoints"
 import { User, UserSchema } from "@/types/authApi"
@@ -39,7 +39,7 @@ async function fetchWithRetryAndTimeout(
   }
 }
 
-async function fetchProblems(tournament: string, year: number): Promise<ProblemList | null> {
+async function fetchProblems(tournament: string, year: number): Promise<ProblemListInterface | null> {
   await connection()
   try {
     const response = await fetchWithRetryAndTimeout(
@@ -47,7 +47,7 @@ async function fetchProblems(tournament: string, year: number): Promise<ProblemL
     )
     if (!response) return null
     // TODO: REWRITE!!!
-    const respJSON: ProblemList = await response.json()
+    const respJSON: ProblemListInterface = await response.json()
     if (!Array.isArray(respJSON)) {
       console.log("Unexpected response received!")
       return null
