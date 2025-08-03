@@ -27,6 +27,30 @@
     height: 10rem;
   }
 }
+.card.underConstruction {
+  position: relative;
+}
+.card.underConstruction::after {
+  content: "🔒";
+  font-size: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(from var(--alt-bg) r g b / 0.75);
+  opacity: 0;
+  color: var(--main-text-color);
+  transition: opacity 250ms ease;
+  @media (max-width: 1200px) {
+    font-size: 5rem;
+  }
+}
+.card.underConstruction:hover::after {
+  opacity: 1;
+}
+
 .upHeaderDescription {
   padding: 1rem 0vw 0vw 2rem;
   color: var(--alt-text);
