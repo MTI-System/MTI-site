@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/Buttons"
 import { FaPlus } from "react-icons/fa6"
 import style from "@/styles/components/sections/problems/problemForms.module.css"
-import { FormEvent, useEffect, useRef, useState } from "react"
+import { FormEvent, useEffect, useRef, useState, useTransition } from "react"
 import clsx from "clsx"
 import { Input, TitledInput } from "@/components/ui/Input"
 import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation"
 export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; targetYear: number }) {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const auth = useAppSelector((state) => state.auth.authInfo)
   const token = useAppSelector((state) => state.auth.token)
   const [isShown, setIsShown] = useState(false)
@@ -31,10 +32,14 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     e.preventDefault()
     setIsLoading(true)
     const isok = await handletaskCreation(e.currentTarget)
-    setIsLoading(false)
     if (isok) {
-      router.refresh()
+      startTransition(() => {
+        setIsLoading(false)
+        router.refresh()
+      })
+      return
     }
+    setIsLoading(false)
   }
   const handletaskCreation = async (form: HTMLFormElement) => {
     if (!isAuthenticated) return
@@ -75,19 +80,25 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
           <textarea name="firstTranslationText"></textarea>
         </TitledInput>
         <div className={style.confirmContainer}>
-          <Button type="submit" className={style.confirmationButton} disabled={isLoading}>
+          <Button type="submit" className={style.confirmationButton} disabled={isLoading || isPending}>
             Создать задачу
           </Button>
           <Button
             type="button"
             className={style.editOnOtherPageButton}
-            disabled={isLoading}
+            disabled={isLoading || isPending}
             onClick={async () => {
               if (!formRef.current) return
               setIsLoading(true)
               const isok = await handletaskCreation(formRef.current)
+              if (isok) {
+                startTransition(() => {
+                  setIsLoading(false)
+                  if (isok) router.push("/underconstruction")
+                })
+                return
+              }
               setIsLoading(false)
-              if (isok) router.push("/underconstruction")
             }}
           >
             Добавить материалы

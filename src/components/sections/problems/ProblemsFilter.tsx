@@ -8,7 +8,15 @@ import { setYear } from "@/redux_stores/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 
-export default function ProblemFilters({ children, possibleYears }: { children: ReactNode; possibleYears: number[] }) {
+export default function ProblemFilters({
+  children,
+  possibleYears,
+  isModerator,
+}: {
+  children: ReactNode
+  possibleYears: number[]
+  isModerator: boolean
+}) {
   const year = useAppSelector((state) => state.searchParams.year)
   const tt = useAppSelector((state) => state.searchParams.tt)
   const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
@@ -17,7 +25,7 @@ export default function ProblemFilters({ children, possibleYears }: { children: 
     <>
       <div className={style.filters}>
         <p className={style.filtersTitle}>Задачи</p>
-        <YearFilter possibleYears={possibleYears} isPending={isPending} />
+        <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
       {!isPending && children}
@@ -26,16 +34,41 @@ export default function ProblemFilters({ children, possibleYears }: { children: 
   )
 }
 
-function YearFilter({ possibleYears, isPending }: { possibleYears: number[]; isPending: boolean }) {
+function YearFilter({
+  possibleYears,
+  isPending,
+  isModerator,
+}: {
+  possibleYears: number[]
+  isPending: boolean
+  isModerator: boolean
+}) {
   const year = useAppSelector((state) => state.searchParams.year)
   const dispatcher = useAppDispatch()
+
+  const optionList: { displayName: string; value: number; active: boolean }[] = []
+  possibleYears.forEach((year, index, array) => {
+    if (index === 0) {
+      if (isModerator) optionList.push({ displayName: `+${year + 1}`, value: year + 1, active: true })
+      optionList.push({ displayName: year.toString(), value: year, active: true })
+      return
+    }
+    for (let i = year + 1; i < array[index - 1]; i++) optionList.push({ displayName: `+${i}`, value: i, active: true })
+    optionList.push({ displayName: year.toString(), value: year, active: true })
+  })
+  if (isModerator) {
+    const firstYear = possibleYears.length > 0 ? possibleYears[possibleYears.length - 1] : new Date().getFullYear() + 1
+    optionList.push({
+      displayName: `+${firstYear - 1}`,
+      value: firstYear - 1,
+      active: true,
+    })
+  }
 
   return (
     <div className={style.yearFilter}>
       <TextDropdown
-        options={possibleYears.map((year) => {
-          return { displayName: year.toString(), value: year, active: true }
-        })}
+        options={optionList}
         defaultSelection={{
           displayName: year.toString(),
           value: year,
