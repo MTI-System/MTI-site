@@ -1,6 +1,6 @@
 .profilePage {
   width: 100vw;
-  height: 1005;
+  height: calc(100vh - var(--nav-header-height));
   background-color: var(--main-bg);
   display: flex;
   flex-direction: column;
