@@ -106,7 +106,7 @@ function DropdownMenu<ValueType>({
 
   return (
     <div className={style.dropdownMenu} style={{ position: "absolute" }} ref={menuRef}>
-      {(!options || options.length == 0) && <p className={style.dropdownText}>No options</p>}
+      {(!options || options.length == 0) && <p className={style.dropdownText}>--------</p>}
       {options &&
         options.map((option, index) => (
           <DropdownOption option={option} onClick={() => onOptionSelect(option)} key={index + 1}></DropdownOption>

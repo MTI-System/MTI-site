@@ -20,6 +20,7 @@
   font-weight: bold;
   color: var(--main-text-color);
   user-select: none;
+  -webkit-user-drag: none;
   @media (max-width: 1200px) {
     border-radius: var(--block-radius);
   }

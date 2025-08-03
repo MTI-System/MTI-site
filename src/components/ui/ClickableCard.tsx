@@ -10,7 +10,7 @@ interface ClickableCardProps extends LinkProps {
 
 function ClickableCard({ children, className, ...linkProps }: ClickableCardProps) {
   return (
-    <Link {...linkProps} className={clsx(style.clickableCard, className)}>
+    <Link {...linkProps} className={clsx(style.clickableCard, className)} draggable={false}>
       {children}
     </Link>
   )

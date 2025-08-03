@@ -60,6 +60,7 @@
 .dropdownText {
   font-size: 1rem;
   text-align: center;
+  user-select: none;
 }
 
 .dropdownMenu {

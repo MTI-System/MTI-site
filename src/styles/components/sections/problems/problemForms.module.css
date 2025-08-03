@@ -15,7 +15,7 @@
   color: var(--alt-primary-accent);
 }
 .expandedButton {
-  height: 30rem;
+  height: 32rem;
   background-color: var(--alt-bg);
 }
 .hiddenButton {
@@ -59,6 +59,7 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  gap: 2rem;
   width: 100%;
 }
 .newProblemform input,
@@ -86,8 +87,14 @@
   font-weight: bold;
 }
 
+.numberAndTitleContainer div {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
 .numberInput {
-  width: 10%;
+  width: 10% !important;
 }
 .numberInput input {
   appearance: textfield;
@@ -100,13 +107,16 @@
 }
 
 .titleInput {
-  width: 87.5%;
+  width: 87.5% !important;
 }
 .textInput {
-  width: 80%;
-  font-size: 1rem;
-  color: black;
-  padding: 1.5rem 0;
+  width: 80% !important;
+  font-size: 1.25rem !important;
+  color: black !important;
+  padding: 1.5rem 0 !important;
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
 }
 .textInput textarea {
   height: 10rem;
