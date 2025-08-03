@@ -1,0 +1,60 @@
+.profilePage {
+  width: 100vw;
+  height: 1005;
+  background-color: var(--main-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.profileContainer {
+  background-color: var(--alt-bg);
+  border: var(--border-width) var(--border-color) solid;
+  box-shadow: 0 0 0.5rem 0.25rem var(--border-color);
+  border-radius: var(--block-radius);
+  width: 90%;
+  max-width: 50rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 3rem;
+}
+
+.rights {
+  border: calc(var(--border-width) * 2) var(--border-color) solid;
+  border-radius: var(--block-radius);
+}
+.rightsTitle {
+  width: 100%;
+  text-align: left;
+  font-size: 1.5rem;
+  padding: 0.75rem;
+  border-bottom: calc(var(--border-width) * 2) var(--border-color) solid;
+}
+.rightsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.right {
+  border: calc(var(--border-width) * 2) var(--alt-text) solid;
+  border-radius: var(--block-radius);
+  padding: 0.5rem;
+  background: transparent;
+}
+
+.logout {
+  font-size: 1.75rem !important;
+  border-radius: calc(var(--block-radius) / 2) !important;
+  height: 4rem !important;
+}
