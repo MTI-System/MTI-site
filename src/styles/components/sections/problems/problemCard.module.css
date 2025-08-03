@@ -154,6 +154,7 @@ body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
     width: 10rem !important;
     border-radius: 0.5rem !important;
     margin-left: 1rem;
+    color: var(--main-text-color) !important;
 }
 
 .problemTextEditArea {
