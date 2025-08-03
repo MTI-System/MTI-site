@@ -1,7 +1,8 @@
 "use server"
-import { ProblemListInterface, ProblemSectionInterface, ProblemSectionSchema } from "@/types/problemAPI"
+import { ProblemListInterface, ProblemSchema, ProblemSectionInterface, ProblemSectionSchema } from "@/types/problemAPI"
+import { EmbeddingInterface, EmbeddingSchema } from "@/types/embeddings"
 import { connection } from "next/server"
-import { PROBLEM_API, AUTH_API } from "@/constants/APIEndpoints"
+import { PROBLEM_API, AUTH_API, MATERIAL_API } from "@/constants/APIEndpoints"
 import { User, UserSchema } from "@/types/authApi"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
@@ -42,22 +43,14 @@ async function fetchWithRetryAndTimeout(
 
 async function fetchProblems(tournament: string, year: number): Promise<ProblemListInterface | null> {
   await connection()
-  try {
-    const response = await fetchWithRetryAndTimeout(
-      PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`
-    )
-    if (!response) return null
-    // TODO: REWRITE!!!
-    const respJSON: ProblemListInterface = await response.json()
-    if (!Array.isArray(respJSON)) {
-      console.log("Unexpected response received!")
-      return null
-    }
-    return respJSON
-  } catch (e) {
-    console.log(`Problem fetching error: ${e}`)
-    return null
-  }
+  const response = await fetchWithRetryAndTimeout(
+    PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`
+  )
+  if (!response) return null
+  const respJSON = z.array(ProblemSchema).safeParse(await response.json())
+  if (respJSON.success) return respJSON.data
+  console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
+  return null
 }
 
 async function fetchPermissions(redirectPath?: string): Promise<User | null> {
@@ -147,6 +140,15 @@ async function fetchDeleteSectionFromTask(problemId: string, sectionId: string) 
   return response != null
 }
 
+async function fetchEmbeddingsInfo(embeddingIds: number[]): Promise<EmbeddingInterface[]> {
+  const response = await fetchWithRetryAndTimeout(MATERIAL_API + `get_material_list?ids=${embeddingIds.toString()}`)
+  if (!response) return []
+  const parsed = z.array(EmbeddingSchema).safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding data: ${parsed.error}`)
+  return []
+}
+
 // async function fetchModifySectionOnTask(problemId:string, sectionId:string, action: "add_section"|"delete_section"): Promise<boolean> {
 //   if (action !== "add_section" && action !== "delete_section") return false
 //   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
@@ -169,4 +171,5 @@ export {
   fetchAllAvailableSections,
   fetchAddSectionToTask,
   fetchDeleteSectionFromTask,
+  fetchEmbeddingsInfo,
 }

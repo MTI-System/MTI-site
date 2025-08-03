@@ -2,7 +2,7 @@ import style from "@/styles/components/sections/problems/[id]/problemPage.module
 import { ProblemInterface } from "@/types/problemAPI"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { Button } from "@/components/ui/Buttons"
-import { fetchPermissions } from "@/scripts/ApiFetchers"
+import { fetchEmbeddingsInfo, fetchPermissions } from "@/scripts/ApiFetchers"
 import { ProblemCardContent } from "../ProblemCard"
 import { ExpandableImage } from "@/components/ui/Files/ImageEmbeddings"
 import { ReactNode } from "react"
@@ -18,12 +18,13 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
       .map((right) => right.right_flag == "MODERATE_PROBLEMS_" + problem.tournament_type)
       .some((x) => x)
   }
-  // const allMaterials = problem.problem_materials
-  // const primaryGifMaterial = allMaterials.filter((mat) => mat.material_type.type_title === "PRIMARY_GIF")
-  // const primaryVideoMaterial = allMaterials.find((mat) => mat.material_type.type_title === "VIDEO")
-  // const listOfMaterials = allMaterials.filter(
-  //   (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "VIDEO"
-  // )
+  const allMaterialIds = problem.materials
+  const allMaterials = await fetchEmbeddingsInfo(allMaterialIds)
+  const primaryGifMaterial = allMaterials.filter((mat) => mat.content_type.typeName === "PRIMARY_GIF")
+  const primaryVideoMaterial = allMaterials.find((mat) => mat.content_type.typeName === "VIDEO")
+  const listOfMaterials = allMaterials.filter(
+    (mat) => mat.content_type.typeName !== "PRIMARY_GIF" && mat.content_type.typeName !== "VIDEO"
+  )
   return (
     <div className={style.pageRoot}>
       <div className={style.main}>
@@ -31,15 +32,15 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
           <div className={style.problem}>
             <ProblemCardContent problem={problem} isEditable={false} />
           </div>
-          {/* {primaryGifMaterial.length > 0 && (
+          {primaryGifMaterial.length > 0 && (
             <div className={style.gifContainer}>
               {primaryGifMaterial.map((gifMaterial, index) => (
-                <ExpandableImage className={style.gif} src={FILES_SERVER + gifMaterial.url} key={index + 1} />
+                <ExpandableImage className={style.gif} src={FILES_SERVER + gifMaterial.content} key={index + 1} />
               ))}
             </div>
-          )} */}
+          )}
         </div>
-        {/* {primaryVideoMaterial && (
+        {primaryVideoMaterial && (
           <ContentContainer containerTitle="Видео">
             <div className={style.videoContainer}>
               <UniversalPlayer embedding={primaryVideoMaterial} />
@@ -47,15 +48,17 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
           </ContentContainer>
         )}
         <ContentContainer containerTitle="Материалы">
-          {listOfMaterials.length <= 0 && <p className={style.nothingMessage}>У этой задачи пока нет материалов</p>}
-          {listOfMaterials.length > 0 && (
+          {listOfMaterials.length <= 0 && !isModerator && (
+            <p className={style.nothingMessage}>У этой задачи пока нет материалов</p>
+          )}
+          {(listOfMaterials.length > 0 || isModerator) && (
             <div className={style.materialContainer}>
               {listOfMaterials.map((material) => {
                 return (
                   <UniversalEmbedding
                     key={material.id}
-                    embeddingImageURL={material.material_type.logo_path}
-                    embeddingName={material.material_name}
+                    embeddingImageURL={material.content_type.iconSource}
+                    embeddingName={material.title}
                     extension="PDF"
                     extensionColor="red"
                   />
@@ -69,7 +72,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
               )}
             </div>
           )}
-        </ContentContainer> */}
+        </ContentContainer>
       </div>
     </div>
   )
