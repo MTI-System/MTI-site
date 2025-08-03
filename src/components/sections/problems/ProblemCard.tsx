@@ -5,8 +5,8 @@ import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
 import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { deleteProblem, fetchAddSectionToTask } from "@/scripts/ApiFetchers"
-import { CSSProperties, useMemo, useState, useTransition } from "react"
+import { deleteProblem, fetchAddSectionToTask, fetchAllAvailableSections } from "@/scripts/ApiFetchers"
+import { CSSProperties, useEffect, useMemo, useState, useTransition } from "react"
 import clsx from "clsx"
 import { PiGlobeLight } from "react-icons/pi"
 import ProblemSection from "@/components/sections/problems/ProblemSection"
@@ -104,36 +104,40 @@ function EditButtons({
 }
 
 function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
+  const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])
+  // --------BAD IMPLEMENTATION THAT SPAMS SERVER WITH REQUESTS!!!-------
+  // useEffect(() => {
+  //   fetchAllAvailableSections().then((sections) => {
+  //     setAddableSections(
+  //       sections.filter(
+  //         (section) =>
+  //           problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined
+  //       )
+  //     )
+  //   })
+  // }, [problem.problem_sections.length])
   return (
     <div className={style.sectionsList}>
       {problem.problem_sections.map((section) => {
-        return <ProblemSection key={section.id} section={section} isEditable={isEditable} />
+        return <ProblemSection key={section.id} section={section} isEditable={isEditable} problemId={problem.id} />
       })}
       {problem.problem_sections.length == 0 && (
-        <ProblemSection section={{ id: 0, title: "Не определено", icon_src: "forbidden.svg", tile_color: "#AAAAAA" }} />
+        <ProblemSection
+          problemId={problem.id}
+          section={{ id: 0, title: "Не определено", icon_src: "forbidden.svg", tile_color: "#AAAAAA" }}
+        />
       )}
-      {isEditable && <AddNewSection problemId={problem.id} existingSections={problem.problem_sections} />}
+      {isEditable && <AddNewSection problemId={problem.id} addableSections={addableSections} />}
     </div>
   )
 }
 
-// function AddNewSection({ problemId }: { problemId: number }) {
-//   const isAddNewModalOpenStste = useState(false)
-//   const setIsAddNewModalOpen = isAddNewModalOpenStste[1]
-//   return (
-//     <>
-//       <Button onClick={() => setIsAddNewModalOpen(true)}>Добавить</Button>
-//       <AddNewSectionModal openState={isAddNewModalOpenStste} problemId={problemId} />
-//     </>
-//   )
-// }
-
 function AddNewSection({
   problemId,
-  existingSections,
+  addableSections,
 }: {
   problemId: number
-  existingSections: ProblemSectionInterface[]
+  addableSections: ProblemSectionInterface[]
 }) {
   const defaultColors = {
     "--border-color": "var(--primary-accent)",
@@ -168,17 +172,7 @@ function AddNewSection({
       value: "0",
       active: true,
     }
-  }, [existingSections, isError])
-  const addableSections = useMemo(() => {
-    // Make fetching and filtering logic here...
-    const trueExistingSections = [
-      { id: 1, title: "Механика", icon_src: "glass.svg", tile_color: "#32E875" },
-      { id: 2, title: "Оптика", icon_src: "glass.svg", tile_color: "#1E2EDE" },
-      { id: 3, title: "Термодинамика", icon_src: "glass.svg", tile_color: "#DE841E" },
-      { id: 4, title: "Магнетизм", icon_src: "glass.svg", tile_color: "#DA3633" },
-    ]
-    return trueExistingSections
-  }, [existingSections])
+  }, [addableSections, isError])
 
   return (
     <>
@@ -187,7 +181,7 @@ function AddNewSection({
           return {
             displayElement: (
               <div className={style.addSectionOptionContainer}>
-                <ProblemSection key={section.id} section={section} />
+                <ProblemSection key={section.id} section={section} problemId={problemId} />
               </div>
             ),
             value: section.id.toString(),

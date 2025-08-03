@@ -6,11 +6,14 @@ import { FaTimes } from "react-icons/fa"
 import { CSSProperties, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import clsx from "clsx"
+import { fetchDeleteSectionFromTask } from "@/scripts/ApiFetchers"
 
 export default function ProblemSection({
+  problemId,
   section,
   isEditable,
 }: {
+  problemId: number
   section: ProblemSectionInterface
   isEditable?: boolean
 }) {
@@ -34,7 +37,9 @@ export default function ProblemSection({
           className={style.deleteIcon}
           onClick={() => {
             // TODO: Create logic for section deletion
-            startTransition(() => {
+            startTransition(async () => {
+              const response = await fetchDeleteSectionFromTask(problemId.toString(), section.id.toString())
+              if (!response) return
               router.refresh()
             })
           }}

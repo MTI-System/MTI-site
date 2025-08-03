@@ -5,12 +5,6 @@ export interface ProblemMaterialTypeInterface {
   logo_path: string
   type_title: string
 }
-export interface ProblemMaterialInterface {
-  id: number
-  material_name: string
-  url: string
-  material_type: ProblemMaterialTypeInterface
-}
 
 export const ProblemTranslationSchema = z.object({
   id: z.number(),
@@ -26,17 +20,17 @@ export interface ProblemInterface {
   year: number
   tournament_type: number
   problem_translations: ProblemTranslationInterface[]
-  problem_materials: ProblemMaterialInterface[]
+  problem_materials: number[]
   problem_sections: ProblemSectionInterface[]
 }
 
-export const ProblemSectionschema = z.object({
+export const ProblemSectionSchema = z.object({
   id: z.number(),
   title: z.string(),
   icon_src: z.string(),
   tile_color: z.string().length(7).startsWith("#"),
 })
 
-export type ProblemSectionInterface = z.infer<typeof ProblemSectionschema>
+export type ProblemSectionInterface = z.infer<typeof ProblemSectionSchema>
 
 export type ProblemListInterface = ProblemInterface[]

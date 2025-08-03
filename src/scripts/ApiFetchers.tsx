@@ -1,10 +1,11 @@
 "use server"
-import { ProblemListInterface } from "@/types/problemAPI"
+import { ProblemListInterface, ProblemSectionInterface, ProblemSectionSchema } from "@/types/problemAPI"
 import { connection } from "next/server"
 import { PROBLEM_API, AUTH_API } from "@/constants/APIEndpoints"
 import { User, UserSchema } from "@/types/authApi"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
+import z from "zod"
 
 async function fetchWithRetryAndTimeout(
   url: string,
@@ -102,10 +103,23 @@ async function deleteProblem(problem: number, tournamentTypeId: number): Promise
 
 async function fetchYears(tournamentTypeId: number): Promise<number[]> {
   return (
-    (await fetchWithRetryAndTimeout(
-      "https://testbackend.mofius-server.ru/api/problems/years?tournamentTypeId=" + tournamentTypeId.toString()
-    ).then((response) => response?.json())) ?? [new Date().getFullYear()]
+    (await fetchWithRetryAndTimeout(PROBLEM_API + "years?tournamentTypeId=" + tournamentTypeId.toString()).then(
+      (response) => response?.json()
+    )) ?? [new Date().getFullYear()]
   )
+}
+
+async function fetchAllAvailableSections(): Promise<ProblemSectionInterface[]> {
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", {
+    next: {
+      revalidate: 3600,
+    },
+  })
+  if (!response) return []
+  const parseRes = z.array(ProblemSectionSchema).safeParse(await response.json())
+  if (parseRes.success) return parseRes.data
+  console.error(`Unexpected response while parsing sections: ${parseRes.error}`)
+  return []
 }
 
 async function fetchAddSectionToTask(problemId: string, sectionId: string): Promise<boolean> {
@@ -119,4 +133,40 @@ async function fetchAddSectionToTask(problemId: string, sectionId: string): Prom
   })
   return response != null
 }
-export { fetchProblems, fetchPermissions, deleteProblem, fetchYears, fetchAddSectionToTask }
+
+async function fetchDeleteSectionFromTask(problemId: string, sectionId: string) {
+  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+  const formData = new FormData()
+  formData.set("token", token)
+  formData.set("sectionId", sectionId)
+  formData.set("problemId", problemId)
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + `sections/delete_section`, {
+    method: "DELETE",
+    body: formData,
+  })
+  return response != null
+}
+
+// async function fetchModifySectionOnTask(problemId:string, sectionId:string, action: "add_section"|"delete_section"): Promise<boolean> {
+//   if (action !== "add_section" && action !== "delete_section") return false
+//   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+//   const formData = new FormData()
+//   formData.set("token", token)
+//   formData.set("sectionId", sectionId)
+//   formData.set("problemId", problemId)
+//   const response = await fetchWithRetryAndTimeout(PROBLEM_API + `sections/${action}`, {
+//     method: "POST",
+//     body: formData,
+//   })
+//   return response != null
+// }
+
+export {
+  fetchProblems,
+  fetchPermissions,
+  deleteProblem,
+  fetchYears,
+  fetchAllAvailableSections,
+  fetchAddSectionToTask,
+  fetchDeleteSectionFromTask,
+}

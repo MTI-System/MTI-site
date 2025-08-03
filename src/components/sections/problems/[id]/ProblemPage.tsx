@@ -18,12 +18,12 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
       .map((right) => right.right_flag == "MODERATE_PROBLEMS_" + problem.tournament_type)
       .some((x) => x)
   }
-  const allMaterials = problem.problem_materials
-  const primaryGifMaterial = allMaterials.filter((mat) => mat.material_type.type_title === "PRIMARY_GIF")
-  const primaryVideoMaterial = allMaterials.find((mat) => mat.material_type.type_title === "VIDEO")
-  const listOfMaterials = allMaterials.filter(
-    (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "VIDEO"
-  )
+  // const allMaterials = problem.problem_materials
+  // const primaryGifMaterial = allMaterials.filter((mat) => mat.material_type.type_title === "PRIMARY_GIF")
+  // const primaryVideoMaterial = allMaterials.find((mat) => mat.material_type.type_title === "VIDEO")
+  // const listOfMaterials = allMaterials.filter(
+  //   (mat) => mat.material_type.type_title !== "PRIMARY_GIF" && mat.material_type.type_title !== "VIDEO"
+  // )
   return (
     <div className={style.pageRoot}>
       <div className={style.main}>
@@ -31,20 +31,19 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
           <div className={style.problem}>
             <ProblemCardContent problem={problem} isEditable={false} />
           </div>
-          {primaryGifMaterial.length > 0 && (
+          {/* {primaryGifMaterial.length > 0 && (
             <div className={style.gifContainer}>
               {primaryGifMaterial.map((gifMaterial, index) => (
                 <ExpandableImage className={style.gif} src={FILES_SERVER + gifMaterial.url} key={index + 1} />
               ))}
             </div>
-          )}
+          )} */}
         </div>
-        {primaryVideoMaterial && (
+        {/* {primaryVideoMaterial && (
           <ContentContainer containerTitle="Видео">
             <div className={style.videoContainer}>
               <UniversalPlayer embedding={primaryVideoMaterial} />
             </div>
-            {/* <div className={style.tmpVideo}>Video here...</div> */}
           </ContentContainer>
         )}
         <ContentContainer containerTitle="Материалы">
@@ -70,7 +69,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
               )}
             </div>
           )}
-        </ContentContainer>
+        </ContentContainer> */}
       </div>
     </div>
   )
