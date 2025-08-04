@@ -1,4 +1,16 @@
 import style from "@/styles/components/sections/app/about.module.css"
+import type {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: {
+    template: "О МТИ",
+    default: "О Менеджере Турнирной Информации",
+  },
+  description: "Страница с информацией, на которой вы можете узнать о то, что такое МТИ (Система для проведения научных турниров, такие как ТЮФ и ТЮЕ)",
+  verification: {
+    yandex: "aa838087dd1ef992",
+  },
+}
 
 export default function AboutPage() {
   return (
