@@ -2,6 +2,8 @@
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { LoadFileForm } from "@/types/embeddings"
 import { useState, useEffect } from "react"
+import { EmbeddingCard } from "../FileEmbeddings"
+import style from "@/styles/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding.module.css"
 
 export default function LoadingFileEmbedding({ form }: { form: LoadFileForm }) {
   const [loadingState, setLoadingState] = useState("loading")
@@ -36,7 +38,9 @@ export default function LoadingFileEmbedding({ form }: { form: LoadFileForm }) {
 
   return (
     <>
-      <h1>Loading file, progress: {progress}</h1>
+      <EmbeddingCard title={form.materialTitle} subtitle="Uploading progress later" embeddingImageURL="/uploading.svg">
+        <div className={style.loadingWrapper}></div>
+      </EmbeddingCard>
     </>
   )
 }

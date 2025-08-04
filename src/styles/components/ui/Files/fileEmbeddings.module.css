@@ -1,4 +1,5 @@
 .embeddingContainer {
+  position: relative;
   max-width: 30vw;
   border: var(--border-width) var(--border-color) solid;
   border-radius: calc(var(--block-radius) / 2);
