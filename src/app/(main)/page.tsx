@@ -3,6 +3,18 @@ import ClickableCard from "@/components/ui/ClickableCard"
 import { Button } from "@/components/ui/Buttons"
 import clsx from "clsx"
 import UnlockTournamentType from "@/components/Redux/UnlockTournamentType"
+import type {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: {
+    template: "МТИ",
+    default: "МТИ - Менеджер Турнирной Информации",
+  },
+  description: "МТИ — единое пространство для научных турниров (ТЮФ, ТЮЕ): регистрация, сетки боёв, статистика, дипломы и история достижений в одном месте.",
+  verification: {
+    yandex: "aa838087dd1ef992",
+  },
+}
 
 export default function Home() {
   return (
