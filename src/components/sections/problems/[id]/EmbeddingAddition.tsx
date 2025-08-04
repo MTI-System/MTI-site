@@ -1,7 +1,6 @@
 "use client"
 import { Button, HoldButton } from "@/components/ui/Buttons"
-import UniversalEmbedding from "@/components/ui/Files/FileEmbeddings"
-import { EmbeddingInterface, EmbeddingTypeInterface } from "@/types/embeddings"
+import { EmbeddingTypeInterface } from "@/types/embeddings"
 import {
   ChangeEvent,
   Dispatch,
@@ -29,25 +28,32 @@ import { useRouter } from "next/navigation"
 type FileFromModalInterface = Omit<LoadFileForm, "link">
 
 export default function PendingEmbeddingsList({ problemId }: { problemId: number }) {
+  const uploadedRef = useRef(0)
   const isOpenState = useState(false)
   const [isOpen, setIsOpen] = isOpenState
-  const [embeddings, setEmbeddings] = useState<FileFromModalInterface[]>([])
+  const [embeddings, setEmbeddings] = useState<{ [key: string]: FileFromModalInterface }>({})
   const [isPending, startTransition] = useTransition()
+
+  useEffect(() => {
+    console.log(embeddings)
+  }, [embeddings])
+
   return (
     <>
-      {embeddings[0] && (
+      {Object.entries(embeddings).map(([key, value]) => (
         <LoadingFileEmbedding
-          form={{
-            materialTitle: "Тест добавления",
-            contentType: 1,
-            token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RfdXNlcjEiLCJleHAiOjE3NTQzMDEzODMuOTg2MzQ4OX0.hbYzla1IBct8qinhiX9Pw2pDg0CBheOZ88bgJ9pcCm4",
-            file: embeddings[0].file,
-            problemId: 11,
-            isPrimary: false,
+          form={value}
+          key={key}
+          onUploadComplete={() => {
+            console.log("Deleteee")
+            setEmbeddings((prev) => {
+              const newEmbeddingsDict = { ...prev }
+              delete newEmbeddingsDict[key]
+              return newEmbeddingsDict
+            })
           }}
         />
-      )}
+      ))}
       <Button
         className={style.addMaterialButton}
         style={{ opacity: isPending ? 0.5 : 1 }}
@@ -61,8 +67,14 @@ export default function PendingEmbeddingsList({ problemId }: { problemId: number
       <AddFileModal
         problemId={problemId}
         openState={isOpenState}
-        onFileAdd={(file) => {
-          // setEmbeddings([{ file }])
+        onFileAdd={(fileForm) => {
+          console.log(fileForm)
+          uploadedRef.current += 1
+          setEmbeddings((prev) => {
+            const newEmbeddingsDict = { ...prev }
+            newEmbeddingsDict[uploadedRef.current] = fileForm
+            return newEmbeddingsDict
+          })
         }}
         startTransition={startTransition}
       />
@@ -223,12 +235,13 @@ function AddFileModal({
                     setErrortext(UploadingErrors.EmptyType)
                     return
                   }
-                  if (attachedLink != "") {
+                  if (attachedLink) {
                     setIsLoading(true)
                     const res = await fetchAddLinkEmbedding({ link: attachedLink, ...dataRef.current })
                     setIsLoading(false)
                     if (res) {
                       setIsModalOpen(false)
+                      clearForm()
                       startTransition(() => {
                         router.refresh()
                       })
@@ -242,6 +255,7 @@ function AddFileModal({
                     ...dataRef.current,
                   })
                   setIsModalOpen(false)
+                  clearForm()
                 }}
                 disabled={
                   (!selectedFile && !attachedLink) ||
