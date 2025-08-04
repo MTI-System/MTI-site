@@ -1,5 +1,6 @@
 import footerStyle from "@/styles/components/sections/app/footer.module.css"
 import LogoWithTT from "@/components/sections/app/LogoWithTT"
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -15,14 +16,14 @@ export default function Footer() {
             </p>
           </div>
           <ol className={footerStyle.leftFooterOl}>
-            <li className={footerStyle.linkItem}>Профиль</li>
-            <li className={footerStyle.linkItem}>Задачи</li>
-            <li className={footerStyle.linkItem}>Турниры</li>
+            <li className={footerStyle.linkItem}><Link href="/about">О нас</Link></li>
+            <li className={footerStyle.linkItem}>Telegram</li>
+            <li className={footerStyle.linkItem}>ВКонтакте</li>
           </ol>
           <ol className={footerStyle.rightFooterOl}>
-            <li className={footerStyle.linkItem}>Бои</li>
-            <li className={footerStyle.linkItem}>Люди</li>
-            <li className={footerStyle.linkItem}>Статистика</li>
+            <li className={footerStyle.linkItem}><Link href="/about">О нас</Link></li>
+            <li className={footerStyle.linkItem}>Telegram</li>
+            <li className={footerStyle.linkItem}>ВКонтакте</li>
           </ol>
         </div>
       </footer>

@@ -49,7 +49,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     formData.set("firstTranslationBy", "Оффициальный перевод")
     formData.set("authToken", token)
     const resp = await fetch(PROBLEM_API + "add_problem", { method: "POST", body: formData })
-    if (resp.ok) form.reset()
+    if (resp) form.reset()
     return resp.ok
   }
 
