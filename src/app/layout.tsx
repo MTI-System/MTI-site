@@ -7,12 +7,14 @@ import Script from "next/script"
 import {cookies} from "next/headers"
 import StoreProvider from "@/components/Redux/StoreProvider"
 import LayoutComponent from "@/components/sections/app/Layout"
+import ThemeUpdator from "@/components/service/ThemeUpdator";
 
 export const metadata: Metadata = {
   title: {
     template: "МТИ",
     default: "МТИ - Менеджер Турнирной Информации",
   },
+  description: "Менеджер Турнирной Информации (МТИ) — это единое пространство для людей, которые делают и любят научные турниры, такие как ТЮФ (Турнир Юных Физиков) и ТЮЕ (Турнир Юных Естествоиспытателей). Мы создаём систему, где турнирная жизнь становится прозрачной и удобной: от регистрации и сеток боёв до статистики, дипломов и истории достижений. Наша цель — чтобы любая команда, жюри и оргкомитет могли работать в одном месте, без бесконечных таблиц и ручной рутины.",
   verification: {
     yandex: "aa838087dd1ef992",
   },
@@ -54,6 +56,7 @@ export default async function Template({children}: { children: React.ReactNode }
       theme={cookiesStore.get("theme")?.value ?? "light"}
       token={cookiesStore.get("mtiyt_auth_token")?.value ?? ""}
     >
+      <ThemeUpdator/>
       <LayoutComponent>{children}</LayoutComponent>
     </StoreProvider>
     </html>

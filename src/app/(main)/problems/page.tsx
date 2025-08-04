@@ -4,9 +4,9 @@ import ProblemsList from "@/components/sections/problems/ProblemsList"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import { Suspense } from "react"
 import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
-import { fetchYears } from "@/scripts/ApiFetchers"
+import { fetchPermissions, fetchYears } from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/service/SearchParamsUpdator"
-import UnlockTournamentType from "@/components/Redux/UnlockTournamentType";
+import UnlockTournamentType from "@/components/Redux/UnlockTournamentType"
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams
@@ -14,11 +14,24 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
   console.log("tt", tt)
 
   const possibleYears = await fetchYears(availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1)
+  let isUndefYear = false
+  if (sp.year && possibleYears.find((year) => sp.year == year) === undefined) isUndefYear = true
   const year = sp.year ?? possibleYears[0]
+
+  const userAuth = await fetchPermissions()
+  let isEditable = false
+  if (userAuth && userAuth.rights.length !== 0) {
+    isEditable = userAuth.rights
+      .map(
+        (right) =>
+          right.right_flag == "MODERATE_PROBLEMS_" + availableTournamentTypes.find((val) => val.name === tt)?.id
+      )
+      .some((x) => x)
+  }
 
   return (
     <>
-      <UnlockTournamentType/>
+      <UnlockTournamentType />
       <Suspense fallback={"Load search params"}>
         <SearchParamsUpdator />
       </Suspense>
@@ -27,10 +40,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
           <h2>Задачи на {availableTournamentTypes.find((val) => val.name === tt)?.longName}</h2>
 
           {tt && (
-            <ProblemFilters possibleYears={possibleYears}>
-              <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-                <ProblemsList year={year} tt={tt} />
-              </Suspense>
+            <ProblemFilters possibleYears={possibleYears} isModerator={isEditable}>
+              {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
+              {!isUndefYear && (
+                <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
+                  <ProblemsList year={year} tt={tt} isEditable={isEditable} />
+                </Suspense>
+              )}
             </ProblemFilters>
           )}
         </div>

@@ -1,7 +1,7 @@
 "use client"
 import style from "@/styles/components/ui/dropdown.module.css"
 import { FaChevronDown } from "react-icons/fa"
-import { useState, useRef, useEffect, ReactNode } from "react"
+import { useState, useRef, useEffect, ReactNode, HTMLAttributes } from "react"
 import clsx from "clsx"
 
 interface DropdownOption<ValueType> {
@@ -10,7 +10,7 @@ interface DropdownOption<ValueType> {
   active: boolean
 }
 
-interface DropdownParams<ValueType> {
+interface DropdownParams<ValueType> extends HTMLAttributes<HTMLDivElement> {
   options: DropdownOption<ValueType>[]
   onOptionSelect: (selection: ValueType) => void
   defaultSelection: number | DropdownOption<ValueType>
@@ -30,6 +30,7 @@ export function Dropdown<ValueType>({
   defaultSelection,
   className,
   disabled,
+  ...rest
 }: DropdownParams<ValueType>) {
   const [selectedOption, setSelectedOption] = useState<number | DropdownOption<ValueType>>(defaultSelection)
   const [isOpened, setIsOpened] = useState(false)
@@ -37,7 +38,7 @@ export function Dropdown<ValueType>({
     setSelectedOption(defaultSelection)
   }, [defaultSelection])
   return (
-    <div className={clsx(style.dropdownContainer, className, { [style.dropdownDisabled]: disabled })}>
+    <div className={clsx(style.dropdownContainer, className, { [style.dropdownDisabled]: disabled })} {...rest}>
       <DropdownButton
         selectedOption={typeof selectedOption === "number" ? options[selectedOption] : selectedOption}
         onClick={(e) => {
@@ -105,7 +106,7 @@ function DropdownMenu<ValueType>({
 
   return (
     <div className={style.dropdownMenu} style={{ position: "absolute" }} ref={menuRef}>
-      {!options && <p>No options</p>}
+      {(!options || options.length == 0) && <p className={style.dropdownText}>--------</p>}
       {options &&
         options.map((option, index) => (
           <DropdownOption option={option} onClick={() => onOptionSelect(option)} key={index + 1}></DropdownOption>
@@ -123,9 +124,8 @@ function DropdownButton<ValueType>({
   onClick: (e: React.MouseEvent) => void
   isOpened: boolean
 }) {
-  const className = `${style.dropdownButton} ${isOpened && style.buttonOpened}`
   return (
-    <div className={className} onClick={onClick}>
+    <div className={clsx(style.dropdownButton, { [style.buttonOpened]: isOpened })} onClick={onClick}>
       <DropdownOption option={selectedOption} />
       <FaChevronDown className={style.arrowIcon} />
     </div>

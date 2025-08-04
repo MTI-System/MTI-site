@@ -1,11 +1,30 @@
-.sectionCard{
-    display: flex;
-    padding: 0.5vh 1vw;
-    border-radius: 10vw;
+.sectionCard {
+  --bg-color: #444;
+  background-color: rgba(from var(--bg-color) r g b / 0.125);
+  border-width: var(--border-width);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  gap: 0.5rem;
+  padding: 0.5vh 1vw;
+  border-radius: 10rem;
+  font-weight: bold;
+  transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease;
 }
-
-.icon{
-    width: 1rem;
-    height: 1rem;
-    font-size: 1rem;
+.sectionCard.deletionPending {
+  opacity: 0.5;
+}
+.bareSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  gap: 0.5rem;
+}
+.icon {
+  width: 1.25rem;
+}
+.deleteIcon {
+  font-size: 0.8rem;
 }

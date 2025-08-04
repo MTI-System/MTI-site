@@ -19,7 +19,7 @@
 
 .contentContainer {
   position: relative;
-  background-color: var(--bg-color);
+  background-color: var(--alt-bg);
   border-radius: 2rem;
   box-shadow: 0 0 0.3em 0.1em rgba(0, 0, 0, 0.25);
   max-width: 80vw;
@@ -35,7 +35,7 @@
   margin: 1.5rem;
   line-height: 100%;
   color: var(--main-text-color);
-  transition: color 250ms ease;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
   cursor: pointer;
 }
 .modalCloseButton[disabled] {

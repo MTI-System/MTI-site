@@ -1,55 +1,39 @@
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import style from "@/styles/components/ui/Files/fileEmbeddings.module.css"
+import { EmbeddingInterface } from "@/types/embeddings"
 
-enum EmbeddingIconState {
-  default,
-  externalLink,
-  error,
-}
-
-interface EmbeddingIconProps {
-  embeddingImageURL: string
-  extension?: string
-  extensionColor?: string
-  iconState: EmbeddingIconState
-}
-
-interface UniversalEmbeddingPropas extends Omit<EmbeddingIconProps, "iconState"> {
-  embeddingName: string
-  url?: string
-  full_url?: string
-  isDownloadable?: boolean
-}
-
-export default function UniversalEmbedding({
-  embeddingName,
-  url,
-  full_url,
-  isDownloadable = true,
-  ...iconProps
-}: UniversalEmbeddingPropas) {
+export default function UniversalEmbedding({ embedding }: { embedding: EmbeddingInterface }) {
+  console.log(embedding)
   return (
     <div className={style.embeddingContainer}>
-      <EmbeddingIcon iconState={EmbeddingIconState.default} {...iconProps} />
+      <EmbeddingIcon
+        embeddingImageURL={embedding.content_type.icon_source}
+        extension={embedding.metadata.extension}
+        isExternal={embedding.metadata.is_external === "true"}
+      />
       <div className={style.textContainer}>
-        <h4 className={style.embeddingName}>{embeddingName}</h4>
+        <h4 className={style.embeddingName}>{embedding.title}</h4>
         <p className={style.embeddingSize}>??? KB</p>
       </div>
     </div>
   )
 }
-
-function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, iconState }: EmbeddingIconProps) {
-  const color = extensionColor ?? "var(--alt-text)"
+interface EmbeddingIconProps {
+  embeddingImageURL: string
+  extension?: string
+  extensionColor?: string
+  isExternal?: boolean
+}
+function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, isExternal }: EmbeddingIconProps) {
+  extensionColor = extensionColor ?? "var(--alt-text)"
   return (
     <div className={style.iconContainer}>
       <img src={FILES_SERVER + embeddingImageURL} />
-      {extension && (
-        <p className={style.extensionTitle} style={{ color: color, borderColor: color }}>
+      {extension && extension.length <= 4 && (
+        <p className={style.extensionTitle} style={{ color: extensionColor, borderColor: extensionColor }}>
           {extension}
         </p>
       )}
-      {iconState !== EmbeddingIconState.default && <></>}
     </div>
   )
 }

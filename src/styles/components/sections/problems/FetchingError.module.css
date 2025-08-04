@@ -1,7 +1,7 @@
 .errorCard {
   width: 100%;
   min-height: 5rem;
-  background-color: #fff;
+  background-color: var(--alt-bg);
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -14,8 +14,8 @@
 .errorCard .errorLogo {
   width: 5rem;
   height: 5rem;
-  background-color: #ddd;
-  border: 0.1rem #888 dashed;
+  background-color: var(--alt-bg);
+  border: 0.25rem var(--border-color) dashed;
 }
 .errorCard p {
   padding: 1rem;

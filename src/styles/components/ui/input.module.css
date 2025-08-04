@@ -1,5 +1,5 @@
 .inputWrapper {
-  font-size: 1.5vw;
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -17,8 +17,9 @@
   border-width: var(--border-width);
   border-radius: var(--block-radius);
   border-color: var(--border-color);
+  color: var(--text-color);
   background-color: var(--alt-card-bg);
-  transition: background-color 250ms ease;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
   cursor: text;
 }
 
@@ -40,7 +41,7 @@
 
 .title {
   user-select: none;
-  font-size: 1vw;
+  font-size: 1.25rem;
   color: var(--main-text-color);
   font-weight: bold;
 }

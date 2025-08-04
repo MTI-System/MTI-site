@@ -6,6 +6,7 @@ import ProfilePicture from "@/components/sections/app/Profile"
 import { Button } from "@/components/ui/Buttons"
 import { FiMenu } from "react-icons/fi"
 import { FaBell } from "react-icons/fa"
+import ThemeSwitchingButton from "./ThemeSwitcher"
 
 export default function Header() {
   return (
@@ -17,16 +18,17 @@ export default function Header() {
           </Button>
           <div>
             <Link href={"/"}>
-              <h1 style={{justifySelf: "start"}}>МТИ</h1>
+              <h1 style={{ justifySelf: "start" }}>МТИ</h1>
             </Link>
             <TournamentTypeSelector className={headerStyle.dropdown} />
           </div>
         </div>
         <div className={headerStyle.rightContainer}>
           {/*<GlobalSearch/>*/}
-          <Button className={headerStyle.headerRoundButton}>
+          {/* <Button className={headerStyle.headerRoundButton}>
             <FaMoon className={headerStyle.headerIconInButton} />
-          </Button>
+          </Button> */}
+          <ThemeSwitchingButton className={headerStyle.headerRoundButton} />
           <Button className={headerStyle.headerRoundButton}>
             <FaBell className={headerStyle.headerIconInButton} />
           </Button>

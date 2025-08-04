@@ -1,0 +1,44 @@
+.animationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.animationContainer svg {
+  width: 80%;
+  height: 80%;
+  fill: var(--main-color);
+  stroke: var(--main-color);
+  transition: fill 250ms ease, stroke 250ms ease;
+  overflow: visible;
+}
+
+.sunCenter {
+  transform-origin: center;
+}
+.sunRays {
+  transform-origin: center;
+}
+.moon {
+  transform-origin: center;
+  transform: rotateZ(505deg) scale(0.35);
+}
+.stars {
+  opacity: 0;
+  transform-origin: center;
+}
+
+.animationContainer.toDark .sunCenter {
+  transform: scale(0.4) translateX(5.5);
+}
+.animationContainer.toDark .sunRays {
+  transform: scale(0.3) translateX(-27) translateY(-13) rotate(180deg);
+  opacity: 0;
+}
+.animationContainer.toDark .moon {
+  transform: rotateZ(250deg) scale(1);
+}
+.animationContainer.toDark .stars {
+  transform: scale(0.3) translateX(-27) translateY(-13);
+  opacity: 1;
+}
