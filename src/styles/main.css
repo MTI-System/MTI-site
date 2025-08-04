@@ -57,6 +57,7 @@
 body {
   font-family: "Roboto Mono Variable", monospace;
   color: var(--main-text-color);
+  background-color: var(--main-bg);
 }
 
 body[data-theme="dark"] {
