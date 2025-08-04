@@ -36,14 +36,16 @@ export default function Modal({
           e.stopPropagation()
         }}
       >
-        <button
-          className={style.modalCloseButton}
-          aria-label="Close modal"
-          disabled={preventClose}
-          onClick={onCloseInternal}
-        >
-          <FaTimes />
-        </button>
+        {!preventClose && (
+          <button
+            className={style.modalCloseButton}
+            aria-label="Close modal"
+            disabled={preventClose}
+            onClick={onCloseInternal}
+          >
+            <FaTimes />
+          </button>
+        )}
         {children}
       </div>
     </div>

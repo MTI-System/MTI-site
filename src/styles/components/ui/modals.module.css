@@ -25,7 +25,7 @@
   max-width: 80vw;
   max-height: 80vh;
   padding: 3rem;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .modalCloseButton {

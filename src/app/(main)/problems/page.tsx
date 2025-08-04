@@ -1,39 +1,40 @@
 import style from "@/styles/routes/(main)/problems/page.module.css"
 import ProblemFilters from "@/components/sections/problems/ProblemsFilter"
 import ProblemsList from "@/components/sections/problems/ProblemsList"
-import {availableTournamentTypes} from "@/constants/AvailableTournaments"
-import {Suspense} from "react"
-import {TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys"
-import {fetchPermissions, fetchYears} from "@/scripts/ApiFetchers"
+import { availableTournamentTypes } from "@/constants/AvailableTournaments"
+import { Suspense } from "react"
+import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
+import { fetchPermissions, fetchYears } from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/service/SearchParamsUpdator"
 import UnlockTournamentType from "@/components/Redux/UnlockTournamentType"
-import type {Metadata} from "next";
+import type { Metadata } from "next"
 
-export async function generateMetadata(
-  {searchParams}: { searchParams: { year: number; tt: string } }
-): Promise<Metadata> {
-  const tt = Array.isArray(searchParams[TOURNAMENT_TYPE_SEARCH_PARAM_NAME])
-    ? searchParams[TOURNAMENT_TYPE_SEARCH_PARAM_NAME][0]
-    : searchParams[TOURNAMENT_TYPE_SEARCH_PARAM_NAME];
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ year: number; tt: string }>
+}): Promise<Metadata> {
+  const searchP = await searchParams
+  const tt = Array.isArray(searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME])
+    ? searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME][0]
+    : searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME]
 
-  const ttype = availableTournamentTypes.find((t) => t.name === tt);
+  const ttype = availableTournamentTypes.find((t) => t.name === tt)
 
-  const titleText = ttype
-    ? `Задачи · ${ttype.longName} – МТИ`
-    : "Задачи – МТИ";
+  const titleText = ttype ? `Задачи · ${ttype.longName} – МТИ` : "Задачи – МТИ"
 
   const descriptionText = ttype
-    ? `Опубликованные задачи для ${ttype.longName}: фильтр по годам, редактура и модерация в одном месте.`
-    : "Список задач научных турниров в системе МТИ.";
+    ? `Опубликованные задачи для ${ttype.longName}: смотри актуальные задачи для научных турниров.`
+    : "Список задач научных турниров в системе МТИ."
 
   return {
     title: titleText,
     description: descriptionText,
-    verification: {yandex: "aa838087dd1ef992"},
-  };
+    verification: { yandex: "aa838087dd1ef992" },
+  }
 }
 
-export default async function Page({searchParams}: { searchParams: Promise<{ year: number; tt: string }> }) {
+export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams
   let tt = sp[TOURNAMENT_TYPE_SEARCH_PARAM_NAME] ?? undefined
   console.log("tt", tt)
@@ -56,9 +57,9 @@ export default async function Page({searchParams}: { searchParams: Promise<{ yea
 
   return (
     <>
-      <UnlockTournamentType/>
+      <UnlockTournamentType />
       <Suspense fallback={"Load search params"}>
-        <SearchParamsUpdator/>
+        <SearchParamsUpdator />
       </Suspense>
       <div className={style.problemPage}>
         <div className={style.problemsContainer}>
@@ -69,7 +70,7 @@ export default async function Page({searchParams}: { searchParams: Promise<{ yea
               {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
               {!isUndefYear && (
                 <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-                  <ProblemsList year={year} tt={tt} isEditable={isEditable}/>
+                  <ProblemsList year={year} tt={tt} isEditable={isEditable} />
                 </Suspense>
               )}
             </ProblemFilters>

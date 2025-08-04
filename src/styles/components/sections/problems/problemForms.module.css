@@ -122,6 +122,7 @@
   height: 10rem;
   overflow-y: scroll;
   text-align: start;
+  color: var(--main-text-color);
 }
 
 .confirmContainer {

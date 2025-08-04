@@ -1,6 +1,12 @@
 "use server"
 import { ProblemListInterface, ProblemSchema, ProblemSectionInterface, ProblemSectionSchema } from "@/types/problemAPI"
-import { EmbeddingInterface, EmbeddingSchema } from "@/types/embeddings"
+import {
+  EmbeddingInterface,
+  EmbeddingSchema,
+  EmbeddingTypeInterface,
+  EmbeddingTypeSchema,
+  LoadFileForm,
+} from "@/types/embeddings"
 import { connection } from "next/server"
 import { PROBLEM_API, AUTH_API, MATERIAL_API } from "@/constants/APIEndpoints"
 import { User, UserSchema } from "@/types/authApi"
@@ -115,26 +121,19 @@ async function fetchAllAvailableSections(): Promise<ProblemSectionInterface[]> {
   return []
 }
 
-async function fetchAddSectionToTask(problemId: string, sectionId: string): Promise<boolean> {
-  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
-  const formData = new FormData()
-  formData.set("token", token)
-  formData.set("section", sectionId)
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + `sections/add_section/${problemId}`, {
-    method: "POST",
-    body: formData,
-  })
-  return response != null
-}
-
-async function fetchDeleteSectionFromTask(problemId: string, sectionId: string) {
+async function fetchModifySectionOnTask(
+  problemId: string,
+  sectionId: string,
+  action: "add_section" | "delete_section"
+): Promise<boolean> {
+  if (action !== "add_section" && action !== "delete_section") return false
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
   const formData = new FormData()
   formData.set("token", token)
   formData.set("sectionId", sectionId)
   formData.set("problemId", problemId)
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + `sections/delete_section`, {
-    method: "DELETE",
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + `sections/${action}`, {
+    method: action === "delete_section" ? "DELETE" : "POST",
     body: formData,
   })
   return response != null
@@ -149,19 +148,29 @@ async function fetchEmbeddingsInfo(embeddingIds: number[]): Promise<EmbeddingInt
   return []
 }
 
-// async function fetchModifySectionOnTask(problemId:string, sectionId:string, action: "add_section"|"delete_section"): Promise<boolean> {
-//   if (action !== "add_section" && action !== "delete_section") return false
-//   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
-//   const formData = new FormData()
-//   formData.set("token", token)
-//   formData.set("sectionId", sectionId)
-//   formData.set("problemId", problemId)
-//   const response = await fetchWithRetryAndTimeout(PROBLEM_API + `sections/${action}`, {
-//     method: "POST",
-//     body: formData,
-//   })
-//   return response != null
-// }
+async function fetchAddLinkEmbedding(embedding: Omit<LoadFileForm, "file">): Promise<boolean> {
+  const formData = new FormData()
+  formData.set("link", embedding.link ?? "")
+  formData.set("materialTitle", embedding.materialTitle)
+  formData.set("contentType", embedding.contentType.toString())
+  formData.set("isExternal", embedding.isPrimary.toString())
+  formData.set("problemId", embedding.problemId.toString())
+  formData.set("token", embedding.token)
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "add_material", {
+    method: "POST",
+    body: formData,
+  })
+  return response != null
+}
+
+async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface[]> {
+  const response = await fetchWithRetryAndTimeout(MATERIAL_API + "get_available_content_types")
+  if (!response) return []
+  const parsed = z.array(EmbeddingTypeSchema).safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding types content types: ${parsed.error}`)
+  return []
+}
 
 export {
   fetchProblems,
@@ -169,7 +178,10 @@ export {
   deleteProblem,
   fetchYears,
   fetchAllAvailableSections,
-  fetchAddSectionToTask,
-  fetchDeleteSectionFromTask,
+  // fetchAddSectionToTask,
+  fetchModifySectionOnTask,
+  // fetchDeleteSectionFromTask,
   fetchEmbeddingsInfo,
+  fetchAddLinkEmbedding,
+  fetchAllAvailableEmbeddingTypes,
 }

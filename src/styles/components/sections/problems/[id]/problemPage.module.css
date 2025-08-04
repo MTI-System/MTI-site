@@ -44,7 +44,10 @@
 .gif {
   height: 100%;
 }
-
+.spacer {
+  padding: 2rem;
+  width: 100%;
+}
 .nothingMessage {
   width: 100%;
   text-align: center;

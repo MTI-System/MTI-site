@@ -3,7 +3,6 @@ import style from "@/styles/components/ui/Files/fileEmbeddings.module.css"
 import { EmbeddingInterface } from "@/types/embeddings"
 
 export default function UniversalEmbedding({ embedding }: { embedding: EmbeddingInterface }) {
-  console.log(embedding)
   return (
     <div className={style.embeddingContainer}>
       <EmbeddingIcon
@@ -18,12 +17,14 @@ export default function UniversalEmbedding({ embedding }: { embedding: Embedding
     </div>
   )
 }
+
 interface EmbeddingIconProps {
   embeddingImageURL: string
   extension?: string
   extensionColor?: string
   isExternal?: boolean
 }
+
 function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, isExternal }: EmbeddingIconProps) {
   extensionColor = extensionColor ?? "var(--alt-text)"
   return (

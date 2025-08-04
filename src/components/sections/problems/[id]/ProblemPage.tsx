@@ -40,26 +40,28 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
             </div>
           )}
         </div>
-        {primaryVideoMaterial && (
-          <ContentContainer containerTitle="Видео">
-            <div className={style.videoContainer}>
-              <UniversalPlayer embedding={primaryVideoMaterial} />
-            </div>
+        <div className={style.spacer}>
+          {primaryVideoMaterial && (
+            <ContentContainer containerTitle="Видео">
+              <div className={style.videoContainer}>
+                <UniversalPlayer embedding={primaryVideoMaterial} />
+              </div>
+            </ContentContainer>
+          )}
+          <ContentContainer containerTitle="Материалы">
+            {listOfMaterials.length <= 0 && !isModerator && (
+              <p className={style.nothingMessage}>У этой задачи пока нет материалов</p>
+            )}
+            {(listOfMaterials.length > 0 || isModerator) && (
+              <div className={style.materialContainer}>
+                {listOfMaterials.map((embedding) => (
+                  <UniversalEmbedding key={embedding.id} embedding={embedding} />
+                ))}
+                {isModerator && <PendingEmbeddingsList problemId={problem.id} />}
+              </div>
+            )}
           </ContentContainer>
-        )}
-        <ContentContainer containerTitle="Материалы">
-          {listOfMaterials.length <= 0 && !isModerator && (
-            <p className={style.nothingMessage}>У этой задачи пока нет материалов</p>
-          )}
-          {(listOfMaterials.length > 0 || isModerator) && (
-            <div className={style.materialContainer}>
-              {listOfMaterials.map((embedding) => (
-                <UniversalEmbedding key={embedding.id} embedding={embedding} />
-              ))}
-              {isModerator && <PendingEmbeddingsList />}
-            </div>
-          )}
-        </ContentContainer>
+        </div>
       </div>
     </div>
   )

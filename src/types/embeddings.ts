@@ -25,4 +25,18 @@ export const EmbeddingSchema = z.object({
   metadata: EmbeddingMetadataSchema,
 })
 
+// export const LoadingEmbeddingShema = z.object({
+//   title,
+// })
+
+export interface LoadFileForm {
+  materialTitle: string
+  contentType: number
+  link?: string | null
+  token: string
+  file?: File | null
+  problemId: number
+  isPrimary: boolean
+}
+
 export type EmbeddingInterface = z.infer<typeof EmbeddingSchema>

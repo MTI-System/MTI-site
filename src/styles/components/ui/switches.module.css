@@ -1,0 +1,30 @@
+.switchContainer {
+  position: relative;
+  height: 1.5em;
+  width: 3em;
+}
+
+.switchBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 3em;
+  background-color: var(--alt-primary-accent);
+}
+.switchContainer.switchOn .switchBackground {
+  background-color: var(--primary-accent);
+}
+.switchContainer.switchDisabled .switchBackground {
+  background-color: var(--inactive-color);
+}
+.switch {
+  position: absolute;
+  top: calc(1em - 50%);
+  left: 0.25em;
+  width: 1em;
+  height: 1em;
+  border-radius: 1em;
+  background-color: white;
+}
