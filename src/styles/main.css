@@ -51,7 +51,8 @@
 }
 
 * {
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease,
+    opacity 250ms ease;
 }
 
 body {

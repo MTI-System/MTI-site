@@ -2,13 +2,18 @@ import z from "zod"
 
 export const EmbeddingTypeSchema = z.object({
   id: z.number(),
-  typeName: z.string(),
-  iconSource: z.string(),
+  type_name: z.string(),
+  icon_source: z.string(),
 })
 
 export type EmbeddingTypeInterface = z.infer<typeof EmbeddingTypeSchema>
 
-export const EmbeddingMetadataSchema = z.record(z.string(), z.union([z.string(), z.number()]))
+export const EmbeddingMetadataSchema = z.record(z.string(), z.union([z.string(), z.number()])).and(
+  z.object({
+    extension: z.string().optional(),
+    is_external: z.string().optional(),
+  })
+)
 
 export type EmbeddingmetadataInterface = z.infer<typeof EmbeddingMetadataSchema>
 

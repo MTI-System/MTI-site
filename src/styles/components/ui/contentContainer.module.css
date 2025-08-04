@@ -1,0 +1,12 @@
+.contentContainer {
+  width: calc(100% - 2rem);
+  border: var(--border-width) var(--border-color) solid;
+  border-radius: var(--block-radius);
+  overflow: hidden;
+}
+.containerTitle {
+  padding: 0.5rem 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  border-bottom: var(--border-width) var(--border-color) solid;
+}

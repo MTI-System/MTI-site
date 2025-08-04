@@ -1,14 +1,14 @@
 import style from "@/styles/components/sections/problems/[id]/problemPage.module.css"
 import { ProblemInterface } from "@/types/problemAPI"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
-import { Button } from "@/components/ui/Buttons"
 import { fetchEmbeddingsInfo, fetchPermissions } from "@/scripts/ApiFetchers"
 import { ProblemCardContent } from "../ProblemCard"
 import { ExpandableImage } from "@/components/ui/Files/ImageEmbeddings"
 import { ReactNode } from "react"
 import UniversalEmbedding from "@/components/ui/Files/FileEmbeddings"
-import { RiFileAddLine } from "react-icons/ri"
 import UniversalPlayer from "@/components/ui/Files/VideoEmbedding"
+import PendingEmbeddingsList from "./EmbeddingAddition"
+import ContentContainer from "@/components/ui/ContentContainer"
 
 async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const userAuth = await fetchPermissions()
@@ -20,10 +20,10 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   }
   const allMaterialIds = problem.materials
   const allMaterials = await fetchEmbeddingsInfo(allMaterialIds)
-  const primaryGifMaterial = allMaterials.filter((mat) => mat.content_type.typeName === "PRIMARY_GIF")
-  const primaryVideoMaterial = allMaterials.find((mat) => mat.content_type.typeName === "VIDEO")
+  const primaryGifMaterial = allMaterials.filter((mat) => mat.content_type.type_name === "PRIMARY_GIF")
+  const primaryVideoMaterial = allMaterials.find((mat) => mat.content_type.type_name === "VIDEO")
   const listOfMaterials = allMaterials.filter(
-    (mat) => mat.content_type.typeName !== "PRIMARY_GIF" && mat.content_type.typeName !== "VIDEO"
+    (mat) => mat.content_type.type_name !== "PRIMARY_GIF" && mat.content_type.type_name !== "VIDEO"
   )
   return (
     <div className={style.pageRoot}>
@@ -53,36 +53,14 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
           )}
           {(listOfMaterials.length > 0 || isModerator) && (
             <div className={style.materialContainer}>
-              {listOfMaterials.map((material) => {
-                return (
-                  <UniversalEmbedding
-                    key={material.id}
-                    embeddingImageURL={material.content_type.iconSource}
-                    embeddingName={material.title}
-                    extension="PDF"
-                    extensionColor="red"
-                  />
-                )
-              })}
-              {isModerator && (
-                <Button className={style.addMaterialButton}>
-                  <RiFileAddLine className={style.addIcon} />
-                  <h4 className={style.addTitle}>Добавить материал</h4>
-                </Button>
-              )}
+              {listOfMaterials.map((embedding) => (
+                <UniversalEmbedding key={embedding.id} embedding={embedding} />
+              ))}
+              {isModerator && <PendingEmbeddingsList />}
             </div>
           )}
         </ContentContainer>
       </div>
-    </div>
-  )
-}
-
-function ContentContainer({ children, containerTitle }: { children: ReactNode; containerTitle: string }) {
-  return (
-    <div className={style.contentContainer}>
-      <h2 className={style.containerTitle}>{containerTitle}</h2>
-      {children}{" "}
     </div>
   )
 }
