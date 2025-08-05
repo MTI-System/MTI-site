@@ -123,11 +123,7 @@ async function fetchYears(tournamentTypeId: number): Promise<number[]> {
 }
 
 async function fetchAllAvailableSections(): Promise<ProblemSectionInterface[]> {
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", {
-    next: {
-      revalidate: 3600,
-    },
-  })
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", {cache:'no-store'})
   if (!response) return []
   const parseRes = z.array(ProblemSectionSchema).safeParse(await response.json())
   if (parseRes.success) return parseRes.data
@@ -167,7 +163,7 @@ async function fetchAddLinkEmbedding(embedding: Omit<LoadFileForm, "file">): Pro
   formData.set("link", embedding.link ?? "")
   formData.set("materialTitle", embedding.materialTitle)
   formData.set("contentType", embedding.contentType.toString())
-  formData.set("isExternal", embedding.isPrimary.toString())
+  formData.set("isPrimary", embedding.isPrimary.toString())
   formData.set("problemId", embedding.problemId.toString())
   formData.set("token", embedding.token)
   const response = await fetchWithRetryAndTimeout(PROBLEM_API + "add_material", {

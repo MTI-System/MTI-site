@@ -22,6 +22,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
 
   useEffect(() => {
     if (!isAuthenticated) return
+    if (auth == null) return
     const hasPermission = auth!!.rights
       .map((right) => right.right_flag == "MODERATE_PROBLEMS_" + targetTTID)
       .some((x) => x)

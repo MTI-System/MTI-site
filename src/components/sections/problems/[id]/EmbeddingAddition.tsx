@@ -7,6 +7,7 @@ import {
   InputHTMLAttributes,
   JSX,
   JSXElementConstructor,
+  ReactNode,
   SetStateAction,
   useEffect,
   useMemo,
@@ -39,12 +40,14 @@ export default function PendingEmbeddingsList({
   problemId,
   LoadingFileEmbedding,
   buttonClassName,
+  buttonIcon,
   isPrimary,
   lockedContentTypes,
 }: {
   problemId: number
   LoadingFileEmbedding: JSXElementConstructor<LFEProps>
   buttonClassName: string
+  buttonIcon: ReactNode
   isPrimary?: boolean
   lockedContentTypes?: string[]
 }) {
@@ -105,7 +108,7 @@ export default function PendingEmbeddingsList({
           setIsOpen(true)
         }}
       >
-        <RiFileAddLine className={style.addIcon} />
+        {buttonIcon}
         <h4 className={style.addTitle}>Добавить материал</h4>
       </Button>
       <AddFileModal
@@ -129,6 +132,7 @@ export default function PendingEmbeddingsList({
 }
 
 enum UploadingErrors {
+  NotALink = "URL не корректен",
   EmptyName = "Имя файла не може быть пустым",
   EmptyType = "Пожалуйста, выберите тип файла из раскрывающегося спика",
   UnknownError = "Произошла ошибка во время прикрипления материала",
@@ -154,7 +158,7 @@ function AddFileModal({
   const [isModalOpen, setIsModalOpen] = openState
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [attachedLink, setAttachedLink] = useState<string | null>(null)
-  const [errorText, setErrortext] = useState<string>("")
+  const [errorText, setErrorText] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const user = useAppSelector((state) => state.auth.authInfo)
   const token = useAppSelector((state) => state.auth.token)
@@ -186,26 +190,22 @@ function AddFileModal({
 
   const handleLinkAttach = (text: string) => {
     setAttachedLink(text === "" ? null : text)
-    const onlyLinks = typeList.filter((value) => value.type_name == "Link")
-    setDefaultOption(
-      !attachedLink ? { displayName: onlyLinks[0].type_name, value: onlyLinks[0].id, active: true } : defaultOption
-    )
-    dataRef.current.contentType = !attachedLink ? onlyLinks[0].id : 0
+    if (errorText === UploadingErrors.NotALink) setErrorText("")
   }
   const handleTitleSet = (text: string) => {
     if (text === "") {
-      setErrortext(UploadingErrors.EmptyName)
+      setErrorText(UploadingErrors.EmptyName)
       return
     }
     dataRef.current.materialTitle = text
-    if (errorText === UploadingErrors.EmptyName) setErrortext("")
+    if (errorText === UploadingErrors.EmptyName) setErrorText("")
   }
   const clearForm = () => {
     setSelectedFile(null)
     setAttachedLink(null)
     dataRef.current.materialTitle = ""
     dataRef.current.isPrimary = false
-    setErrortext("")
+    setErrorText("")
     setDefaultOption(defaultOption)
     dataRef.current.contentType = 0
   }
@@ -271,7 +271,7 @@ function AddFileModal({
                       const newOpt = typeList.find((value) => opt === value.id)
                       if (newOpt === undefined) return
                       setDefaultOption({ displayName: newOpt.type_name, value: newOpt.id, active: true })
-                      if (errorText === UploadingErrors.EmptyType) setErrortext("")
+                      if (errorText === UploadingErrors.EmptyType) setErrorText("")
                     }}
                   ></TextDropdown>
                 </div>
@@ -291,14 +291,20 @@ function AddFileModal({
               <Button
                 onClick={async () => {
                   if (dataRef.current.materialTitle === "") {
-                    setErrortext(UploadingErrors.EmptyName)
+                    setErrorText(UploadingErrors.EmptyName)
                     return
                   }
                   if (typeList.find((value) => dataRef.current.contentType === value.id) === undefined) {
-                    setErrortext(UploadingErrors.EmptyType)
+                    setErrorText(UploadingErrors.EmptyType)
                     return
                   }
                   if (attachedLink) {
+                    try {
+                      new URL(attachedLink)
+                    } catch {
+                      setErrorText(UploadingErrors.NotALink)
+                      return
+                    }
                     setIsLoading(true)
                     const res = await fetchAddLinkEmbedding({ link: attachedLink, ...dataRef.current })
                     setIsLoading(false)
@@ -310,7 +316,7 @@ function AddFileModal({
                       })
                       return
                     }
-                    setErrortext(UploadingErrors.UnknownError)
+                    setErrorText(UploadingErrors.UnknownError)
                     return
                   }
                   onFileAdd({

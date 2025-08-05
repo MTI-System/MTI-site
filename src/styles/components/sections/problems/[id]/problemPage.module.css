@@ -7,7 +7,7 @@
   align-content: center !important;
   gap: 0.5rem !important;
 }
-.addMaterialButton > svg {
+.addMaterialButton .addImgButton {
   height: 100% !important;
   width: 2.5rem !important;
 }
@@ -97,4 +97,8 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1rem;
+}
+.addIcon {
+  height: 100%;
+  width: 2.5rem;
 }

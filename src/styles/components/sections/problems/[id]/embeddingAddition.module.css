@@ -7,10 +7,6 @@
   align-content: center;
   gap: 0.5rem;
 }
-.addMaterialButton .addIcon {
-  height: 100%;
-  width: 2.5rem;
-}
 .addMaterialButton .addTitle {
   width: calc(100% - 2.5rem);
 }

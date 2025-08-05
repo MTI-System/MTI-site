@@ -13,6 +13,9 @@ import { Button } from "@/components/ui/Buttons"
 import LoadingImageEmbedding from "@/components/ui/Files/LoadingEmbeddings/LoadingImageEmbedding"
 import LoadingFileEmbedding from "@/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding"
 import { MdOutlineClose } from "react-icons/md"
+import { RiFileAddLine } from "react-icons/ri"
+import { BiImageAdd } from "react-icons/bi"
+import { AiOutlineVideoCameraAdd } from "react-icons/ai"
 
 async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const userAuth = await fetchPermissions()
@@ -31,6 +34,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
     (mat) => mat.content_type.type_name === "Video" && mat.metadata.is_primary === "true"
   )
   const listOfMaterials = allMaterials.filter((mat) => mat.metadata.is_primary !== "true")
+
   return (
     <div className={style.pageRoot}>
       <div className={style.main}>
@@ -40,20 +44,25 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
           </div>
           {(primaryGifMaterial.length > 0 || isModerator) && (
             <div className={style.gifContainer}>
-              {primaryGifMaterial.map((gifMaterial, index) => (
-                <ExpandableImage
-                  isModerator={isModerator}
-                  className={style.gif}
-                  src={FILES_SERVER + gifMaterial.content}
-                  embedding={gifMaterial}
-                  problemId={problem.id}
-                  key={index + 1}
-                />
-              ))}
+              {primaryGifMaterial.map((gifMaterial, index) => {
+                const imageSrc =
+                  gifMaterial.metadata.is_external == "false" ? FILES_SERVER + gifMaterial.content : gifMaterial.content
+                return (
+                  <ExpandableImage
+                    isModerator={isModerator}
+                    className={style.gif}
+                    src={imageSrc}
+                    embedding={gifMaterial}
+                    problemId={problem.id}
+                    key={index + 1}
+                  />
+                )
+              })}
               {isModerator && (
                 <PendingEmbeddingsList
                   problemId={problem.id}
                   LoadingFileEmbedding={LoadingImageEmbedding}
+                  buttonIcon={<BiImageAdd />}
                   buttonClassName={style.gif}
                   isPrimary={true}
                   lockedContentTypes={["Picture"]}
@@ -63,10 +72,22 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
           )}
         </div>
         <div className={style.spacer}>
-          {primaryVideoMaterial && (
+          {(primaryVideoMaterial || isModerator) && (
             <ContentContainer containerTitle="Видео">
               <div className={style.videoContainer}>
-                <UniversalPlayer embedding={primaryVideoMaterial} />
+                {primaryVideoMaterial && <UniversalPlayer embedding={primaryVideoMaterial} problemId={problem.id} />}
+                {!primaryVideoMaterial && (
+                  <div className={style.addingVideoContainer}>
+                    <PendingEmbeddingsList
+                      problemId={problem.id}
+                      LoadingFileEmbedding={LoadingFileEmbedding}
+                      buttonIcon={<AiOutlineVideoCameraAdd className={style.addImgButton}/>}
+                      buttonClassName={style.gif}
+                      isPrimary={true}
+                      lockedContentTypes={["Video"]}
+                    />
+                  </div>
+                )}
               </div>
             </ContentContainer>
           )}
@@ -89,6 +110,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
                     problemId={problem.id}
                     LoadingFileEmbedding={LoadingFileEmbedding}
                     buttonClassName={style.addMaterialButton}
+                    buttonIcon={<RiFileAddLine className={style.addIcon} />}
                   />
                 )}
               </div>
