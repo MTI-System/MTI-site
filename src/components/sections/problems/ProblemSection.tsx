@@ -3,7 +3,7 @@ import { ProblemSectionInterface } from "@/types/problemAPI"
 import style from "@/styles/components/sections/problems/problemSection.module.css"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { FaTimes } from "react-icons/fa"
-import { CSSProperties, useTransition } from "react"
+import { CSSProperties, useTransition, useRef } from "react"
 import { useRouter } from "next/navigation"
 import clsx from "clsx"
 import { fetchModifySectionOnTask } from "@/scripts/ApiFetchers"
@@ -30,13 +30,21 @@ export default function ProblemSection({
         } as CSSProperties
       }
     >
-      <img className={style.icon} src={FILES_SERVER + section.icon_src} />
+      <div
+        className={style.sectionLogo}
+        style={
+          {
+            mask: `url(${FILES_SERVER + section.icon_src}) no-repeat  center/contain`,
+            WebkitMask: `url(${FILES_SERVER + section.icon_src}) no-repeat center/contain`,
+            backgroundColor: section.tile_color,
+          } as CSSProperties
+        }
+      ></div>
       <p>{section.title}</p>
       {isEditable && (
         <FaTimes
           className={style.deleteIcon}
           onClick={() => {
-            // TODO: Create logic for section deletion
             startTransition(async () => {
               const response = await fetchModifySectionOnTask(
                 problemId.toString(),

@@ -41,6 +41,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     }
     setIsLoading(false)
   }
+
   const handletaskCreation = async (form: HTMLFormElement) => {
     if (!isAuthenticated) return
     const formData = new FormData(form)
@@ -50,7 +51,8 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     formData.set("authToken", token)
     const resp = await fetch(PROBLEM_API + "add_problem", { method: "POST", body: formData })
     if (resp) form.reset()
-    return resp.ok
+    // console.log("RESPONSE", await resp.text())
+    return await resp.text()
   }
 
   return (
@@ -94,7 +96,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
               if (isok) {
                 startTransition(() => {
                   setIsLoading(false)
-                  if (isok) router.push("/underconstruction")
+                  if (isok) router.push("/problems/" + isok + "?is_edit=true")
                 })
                 return
               }

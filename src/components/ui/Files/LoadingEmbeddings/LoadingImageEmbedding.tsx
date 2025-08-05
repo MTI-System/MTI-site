@@ -1,13 +1,12 @@
 "use client"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { LoadFileForm } from "@/types/embeddings"
-import { useState, useEffect, useRef, CSSProperties, ReactNode } from "react"
-import { EmbeddingCard } from "../FileEmbeddings"
-import style from "@/styles/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding.module.css"
 import axios from "axios"
-import { MdOutlineRefresh, MdOutlineClose } from "react-icons/md"
+import { MdOutlineClose, MdOutlineRefresh } from "react-icons/md"
+import style from "@/styles/components/ui/Files/LoadingEmbeddings/LoadingImageEmbedding.module.css"
+import { useEffect, useRef, useState } from "react"
 
-export default function LoadingFileEmbedding({
+export default function LoadingImageEmbedding({
   form,
   onUploadComplete,
   onUploadCancel,
@@ -37,6 +36,7 @@ export default function LoadingFileEmbedding({
       .post(PROBLEM_API + "add_material", formData, {
         onUploadProgress: (event) => {
           if (!event.progress) return
+          console.log(event.progress)
           progresRef.current?.style.setProperty("--progress-shift", `${event.progress * 100 - 100}%`)
           setProgress(event.progress * 100)
         },
@@ -59,6 +59,7 @@ export default function LoadingFileEmbedding({
         console.error("File loaded with error", error)
         progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
         progresRef.current?.style.setProperty("--progress-color", "#FF0000")
+        if (error.code === "ERR_CANCELED") return
         setIsError(true)
       })
   }
@@ -68,11 +69,7 @@ export default function LoadingFileEmbedding({
   }, [])
 
   return (
-    <EmbeddingCard
-      title={form.materialTitle}
-      subtitle={isError ? "Ошибка" : `Загрузка: ${progress.toFixed(2)}%`}
-      embeddingImageURL="/uploading.svg"
-    >
+    <div className={style.imgEmbeddingContainer}>
       <div className={style.iconButtons}>
         {isError && (
           <MdOutlineRefresh
@@ -93,7 +90,8 @@ export default function LoadingFileEmbedding({
           }}
         />
       </div>
+      <p className={style.progressText}>{`Загрузка: ${progress.toFixed(2)}%`}</p>
       <div className={style.loadingWrapper} ref={progresRef}></div>
-    </EmbeddingCard>
+    </div>
   )
 }

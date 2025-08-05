@@ -3,17 +3,8 @@ import style from "@/styles/components/ui/Files/fileEmbeddings.module.css"
 import { EmbeddingInterface } from "@/types/embeddings"
 import { ReactNode } from "react"
 
-export default function UniversalEmbedding({ embedding }: { embedding: EmbeddingInterface }) {
-  return (
-    <EmbeddingCard
-      title={embedding.title}
-      subtitle={"???KB"}
-      embeddingImageURL={embedding.content_type.icon_source}
-      extension={embedding.metadata.extension}
-      isExternal={embedding.metadata.is_external === "true"}
-    ></EmbeddingCard>
-  )
-}
+
+
 
 interface EmbeddingIconProps {
   embeddingImageURL: string
@@ -21,7 +12,6 @@ interface EmbeddingIconProps {
   extensionColor?: string
   isExternal?: boolean
 }
-
 function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, isExternal }: EmbeddingIconProps) {
   extensionColor = extensionColor ?? "var(--alt-text)"
   return (
@@ -51,6 +41,7 @@ export function EmbeddingCard({ children, title, subtitle, isExternal, ...rest }
         <p className={style.embeddingSize}>{subtitle}</p>
       </div>
       {children}
+
     </div>
   )
 }

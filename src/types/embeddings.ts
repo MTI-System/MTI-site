@@ -8,10 +8,12 @@ export const EmbeddingTypeSchema = z.object({
 
 export type EmbeddingTypeInterface = z.infer<typeof EmbeddingTypeSchema>
 
-export const EmbeddingMetadataSchema = z.record(z.string(), z.union([z.string(), z.number()])).and(
+export const EmbeddingMetadataSchema = z.record(z.string(), z.union([z.string(), z.number()]).nullable()).and(
   z.object({
     extension: z.string().optional(),
     is_external: z.string().optional(),
+    file_size: z.string().optional(),
+    is_primary: z.string().optional(),
   })
 )
 

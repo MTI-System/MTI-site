@@ -2,7 +2,7 @@
   width: 100%;
   border: var(--border-width) var(--border-color) solid;
   border-radius: var(--block-radius);
-  overflow: hidden;
+  overflow: visible;
 }
 .containerTitle {
   padding: 0.5rem 1rem;

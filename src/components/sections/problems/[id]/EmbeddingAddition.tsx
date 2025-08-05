@@ -5,8 +5,11 @@ import {
   ChangeEvent,
   Dispatch,
   InputHTMLAttributes,
+  JSX,
+  JSXElementConstructor,
   SetStateAction,
   useEffect,
+  useMemo,
   useRef,
   useState,
   useTransition,
@@ -18,25 +21,54 @@ import ContentContainer from "@/components/ui/ContentContainer"
 import AddFileField from "@/components/ui/Files/AddFileField"
 import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import clsx from "clsx"
-import LoadingFileEmbedding from "@/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding"
+// import LoadingFileEmbedding from "@/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding"
 import { LoadFileForm } from "@/types/embeddings"
 import { TextDropdown } from "@/components/ui/Dropdown"
-import TwoPositionalSwitch from "@/components/ui/Switched"
 import { fetchAddLinkEmbedding, fetchAllAvailableEmbeddingTypes } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
 
 type FileFromModalInterface = Omit<LoadFileForm, "link">
 
-export default function PendingEmbeddingsList({ problemId }: { problemId: number }) {
+interface LFEProps {
+  form: FileFromModalInterface
+  onUploadComplete: () => void
+  onUploadCancel: (noWait: boolean) => void
+}
+
+export default function PendingEmbeddingsList({
+  problemId,
+  LoadingFileEmbedding,
+  buttonClassName,
+  isPrimary,
+  lockedContentTypes,
+}: {
+  problemId: number
+  LoadingFileEmbedding: JSXElementConstructor<LFEProps>
+  buttonClassName: string
+  isPrimary?: boolean
+  lockedContentTypes?: string[]
+}) {
   const uploadedRef = useRef(0)
+  const deleteKeyRef = useRef<string>("")
   const isOpenState = useState(false)
   const [isOpen, setIsOpen] = isOpenState
   const [embeddings, setEmbeddings] = useState<{ [key: string]: FileFromModalInterface }>({})
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   useEffect(() => {
     console.log(embeddings)
   }, [embeddings])
+
+  useEffect(() => {
+    console.log(deleteKeyRef.current, isPending)
+    if (isPending === true || deleteKeyRef.current === "") return
+    setEmbeddings((prev) => {
+      const newEmbeddingsDict = { ...prev }
+      delete newEmbeddingsDict[deleteKeyRef.current]
+      return newEmbeddingsDict
+    })
+  }, [isPending])
 
   return (
     <>
@@ -45,17 +77,29 @@ export default function PendingEmbeddingsList({ problemId }: { problemId: number
           form={value}
           key={key}
           onUploadComplete={() => {
-            console.log("Deleteee")
-            setEmbeddings((prev) => {
-              const newEmbeddingsDict = { ...prev }
-              delete newEmbeddingsDict[key]
-              return newEmbeddingsDict
+            console.log("Upload complete")
+            deleteKeyRef.current = key
+            startTransition(() => {
+              router.refresh()
             })
+          }}
+          onUploadCancel={(noWait) => {
+            console.log("upload canceled")
+            setTimeout(
+              () =>
+                setEmbeddings((prev) => {
+                  const newEmbeddingsDict = { ...prev }
+                  delete newEmbeddingsDict[key]
+                  return newEmbeddingsDict
+                }),
+              noWait ? 0 : 1000
+            )
           }}
         />
       ))}
       <Button
-        className={style.addMaterialButton}
+        className={buttonClassName}
+        // className={style.addMaterialButton}
         style={{ opacity: isPending ? 0.5 : 1 }}
         onClick={() => {
           setIsOpen(true)
@@ -77,6 +121,8 @@ export default function PendingEmbeddingsList({ problemId }: { problemId: number
           })
         }}
         startTransition={startTransition}
+        isPrimary={isPrimary}
+        lockedContentTypes={lockedContentTypes}
       />
     </>
   )
@@ -93,11 +139,15 @@ function AddFileModal({
   onFileAdd,
   problemId,
   startTransition,
+  isPrimary,
+  lockedContentTypes,
 }: {
   openState: [boolean, Dispatch<SetStateAction<boolean>>]
   onFileAdd: (ffm: FileFromModalInterface) => void
   problemId: number
   startTransition: (trh: () => void) => void
+  isPrimary?: boolean
+  lockedContentTypes?: string[]
 }) {
   const router = useRouter()
 
@@ -108,24 +158,39 @@ function AddFileModal({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const user = useAppSelector((state) => state.auth.authInfo)
   const token = useAppSelector((state) => state.auth.token)
-  const [typeList, settypeList] = useState<EmbeddingTypeInterface[]>([])
-
-  useEffect(() => {
-    fetchAllAvailableEmbeddingTypes().then((response) => {
-      settypeList(response)
-    })
-  }, [])
-
+  const [typeList, setTypeList] = useState<EmbeddingTypeInterface[]>([])
+  let defaultOptionConstant = { displayName: "Выберите тип файла", value: 0, active: true }
+  const [defaultOption, setDefaultOption] = useState(defaultOptionConstant)
   const dataRef = useRef<Omit<FileFromModalInterface, "file" | "link">>({
     materialTitle: "",
     contentType: 0,
-    isPrimary: false,
+    isPrimary: isPrimary ?? false,
     problemId: problemId,
     token: token,
   })
 
+  useEffect(() => {
+    fetchAllAvailableEmbeddingTypes().then((response) => {
+      if (!lockedContentTypes) {
+        setTypeList(response)
+        return
+      }
+      const validOptions = response.filter(
+        (value) => lockedContentTypes.find((lctValue) => value.type_name === lctValue) !== undefined
+      )
+      setTypeList(validOptions)
+      defaultOptionConstant = { displayName: validOptions[0].type_name, value: validOptions[0].id, active: true }
+      dataRef.current.contentType = validOptions[0].id
+    })
+  }, [problemId, lockedContentTypes])
+
   const handleLinkAttach = (text: string) => {
     setAttachedLink(text === "" ? null : text)
+    const onlyLinks = typeList.filter((value) => value.type_name == "Link")
+    setDefaultOption(
+      !attachedLink ? { displayName: onlyLinks[0].type_name, value: onlyLinks[0].id, active: true } : defaultOption
+    )
+    dataRef.current.contentType = !attachedLink ? onlyLinks[0].id : 0
   }
   const handleTitleSet = (text: string) => {
     if (text === "") {
@@ -138,7 +203,11 @@ function AddFileModal({
   const clearForm = () => {
     setSelectedFile(null)
     setAttachedLink(null)
+    dataRef.current.materialTitle = ""
+    dataRef.current.isPrimary = false
     setErrortext("")
+    setDefaultOption(defaultOption)
+    dataRef.current.contentType = 0
   }
 
   return (
@@ -185,32 +254,26 @@ function AddFileModal({
             </ContentContainer>
             <ContentContainer containerTitle="Настройки">
               <div className={style.additionalDataContainer}>
-                {errorText !== "" && <p className={style.errorText}>{errorText}</p>}
-                <TextInput
-                  placeholder="Введите имя файла"
-                  className={clsx(style.input, style.filename)}
-                  onChange={(e) => {
-                    const newVal = e.target.value
-                  }}
-                  onEnter={handleTitleSet}
-                  onBlur={handleTitleSet}
-                />
+                <div>{errorText !== "" && <p className={style.errorText}>{errorText}</p>}</div>
                 <div className={style.typeSettingsContainer}>
+                  <TextInput
+                    placeholder="Введите имя файла"
+                    className={clsx(style.input, style.filename)}
+                    onEnter={handleTitleSet}
+                    onBlur={handleTitleSet}
+                  />
                   <TextDropdown
                     className={style.typeSelectDropdown}
                     options={typeList.map((value) => ({ displayName: value.type_name, value: value.id, active: true }))}
-                    defaultSelection={{ displayName: "Выберите тип файла", value: null, active: true }}
+                    defaultSelection={defaultOption}
                     onOptionSelect={(opt) => {
                       dataRef.current.contentType = opt ?? 0
-                      if (opt && errorText === UploadingErrors.EmptyType) setErrortext("")
+                      const newOpt = typeList.find((value) => opt === value.id)
+                      if (newOpt === undefined) return
+                      setDefaultOption({ displayName: newOpt.type_name, value: newOpt.id, active: true })
+                      if (errorText === UploadingErrors.EmptyType) setErrortext("")
                     }}
                   ></TextDropdown>
-                  <div className={style.displayCheckboxContainer}>
-                    <p className={clsx(style.displayCheckboxTitle, { [style.disabled]: false })}>
-                      Отображать развёрнутым:
-                    </p>
-                    <TwoPositionalSwitch defaultState={false} onChange={(val) => (dataRef.current.isPrimary = val)} />
-                  </div>
                 </div>
               </div>
             </ContentContainer>

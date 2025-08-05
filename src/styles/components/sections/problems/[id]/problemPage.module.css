@@ -1,11 +1,30 @@
+.addMaterialButton {
+  border-radius: 1rem !important;
+  padding: 0.5rem !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  align-content: center !important;
+  gap: 0.5rem !important;
+}
+.addMaterialButton > svg {
+  height: 100% !important;
+  width: 2.5rem !important;
+}
+.addMaterialButton > h4 {
+  width: calc(100% - 2.5rem) !important;
+}
+
 .pageRoot {
-  width: 100vw;
+  width: 100%;
   min-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
   gap: 1.25em;
-  padding: 1.25rem;
+  
   background-color: var(--main-bg);
 }
 .main {
@@ -42,7 +61,17 @@
   gap: 1vw;
 }
 .gif {
-  height: 100%;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap:2rem;
+  font-size: 1.5rem;
+}
+.gif > svg{
+  font-size: 5rem;
 }
 .spacer {
   padding: 2rem;

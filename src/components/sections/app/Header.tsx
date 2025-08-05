@@ -7,15 +7,16 @@ import { Button } from "@/components/ui/Buttons"
 import { FiMenu } from "react-icons/fi"
 import { FaBell } from "react-icons/fa"
 import ThemeSwitchingButton from "./ThemeSwitcher"
+import { FILES_SERVER } from "@/constants/APIEndpoints"
 
 export default function Header() {
   return (
     <>
       <header className={headerStyle.header}>
         <div className={headerStyle.leftContainer}>
-          <Button className={headerStyle.headerRoundButton}>
-            <FiMenu className={headerStyle.headerIconInButton} />
-          </Button>
+          <Link href={"/"}>
+            <div className={headerStyle.logo}></div>
+          </Link>
           <div>
             <Link href={"/"}>
               <h1 style={{ justifySelf: "start" }}>МТИ</h1>
@@ -24,10 +25,6 @@ export default function Header() {
           </div>
         </div>
         <div className={headerStyle.rightContainer}>
-          {/*<GlobalSearch/>*/}
-          {/* <Button className={headerStyle.headerRoundButton}>
-            <FaMoon className={headerStyle.headerIconInButton} />
-          </Button> */}
           <ThemeSwitchingButton className={headerStyle.headerRoundButton} />
           <Button className={headerStyle.headerRoundButton}>
             <FaBell className={headerStyle.headerIconInButton} />

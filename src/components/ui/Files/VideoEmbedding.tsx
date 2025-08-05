@@ -10,7 +10,7 @@ interface UniversalPlayerProps {
 }
 
 export default function UniversalPlayer({ embedding }: UniversalPlayerProps) {
-  const typeName = embedding.content_type.typeName
+  const typeName = embedding.content_type.type_name
   let vidURL = ""
   let isYouTube = false
   const opts = {
@@ -22,10 +22,10 @@ export default function UniversalPlayer({ embedding }: UniversalPlayerProps) {
     },
   }
 
-  if (typeName === "YOUTUBE_VIDEO") {
+  if (typeName === "Video" && embedding.metadata.is_external === "true" && embedding.metadata.is_primary === "true") {
     vidURL = getVideoId(embedding.content).id ?? ""
     isYouTube = true
-  } else if (typeName === "VIDEO") {
+  } else if (typeName === "Video" && embedding.metadata.is_primary === "true") {
     vidURL = FILES_SERVER + embedding.content
   }
   return (

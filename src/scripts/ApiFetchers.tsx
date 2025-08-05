@@ -100,6 +100,20 @@ async function deleteProblem(problem: number, tournamentTypeId: number): Promise
   return response != null
 }
 
+async function deleteMaterial(problemId: number, materialId: number): Promise<boolean> {
+  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+  const formData = new FormData()
+  formData.append("token", token)
+  formData.append("problemId", problemId.toString())
+  formData.append("materialId", materialId.toString())
+
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "delete_material", {
+    method: "DELETE",
+    body: formData,
+  })
+  return response != null
+}
+
 async function fetchYears(tournamentTypeId: number): Promise<number[]> {
   return (
     (await fetchWithRetryAndTimeout(PROBLEM_API + "years?tournamentTypeId=" + tournamentTypeId.toString()).then(
@@ -179,6 +193,7 @@ export {
   fetchYears,
   fetchAllAvailableSections,
   // fetchAddSectionToTask,
+  deleteMaterial,
   fetchModifySectionOnTask,
   // fetchDeleteSectionFromTask,
   fetchEmbeddingsInfo,

@@ -221,17 +221,6 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
   const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])
   const isSectionLoading = useAppSelector((state) => state.problems.isLoaded)
   const dispatcher = store.dispatch
-  // --------BAD IMPLEMENTATION THAT SPAMS SERVER WITH REQUESTS!!!-------
-  // useEffect(() => {
-  //   fetchAllAvailableSections().then((sections) => {
-  //     setAddableSections(
-  //       sections.filter(
-  //         (section) =>
-  //           problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined
-  //       )
-  //     )
-  //   })
-  // }, [problem.problem_sections.length])
 
   useEffect(() => {
     if (allSections === null && !isSectionLoading) {

@@ -3,6 +3,8 @@
   border: var(--border-width) var(--border-color) solid;
   border-radius: var(--block-radius);
   overflow: hidden;
+    justify-content: start;
+  align-items: end;
 }
 .expandableImageContainer img {
   width: 100%;
@@ -10,8 +12,10 @@
   object-fit: contain;
 }
 .expandButtonContainer {
+  position: relative;
   background-color: rgba(0, 0, 0, 0.1);
   transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  color: black;
   opacity: 0;
   position: absolute;
   width: 100%;
@@ -24,4 +28,22 @@
 }
 .expandableImageContainer:hover .expandButtonContainer {
   opacity: 1;
+}
+
+.svgContainer{
+  width: 100%;
+  height: 100%;
+}
+
+.deleteIcons{
+  font-size: 2rem !important;
+  
+  z-index: 9; 
+  background: white; 
+  border-radius: 5rem;
+  color: black;
+}
+
+.deleteIcons:hover{
+  background: #c7c7c7; 
 }
