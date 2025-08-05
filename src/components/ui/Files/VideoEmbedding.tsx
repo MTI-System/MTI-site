@@ -60,9 +60,14 @@ export default function UniversalPlayer({ embedding, problemId }: UniversalPlaye
                     setIsDeleteDialogOpen(true)
                   }
                 }/>
-            {!isVideoLoaded && (<h1>Видео загружается</h1>)}
-            {isYouTube && <YouTube  videoId={vidURL} opts={opts} onReady={()=>console.log("Ready Youtube")}/>}
-            {!isYouTube && <video hidden={!isVideoLoaded} src={vidURL} controls onCanPlay={()=>setIsVideoLoaded(true)}/>}
+            {!isVideoLoaded &&
+              (<div>
+                {isYouTube && <h1>Видео грузится. Вы можете посмотреть его на youtube: <a>{vidURL}</a></h1>}
+                {!isYouTube &&  <h1>Видео загружается, подождите, пожалуйста</h1>}
+              </div>)
+            }
+            {isYouTube && <div hidden={!isVideoLoaded}><YouTube videoId={vidURL} opts={opts} onReady={()=>setIsVideoLoaded(true)}/></div>}
+            {!isYouTube && <video onProgress={e=>console.log("Loading progress: ", e)} hidden={!isVideoLoaded} src={vidURL} controls onCanPlay={()=>setIsVideoLoaded(true)}/>}
           </>
         )}
 
