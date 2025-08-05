@@ -61,7 +61,7 @@ export default function UniversalPlayer({ embedding, problemId }: UniversalPlaye
                   }
                 }/>
             {!isVideoLoaded &&
-              (<div>
+              (<div className={style.videoPlaceholderContainer}>
                 {isYouTube && <h1>Видео грузится. Вы можете посмотреть его на youtube: <a>{vidURL}</a></h1>}
                 {!isYouTube &&  <h1>Видео загружается, подождите, пожалуйста</h1>}
               </div>)
