@@ -1,4 +1,4 @@
-"use client"
+  "use client"
 import style from "@/styles/components/ui/Files/videoEmbedding.module.css"
 import getVideoId from "get-video-id"
 import YouTube from "react-youtube"
@@ -60,8 +60,9 @@ export default function UniversalPlayer({ embedding, problemId }: UniversalPlaye
                     setIsDeleteDialogOpen(true)
                   }
                 }/>
-            {isYouTube && <YouTube videoId={vidURL} opts={opts} onReady={()=>console.log("Ready Youtube")}/>}
-            {!isYouTube && <video src={vidURL} controls onCanPlay={()=>console.log("Ready Video")}/>}
+            {!isVideoLoaded && (<h1>Видео загружается</h1>)}
+            {isYouTube && <YouTube  videoId={vidURL} opts={opts} onReady={()=>console.log("Ready Youtube")}/>}
+            {!isYouTube && <video hidden={!isVideoLoaded} src={vidURL} controls onCanPlay={()=>setIsVideoLoaded(true)}/>}
           </>
         )}
 
