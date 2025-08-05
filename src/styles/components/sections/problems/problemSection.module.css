@@ -31,8 +31,7 @@
   gap: 0.5rem;
 }
 .icon {
-  width: 1.25rem;
 }
 .deleteIcon {
-  font-size: 0.8rem;
+  font-size: 0.8rem!important;
 }
