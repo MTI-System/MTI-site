@@ -43,45 +43,28 @@ export function ProblemCardContent({
   const searchParams = useSearchParams()
   const is_edit_page = searchParams.get("is_edit") === "true"
 
-  const [editedProblemNumber, setEditedProblemNumber] = useState(problem.global_number)
-  const [editedProblemName, setEditedProblemName] = useState(
-    problem.problem_translations[selectedTrnslation].problem_name
-  )
-  const [editedProblemText, setEditedProblemText] = useState(
-    problem.problem_translations[selectedTrnslation].problem_text
-  )
+  const editedProblemNumberRef = useRef<number>(problem.global_number)
+  const editedProblemNameRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_name)
+  const editedProblemTextRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_name)
   const [isEdited, setIsEdited] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const router = useRouter()
   const token = useAppSelector((state) => state.auth.token)
-
+  if(!startTransition) startTransition = useTransition()[1]
   const handletaskEdit = async () => {
     if (!isAuthenticated) return
     const formData = new FormData()
     formData.set("problemId", problem.id.toString())
-    formData.set("newProblemGlobalNumber", editedProblemNumber.toString())
-    formData.set("newProblemFirstTranslationName", editedProblemName)
-    formData.set("newProblemFirstTranslationText", editedProblemText)
+    formData.set("newProblemGlobalNumber", editedProblemNumberRef.current.toString())
+    formData.set("newProblemFirstTranslationName", editedProblemNameRef.current)
+    formData.set("newProblemFirstTranslationText", editedProblemTextRef.current)
     formData.set("token", token)
 
     const resp = await fetch(PROBLEM_API + "edit_problem", { method: "POST", body: formData })
-    // if (resp.ok) form.reset()
     return resp.ok
   }
-
-  useEffect(() => {
-    if (
-      editedProblemNumber !== problem.global_number ||
-      editedProblemName !== problem.problem_translations[selectedTrnslation].problem_name ||
-      editedProblemText !== problem.problem_translations[selectedTrnslation].problem_text
-    ) {
-      setIsEdited(true)
-    } else {
-      setIsEdited(false)
-    }
-  }, [editedProblemNumber, editedProblemName, editedProblemText])
-
   useEffect(() => {
     if (is_edit_page && !isAuthenticated) {
       router.push("/problems/" + problem.id.toString())
@@ -92,7 +75,7 @@ export function ProblemCardContent({
     <>
       <div className={style.cardHeader}>
         <div className={style.titleContainer}>
-          {!startTransition && is_edit_page && (
+          {is_edit_page && (
             <div className={style.editProblemLineDiv}>
               <Input
                 className={style.problemNumberInput}
@@ -101,25 +84,31 @@ export function ProblemCardContent({
                 min={1}
                 max={20}
                 defaultValue={problem.global_number}
-                onChange={(event) => setEditedProblemNumber(Number(event.target.value))}
+                onChange={(event) => {
+                  editedProblemNumberRef.current = Number(event.target.value)
+                  !isEdited && setIsEdited(true)
+                }}
               />
               <Input
                 className={style.problemNameInput}
                 name="firstTranslationName"
                 type="text"
                 defaultValue={problem.problem_translations[selectedTrnslation].problem_name}
-                onChange={(event) => setEditedProblemName(event.target.value)}
+                onChange={(event) => {
+                  editedProblemNameRef.current = event.target.value
+                  !isEdited && setIsEdited(true)
+                }}
               />
             </div>
           )}
-          {!(!startTransition && is_edit_page) && (
+          {!(is_edit_page) && (
             <Link href={"/problems/" + problem.id.toString()}>
               <h2 className={style.problemTitle}>
                 {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
               </h2>
             </Link>
           )}
-          {startTransition && isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
+          {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
         </div>
         <div className={style.translationContainer}>
           <PiGlobeLight />
@@ -129,37 +118,45 @@ export function ProblemCardContent({
         </div>
       </div>
       <div className={style.textContainer}>
-        {!startTransition && is_edit_page && (
+        {is_edit_page && (
           <div>
             <textarea
               className={style.problemTextEditArea}
               name="firstTranslationName"
               defaultValue={problem.problem_translations[selectedTrnslation].problem_text}
-              onChange={(event) => setEditedProblemText(event.target.value)}
+              onChange={(event) => {
+                editedProblemTextRef.current = event.target.value
+                !isEdited && setIsEdited(true)
+              }}
             />
           </div>
         )}
-        {!(!startTransition && is_edit_page) && (
+        {!(is_edit_page) && (
           <p className={style.problemText}>{problem.problem_translations[selectedTrnslation].problem_text}</p>
         )}
       </div>
-      {!startTransition && is_edit_page && (
+      {is_edit_page && isError && <p className={style.errormessage}>Произошла ошибка</p>}
+      {is_edit_page && (
         <Button
           className={style.confirmEditButton}
-          disabled={!isEdited}
+          disabled={isLoading || !isEdited}
           onClick={async () => {
             setIsLoading(true)
             setIsEdited(false)
+            setIsError(false)
             const isok = await handletaskEdit()
             if (isok) {
-              setIsLoading(false)
+              startTransition(()=>{
+                router.replace(`/problems/${problem.id}`)
+              })
             } else {
-              setIsEdited(true)
+              setIsError(true)
+              setIsLoading(false)
             }
           }}
         >
-          {isLoading && <p>Применение изменений</p>}
-          {!isLoading && <p>Применить изменения</p>}
+          {isLoading && <p>Применяем...</p>}
+          {!isLoading && <p>Применить</p>}
         </Button>
       )}
 
@@ -167,7 +164,6 @@ export function ProblemCardContent({
         <h3>Разделы физики:</h3>
         <SectionsList problem={problem} isEditable={is_edit_page || isEditable} />
       </div>
-      {/*</form>*/}
     </>
   )
 }

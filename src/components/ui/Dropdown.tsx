@@ -1,7 +1,7 @@
 "use client"
 import style from "@/styles/components/ui/dropdown.module.css"
 import { FaChevronDown } from "react-icons/fa"
-import { useState, useRef, useEffect, ReactNode, HTMLAttributes } from "react"
+import { useState, useRef, useEffect, ReactNode, HTMLAttributes, useLayoutEffect } from "react"
 import clsx from "clsx"
 
 interface DropdownOption<ValueType> {
@@ -16,6 +16,7 @@ interface DropdownParams<ValueType> extends HTMLAttributes<HTMLDivElement> {
   defaultSelection: number | DropdownOption<ValueType>
   className?: string
   disabled?: boolean
+  isAlwaysUp?: boolean
 }
 
 type TextOption<ValueType> = { displayName: string; value: ValueType; active: boolean }
@@ -30,6 +31,7 @@ export function Dropdown<ValueType>({
   defaultSelection,
   className,
   disabled,
+  isAlwaysUp,
   ...rest
 }: DropdownParams<ValueType>) {
   const [selectedOption, setSelectedOption] = useState<number | DropdownOption<ValueType>>(defaultSelection)
@@ -37,6 +39,7 @@ export function Dropdown<ValueType>({
   useEffect(() => {
     setSelectedOption(defaultSelection)
   }, [defaultSelection])
+
   return (
     <div className={clsx(style.dropdownContainer, className, { [style.dropdownDisabled]: disabled })} {...rest}>
       <DropdownButton
@@ -56,6 +59,7 @@ export function Dropdown<ValueType>({
           onOptionSelect(selection.value)
         }}
         isOpened={isOpened}
+        isAlwaysUp={isAlwaysUp??false}
       />
     </div>
   )
@@ -77,13 +81,16 @@ function DropdownMenu<ValueType>({
   options,
   onOptionSelect,
   isOpened,
+  isAlwaysUp,
 }: {
   options: DropdownOption<ValueType>[]
   onOptionSelect: (selection: DropdownOption<ValueType> | null) => void
-  isOpened: boolean
+  isOpened: boolean,
+  isAlwaysUp: boolean
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
-
+  const positionRef = useRef<HTMLDivElement>(null)
+  const [isDown, setIsDown] = useState(true)
   useEffect(() => {
     if (!menuRef.current) return
     if (isOpened) {
@@ -104,14 +111,34 @@ function DropdownMenu<ValueType>({
     }
   }, [isOpened])
 
+  useEffect(()=>{
+    console.log("Is down: ", isDown)
+  }, [isDown])
+
+  useEffect(()=>{
+    const isOverflowUp = positionRef.current?.getBoundingClientRect().y!! - menuRef.current?.getBoundingClientRect().height!! < 0
+    const isOverflowDown = menuRef.current?.getBoundingClientRect().height!! + positionRef.current?.getBoundingClientRect().y!! > window.innerHeight
+    console.log("up: ", isOverflowUp, "down: ", isOverflowDown, "height: ", menuRef.current?.getBoundingClientRect().height!!)
+    if(isOverflowDown){
+      setIsDown(false)
+    }
+    else{
+      setIsDown(true)
+    }
+  }, [isOpened])
+
+
   return (
-    <div className={style.dropdownMenu} style={{ position: "absolute" }} ref={menuRef}>
-      {(!options || options.length == 0) && <p className={style.dropdownText}>--------</p>}
-      {options &&
-        options.map((option, index) => (
-          <DropdownOption option={option} onClick={() => onOptionSelect(option)} key={index + 1}></DropdownOption>
-        ))}
-    </div>
+    <>
+      <div ref={positionRef} style={{border: "none"}}/>
+      <div className={clsx(style.dropdownMenu, {[style.down]: !isDown || isAlwaysUp}, {[style.shown]: isOpened})} style={{ position: "absolute"}} ref={menuRef}>
+        {(!options || options.length == 0) && <p className={style.dropdownText}>--------</p>}
+        {options &&
+          options.map((option, index) => (
+            <DropdownOption option={option} onClick={() => onOptionSelect(option)} key={index + 1}></DropdownOption>
+          ))}
+      </div>
+    </>
   )
 }
 

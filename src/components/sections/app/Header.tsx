@@ -26,9 +26,9 @@ export default function Header() {
         </div>
         <div className={headerStyle.rightContainer}>
           <ThemeSwitchingButton className={headerStyle.headerRoundButton} />
-          <Button className={headerStyle.headerRoundButton}>
+          {/* <Button className={headerStyle.headerRoundButton}>
             <FaBell className={headerStyle.headerIconInButton} />
-          </Button>
+          </Button> */}
           <Button className={headerStyle.headerRoundButton}>
             <ProfilePicture className={headerStyle.headerIconInButton} />
           </Button>

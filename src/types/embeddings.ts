@@ -4,6 +4,8 @@ export const EmbeddingTypeSchema = z.object({
   id: z.number(),
   type_name: z.string(),
   icon_source: z.string(),
+  allowed_mime_types: z.string().optional(),
+  display_name: z.string(),
 })
 
 export type EmbeddingTypeInterface = z.infer<typeof EmbeddingTypeSchema>

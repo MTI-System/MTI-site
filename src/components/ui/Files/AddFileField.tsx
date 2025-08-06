@@ -6,9 +6,11 @@ import clsx from "clsx"
 export default function AddFileField({
   onFileSet,
   disabled,
+  accept
 }: {
   onFileSet: (file: File | null) => void
-  disabled: boolean
+  disabled: boolean,
+  accept: string
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const targetRef = useRef<HTMLLabelElement>(null)
@@ -123,6 +125,7 @@ export default function AddFileField({
         type="file"
         multiple={false}
         ref={fileInputRef}
+        accept={accept}
         onChange={(e) => {
           if (!e.target.files) return
           scopeRef.current?.methods.silentFileAdd()

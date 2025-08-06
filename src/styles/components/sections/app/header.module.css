@@ -30,6 +30,7 @@
 }
 .dropdown:hover + .hoverText {
   left: 12vw;
+  margin-top: 1em;
   font-size: 1rem;
   background-color: var(--inactive-color);
   border-radius: 1rem;

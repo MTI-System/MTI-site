@@ -12,18 +12,18 @@ export default function Footer() {
             <p className={footerStyle.commonBioText}>
               © 2025 Менеджер Турнирной Информации МТИ
               <br />
-              12345 Антарктида, Где то
+              
             </p>
           </div>
           <ol className={footerStyle.leftFooterOl}>
-            <li className={footerStyle.linkItem}><Link href="/about">О нас</Link></li>
+            {/* <li className={footerStyle.linkItem}><Link href="/about">О нас</Link></li>
             <li className={footerStyle.linkItem}>Telegram</li>
-            <li className={footerStyle.linkItem}>ВКонтакте</li>
+            <li className={footerStyle.linkItem}>ВКонтакте</li> */}
           </ol>
           <ol className={footerStyle.rightFooterOl}>
             <li className={footerStyle.linkItem}><Link href="/about">О нас</Link></li>
-            <li className={footerStyle.linkItem}>Telegram</li>
-            <li className={footerStyle.linkItem}>ВКонтакте</li>
+            <li className={footerStyle.linkItem}><Link href="https://t.me/mty_ypt">Telegram</Link></li>
+            <li className={footerStyle.linkItem}><Link href="https://vk.com/mty_ypt">ВКонтакте</Link></li>
           </ol>
         </div>
       </footer>

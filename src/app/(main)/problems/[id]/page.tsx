@@ -6,16 +6,12 @@ import LockTournamentType from "@/components/Redux/LockTournamentType"
 import {availableTournamentTypes} from "@/constants/AvailableTournaments"
 import {Metadata} from "next";
 import { cache } from 'react'
+import { fetchProblemById } from "@/scripts/ApiFetchers"
 
-const getProblemData = cache(async (id: number): Promise<ProblemInterface | null> => {
-  console.log("Getting problem data", id)
-  const response = await fetch(PROBLEM_API + "get_problem_by_global_id/" + id.toString())
-  return response ?  await response.json() : null;
-})
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params
-  const problem = await getProblemData(id)
+  const problem = await fetchProblemById(id)
   if (problem === null) {
     return {
       title: "Задача не найдена – МТИ",
@@ -34,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 async function ProblemPageMain({ params }: PageProps) {
   const { id } = await params
-  const problem = await getProblemData(id)
+  const problem = await fetchProblemById(id)
   if (problem === null) return <NotFound />
   return (
     <>

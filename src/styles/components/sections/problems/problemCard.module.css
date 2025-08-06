@@ -7,6 +7,7 @@
   border: var(--border-width) var(--border-color) solid;
   display: flex;
   flex-direction: column;
+  padding-bottom: 1rem;
 }
 
 .cardPendingDeletion {
@@ -16,7 +17,7 @@
 /* header */
 .cardHeader {
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 2rem;
   border-bottom: var(--border-width) var(--border-color) solid;
 }
 
@@ -74,17 +75,18 @@
 /* Text */
 .textContainer {
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 1rem 2rem;
 }
 
 /* modals */
 .errormessage {
   color: rgb(252, 71, 71);
   font-size: 0.9rem;
+  padding: 0.5rem 1rem;
 }
 
 .sectionListContainer {
-  padding: 0.5rem 1rem;
+  padding: 0rem 2rem;
 }
 
 .sectionListContainer h3 {
@@ -96,16 +98,12 @@
   flex-wrap: wrap;
   border-radius: 0.5vw;
   gap: 1vw;
+  margin-top: 0.5rem;
 }
 
 .addNewSectionDropdown {
   height: 100% !important;
   width: 15rem !important;
-  transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease !important;
-}
-
-.addNewSectionDropdown > div[style] {
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease !important;
 }
 
 .addNewSectionDropdown > div:not([style]) {
@@ -114,7 +112,7 @@
   color: var(--border-color) !important;
   font-weight: bold !important;
   border-radius: 10rem !important;
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease !important;
+  /* transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease !important; */
 }
 
 .addNewSectionDropdown > div:not([style]):hover {
@@ -152,9 +150,12 @@ body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
 }
 
 .confirmEditButton {
-  width: 10rem !important;
-  border-radius: 0.5rem !important;
+  /* width: 10rem !important; */
+  width: 15rem !important;
+  height: 3rem;
+  border-radius: calc(var(--block-radius) / 2) !important;
   margin-left: 1rem;
+  font-size: 1.25rem;
   color: var(--main-text-color) !important;
 }
 

@@ -1,5 +1,5 @@
 "use server"
-import { ProblemListInterface, ProblemSchema, ProblemSectionInterface, ProblemSectionSchema } from "@/types/problemAPI"
+import { ProblemInterface, ProblemListInterface, ProblemSchema, ProblemSectionInterface, ProblemSectionSchema } from "@/types/problemAPI"
 import {
   EmbeddingInterface,
   EmbeddingSchema,
@@ -57,6 +57,17 @@ async function fetchProblems(tournament: string, year: number): Promise<ProblemL
   if (respJSON.success) return respJSON.data
   console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
   return null
+}
+
+async function fetchProblemById(problemId:number): Promise<ProblemInterface|null> {
+  await connection()
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + `get_problem_by_global_id/${problemId}`)
+  if(!response) return null
+  const respJSON = ProblemSchema.safeParse(await response.json())
+  if(respJSON.success) return respJSON.data
+  console.error(`Unexpected response while parsing problem with id ${problemId}: ${respJSON.error}`)
+  return null
+  
 }
 
 async function fetchPermissions(redirectPath?: string): Promise<User | null> {
@@ -184,6 +195,7 @@ async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface
 
 export {
   fetchProblems,
+  fetchProblemById,
   fetchPermissions,
   deleteProblem,
   fetchYears,

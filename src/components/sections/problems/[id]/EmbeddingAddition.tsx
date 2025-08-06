@@ -1,5 +1,5 @@
 "use client"
-import { Button, HoldButton } from "@/components/ui/Buttons"
+import { Button } from "@/components/ui/Buttons"
 import { EmbeddingTypeInterface } from "@/types/embeddings"
 import {
   ChangeEvent,
@@ -43,6 +43,7 @@ export default function PendingEmbeddingsList({
   buttonIcon,
   isPrimary,
   lockedContentTypes,
+  onlyOneUpload,
 }: {
   problemId: number
   LoadingFileEmbedding: JSXElementConstructor<LFEProps>
@@ -50,6 +51,7 @@ export default function PendingEmbeddingsList({
   buttonIcon: ReactNode
   isPrimary?: boolean
   lockedContentTypes?: string[]
+  onlyOneUpload?: boolean
 }) {
   const uploadedRef = useRef(0)
   const deleteKeyRef = useRef<string>("")
@@ -100,17 +102,20 @@ export default function PendingEmbeddingsList({
           }}
         />
       ))}
-      <Button
-        className={buttonClassName}
-        // className={style.addMaterialButton}
-        style={{ opacity: isPending ? 0.5 : 1 }}
-        onClick={() => {
-          setIsOpen(true)
-        }}
-      >
-        {buttonIcon}
-        <h4 className={style.addTitle}>Добавить материал</h4>
-      </Button>
+      {(Object.keys(embeddings).length === 0 || !onlyOneUpload) && (
+        <Button
+          className={buttonClassName}
+          // className={style.addMaterialButton}
+          style={{ opacity: isPending ? 0.5 : 1 }}
+          onClick={() => {
+            setIsOpen(true)
+          }}
+        >
+          {buttonIcon}
+          <h4 className={style.addTitle}>Добавить материал</h4>
+        </Button>
+      )}
+
       <AddFileModal
         problemId={problemId}
         openState={isOpenState}
@@ -136,6 +141,7 @@ enum UploadingErrors {
   EmptyName = "Имя файла не може быть пустым",
   EmptyType = "Пожалуйста, выберите тип файла из раскрывающегося спика",
   UnknownError = "Произошла ошибка во время прикрипления материала",
+  InvalidFileType = "Неверный тип файла",
 }
 
 function AddFileModal({
@@ -155,8 +161,10 @@ function AddFileModal({
 }) {
   const router = useRouter()
 
+  const [embeddingtypes, setEmbeddingtypes] = useState<EmbeddingTypeInterface[] | null>([])
+  const [acceptedEmbeddingTypes, setAcceptedEmbeddingTypes] = useState("*")
   const [isModalOpen, setIsModalOpen] = openState
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [attachedFile, setSelectedFile] = useState<File | null>(null)
   const [attachedLink, setAttachedLink] = useState<string | null>(null)
   const [errorText, setErrorText] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -174,19 +182,36 @@ function AddFileModal({
   })
 
   useEffect(() => {
-    fetchAllAvailableEmbeddingTypes().then((response) => {
-      if (!lockedContentTypes) {
-        setTypeList(response)
-        return
-      }
-      const validOptions = response.filter(
-        (value) => lockedContentTypes.find((lctValue) => value.type_name === lctValue) !== undefined
-      )
-      setTypeList(validOptions)
-      defaultOptionConstant = { displayName: validOptions[0].type_name, value: validOptions[0].id, active: true }
-      dataRef.current.contentType = validOptions[0].id
-    })
-  }, [problemId, lockedContentTypes])
+    if (embeddingtypes === null) return
+    if (embeddingtypes.length === 0) {
+      fetchAllAvailableEmbeddingTypes()
+        .then((response) => {
+          if (!lockedContentTypes) {
+            setEmbeddingtypes(response)
+            return
+          }
+
+          const validOptions = response.filter(
+            (value) => lockedContentTypes.find((lctValue) => value.type_name === lctValue) !== undefined
+          )
+          setEmbeddingtypes(validOptions)
+        })
+        .catch(() => {
+          setEmbeddingtypes(null)
+        })
+      return
+    }
+    setTypeList(embeddingtypes)
+  }, [problemId, lockedContentTypes, embeddingtypes])
+  useEffect(() => {
+    if (embeddingtypes === null) return
+    if (!attachedFile) {
+      setTypeList(embeddingtypes)
+      return
+    }
+    setTypeList(embeddingtypes.filter((et)=>et.type_name!=="Link"))
+
+  }, [attachedFile])
 
   const handleLinkAttach = (text: string) => {
     setAttachedLink(text === "" ? null : text)
@@ -204,9 +229,10 @@ function AddFileModal({
     setSelectedFile(null)
     setAttachedLink(null)
     dataRef.current.materialTitle = ""
-    dataRef.current.isPrimary = false
+    dataRef.current.isPrimary = isPrimary ?? false
     setErrorText("")
-    setDefaultOption(defaultOption)
+    setDefaultOption(defaultOptionConstant)
+    setAcceptedEmbeddingTypes("*")
     dataRef.current.contentType = 0
   }
 
@@ -216,7 +242,6 @@ function AddFileModal({
       onClose={() => {
         clearForm()
       }}
-      preventClose
     >
       <div className={style.modalContentCotainer}>
         {isModalOpen && (
@@ -229,14 +254,16 @@ function AddFileModal({
                       onFileSet={(f) => {
                         setSelectedFile(f)
                         console.log(f)
+                        if (errorText === UploadingErrors.InvalidFileType) setErrorText("")
                       }}
+                      accept={acceptedEmbeddingTypes}
                       disabled={attachedLink !== null}
                     />
                     <h1 className={style.bigOR}>ИЛИ</h1>
                   </>
                 )}
                 <TextInput
-                  disabled={selectedFile !== null}
+                  disabled={attachedFile !== null}
                   placeholder="Добавить ссылку на ресурс"
                   className={clsx(style.input, style.linkInput)}
                   onChange={(e) => {
@@ -249,6 +276,7 @@ function AddFileModal({
                   }}
                   onEnter={handleLinkAttach}
                   onBlur={handleLinkAttach}
+                  maxLength={10000}
                 />
               </div>
             </ContentContainer>
@@ -261,33 +289,39 @@ function AddFileModal({
                     className={clsx(style.input, style.filename)}
                     onEnter={handleTitleSet}
                     onBlur={handleTitleSet}
+                    maxLength={255}
                   />
                   <TextDropdown
                     className={style.typeSelectDropdown}
-                    options={typeList.map((value) => ({ displayName: value.type_name, value: value.id, active: true }))}
+                    options={typeList.map((value) => ({ displayName: value.display_name, value: value.id, active: true }))}
                     defaultSelection={defaultOption}
+                    isAlwaysUp={true}
                     onOptionSelect={(opt) => {
                       dataRef.current.contentType = opt ?? 0
                       const newOpt = typeList.find((value) => opt === value.id)
                       if (newOpt === undefined) return
-                      setDefaultOption({ displayName: newOpt.type_name, value: newOpt.id, active: true })
-                      if (errorText === UploadingErrors.EmptyType) setErrorText("")
+                      setDefaultOption({ displayName: newOpt.display_name, value: newOpt.id, active: true })
+                      dataRef.current.contentType = newOpt.id
+                      if (errorText === UploadingErrors.EmptyType || errorText === UploadingErrors.InvalidFileType)
+                        setErrorText("")
+                      setAcceptedEmbeddingTypes(newOpt.allowed_mime_types ?? "*")
+                      console.log(newOpt.allowed_mime_types)
                     }}
                   ></TextDropdown>
                 </div>
               </div>
             </ContentContainer>
             <div className={style.confirmButtons}>
-              <HoldButton
+              <Button
                 style={{ "--main-color": "var(--warning-accent)", "--main-light-color": "var(--alt-warning-accent)" }}
-                onConfirm={() => {
+                onClick={() => {
                   clearForm()
                   setIsModalOpen(false)
                 }}
                 disabled={isLoading}
               >
                 Отмена
-              </HoldButton>
+              </Button>
               <Button
                 onClick={async () => {
                   if (dataRef.current.materialTitle === "") {
@@ -319,15 +353,48 @@ function AddFileModal({
                     setErrorText(UploadingErrors.UnknownError)
                     return
                   }
+                  const fileType = attachedFile?.type
+                  console.log(
+                    fileType,
+                    embeddingtypes,
+                    embeddingtypes?.find((value) => value.id === dataRef.current.contentType)
+                  )
+                  const allowed_types = embeddingtypes
+                    ?.find((value) => value.id === dataRef.current.contentType)
+                    ?.allowed_mime_types?.split(",")
+                  console.log(fileType, allowed_types)
+                  if (
+                    allowed_types &&
+                    allowed_types.find((mimeType) => {
+                      if (!fileType) return false
+                      const mimeTypeStarIndex = mimeType.indexOf("/*")
+                      const filetypeSlashIndex = fileType.indexOf("/")
+                      console.log("Check first")
+                      console.log(fileType, mimeType)
+                      if (mimeTypeStarIndex > 0) {
+                        return fileType.slice(0, filetypeSlashIndex) === mimeType.slice(0, mimeTypeStarIndex)
+                      }
+                      console.log("Check extension")
+                      if (mimeType[0] === ".") {
+                        return mimeType.slice(1) === fileType.slice(filetypeSlashIndex + 1)
+                      }
+                      console.log("full check")
+                      return fileType === mimeType
+                    }) === undefined
+                  ) {
+                    setErrorText(UploadingErrors.InvalidFileType)
+                    return
+                  }
+                  console.log("Added file with isPrimary:", dataRef.current.isPrimary)
                   onFileAdd({
-                    file: selectedFile,
+                    file: attachedFile,
                     ...dataRef.current,
                   })
                   setIsModalOpen(false)
                   clearForm()
                 }}
                 disabled={
-                  (!selectedFile && !attachedLink) ||
+                  (!attachedFile && !attachedLink) ||
                   (errorText !== "" && errorText !== UploadingErrors.UnknownError) ||
                   isLoading
                 }

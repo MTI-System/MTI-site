@@ -19,6 +19,11 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   const [isExpanded, setIsExpanded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
+  const [error, setError] = useState("")
+
+  useEffect(()=>{
+    console.log("error: ", error)
+  }, [error])
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -30,8 +35,15 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   }, [targetTTID])
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    setError("")
     e.preventDefault()
     setIsLoading(true)
+    const formData = new FormData(e.currentTarget)
+    if(!formData.get("globalNumber") || !formData.get("firstTranslationName") || !formData.get("firstTranslationText") || !formData.get("firstTranslationBy")){
+      setError("Все поля должны быть заполнены")
+      setIsLoading(false)
+      return
+    }
     const isok = await handletaskCreation(e.currentTarget)
     if (isok) {
       startTransition(() => {
@@ -39,6 +51,9 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
         router.refresh()
       })
       return
+    }
+    else{
+      setError("При добавлении задачи произошла ошибка")
     }
     setIsLoading(false)
   }
@@ -48,10 +63,12 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     const formData = new FormData(form)
     formData.set("year", targetYear.toString())
     formData.set("tournamentType", targetTTID.toString())
-    formData.set("firstTranslationBy", "Оффициальный перевод")
     formData.set("authToken", token)
     const resp = await fetch(PROBLEM_API + "add_problem", { method: "POST", body: formData })
     if (resp) form.reset()
+    if (resp.status != 200){
+      return null
+    }
     // console.log("RESPONSE", await resp.text())
     return await resp.text()
   }
@@ -75,15 +92,19 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
           <TitledInput title="№" className={style.numberInput}>
             <Input name="globalNumber" type="number" min={1} />
           </TitledInput>
-          <TitledInput title="Title" className={style.titleInput}>
+          <TitledInput title="Название" className={style.titleInput}>
             <Input name="firstTranslationName" />
           </TitledInput>
         </div>
-        <TitledInput title="Problem text" className={style.textInput}>
+        <TitledInput title="Условие задания" className={style.textInput}>
           <textarea name="firstTranslationText"></textarea>
         </TitledInput>
+        <TitledInput title="Перевод" className={style.problemByInput}>
+          <Input className={style.problemByInputField} name="firstTranslationBy" defaultValue={"Официальный перевод"} />
+        </TitledInput>
+        {error!="" && <p className={style.errorMessage}>{error}</p>}
         <div className={style.confirmContainer}>
-          <Button type="submit" className={style.confirmationButton} disabled={isLoading || isPending}>
+          <Button type="submit" className={style.editOnOtherPageButton} disabled={isLoading || isPending}>
             Создать задачу
           </Button>
           <Button
@@ -91,16 +112,18 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
             className={style.editOnOtherPageButton}
             disabled={isLoading || isPending}
             onClick={async () => {
+              setError("")
               if (!formRef.current) return
               setIsLoading(true)
               const isok = await handletaskCreation(formRef.current)
               if (isok) {
                 startTransition(() => {
                   setIsLoading(false)
-                  if (isok) router.push("/problems/" + isok + "?is_edit=true")
+                  router.push("/problems/" + isok + "?is_edit=true")
                 })
                 return
               }
+              else setError("При добавлении задачи произошла ошибка")
               setIsLoading(false)
             }}
           >

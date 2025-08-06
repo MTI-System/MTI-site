@@ -12,6 +12,7 @@
 }
 
 .iconContainer {
+  flex: 0 0 2.5rem;
   width: 2.5rem;
   overflow: hidden;
   white-space: nowrap;
@@ -19,7 +20,11 @@
 }
 
 .textContainer {
-  width: calc(100% - 2.5rem);
+  flex: 1 1 0;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .embeddingName {

@@ -44,17 +44,17 @@ export default function AboutPage() {
             <p>Сергей — победитель Всероссийских и Сибирских турниров
               юных физиков в составе Бобров, программист с большим опытом
               (пишу физический и клиентский софт с 9 класса), студент НГУ.</p>
-            <img src="https://api.mtiyt.ru/files/get/Sergey.jpg" className={style.imageStyle}/>
+            {/* <img src="https://api.mtiyt.ru/files/get/Sergey.jpg" className={style.imageStyle}/> */}
           </div>
           <div className={style.personContainer}>
             <p>Антон — победитель РосТЮФ-2024 и МосТЮФ-2023 в составе Буравчиков,
               в программировании с детства: от Scratch до микроконтроллеров, победитель
               хакатонов и конференций, сейчас учусь в РТУ МИРЭА.</p>
-            <img src="https://api.mtiyt.ru/files/get/Anton.jpg" className={style.imageStyle}/>
+            {/* <img src="https://api.mtiyt.ru/files/get/Anton.jpg" className={style.imageStyle}/> */}
           </div>
         </div>
         <div>
-          <h1 className={style.headerStyle}>В разработке так же участвуют</h1>
+          <h1 className={style.headerStyle}>В разработке также участвуют</h1>
           <ol className={style.personsList}>
             <li>Артем Голомолзин - SMM</li>
             <li>Федор Василенко - UI/UX дизайнер</li>

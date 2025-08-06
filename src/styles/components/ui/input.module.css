@@ -13,7 +13,9 @@
 .titledInputContainer {
   padding: 0.7rem;
   padding-left: 2rem;
-  width: 40rem;
+  /* width: 40em; */
+  width: 80%;
+  /* min-width: 40em; */
   border-width: var(--border-width);
   border-radius: var(--block-radius);
   border-color: var(--border-color);
