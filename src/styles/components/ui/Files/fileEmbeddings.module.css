@@ -1,6 +1,7 @@
 .embeddingContainer {
   position: relative;
   max-width: 30vw;
+
   border: var(--border-width) var(--border-color) solid;
   border-radius: calc(var(--block-radius) / 2);
   padding: 0.5rem;
@@ -8,7 +9,10 @@
   flex-direction: row;
   gap: 0.5rem;
   overflow: hidden;
-
+  @media (max-width: 1200px) {
+    max-width: 100%;
+    
+  }
 }
 
 .iconContainer {

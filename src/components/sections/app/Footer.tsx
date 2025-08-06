@@ -12,7 +12,6 @@ export default function Footer() {
             <p className={footerStyle.commonBioText}>
               © 2025 Менеджер Турнирной Информации МТИ
               <br />
-              
             </p>
           </div>
           <ol className={footerStyle.leftFooterOl}>
@@ -20,6 +19,7 @@ export default function Footer() {
             <li className={footerStyle.linkItem}>Telegram</li>
             <li className={footerStyle.linkItem}>ВКонтакте</li> */}
           </ol>
+          {/* <a>asfasasdfas</a> */}
           <ol className={footerStyle.rightFooterOl}>
             <li className={footerStyle.linkItem}><Link href="/about">О нас</Link></li>
             <li className={footerStyle.linkItem}><Link href="https://t.me/mty_ypt">Telegram</Link></li>

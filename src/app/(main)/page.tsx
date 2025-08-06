@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div>
+    <div style={{marginBottom: "1rem"}}>
       <UnlockTournamentType />
       {/*<video src={"https://files.mofius-server.ru/media/get/AQPUtp1tpdS06ThMCbWYoHohuk19_muVSo55Nqu5VSwfkPXd3SC2z_BTPcPFCDZ.mp4"} controls></video>*/}
       <div className={mainStyle.cardGrid}>
@@ -36,7 +36,7 @@ export default function Home() {
         </ClickableCard>
         <ClickableCard
           className={clsx(mainStyle.card, mainStyle.statistics, mainStyle.underConstruction)}
-          href="/underconstruction"
+          href="/"
         >
           <div className={mainStyle.cardMainDiv}>
             <div>
@@ -53,7 +53,7 @@ export default function Home() {
           className={clsx(mainStyle.card, mainStyle.tournaments, mainStyle.underConstruction, {
             [mainStyle.nosaved]: true,
           })}
-          href="/underconstruction"
+          href="/"
         >
           <div className={mainStyle.cardMainDiv}>
             <div>
@@ -71,7 +71,7 @@ export default function Home() {
       </ClickableCard> */}
         <ClickableCard
           className={clsx(mainStyle.card, mainStyle.fights, mainStyle.underConstruction)}
-          href="/underconstruction"
+          href="/"
         >
           <div>
             <p className={mainStyle.upHeaderDescription}>БЛИЖАЙШИЕ, ИДУЩИЕ, ПРОШЕДШИЕ</p>
@@ -80,7 +80,7 @@ export default function Home() {
         </ClickableCard>
         <ClickableCard
           className={clsx(mainStyle.card, mainStyle.peoplem, mainStyle.underConstruction)}
-          href="/underconstruction"
+          href="/"
         >
           <div>
             <p className={mainStyle.upHeaderDescription}>ВСЕ, КТО СВЯЗАН С ТУРНИРАМИ</p>
@@ -89,7 +89,7 @@ export default function Home() {
         </ClickableCard>
         <ClickableCard
           className={clsx(mainStyle.card, mainStyle.forOrganizators, mainStyle.underConstruction)}
-          href="/organization"
+          href="/"
         >
           <div>
             <p className={mainStyle.upHeaderDescription}>ЛИЧНЫЙ КАБИНЕТ</p>

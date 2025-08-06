@@ -9,14 +9,16 @@
     color: var(--alt-text);
     font-weight: bold;
     font-size: 1.7rem;
+    display: flex;
+    justify-content: center;
 }
 
 .gridDiv {
     display: grid;
     grid-template-columns: 35% 35% 20%;
     @media (max-width: 1200px) {
-        grid-template-columns: 50% 50%;
-        grid-template-rows: 50% 50%;
+        display: flex;
+        flex-direction: column;
     }
 }
 
@@ -29,6 +31,8 @@
     gap: 2vw;
     margin-left: 7vw;
     @media (max-width: 1200px) {
+        padding-top: 1rem;
+        flex-direction: column;
         grid-row: 1;
         grid-column: 1 / 3;
         margin-left: 0px;
@@ -71,8 +75,8 @@
 .leftFooterOl {
     justify-self: center;
     align-items: center;
-    padding-top: 1.7vh;
-    padding-bottom: 1.7vh;
+    /* padding-top: 1.7vh; */
+    /* padding-bottom: 1.7vh; */
     @media (max-width: 1200px) {
         align-items: end;
         justify-self: end;

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/Buttons"
 import LogoWithTT from "@/components/sections/app/LogoWithTT"
 import { setAuth, setToken } from "@/redux_stores/AuthSlice"
 import { useAppDispatch } from "@/redux_stores/tournamentTypeRedixStore"
+import { fetchSendLogin } from "@/scripts/ApiFetchers"
 
 enum FormState {
   AwaitLogin,
@@ -59,26 +60,21 @@ function LoginPage() {
       return
     }
     setFormState(FormState.Loading)
-    const response = await fetch(AUTH_API + "login", {
-      method: "POST",
-      body: formData,
-    })
-
-    if (response.ok) {
-      const data: string = await response.json()
-      if (!data) {
-        console.log("Wrong credentials")
-        setFormState(FormState.IncorrectData)
-        return
-      }
-      dispatcher(setToken(data))
-      // dispatcher(setAuth())
-      cookies.set(AUTH_TOKEN_KEY_NAME, data)
-      router.replace("/" + redirect)
-    } else {
+    const token = await fetchSendLogin(formData)
+    if (token === null) {
       console.log("Error?")
       setFormState(FormState.UnknownError)
+      return
     }
+    if (!token) {
+      console.log("Wrong credentials")
+      setFormState(FormState.IncorrectData)
+      return
+    }
+    dispatcher(setToken(token))
+    // dispatcher(setAuth())
+    cookies.set(AUTH_TOKEN_KEY_NAME, token)
+    router.replace("/" + redirect)
   }
 
   function handleEnter() {

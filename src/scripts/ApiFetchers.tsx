@@ -70,6 +70,18 @@ async function fetchProblemById(problemId:number): Promise<ProblemInterface|null
   
 }
 
+async function fetchSendLogin(creds: FormData): Promise<string | null | undefined>{
+  const response = await fetchWithRetryAndTimeout(AUTH_API + "login", {
+    method: "POST",
+    body: creds,
+  })
+  if (!response) return null
+  const token = await response.json()
+  if (!token) return undefined
+  return token
+
+}
+
 async function fetchPermissions(redirectPath?: string): Promise<User | null> {
   await connection()
   const token = (await cookies()).get("mtiyt_auth_token")?.value
@@ -196,6 +208,7 @@ async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface
 export {
   fetchProblems,
   fetchProblemById,
+  fetchSendLogin,
   fetchPermissions,
   deleteProblem,
   fetchYears,

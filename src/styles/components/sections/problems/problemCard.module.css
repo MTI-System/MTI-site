@@ -189,3 +189,10 @@ body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
 .editProblemLineDiv {
   width: 100%;
 }
+
+.problemText{
+  white-space: pre-wrap;
+  /* text-wrap: wrap; */
+}
+
+

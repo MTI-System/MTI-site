@@ -63,8 +63,8 @@ export default function AboutPage() {
         </div>
         <h1 className={style.headerStyle}>Присоединяйтесь</h1>
         <p className={style.textStyle}>Мы будем рады обратной связи и помощи. Следите за обновлениями и пишите нам:</p>
-        <p className={style.personsList}>Telegram: <a href="t.me/mty_ypt">t.me/mty_ypt</a> VK: <a
-          href="vk.com/mty_ypt">vk.com/mty_ypt</a></p>
+        <p className={style.personsList}>Telegram: <a href="https://t.me/mty_ypt">Ссылка</a> VK: <a
+          href="https://vk.com/mty_ypt">Ссылка</a></p>
 
 
       </div>

@@ -52,7 +52,7 @@ export function ProblemCardContent({
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const router = useRouter()
   const token = useAppSelector((state) => state.auth.token)
-  if(!startTransition) startTransition = useTransition()[1]
+  if (!startTransition) startTransition = useTransition()[1]
   const handletaskEdit = async () => {
     if (!isAuthenticated) return
     const formData = new FormData()
@@ -61,7 +61,6 @@ export function ProblemCardContent({
     formData.set("newProblemFirstTranslationName", editedProblemNameRef.current)
     formData.set("newProblemFirstTranslationText", editedProblemTextRef.current)
     formData.set("token", token)
-
     const resp = await fetch(PROBLEM_API + "edit_problem", { method: "POST", body: formData })
     return resp.ok
   }
@@ -101,7 +100,7 @@ export function ProblemCardContent({
               />
             </div>
           )}
-          {!(is_edit_page) && (
+          {!is_edit_page && (
             <Link href={"/problems/" + problem.id.toString()}>
               <h2 className={style.problemTitle}>
                 {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
@@ -131,8 +130,10 @@ export function ProblemCardContent({
             />
           </div>
         )}
-        {!(is_edit_page) && (
-          <p className={style.problemText}>{problem.problem_translations[selectedTrnslation].problem_text}</p>
+        {!is_edit_page && (
+          <pre>
+            <p className={style.problemText}>{problem.problem_translations[selectedTrnslation].problem_text}</p>
+          </pre>
         )}
       </div>
       {is_edit_page && isError && <p className={style.errormessage}>Произошла ошибка</p>}
@@ -146,7 +147,7 @@ export function ProblemCardContent({
             setIsError(false)
             const isok = await handletaskEdit()
             if (isok) {
-              startTransition(()=>{
+              startTransition(() => {
                 router.replace(`/problems/${problem.id}`)
               })
             } else {
@@ -250,7 +251,14 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
       {problem.problem_sections.length == 0 && (
         <ProblemSection
           problemId={problem.id}
-          section={{ id: 0, title: "Не определено", icon_src: "forbidden.svg", tile_color: "#AAAAAA" }}
+          section={{
+            id: 0,
+            title: "Не определено",
+            icon_src: "forbidden.svg",
+            tile_color: "#AAAAAA",
+            section_science: 0,
+            tournament_type: 0,
+          }}
         />
       )}
       {isEditable && <AddNewSection problemId={problem.id} addableSections={addableSections ?? []} />}

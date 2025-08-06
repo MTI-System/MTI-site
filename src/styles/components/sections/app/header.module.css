@@ -26,19 +26,13 @@
   /*position: relative;*/
 }
 .hoverText {
-  display: none;
-}
-.dropdown:hover + .hoverText {
   left: 12vw;
-  margin-top: 1em;
   font-size: 1rem;
   background-color: var(--inactive-color);
   border-radius: 1rem;
   padding: 1vw;
-  position: absolute;
   display: block;
 }
-
 .headerRoundButton {
   width: 4rem;
   height: 4rem;

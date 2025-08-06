@@ -38,12 +38,9 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     setError("")
     e.preventDefault()
     setIsLoading(true)
+    
     const formData = new FormData(e.currentTarget)
-    if(!formData.get("globalNumber") || !formData.get("firstTranslationName") || !formData.get("firstTranslationText") || !formData.get("firstTranslationBy")){
-      setError("Все поля должны быть заполнены")
-      setIsLoading(false)
-      return
-    }
+
     const isok = await handletaskCreation(e.currentTarget)
     if (isok) {
       startTransition(() => {
@@ -53,7 +50,10 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
       return
     }
     else{
-      setError("При добавлении задачи произошла ошибка")
+      if (error == ""){
+        setError("При добавлении задачи произошла ошибка")
+      }
+      
     }
     setIsLoading(false)
   }
@@ -61,6 +61,11 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   const handletaskCreation = async (form: HTMLFormElement) => {
     if (!isAuthenticated) return
     const formData = new FormData(form)
+    if(formData.get("globalNumber") === "" || formData.get("firstTranslationName") === "" || formData.get("firstTranslationText")==="" || formData.get("firstTranslationBy") === ""){
+      setError("Все поля должны быть заполнены")
+      setIsLoading(false)
+      return null
+    }
     formData.set("year", targetYear.toString())
     formData.set("tournamentType", targetTTID.toString())
     formData.set("authToken", token)
@@ -123,7 +128,11 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
                 })
                 return
               }
-              else setError("При добавлении задачи произошла ошибка")
+              else {
+                if (error == ""){
+                  setError("При добавлении задачи произошла ошибка")
+                }
+              }
               setIsLoading(false)
             }}
           >

@@ -7,6 +7,9 @@
   gap: 1.5vh;
   width: 100%;
   max-width: 30vw;
+  @media (max-width: 1200px) {
+    max-width: none;
+  }
   height: 100%;
   text-align: center;
     font-size: 1.5rem;
@@ -40,6 +43,14 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+  @media (max-width: 1200px){
+    justify-content: center;
+    gap: 0.5rem;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+  }
+
   
 }
 
