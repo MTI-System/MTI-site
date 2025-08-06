@@ -9,7 +9,7 @@ import { ReactNode } from "react"
 interface EmbeddingIconProps {
   embeddingImageURL: string
   extension?: string
-  extensionColor?: string
+  extensionColor?: string | null
   isExternal?: boolean
 }
 function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, isExternal }: EmbeddingIconProps) {
