@@ -29,6 +29,7 @@ export default function UniversalEmbedding({ embedding, problemId, isModerator }
             title={embedding.title}
             subtitle={sub}
             embeddingImageURL={embedding.content_type.icon_source}
+            extensionColor={embedding.metadata.extension_color}
             extension={embedding.metadata.extension}
             isExternal={embedding.metadata.is_external === "true"}
           >

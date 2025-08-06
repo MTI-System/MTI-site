@@ -16,6 +16,7 @@ export const EmbeddingMetadataSchema = z.record(z.string(), z.union([z.string(),
     is_external: z.string().optional(),
     file_size: z.string().optional(),
     is_primary: z.string().optional(),
+    extension_color: z.string().optional().nullable()
   })
 )
 
