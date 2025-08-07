@@ -33,7 +33,6 @@ jobs:
           load: true
           push: true
 
-
       - name: SHH and restart service
         uses: appleboy/ssh-action@v1
         with:
