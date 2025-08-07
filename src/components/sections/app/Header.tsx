@@ -19,7 +19,7 @@ export default function Header() {
           </Link>
           <div>
             <Link href={"/"}>
-              <h1 style={{ justifySelf: "start" }}>МТИ</h1>
+              <h1 style={{ justifySelf: "start" }}>МТИ + Работает</h1>
             </Link>
             <TournamentTypeSelector className={headerStyle.dropdown} />
           </div>
