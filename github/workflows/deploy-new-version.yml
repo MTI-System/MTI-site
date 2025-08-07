@@ -1,0 +1,20 @@
+name: Deploy new version
+on:
+  push:
+    branches: [ "Anton_branch" ]
+env:
+  SERVICE_NAME: ${{ secrets.DEPLOY_SERVICE_NAME }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SHH and current service status
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          username: ${{ secrets.DEPLOY_SSH_USERNAME }}
+          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            echo Checking service:
+            systemctl status "$SERVICE_NAME"
