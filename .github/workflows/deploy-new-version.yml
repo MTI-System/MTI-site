@@ -16,4 +16,4 @@ jobs:
           port: ${{ secrets.DEPLOY_SSH_PORT }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            systemctl status "$SERVICE_NAME"
+            systemctl status $SERVICE_NAME
