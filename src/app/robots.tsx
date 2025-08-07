@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/private/",
     },
-    sitemap: "https://mtiyt/sitemap.xml",
+    sitemap: "https://mtiyt.ru/sitemap.xml",
   }
 }
