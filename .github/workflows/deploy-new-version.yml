@@ -2,8 +2,6 @@ name: Deploy new version
 on:
   push:
     branches: [ "Anton_branch" ]
-env:
-  SERVICE_NAME: ${{ secrets.DEPLOY_SERVICE_NAME }}
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,4 +14,4 @@ jobs:
           port: ${{ secrets.DEPLOY_SSH_PORT }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            systemctl status $SERVICE_NAME
+            systemctl status "${{ secrets.DEPLOY_SERVICE_NAME }}"
