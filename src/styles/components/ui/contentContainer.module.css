@@ -1,8 +1,11 @@
 .contentContainer {
-  width: calc(100% - 2rem);
+  width: 100%;
   border: var(--border-width) var(--border-color) solid;
   border-radius: var(--block-radius);
   overflow: hidden;
+    @media(max-width: 1200px){
+    border-radius: 1rem;
+  }
 }
 .containerTitle {
   padding: 0.5rem 1rem;

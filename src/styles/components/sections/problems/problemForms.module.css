@@ -15,7 +15,7 @@
   color: var(--alt-primary-accent);
 }
 .expandedButton {
-  height: 32rem;
+  height: 40rem;
   background-color: var(--alt-bg);
 }
 .hiddenButton {
@@ -59,7 +59,7 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   width: 100%;
 }
 .newProblemform input,
@@ -118,10 +118,25 @@
   padding: 0 !important;
   background: transparent !important;
 }
+
+.problemByInput{
+  width: 80% !important;
+  font-size: 1.25rem !important;
+  color: var(--main-text-color) !important;
+  padding: 1.5rem 0 !important;
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+.problemByInputField{
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
 .textInput textarea {
   height: 10rem;
   overflow-y: scroll;
   text-align: start;
+  color: var(--main-text-color);
 }
 
 .confirmContainer {
@@ -137,4 +152,15 @@
   width: 45%;
   height: 100%;
   border-radius: 1rem;
+}
+
+.editOnOtherPageButton{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+}
+
+.errorMessage{
+  color: red;
+  font-size: 1rem;
 }

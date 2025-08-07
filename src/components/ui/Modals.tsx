@@ -18,7 +18,7 @@ export default function Modal({
 }) {
   const [isOpen, setIsOpen] = openState
   const onOpenInternal = () => {}
-  const onCloseInternal = (e: MouseEvent) => {
+  const onCloseInternal = (e: MouseEvent | React.KeyboardEvent<HTMLDivElement>) => {
     e.stopPropagation()
     if (preventClose) return
     setIsOpen(false)
@@ -29,21 +29,25 @@ export default function Modal({
     onOpenInternal()
   }, [isOpen])
   return (
-    <div className={clsx(style.overlay, { [style.open]: isOpen })} onClick={onCloseInternal}>
+    <div className={clsx(style.overlay, { [style.open]: isOpen })} onClick={onCloseInternal} onKeyDown={(e)=>{
+      if(e.key === "Escape") onCloseInternal(e)
+    }}>
       <div
         className={style.contentContainer}
         onClick={(e) => {
           e.stopPropagation()
         }}
       >
-        <button
-          className={style.modalCloseButton}
-          aria-label="Close modal"
-          disabled={preventClose}
-          onClick={onCloseInternal}
-        >
-          <FaTimes />
-        </button>
+        {!preventClose && (
+          <button
+            className={style.modalCloseButton}
+            aria-label="Close modal"
+            disabled={preventClose}
+            onClick={onCloseInternal}
+          >
+            <FaTimes />
+          </button>
+        )}
         {children}
       </div>
     </div>

@@ -7,6 +7,32 @@ import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
 import { fetchPermissions, fetchYears } from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/service/SearchParamsUpdator"
 import UnlockTournamentType from "@/components/Redux/UnlockTournamentType"
+import type { Metadata } from "next"
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ year: number; tt: string }>
+}): Promise<Metadata> {
+  const searchP = await searchParams
+  const tt = Array.isArray(searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME])
+    ? searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME][0]
+    : searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME]
+
+  const ttype = availableTournamentTypes.find((t) => t.name === tt)
+
+  const titleText = ttype ? `Задачи · ${ttype.longName} – МТИ` : "Задачи – МТИ"
+
+  const descriptionText = ttype
+    ? `Опубликованные задачи для ${ttype.longName}: смотри актуальные задачи для научных турниров.`
+    : "Список задач научных турниров в системе МТИ."
+
+  return {
+    title: titleText,
+    description: descriptionText,
+    verification: { yandex: "aa838087dd1ef992" },
+  }
+}
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams

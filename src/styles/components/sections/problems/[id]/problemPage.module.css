@@ -1,11 +1,30 @@
+.addMaterialButton {
+  border-radius: 1rem !important;
+  padding: 0.5rem !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  align-content: center !important;
+  gap: 0.5rem !important;
+}
+.addMaterialButton .addImgButton {
+  height: 100% !important;
+  width: 2.5rem !important;
+}
+.addMaterialButton > h4 {
+  width: calc(100% - 2.5rem) !important;
+}
+
 .pageRoot {
-  width: 100vw;
+  width: 100%;
   min-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
   gap: 1.25em;
-  padding: 1.25rem;
+
   background-color: var(--main-bg);
 }
 .main {
@@ -33,23 +52,51 @@
   gap: 1.5vh;
 }
 .gifContainer {
-  padding: 0 1rem;
-  height: 30vh;
+
+  height: 30vh; 
+  width: fit-content;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   gap: 1vw;
 }
-.gif {
+.scrollableContainer{
+  display: flex;
   height: 100%;
+  width: 100%;
+  overflow: auto;
+  padding: 0.5rem 2rem;
+}
+.gif {
+  height: 100% !important;
+  width: auto;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 2rem;
+  font-size: 1.5rem;
+}
+.gif > svg {
+  font-size: 5rem;
 }
 
+.spacer {
+  padding: 0rem 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
 .nothingMessage {
   width: 100%;
   text-align: center;
   padding: 1rem 0;
   background-color: var(--main-bg);
+  overflow: hidden;
 }
 .videoContainer {
   width: 100%;
@@ -59,10 +106,32 @@
   align-content: center;
   padding: 1rem;
 }
+.addingVideoContainer{
+  padding: 1rem;
+}
+.video {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 2rem;
+  font-size: 1.5rem;
+  padding: 2rem;
+}
+.video > svg {
+  font-size: 5rem;
+}
+
 .materialContainer {
   padding: 1rem;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1rem;
+}
+.addIcon {
+  height: 100%;
+  width: 2.5rem;
 }

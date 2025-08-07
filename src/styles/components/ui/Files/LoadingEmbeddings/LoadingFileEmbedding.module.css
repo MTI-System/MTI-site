@@ -1,0 +1,33 @@
+.loadingWrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0.5rem;
+  bottom: 0;
+  --progress-shift: -100%;
+  --progress-color: var(--primary-accent);
+  /* background-color: red; */
+}
+.loadingWrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: var(--progress-shift);
+  height: 0.5rem;
+  width: 100%;
+  background-color: var(--progress-color);
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease,
+    opacity 250ms ease, left 250ms ease;
+}
+
+.iconButtons {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-items: center;
+}
+.iconButtons > svg {
+  font-size: 2rem;
+  /* width: 2.5rem; */
+}

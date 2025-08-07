@@ -1,4 +1,50 @@
 .videoContainer {
+  position: relative;
+  aspect-ratio: 16 / 9;
   border-radius: var(--block-radius);
   overflow: hidden;
+  justify-content: end;
+  display: flex;
+  width: 100%; 
+}
+
+.videoPlayerStyle{
+  width: 100%; 
+  z-index: 8;
+  aspect-ratio: 16 / 9;
+} 
+
+.videoPlaceholderContainer {
+  position: absolute;
+  z-index: 9; 
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: var(--inactive-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.videoPlaceholderTitle{
+
+}
+.videoPlaceholderDescription{
+  width: 100%;
+  text-align: center;
+}
+
+.youtubePlaceholderButton{
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-top: 1rem;
+  background-color: rgba(255, 0, 0, 0.363)!important;
+  border-color: red!important;
+  color: white!important;
+  border-width: 3px!important;
+}
+
+.youtubePlaceholderButton:hover{
+  background-color: red!important;
+   color: white!important;
 }

@@ -1,4 +1,16 @@
 import style from "@/styles/components/sections/app/about.module.css"
+import type {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: {
+    template: "О МТИ",
+    default: "О Менеджере Турнирной Информации",
+  },
+  description: "Страница с информацией, на которой вы можете узнать о то, что такое МТИ (Система для проведения научных турниров, такие как ТЮФ и ТЮЕ)",
+  verification: {
+    yandex: "aa838087dd1ef992",
+  },
+}
 
 export default function AboutPage() {
   return (
@@ -32,17 +44,17 @@ export default function AboutPage() {
             <p>Сергей — победитель Всероссийских и Сибирских турниров
               юных физиков в составе Бобров, программист с большим опытом
               (пишу физический и клиентский софт с 9 класса), студент НГУ.</p>
-            <img src="https://api.mtiyt.ru/files/get/Sergey.jpg" className={style.imageStyle}/>
+            {/* <img src="https://api.mtiyt.ru/files/get/Sergey.jpg" className={style.imageStyle}/> */}
           </div>
           <div className={style.personContainer}>
             <p>Антон — победитель РосТЮФ-2024 и МосТЮФ-2023 в составе Буравчиков,
               в программировании с детства: от Scratch до микроконтроллеров, победитель
               хакатонов и конференций, сейчас учусь в РТУ МИРЭА.</p>
-            <img src="https://api.mtiyt.ru/files/get/Anton.jpg" className={style.imageStyle}/>
+            {/* <img src="https://api.mtiyt.ru/files/get/Anton.jpg" className={style.imageStyle}/> */}
           </div>
         </div>
         <div>
-          <h1 className={style.headerStyle}>В разработке так же участвуют</h1>
+          <h1 className={style.headerStyle}>В разработке также участвуют</h1>
           <ol className={style.personsList}>
             <li>Артем Голомолзин - SMM</li>
             <li>Федор Василенко - UI/UX дизайнер</li>
@@ -51,8 +63,8 @@ export default function AboutPage() {
         </div>
         <h1 className={style.headerStyle}>Присоединяйтесь</h1>
         <p className={style.textStyle}>Мы будем рады обратной связи и помощи. Следите за обновлениями и пишите нам:</p>
-        <p className={style.personsList}>Telegram: <a href="t.me/mty_ypt">t.me/mty_ypt</a> VK: <a
-          href="vk.com/mty_ypt">vk.com/mty_ypt</a></p>
+        <p className={style.personsList}>Telegram: <a href="https://t.me/mty_ypt">Ссылка</a> VK: <a
+          href="https://vk.com/mty_ypt">Ссылка</a></p>
 
 
       </div>

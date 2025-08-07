@@ -3,6 +3,8 @@ import { useDispatch, useSelector, useStore } from "react-redux"
 import { SPSlice } from "@/redux_stores/SearchParamsSlice"
 import { AuthSlice } from "@/redux_stores/AuthSlice"
 import { SystemSlice } from "@/redux_stores/SystemSlice"
+import { ProblemsSlice } from "@/redux_stores/ProblemSlice"
+import { ProblemSectionInterface } from "@/types/problemAPI"
 
 export default function makeStore(theme: string, tt: string, token: string) {
   return configureStore({
@@ -10,6 +12,7 @@ export default function makeStore(theme: string, tt: string, token: string) {
       searchParams: SPSlice.reducer,
       auth: AuthSlice.reducer,
       system: SystemSlice.reducer,
+      problems: ProblemsSlice.reducer,
     },
     preloadedState: {
       system: {
@@ -24,8 +27,8 @@ export default function makeStore(theme: string, tt: string, token: string) {
       auth: {
         token: token,
         isAuthenticated: token.length > 0,
-        authInfo: null
-      }
+        authInfo: null,
+      },
     },
   })
 }

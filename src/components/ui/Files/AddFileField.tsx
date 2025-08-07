@@ -1,8 +1,17 @@
 import { animate, createScope, Scope } from "animejs"
 import { useEffect, useRef, useState } from "react"
 import style from "@/styles/components/ui/Files/addFileField.module.css"
+import clsx from "clsx"
 
-export default function AddFileField({ onFileSet }: { onFileSet: (file: File) => void }) {
+export default function AddFileField({
+  onFileSet,
+  disabled,
+  accept
+}: {
+  onFileSet: (file: File | null) => void
+  disabled: boolean,
+  accept: string
+}) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const targetRef = useRef<HTMLLabelElement>(null)
   const scopeRef = useRef<Scope>(null)
@@ -29,8 +38,31 @@ export default function AddFileField({ onFileSet }: { onFileSet: (file: File) =>
         ease: "outQuad",
         duration: animTime * 1.5,
         autoplay: false,
+        onComplete: (anim) => {
+          if (!fileInputRef.current?.value || !anim.backwards) return
+          rotateBoxAnim.play()
+        },
+      })
+      const rotateBoxAnim = animate(`svg`, {
+        rotate: [0, "45deg"],
+        ease: "inOutQuad",
+        duration: animTime / 2,
+        autoplay: false,
+        onComplete: (anim) => {
+          if (!fileInputRef.current?.value || !anim.backwards) return
+          horizontalLineAnim.play()
+          angleAnim.play()
+          boxAnim.play()
+          // console.log(fileInputRef.current, anim.backwards)
+          // if (!fileInputRef.current?.value || !anim.backwards) return
+          // console.log("Yeeeaaahhh!")
+        },
       })
       self.add("uploadPlay", () => {
+        if (fileInputRef.current?.value) {
+          rotateBoxAnim.reverse()
+          return
+        }
         horizontalLineAnim.play()
         angleAnim.play()
         boxAnim.play()
@@ -40,6 +72,12 @@ export default function AddFileField({ onFileSet }: { onFileSet: (file: File) =>
         angleAnim.reverse()
         boxAnim.reverse()
       })
+      self.add("silentFileAdd", () => {
+        rotateBoxAnim.play()
+      })
+      self.add("deleteSelectedFile", () => {
+        rotateBoxAnim.reverse()
+      })
     })
     return () => {
       scopeRef.current?.revert()
@@ -47,18 +85,21 @@ export default function AddFileField({ onFileSet }: { onFileSet: (file: File) =>
   }, [])
   return (
     <label
-      className={style.fileInputField}
+      className={clsx(style.fileInputField, { [style.disabledInput]: disabled })}
       ref={targetRef}
       onDragOver={(e) => {
         e.preventDefault()
+        if (disabled) return
         targetRef.current?.classList.add(style.dragOver)
         scopeRef.current?.methods.uploadPlay()
       }}
       onDrop={(e) => {
         e.preventDefault()
         e.stopPropagation()
+        if (disabled) return
         targetRef.current?.classList.remove(style.dragOver)
         scopeRef.current?.methods.uploadRevert()
+        if (fileInputRef.current) fileInputRef.current.files = e.dataTransfer.files
         if (e.dataTransfer.items) {
           const item = e.dataTransfer.items[0]
           if (item.kind === "file") {
@@ -74,6 +115,7 @@ export default function AddFileField({ onFileSet }: { onFileSet: (file: File) =>
         }
       }}
       onDragLeave={() => {
+        if (disabled) return
         targetRef.current?.classList.remove(style.dragOver)
         scopeRef.current?.methods.uploadRevert()
       }}
@@ -83,14 +125,33 @@ export default function AddFileField({ onFileSet }: { onFileSet: (file: File) =>
         type="file"
         multiple={false}
         ref={fileInputRef}
+        accept={accept}
         onChange={(e) => {
           if (!e.target.files) return
+          scopeRef.current?.methods.silentFileAdd()
           const newFile = e.target.files[0]
           setCurrentFile(newFile)
           onFileSet(newFile)
         }}
+        disabled={disabled}
       />
-      <svg stroke="currentColor" fill="transparent" strokeWidth="0" viewBox="0 0 448 512" height="1em" width="1em">
+      <svg
+        stroke="currentColor"
+        fill="transparent"
+        strokeWidth="0"
+        viewBox="0 0 448 512"
+        height="1em"
+        width="1em"
+        onClick={(e) => {
+          if (!currentFile) return
+          e.stopPropagation()
+          e.preventDefault()
+          scopeRef.current?.methods.deleteSelectedFile()
+          if (fileInputRef.current) fileInputRef.current.value = ""
+          onFileSet(null)
+          setCurrentFile(null)
+        }}
+      >
         <clipPath id="angleClip">
           <rect
             className={style.iconAngle}

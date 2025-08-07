@@ -26,18 +26,13 @@
   /*position: relative;*/
 }
 .hoverText {
-  display: none;
-}
-.dropdown:hover + .hoverText {
   left: 12vw;
   font-size: 1rem;
   background-color: var(--inactive-color);
   border-radius: 1rem;
   padding: 1vw;
-  position: absolute;
   display: block;
 }
-
 .headerRoundButton {
   width: 4rem;
   height: 4rem;
@@ -61,4 +56,13 @@
 .headerIconInButton {
   width: 100%;
   height: 50%;
+  color: var(--main-text-color);
+}
+
+.logo {
+  background-color: var(--main-text-color);
+  mask: url(https://api.mtiyt.ru/files/get/LogoType.svg) no-repeat center;
+  mask-size: contain;
+  height: 3rem;
+  width: 3rem;
 }

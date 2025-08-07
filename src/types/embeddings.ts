@@ -4,14 +4,19 @@ export const EmbeddingTypeSchema = z.object({
   id: z.number(),
   type_name: z.string(),
   icon_source: z.string(),
+  allowed_mime_types: z.string().optional(),
+  display_name: z.string(),
 })
 
 export type EmbeddingTypeInterface = z.infer<typeof EmbeddingTypeSchema>
 
-export const EmbeddingMetadataSchema = z.record(z.string(), z.union([z.string(), z.number()])).and(
+export const EmbeddingMetadataSchema = z.record(z.string(), z.union([z.string(), z.number()]).nullable()).and(
   z.object({
     extension: z.string().optional(),
     is_external: z.string().optional(),
+    file_size: z.string().optional(),
+    is_primary: z.string().optional(),
+    extension_color: z.string().optional().nullable()
   })
 )
 
@@ -24,5 +29,19 @@ export const EmbeddingSchema = z.object({
   content: z.string(),
   metadata: EmbeddingMetadataSchema,
 })
+
+// export const LoadingEmbeddingShema = z.object({
+//   title,
+// })
+
+export interface LoadFileForm {
+  materialTitle: string
+  contentType: number
+  link?: string | null
+  token: string
+  file?: File | null
+  problemId: number
+  isPrimary: boolean
+}
 
 export type EmbeddingInterface = z.infer<typeof EmbeddingSchema>

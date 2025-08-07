@@ -1,27 +1,15 @@
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import style from "@/styles/components/ui/Files/fileEmbeddings.module.css"
 import { EmbeddingInterface } from "@/types/embeddings"
+import { ReactNode } from "react"
 
-export default function UniversalEmbedding({ embedding }: { embedding: EmbeddingInterface }) {
-  console.log(embedding)
-  return (
-    <div className={style.embeddingContainer}>
-      <EmbeddingIcon
-        embeddingImageURL={embedding.content_type.icon_source}
-        extension={embedding.metadata.extension}
-        isExternal={embedding.metadata.is_external === "true"}
-      />
-      <div className={style.textContainer}>
-        <h4 className={style.embeddingName}>{embedding.title}</h4>
-        <p className={style.embeddingSize}>??? KB</p>
-      </div>
-    </div>
-  )
-}
+
+
+
 interface EmbeddingIconProps {
   embeddingImageURL: string
   extension?: string
-  extensionColor?: string
+  extensionColor?: string | null
   isExternal?: boolean
 }
 function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, isExternal }: EmbeddingIconProps) {
@@ -34,6 +22,26 @@ function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, isExterna
           {extension}
         </p>
       )}
+    </div>
+  )
+}
+
+interface EmbeddingCardProps extends EmbeddingIconProps {
+  title: string
+  subtitle?: string
+  children?: ReactNode
+}
+
+export function EmbeddingCard({ children, title, subtitle, isExternal, ...rest }: EmbeddingCardProps) {
+  return (
+    <div className={style.embeddingContainer}>
+      <EmbeddingIcon {...rest} />
+      <div className={style.textContainer}>
+        <h4 className={style.embeddingName}>{title}</h4>
+        <p className={style.embeddingSize}>{subtitle}</p>
+      </div>
+      {children}
+
     </div>
   )
 }

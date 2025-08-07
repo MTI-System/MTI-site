@@ -1,191 +1,198 @@
 /* main */
 .problemCard {
-    width: 100%;
-    min-height: 5rem;
-    background-color: var(--alt-bg);
-    border-radius: 1rem;
-    border: var(--border-width) var(--border-color) solid;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  min-height: 5rem;
+  background-color: var(--alt-bg);
+  border-radius: 1rem;
+  border: var(--border-width) var(--border-color) solid;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
 }
 
 .cardPendingDeletion {
-    opacity: 0.25;
+  opacity: 0.25;
 }
 
 /* header */
 .cardHeader {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border-bottom: var(--border-width) var(--border-color) solid;
+  width: 100%;
+  padding: 0.5rem 2rem;
+  border-bottom: var(--border-width) var(--border-color) solid;
 }
 
 .titleContainer {
-    font-size: 1.5rem;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.5rem 0;
 }
 
 .problemTitle {
-    color: var(--main-text-color);
+  color: var(--main-text-color);
 }
 
 .translationContainer {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .translationContainer svg {
-    fill: var(--alt-text);
+  fill: var(--alt-text);
 }
 
 .translationSelector {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 0 0.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 0.5rem;
 }
 
 .translationName {
-    color: var(--alt-text);
+  color: var(--alt-text);
 }
 
 .editButtons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    font-size: 1.3rem;
-    min-width: 4rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 1.3rem;
+  min-width: 4rem;
 }
 
 .editButtons svg {
-    color: var(--primary-accent);
-    transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  color: var(--primary-accent);
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
 }
 
 .editButtons svg:hover {
-    color: var(--accent-hover-color);
+  color: var(--accent-hover-color);
 }
 
 /* Text */
 .textContainer {
-    width: 100%;
-    padding: 0.5rem 1rem;
+  width: 100%;
+  padding: 1rem 2rem;
 }
 
 /* modals */
 .errormessage {
-    color: rgb(252, 71, 71);
-    font-size: 0.9rem;
+  color: rgb(252, 71, 71);
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
 }
 
 .sectionListContainer {
-    padding: 0.5rem 1rem;
+  padding: 0rem 2rem;
 }
 
 .sectionListContainer h3 {
-    color: var(--alt-text);
+  color: var(--alt-text);
 }
 
 .sectionsList {
-    display: flex;
-    border-radius: 0.5vw;
-    gap: 1vw;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 0.5vw;
+  gap: 1vw;
+  margin-top: 0.5rem;
 }
 
 .addNewSectionDropdown {
-    height: 100% !important;
-    width: 15rem !important;
-    transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease !important;
-}
-
-.addNewSectionDropdown > div[style] {
-    transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease !important;
+  height: 100% !important;
+  width: 15rem !important;
 }
 
 .addNewSectionDropdown > div:not([style]) {
-    background-color: var(--bg-color) !important;
-    border: var(--border-width) var(--border-color) solid !important;
-    color: var(--border-color) !important;
-    font-weight: bold !important;
-    border-radius: 10rem !important;
-    transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease !important;
+  background-color: var(--bg-color) !important;
+  border: var(--border-width) var(--border-color) solid !important;
+  color: var(--border-color) !important;
+  font-weight: bold !important;
+  border-radius: 10rem !important;
+  /* transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease !important; */
 }
 
 .addNewSectionDropdown > div:not([style]):hover {
-    background-color: hsl(from var(--bg-color) h s calc(l - 5)) !important;
+  background-color: hsl(from var(--bg-color) h s calc(l - 5)) !important;
 }
 
 body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
-    background-color: hsl(from var(--bg-color) h s calc(l + 5)) !important;
+  background-color: hsl(from var(--bg-color) h s calc(l + 5)) !important;
 }
 
 .addSectionOptionContainer {
-    padding: 0.25rem !important;
+  padding: 0.25rem !important;
 }
 
 .addNewSectionDropdown > div:not([style]) .addSectionOptionContainer {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .addNewSectionDropdown > div:not([style]) .addSectionOptionContainer div {
-    border: none !important;
-    background: none !important;
-    padding: 0 0.25rem !important;
+  border: none !important;
+  background: none !important;
+  padding: 0 0.25rem !important;
 }
 
 .defaultOption {
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    align-content: center !important;
-    gap: 0.5rem !important;
-    padding: 0 0.5rem !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  align-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0 0.5rem !important;
 }
 
 .confirmEditButton {
-    width: 10rem !important;
-    border-radius: 0.5rem !important;
-    margin-left: 1rem;
-    color: var(--main-text-color) !important;
+  /* width: 10rem !important; */
+  width: 15rem !important;
+  height: 3rem;
+  border-radius: calc(var(--block-radius) / 2) !important;
+  margin-left: 1rem;
+  font-size: 1.25rem;
+  color: var(--main-text-color) !important;
 }
 
 .problemTextEditArea {
-    width: 100%;
-    height: 5rem;
-    resize: none;
-    border-width: 1px;
-    border-radius: 1rem;
-    padding: 0.5rem;
-    border-color: var(--border-color);
+  width: 100%;
+  height: 5rem;
+  resize: none;
+  border-width: 1px;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  border-color: var(--border-color);
 }
 
 .problemNumberInput {
-    width: 20% !important;
-    border-width: 1px;
-    border-radius: 1rem;
-    padding: 0.5rem;
-    border-color: var(--border-color);
+  width: 20% !important;
+  border-width: 1px;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  border-color: var(--border-color);
 }
 
 .problemNameInput {
-    width: 79%;
-    border-width: 1px;
-    border-radius: 1rem;
-    padding: 0.5rem;
-    margin-left: 1%;
-    border-color: var(--border-color);
+  width: 79%;
+  border-width: 1px;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  margin-left: 1%;
+  border-color: var(--border-color);
 }
 
-.editProblemLineDiv{
-    width:  100%;
+.editProblemLineDiv {
+  width: 100%;
+}
+
+.problemText{
+  white-space: pre-wrap;
+  /* text-wrap: wrap; */
 }
 
 

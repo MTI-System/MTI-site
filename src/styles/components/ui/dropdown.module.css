@@ -64,21 +64,37 @@
 }
 
 .dropdownMenu {
-  display: none;
+  /* display: none; */
+  visibility: hidden;
   left: 0;
   top: calc(100% + 0.3em);
-  animation: 250ms both appearence;
-  animation-play-state: paused;
+  /* animation: 250ms both appearence;
+  animation-play-state: paused; */
   width: 100%;
+  max-height: 30vh;
   background-color: var(--alt-bg);
   border: var(--border-width) var(--border-color) solid;
   box-shadow: 0 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
-  overflow: hidden;
+  overflow: auto;
   z-index: 2;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease, opacity 250ms ease, transform 250ms ease;
+  transform: translateY(-1em);
+  opacity: 0;
+}
+.dropdownMenu.down {
+  top: auto;
+  bottom: calc(100% + 0.3em);
+  opacity: 0;
+  transform: translateY(1em);
+}
+.dropdownMenu.shown {
+  visibility: visible;
+  transform: translateY(0);
+  opacity: 1;
 }
 
-@keyframes appearence {
+/* @keyframes appearence {
   0% {
     opacity: 0;
     transform: translateY(-1em);
@@ -100,15 +116,33 @@
   }
 }
 
+@keyframes appearence-down {
+  0% {
+    opacity: 0;
+    transform: translateY(1em);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fading-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(1em);
+  }
+} */
+
 .dropdownMenu.menuAppearing {
   /* animation: 250ms forwards appearence; */
   animation-direction: normal;
   animation-play-state: running;
   display: block;
-}
-
-.dropdownMenu.menuFading {
-  animation: 250ms both fading;
 }
 
 .dropdownOption {

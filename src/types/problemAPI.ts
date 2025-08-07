@@ -6,15 +6,21 @@ export const ProblemTranslationSchema = z.object({
   problem_text: z.string(),
   problem_by: z.string(),
 })
-export type ProblemTranslationInterface = z.infer<typeof ProblemTranslationSchema>
 
 export const ProblemSectionSchema = z.object({
   id: z.number(),
   title: z.string(),
   icon_src: z.string(),
   tile_color: z.string().length(7).startsWith("#"),
+  section_science: z.number(),
+  tournament_type: z.number(),
 })
-export type ProblemSectionInterface = z.infer<typeof ProblemSectionSchema>
+
+export const ScienceShenma = z.object({
+  id: z.number(),
+  title: z.string(),
+  color: z.string(),
+})
 
 export const ProblemSchema = z.object({
   id: z.number(),
@@ -24,7 +30,15 @@ export const ProblemSchema = z.object({
   problem_translations: z.array(ProblemTranslationSchema),
   problem_sections: z.array(ProblemSectionSchema),
   materials: z.array(z.number()),
+  sciences: z.array(ScienceShenma),
 })
+
+export type ProblemTranslationInterface = z.infer<typeof ProblemTranslationSchema>
+
+export type ProblemSectionInterface = z.infer<typeof ProblemSectionSchema>
+
+export type ScienceInterface = z.infer<typeof ScienceShenma>
+
 export type ProblemInterface = z.infer<typeof ProblemSchema>
 
 export type ProblemListInterface = ProblemInterface[]
