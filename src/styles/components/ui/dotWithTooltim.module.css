@@ -3,12 +3,20 @@
   border-radius: 1000rem;
   width: 1rem;
   height: 1rem;
+  border-width: calc(var(--border-width) * 2);
+  border-style: solid;
+  background-color: rgba(from var(--color) r g b / 0.25);
+  border-color: var(--color);
+}
+
+.dot:hover{
+  background-color: var(--color);
 }
 
 .tooltip {
-  background-color: var(--inactive-color);
-  /* border: var(--border-width) var(--border-color) solid; */
-  color: var(--main-text-color);
+  background-color: var(--alt-bg);
+  border: var(--border-width) var(--color) solid;
+  color: var(--color);
   border-radius: calc(var(--block-radius) / 4);
   padding: 0.25rem;
   font-size: 1rem;
