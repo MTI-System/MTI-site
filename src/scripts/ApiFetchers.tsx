@@ -1,5 +1,13 @@
 "use server"
-import { ProblemInterface, ProblemListInterface, ProblemSchema, ProblemSectionInterface, ProblemSectionSchema, ProblemSectionWithSciencesInterface, ProblemSectionWithSciencesSchema } from "@/types/problemAPI"
+import {
+  ProblemInterface,
+  ProblemListInterface,
+  ProblemSchema,
+  ProblemSectionInterface,
+  ProblemSectionSchema,
+  ProblemSectionWithSciencesInterface,
+  ProblemSectionWithSciencesSchema,
+} from "@/types/problemAPI"
 import {
   EmbeddingInterface,
   EmbeddingSchema,
@@ -59,18 +67,17 @@ async function fetchProblems(tournament: string, year: number): Promise<ProblemL
   return null
 }
 
-async function fetchProblemById(problemId:number): Promise<ProblemInterface|null> {
+async function fetchProblemById(problemId: number): Promise<ProblemInterface | null> {
   await connection()
   const response = await fetchWithRetryAndTimeout(PROBLEM_API + `get_problem_by_global_id/${problemId}`)
-  if(!response) return null
+  if (!response) return null
   const respJSON = ProblemSchema.safeParse(await response.json())
-  if(respJSON.success) return respJSON.data
+  if (respJSON.success) return respJSON.data
   console.error(`Unexpected response while parsing problem with id ${problemId}: ${respJSON.error}`)
   return null
-  
 }
 
-async function fetchSendLogin(creds: FormData): Promise<string | null | undefined>{
+async function fetchSendLogin(creds: FormData): Promise<string | null | undefined> {
   const response = await fetchWithRetryAndTimeout(AUTH_API + "login", {
     method: "POST",
     body: creds,
@@ -79,7 +86,6 @@ async function fetchSendLogin(creds: FormData): Promise<string | null | undefine
   const token = await response.json()
   if (!token) return undefined
   return token
-
 }
 
 async function fetchPermissions(redirectPath?: string): Promise<User | null> {
@@ -146,7 +152,7 @@ async function fetchYears(tournamentTypeId: number): Promise<number[]> {
 }
 
 async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesInterface[]> {
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", {cache:'no-store'})
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", { cache: "no-store" })
   if (!response) return []
   const parseRes = z.array(ProblemSectionWithSciencesSchema).safeParse(await response.json())
   if (parseRes.success) return parseRes.data
@@ -163,7 +169,8 @@ async function fetchModifySectionOnTask(
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
   const formData = new FormData()
   formData.set("token", token)
-  formData.set("sectionId", sectionIds.toString())
+  const sectionIdsName = action === "add_section" ? "sectionIds" : "sectionId"
+  formData.set(sectionIdsName, sectionIds.toString())
   formData.set("problemId", problemId)
   const response = await fetchWithRetryAndTimeout(PROBLEM_API + `sections/${action}`, {
     method: action === "delete_section" ? "DELETE" : "POST",
