@@ -1,5 +1,5 @@
 "use server"
-import { ProblemInterface, ProblemListInterface, ProblemSchema, ProblemSectionInterface, ProblemSectionSchema } from "@/types/problemAPI"
+import { ProblemInterface, ProblemListInterface, ProblemSchema, ProblemSectionInterface, ProblemSectionSchema, ProblemSectionWithSciencesInterface, ProblemSectionWithSciencesSchema } from "@/types/problemAPI"
 import {
   EmbeddingInterface,
   EmbeddingSchema,
@@ -145,10 +145,10 @@ async function fetchYears(tournamentTypeId: number): Promise<number[]> {
   )
 }
 
-async function fetchAllAvailableSections(): Promise<ProblemSectionInterface[]> {
+async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesInterface[]> {
   const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", {cache:'no-store'})
   if (!response) return []
-  const parseRes = z.array(ProblemSectionSchema).safeParse(await response.json())
+  const parseRes = z.array(ProblemSectionWithSciencesSchema).safeParse(await response.json())
   if (parseRes.success) return parseRes.data
   console.error(`Unexpected response while parsing sections: ${parseRes.error}`)
   return []

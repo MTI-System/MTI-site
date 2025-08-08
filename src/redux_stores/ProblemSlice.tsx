@@ -1,9 +1,9 @@
-import { ProblemSectionInterface } from "@/types/problemAPI"
+import { ProblemSectionInterface, ProblemSectionWithSciencesInterface } from "@/types/problemAPI"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 interface SectionsState {
   isLoaded: boolean
-  sections: ProblemSectionInterface[] | null
+  sections: ProblemSectionWithSciencesInterface[] | null
 }
 
 const initialState: SectionsState = {
@@ -15,7 +15,7 @@ export const ProblemsSlice = createSlice({
   name: "problems",
   initialState,
   reducers: {
-    setSections: (state, action: PayloadAction<ProblemSectionInterface[] | null>) => {
+    setSections: (state, action: PayloadAction<ProblemSectionWithSciencesInterface[] | null>) => {
       state.sections = action.payload
     },
     setIsLoaded: (state) => {

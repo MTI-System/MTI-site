@@ -1,7 +1,7 @@
 "use client"
 import { FaEdit, FaPlus } from "react-icons/fa"
 import { MdDeleteOutline } from "react-icons/md"
-import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
+import { ProblemInterface, ProblemSectionInterface, ProblemSectionWithSciencesInterface } from "@/types/problemAPI"
 import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -238,8 +238,7 @@ function ScienceList({ problem }: { problem: ProblemInterface }) {
     <div className={style.sciencesListContainer}>
       <h3>Разделы {problem.tournament_type === 1 ? "физики" : "наук"}:</h3>
       {problem.tournament_type !== 1 && <div className={style.scienceList}>
-        <DotWithTooltip dotColor="red" dotTooltipText="Test" />
-        <DotWithTooltip dotColor="green" dotTooltipText="Test 2" />
+        {problem.sciences.map((value, index)=>(<DotWithTooltip dotColor={value.color} dotTooltipText={value.title} key={index}/>))}
         </div>}
     </div>
   )
@@ -262,7 +261,7 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
         fetchAllAvailableSections().then((sections) => {
           console.log("Sections", sections)
           dispatcher(setSections(sections))
-          setAddableSections(sections)
+          setAddableSections(sections.map((value)=>({...value, section_science: value.section_science.id})))
         })
       }
     }
@@ -275,7 +274,7 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
         (section) =>
           problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined &&
           section.tournament_type === problem.tournament_type
-      )
+      ).map((value)=>({...value, section_science: value.section_science.id}))
     )
   }, [problem.problem_sections.length, allSections])
 
