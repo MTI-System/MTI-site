@@ -28,6 +28,7 @@ export async function generateMetadata({
     ? `Опубликованные задачи для ${ttype.longName}: смотри актуальные задачи для научных турниров.`
     : "Список задач научных турниров в системе МТИ."
   
+    
 
   return {
     title: titleText,
