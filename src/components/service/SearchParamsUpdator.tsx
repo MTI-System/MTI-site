@@ -30,7 +30,7 @@ export default function SearchParamsUpdator() {
   }, [isPending]);
 
   useEffect(() => {
-    const ttSP = getSearchParams.get("tt") ?? cookies.get("mtiyt_tournamentType");
+    const ttSP = getSearchParams.get("tt") ?? cookies.get("mtiyt_tournamentType") ?? availableTournamentTypes[0].name;
     const params = new URLSearchParams(searchParams.toString())
     console.log(ttSP, year)
     if (ttSP) {
