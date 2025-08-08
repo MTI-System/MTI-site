@@ -78,7 +78,8 @@
   border-radius: 0.25rem;
   overflow: auto;
   z-index: 2;
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease, opacity 250ms ease, transform 250ms ease;
+  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease,
+    opacity 250ms ease, transform 250ms ease;
   transform: translateY(-1em);
   opacity: 0;
 }
@@ -138,13 +139,9 @@
   }
 } */
 
-.dropdownMenu.menuAppearing {
-  /* animation: 250ms forwards appearence; */
-  animation-direction: normal;
-  animation-play-state: running;
-  display: block;
+.dropdownMenu.animating {
+  visibility: visible;
 }
-
 .dropdownOption {
   /*padding: 0.25em 1em;*/
   transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;

@@ -100,29 +100,41 @@ function DropdownMenu<ValueType>({
   const menuRef = useRef<HTMLDivElement>(null)
   const positionRef = useRef<HTMLDivElement>(null)
   const [isDown, setIsDown] = useState(true)
+  // useEffect(() => {
+  //   if (!menuRef.current) return
+  //   if (isOpened) {
+  //     menuRef.current.classList.remove(style.menuFading)
+  //     menuRef.current.classList.remove(style.menuAppearing)
+  //     menuRef.current.classList.add(style.menuAppearing)
+  //     return
+  //   }
+  //   menuRef.current.classList.add(style.menuFading)
+  //   if (menuRef.current.classList.contains(style.menuAppearing)) {
+  //     const handleAnimationEnd = () => {
+  //       if (!menuRef.current) return
+  //       menuRef.current.classList.remove(style.menuFading)
+  //       menuRef.current.classList.remove(style.menuAppearing)
+  //       menuRef.current.removeEventListener("transitionend", handleAnimationEnd)
+  //     }
+  //     menuRef.current.addEventListener("transitionend", handleAnimationEnd)
+  //   }
+  // }, [isOpened])
   useEffect(() => {
-    if (!menuRef.current) return
-    if (isOpened) {
-      menuRef.current.classList.remove(style.menuFading)
-      menuRef.current.classList.remove(style.menuAppearing)
-      menuRef.current.classList.add(style.menuAppearing)
-      return
+    console.log("WTF?")
+    const handleTransitionEnd = (e: TransitionEvent) => {
+      if(e.target !== menuRef.current) return
+      if(e.propertyName !== "opacity") return
+      menuRef.current?.classList.remove(style.animating)
     }
-    menuRef.current.classList.add(style.menuFading)
-    if (menuRef.current.classList.contains(style.menuAppearing)) {
-      const handleAnimationEnd = () => {
-        if (!menuRef.current) return
-        menuRef.current.classList.remove(style.menuFading)
-        menuRef.current.classList.remove(style.menuAppearing)
-        menuRef.current.removeEventListener("animationend", handleAnimationEnd)
-      }
-      menuRef.current.addEventListener("animationend", handleAnimationEnd)
+    menuRef.current?.addEventListener("transitionend", handleTransitionEnd)
+    return () => {
+      menuRef.current?.removeEventListener("transitionend", handleTransitionEnd)
     }
+  }, [])
+  useEffect(()=>{
+    isOpened && menuRef.current?.classList.add(style.shown, style.animating)
+    !isOpened && menuRef.current?.classList.add(style.animating)
   }, [isOpened])
-
-  useEffect(() => {
-    console.log("Is down: ", isDown)
-  }, [isDown])
 
   useEffect(() => {
     const isOverflowUp =
@@ -130,14 +142,6 @@ function DropdownMenu<ValueType>({
     const isOverflowDown =
       menuRef.current?.getBoundingClientRect().height!! + positionRef.current?.getBoundingClientRect().y!! >
       window.innerHeight
-    console.log(
-      "up: ",
-      isOverflowUp,
-      "down: ",
-      isOverflowDown,
-      "height: ",
-      menuRef.current?.getBoundingClientRect().height!!
-    )
     if (isOverflowDown) {
       setIsDown(false)
     } else {
