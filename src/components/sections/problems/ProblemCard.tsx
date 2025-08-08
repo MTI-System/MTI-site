@@ -1,10 +1,10 @@
 "use client"
 import { FaEdit, FaPlus } from "react-icons/fa"
 import { MdDeleteOutline } from "react-icons/md"
-import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
+import { ProblemInterface, ProblemSectionInterface, ProblemSectionWithSciencesInterface } from "@/types/problemAPI"
 import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import {usePathname, useRouter, useSearchParams} from "next/navigation"
 import { deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections } from "@/scripts/ApiFetchers"
 import { CSSProperties, useEffect, useMemo, useRef, useState, useTransition } from "react"
 import clsx from "clsx"
@@ -20,6 +20,7 @@ import { router } from "next/client"
 import { useAppDispatch } from "@/redux_stores/tournamentTypeRedixStore"
 import { setSections, setIsLoaded } from "@/redux_stores/ProblemSlice"
 import { useStore } from "react-redux"
+import DotWithTooltip from "@/components/ui/DotWithTooltip"
 
 export default function ProblemCard({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
@@ -45,13 +46,14 @@ export function ProblemCardContent({
 
   const editedProblemNumberRef = useRef<number>(problem.global_number)
   const editedProblemNameRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_name)
-  const editedProblemTextRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_name)
+  const editedProblemTextRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_text)
   const [isEdited, setIsEdited] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const router = useRouter()
   const token = useAppSelector((state) => state.auth.token)
+  const pathname = usePathname()
   if (!startTransition) startTransition = useTransition()[1]
   const handletaskEdit = async () => {
     if (!isAuthenticated) return
@@ -86,6 +88,13 @@ export function ProblemCardContent({
                 onChange={(event) => {
                   editedProblemNumberRef.current = Number(event.target.value)
                   !isEdited && setIsEdited(true)
+                  if (!isEdited) return
+                  if (editedProblemNameRef.current !== problem.problem_translations[selectedTrnslation].problem_name)
+                    return
+                  if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
+                    return
+                  if (editedProblemNumberRef.current !== problem.global_number) return
+                  setIsEdited(false)
                 }}
               />
               <Input
@@ -96,36 +105,60 @@ export function ProblemCardContent({
                 onChange={(event) => {
                   editedProblemNameRef.current = event.target.value
                   !isEdited && setIsEdited(true)
+                  if (!isEdited) return
+                  if (editedProblemNameRef.current !== problem.problem_translations[selectedTrnslation].problem_name)
+                    return
+                  if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
+                    return
+                  if (editedProblemNumberRef.current !== problem.global_number) return
+                  setIsEdited(false)
                 }}
               />
             </div>
           )}
           {!is_edit_page && (
             <Link href={"/problems/" + problem.id.toString()}>
-              <h2 className={style.problemTitle}>
+              <h2 className={clsx(style.problemTitle, {[style.hover]: !pathname.startsWith("/problems/" + problem.id.toString())})}>
                 {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
               </h2>
             </Link>
           )}
           {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
         </div>
-        <div className={style.translationContainer}>
-          <PiGlobeLight />
+
+
+        {is_edit_page && <div className={style.translationContainer}>
+          <PiGlobeLight/>
+          <div className={style.translationSelector}>
+            {/*<h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>*/}
+            <input className={clsx(style.problemByInput)} defaultValue={problem.problem_translations[selectedTrnslation].problem_by}/>
+          </div>
+        </div>}
+        {!is_edit_page && <div className={style.translationContainer}>
+          <PiGlobeLight/>
           <div className={style.translationSelector}>
             <h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>
           </div>
-        </div>
+        </div>}
+
       </div>
       <div className={style.textContainer}>
         {is_edit_page && (
           <div>
             <textarea
               className={style.problemTextEditArea}
-              name="firstTranslationName"
+              name="firstTranslationText"
               defaultValue={problem.problem_translations[selectedTrnslation].problem_text}
               onChange={(event) => {
                 editedProblemTextRef.current = event.target.value
                 !isEdited && setIsEdited(true)
+                if (!isEdited) return
+                if (editedProblemNameRef.current !== problem.problem_translations[selectedTrnslation].problem_name)
+                  return
+                if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
+                  return
+                if (editedProblemNumberRef.current !== problem.global_number) return
+                setIsEdited(false)
               }}
             />
           </div>
@@ -162,7 +195,7 @@ export function ProblemCardContent({
       )}
 
       <div className={style.sectionListContainer}>
-        <h3>Разделы физики:</h3>
+        <ScienceList problem={problem} />
         <SectionsList problem={problem} isEditable={is_edit_page || isEditable} />
       </div>
     </>
@@ -188,7 +221,6 @@ function EditButtons({
         </Link>
         <MdDeleteOutline
           onClick={() => {
-            console.log(problem)
             setIsDelModalOpen(true)
           }}
         />
@@ -198,16 +230,29 @@ function EditButtons({
         problem_title={problem.problem_translations[0].problem_name}
         openState={isDelModalOpenState}
         onConfirm={async () => {
-          console.log(problem)
           const s = await deleteProblem(problem.id, problem.tournament_type)
           if (!s) throw new Error("Deletion has failed")
-          console.log("Delete fetch completed")
           startTransition(() => {
             router.refresh()
           })
         }}
       />
     </>
+  )
+}
+
+function ScienceList({ problem }: { problem: ProblemInterface }) {
+  return (
+    <div className={style.sciencesListContainer}>
+      <h3>Разделы {problem.sciences.length === 1 ? problem.sciences[0].title.toLowerCase().slice(0, -1) + "и" : "наук"}:</h3>
+      {problem.sciences.length !== 1 && (
+        <div className={style.scienceList}>
+          {problem.sciences.map((value, index) => (
+            <DotWithTooltip dotColor={value.color} dotTooltipText={value.title} key={index} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -225,21 +270,22 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
       if (!freshLoaded) {
         dispatcher(setIsLoaded())
         fetchAllAvailableSections().then((sections) => {
-          console.log("Sections", sections)
           dispatcher(setSections(sections))
-          setAddableSections(sections)
+          setAddableSections(sections.map((value) => ({ ...value, section_science: value.section_science.id })))
         })
       }
     }
   }, [allSections, dispatcher])
 
   useEffect(() => {
-    console.log("Filter Sections", allSections)
     setAddableSections(
-      (allSections ?? []).filter(
-        (section) =>
-          problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined
-      )
+      (allSections ?? [])
+        .filter(
+          (section) =>
+            problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined &&
+            section.tournament_type === problem.tournament_type
+        )
+        .map((value) => ({ ...value, section_science: value.section_science.id }))
     )
   }, [problem.problem_sections.length, allSections])
 
@@ -273,17 +319,19 @@ function AddNewSection({
   problemId: number
   addableSections: ProblemSectionInterface[]
 }) {
+  const [isError, setIsError] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   const defaultColors = {
     "--border-color": "var(--primary-accent)",
     "--bg-color": "var(--alt-primary-accent)",
     opacity: 1,
   }
   const [color, setColor] = useState(defaultColors)
-  const [isError, setIsError] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [selectedOptions, setSelectedOption] = useState<string[]>([])
 
-  const defaultElement = useMemo(() => {
+  useEffect(() => {
     if (isError) {
       setColor((curColor) => {
         const newColor = { ...curColor }
@@ -296,16 +344,6 @@ function AddNewSection({
         setIsError(false)
       }, 2000)
     } else setColor(defaultColors)
-    return {
-      displayElement: (
-        <div className={style.defaultOption}>
-          <FaPlus />
-          {isError ? <p>Ошибка</p> : <p>Добавить</p>}
-        </div>
-      ),
-      value: "0",
-      active: true,
-    }
   }, [addableSections, isError])
 
   return (
@@ -314,7 +352,11 @@ function AddNewSection({
         options={addableSections.map((section) => {
           return {
             displayElement: (
-              <div className={style.addSectionOptionContainer}>
+              <div
+                className={clsx(style.addSectionOptionContainer, {
+                  [style.selectedSection]: selectedOptions.find((v) => v === section.id.toString()) !== undefined,
+                })}
+              >
                 <ProblemSection key={section.id} section={section} problemId={problemId} />
               </div>
             ),
@@ -322,17 +364,51 @@ function AddNewSection({
             active: true,
           }
         })}
-        defaultSelection={defaultElement}
-        onOptionSelect={async (sel) => {
-          const color = addableSections.find((val) => val.id.toString() === sel)?.tile_color
-          setColor((curColor) => {
-            const newColor = { ...curColor }
-            newColor["--border-color"] = color ?? "var(--primary-accent)"
-            newColor["--bg-color"] = "rgba(from var(--border-color) r g b / 0.125)"
-            newColor.opacity = 0.5
-            return newColor
+        defaultSelection={{
+          displayElement: (
+            <div className={style.defaultOption}>
+              <FaPlus />
+              {isError || isLoading ? (
+                isError ? (
+                  <p>Ошибка</p>
+                ) : (
+                  <p>Добавляем...</p>
+                )
+              ) : selectedOptions.length > 0 ? (
+                <p>Добавить {selectedOptions.length}</p>
+              ) : (
+                <p>Добавить</p>
+              )}
+            </div>
+          ),
+          value: "0",
+          active: true,
+        }}
+        onOptionSelect={(e) => {
+          e.isDefaultPrevented = true
+          const elem = selectedOptions.find((v) => v === e.selection)
+          if (elem === undefined)
+            setSelectedOption((prev) => {
+              return [...prev, e.selection]
+            })
+          else
+            setSelectedOption((prev) => {
+              return [...prev.filter((v) => v !== e.selection)]
+            })
+        }}
+        onToggle={async (isOpened) => {
+          if (isOpened) return
+          if (selectedOptions.length === 0) return
+          setSelectedOption([])
+          console.log("fetch->add")
+          setColor({
+            "--border-color": "rgb(255, 204, 0)",
+            "--bg-color": "rgba(255, 204, 0, 0.25)",
+            opacity: 0.5,
           })
-          const res = await fetchModifySectionOnTask(problemId.toString(), sel, "add_section")
+          setIsLoading(true)
+          const res = await fetchModifySectionOnTask(problemId.toString(), selectedOptions, "add_section")
+          setIsLoading(false)
           if (res) {
             startTransition(() => {
               router.refresh()
@@ -343,7 +419,7 @@ function AddNewSection({
         }}
         className={style.addNewSectionDropdown}
         style={color as CSSProperties}
-        disabled={isPending || isError}
+        disabled={isPending || isError || isLoading}
       />
     </>
   )

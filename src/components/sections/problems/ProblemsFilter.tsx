@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRed
 import { setYear } from "@/redux_stores/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
+import LogoWithTT from "../app/LogoWithTT"
 
 export default function ProblemFilters({
   children,
@@ -17,7 +18,7 @@ export default function ProblemFilters({
   possibleYears: number[]
   isModerator: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year)
+  const year = useAppSelector((state) => state.searchParams.year ?? possibleYears[0])
   const tt = useAppSelector((state) => state.searchParams.tt)
   const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
   const isPending = useAppSelector((state) => state.system.isPending)
@@ -25,6 +26,9 @@ export default function ProblemFilters({
     <>
       <div className={style.filters}>
         <p className={style.filtersTitle}>Задачи</p>
+        <LogoWithTT logoSize={"2rem"} margin={"0rem"}>
+          <></>
+        </LogoWithTT>
         <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
@@ -43,7 +47,7 @@ function YearFilter({
   isPending: boolean
   isModerator: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year)
+  const year = useAppSelector((state) => state.searchParams.year) ?? possibleYears[0]
   const dispatcher = useAppDispatch()
 
   const optionList: { displayName: string; value: number; active: boolean }[] = []
@@ -53,7 +57,9 @@ function YearFilter({
       optionList.push({ displayName: year.toString(), value: year, active: true })
       return
     }
-    for (let i = year + 1; i < array[index - 1]; i++) optionList.push({ displayName: `+${i}`, value: i, active: true })
+    if (isModerator)
+      for (let i = year + 1; i < array[index - 1]; i++)
+        optionList.push({ displayName: `+${i}`, value: i, active: true })
     optionList.push({ displayName: year.toString(), value: year, active: true })
   })
   if (isModerator) {
@@ -74,8 +80,8 @@ function YearFilter({
           value: year,
           active: true,
         }}
-        onOptionSelect={(newValue) => {
-          dispatcher(setYear(newValue))
+        onOptionSelect={(e) => {
+          dispatcher(setYear(e.selection))
         }}
         disabled={isPending}
       ></TextDropdown>

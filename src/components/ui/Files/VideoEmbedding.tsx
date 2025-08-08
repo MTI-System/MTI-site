@@ -39,11 +39,6 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
     }
   }, [])
 
-  useEffect(
-    ()=>{
-      console.log("loaded?", isVideoLoaded)
-    }, [isVideoLoaded]
-  )
 
 
   let vidURL = ""
@@ -74,7 +69,6 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
   useEffect(()=>{
     timeoutRef.current = setTimeout(
     ()=>{
-      console.log("Timeout")
       setIsVideoLoadingError(true)
       setErrorMessage("Timeout error")
     }, 30000
@@ -103,7 +97,6 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
                   (e)=>{
                     e.stopPropagation()
                     e.preventDefault()
-                    console.log("delete")
                     setIsDeleteDialogOpen(true)
                   }
                 }/>}
@@ -149,14 +142,12 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
               videoId={vidURL} opts={opts} 
                 onError={
                   (e)=>{
-                    console.log("LoadingError", e)
                   }
                 }
                onReady={()=>setIsVideoLoaded(true)}/>
                 </div>}
             {!isYouTube && <video ref={videoRef}
             onError={(e)=>{
-              console.log("Video loading error", e)
               setIsVideoLoadingError(true)
             }} src={vidURL} controls 
             onCanPlay={()=>{
@@ -173,7 +164,6 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
         problem_global_number={1} problem_title={embedding.title} onConfirm={async ()=>{
             const s = await deleteMaterial(problemId, embedding.id)
             if (!s) throw new Error("Deletion has failed")
-            console.log("Delete fetch completed")
             startTransition(() => {
                 router.refresh()
             })

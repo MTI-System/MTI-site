@@ -28,8 +28,6 @@ function InitRedux() {
   const [isPending, startTransition] = useTransition()
   const mounted = useRef(false)
   useEffect(() => {
-    // console.log("INIT STATE", )
-    console.log("INIT REDUX FROM COOKIES")
     const tt = cookies.get(TOURNAMENT_TYPE_KEY_NAME)
     const token = cookies.get("mtiyt_auth_token")
     const getAuth = async () => {
@@ -59,7 +57,6 @@ function InitRedux() {
   }, [])
 
   useEffect(() => {
-    console.log("auth", auth)
     if (auth) {
       dispatch(setAuth(auth))
     }

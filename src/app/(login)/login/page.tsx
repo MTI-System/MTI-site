@@ -13,6 +13,7 @@ import LogoWithTT from "@/components/sections/app/LogoWithTT"
 import { setAuth, setToken } from "@/redux_stores/AuthSlice"
 import { useAppDispatch } from "@/redux_stores/tournamentTypeRedixStore"
 import { fetchSendLogin } from "@/scripts/ApiFetchers"
+import footerStyle from "@/styles/components/sections/app/footer.module.css"
 
 enum FormState {
   AwaitLogin,
@@ -62,12 +63,10 @@ function LoginPage() {
     setFormState(FormState.Loading)
     const token = await fetchSendLogin(formData)
     if (token === null) {
-      console.log("Error?")
       setFormState(FormState.UnknownError)
       return
     }
     if (!token) {
-      console.log("Wrong credentials")
       setFormState(FormState.IncorrectData)
       return
     }
@@ -85,7 +84,11 @@ function LoginPage() {
   return (
     <div className={style.loginContainer}>
       <div className={style.login}>
-        <LogoWithTT logoSize={"7rem"} margin={"-4rem"} />
+        <LogoWithTT logoSize={"7rem"} margin={"-4rem"}>
+          <h2 className={footerStyle.mainBioHeaderText} style={{ fontSize: "7rem" }}>
+            МТИ
+          </h2>
+        </LogoWithTT>
         <div className={style.infoDiv}>
           <h2 className={style.infoHeader}>ВОЙТИ В АККАУНТ</h2>
           <p className={style.infoText}>Войдите в аккаунт, чтобы получить доступ к функциям организаторов</p>

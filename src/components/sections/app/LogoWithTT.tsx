@@ -2,19 +2,25 @@
 import footerStyle from "@/styles/components/sections/app/footer.module.css"
 import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
+import { ReactNode } from "react"
 
-export default function LogoWithTT({ logoSize, margin }: { logoSize: string; margin: string }) {
+export default function LogoWithTT({
+  logoSize,
+  margin,
+  children,
+}: {
+  logoSize: string
+  margin: string
+  children: ReactNode
+}) {
   const tt = useAppSelector((state) => state.searchParams.tt)
   return (
     <div>
-      <h2 className={footerStyle.mainBioHeaderText} style={{ fontSize: logoSize }}>
-        МТИ
-      </h2>
+      {children}
       <p className={footerStyle.ttBioHeaderText} style={{ fontSize: logoSize, marginTop: margin }}>
         {tt?.slice(0, -1)}
         <span style={{ color: availableTournamentTypes.find((type) => type.name === tt)?.color }}>{tt?.slice(-1)}</span>
       </p>
-      {/*TODO Сделать корректное отображение типа турнира*/}
     </div>
   )
 }

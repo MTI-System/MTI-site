@@ -4,14 +4,14 @@ import {TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/con
 // import cookies from "next/headers"
 interface SPState {
   tt: string|null,
-  year: number,
-  isTTLocked: boolean,
+  year: number|null,
+  // isTTLocked: boolean,
 }
 
 const initialState: SPState = {
   tt: null,
   year: 2026,
-  isTTLocked: false
+  // isTTLocked: false
 }
 
 export const SPSlice = createSlice({
@@ -19,17 +19,12 @@ export const SPSlice = createSlice({
   initialState,
   reducers: {
     setTT(state, action: PayloadAction<string>) {
-      // cookies.set(TOURNAMENT_TYPE_KEY_NAME, action.payload)
-      // console.log("SET_TT", action.payload, cookies.get(TOURNAMENT_TYPE_KEY_NAME))
       state.tt = action.payload
     },
-    setYear(state, action: PayloadAction<number>) {
+    setYear(state, action: PayloadAction<number|null>) {
       state.year = action.payload
     },
-    setIsTTLocked(state, action: PayloadAction<boolean>) {
-      state.isTTLocked = action.payload
-    }
   }
 })
 
-export const { setTT, setYear, setIsTTLocked } = SPSlice.actions
+export const { setTT, setYear } = SPSlice.actions

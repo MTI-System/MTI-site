@@ -23,6 +23,7 @@
   --main-text-color: #212519;
   --alt-bg: #ffffff;
   --hover-color: #e2e2e2;
+  --text-hover-color: #909090;
   --card-cta-bar-color: #0a0a0a22;
   --main-bg: #e5e5e5;
   --alt-text: #7d8590;
@@ -52,7 +53,7 @@
 
 * {
   transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease,
-    opacity 250ms ease, scrollbar-color 250ms ease;
+    opacity 250ms ease;
 
   scrollbar-color:  var(--alt-primary-accent) transparent;
   scrollbar-width: thin;

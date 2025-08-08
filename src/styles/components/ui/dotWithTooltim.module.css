@@ -1,0 +1,15 @@
+.dot {
+  position: relative;
+  border-radius: 1000rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.tooltip {
+  background-color: var(--inactive-color);
+  /* border: var(--border-width) var(--border-color) solid; */
+  color: var(--main-text-color);
+  border-radius: calc(var(--block-radius) / 4);
+  padding: 0.25rem;
+  font-size: 1rem;
+}
