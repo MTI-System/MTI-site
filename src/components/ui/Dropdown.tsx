@@ -100,40 +100,29 @@ function DropdownMenu<ValueType>({
   const menuRef = useRef<HTMLDivElement>(null)
   const positionRef = useRef<HTMLDivElement>(null)
   const [isDown, setIsDown] = useState(true)
-  // useEffect(() => {
-  //   if (!menuRef.current) return
-  //   if (isOpened) {
-  //     menuRef.current.classList.remove(style.menuFading)
-  //     menuRef.current.classList.remove(style.menuAppearing)
-  //     menuRef.current.classList.add(style.menuAppearing)
-  //     return
-  //   }
-  //   menuRef.current.classList.add(style.menuFading)
-  //   if (menuRef.current.classList.contains(style.menuAppearing)) {
-  //     const handleAnimationEnd = () => {
-  //       if (!menuRef.current) return
-  //       menuRef.current.classList.remove(style.menuFading)
-  //       menuRef.current.classList.remove(style.menuAppearing)
-  //       menuRef.current.removeEventListener("transitionend", handleAnimationEnd)
-  //     }
-  //     menuRef.current.addEventListener("transitionend", handleAnimationEnd)
-  //   }
-  // }, [isOpened])
+
   useEffect(() => {
     console.log("WTF?")
     const handleTransitionEnd = (e: TransitionEvent) => {
-      if(e.target !== menuRef.current) return
-      if(e.propertyName !== "opacity") return
+      if (e.target !== menuRef.current) return
+      if (e.propertyName !== "opacity") return
       menuRef.current?.classList.remove(style.animating)
     }
+    const handleTransitionStart = (e: TransitionEvent) => {
+      if (e.target !== menuRef.current) return
+      if (e.propertyName !== "opacity") return
+      menuRef.current?.classList.add(style.animating)
+    }
     menuRef.current?.addEventListener("transitionend", handleTransitionEnd)
+    menuRef.current?.addEventListener("transitionstart", handleTransitionStart)
     return () => {
       menuRef.current?.removeEventListener("transitionend", handleTransitionEnd)
+      menuRef.current?.removeEventListener("transitionstart", handleTransitionStart)
     }
   }, [])
-  useEffect(()=>{
+
+  useEffect(() => {
     isOpened && menuRef.current?.classList.add(style.shown, style.animating)
-    !isOpened && menuRef.current?.classList.add(style.animating)
   }, [isOpened])
 
   useEffect(() => {

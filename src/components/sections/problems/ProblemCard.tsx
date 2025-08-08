@@ -237,13 +237,16 @@ function ScienceList({ problem }: { problem: ProblemInterface }) {
   return (
     <div className={style.sciencesListContainer}>
       <h3>Разделы {problem.tournament_type === 1 ? "физики" : "наук"}:</h3>
-      {problem.tournament_type !== 1 && <div className={style.scienceList}>
-        {problem.sciences.map((value, index)=>(<DotWithTooltip dotColor={value.color} dotTooltipText={value.title} key={index}/>))}
-        </div>}
+      {problem.tournament_type !== 1 && (
+        <div className={style.scienceList}>
+          {problem.sciences.map((value, index) => (
+            <DotWithTooltip dotColor={value.color} dotTooltipText={value.title} key={index} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
-
 
 function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
   // const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])\
@@ -261,7 +264,7 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
         fetchAllAvailableSections().then((sections) => {
           console.log("Sections", sections)
           dispatcher(setSections(sections))
-          setAddableSections(sections.map((value)=>({...value, section_science: value.section_science.id})))
+          setAddableSections(sections.map((value) => ({ ...value, section_science: value.section_science.id })))
         })
       }
     }
@@ -270,11 +273,13 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
   useEffect(() => {
     console.log("Filter Sections", allSections)
     setAddableSections(
-      (allSections ?? []).filter(
-        (section) =>
-          problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined &&
-          section.tournament_type === problem.tournament_type
-      ).map((value)=>({...value, section_science: value.section_science.id}))
+      (allSections ?? [])
+        .filter(
+          (section) =>
+            problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined &&
+            section.tournament_type === problem.tournament_type
+        )
+        .map((value) => ({ ...value, section_science: value.section_science.id }))
     )
   }, [problem.problem_sections.length, allSections])
 
@@ -301,6 +306,90 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
   )
 }
 
+// function AddNewSection({
+//   problemId,
+//   addableSections,
+// }: {
+//   problemId: number
+//   addableSections: ProblemSectionInterface[]
+// }) {
+//   const defaultColors = {
+//     "--border-color": "var(--primary-accent)",
+//     "--bg-color": "var(--alt-primary-accent)",
+//     opacity: 1,
+//   }
+//   const [color, setColor] = useState(defaultColors)
+//   const [isError, setIsError] = useState(false)
+//   const [isPending, startTransition] = useTransition()
+//   const router = useRouter()
+
+//   const defaultElement = useMemo(() => {
+//     if (isError) {
+//       setColor((curColor) => {
+//         const newColor = { ...curColor }
+//         newColor["--border-color"] = "var(--warning-accent)"
+//         newColor["--bg-color"] = "rgba(from var(--border-color) r g b / 0.125)"
+//         newColor.opacity = 1
+//         return newColor
+//       })
+//       setTimeout(() => {
+//         setIsError(false)
+//       }, 2000)
+//     } else setColor(defaultColors)
+//     return {
+//       displayElement: (
+//         <div className={style.defaultOption}>
+//           <FaPlus />
+//           {isError ? <p>Ошибка</p> : <p>Добавить</p>}
+//         </div>
+//       ),
+//       value: "0",
+//       active: true,
+//     }
+//   }, [addableSections, isError])
+
+//   return (
+//     <>
+//       <Dropdown
+//         options={addableSections.map((section) => {
+//           return {
+//             displayElement: (
+//               <div className={style.addSectionOptionContainer}>
+//                 <ProblemSection key={section.id} section={section} problemId={problemId} />
+//               </div>
+//             ),
+//             value: section.id.toString(),
+//             active: true,
+//           }
+//         })}
+//         defaultSelection={defaultElement}
+//         onOptionSelect={async (e) => {
+//           const sel = e.selection
+//           const color = addableSections.find((val) => val.id.toString() === sel)?.tile_color
+//           setColor((curColor) => {
+//             const newColor = { ...curColor }
+//             newColor["--border-color"] = color ?? "var(--primary-accent)"
+//             newColor["--bg-color"] = "rgba(from var(--border-color) r g b / 0.125)"
+//             newColor.opacity = 0.5
+//             return newColor
+//           })
+//           const res = await fetchModifySectionOnTask(problemId.toString(), sel, "add_section")
+//           if (res) {
+//             startTransition(() => {
+//               router.refresh()
+//             })
+//             return
+//           }
+//           setIsError(true)
+//         }}
+//         className={style.addNewSectionDropdown}
+//         style={color as CSSProperties}
+//         disabled={isPending || isError}
+//       />
+//     </>
+//   )
+// }
+
 function AddNewSection({
   problemId,
   addableSections,
@@ -308,17 +397,19 @@ function AddNewSection({
   problemId: number
   addableSections: ProblemSectionInterface[]
 }) {
+  const [isError, setIsError] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   const defaultColors = {
     "--border-color": "var(--primary-accent)",
     "--bg-color": "var(--alt-primary-accent)",
     opacity: 1,
   }
   const [color, setColor] = useState(defaultColors)
-  const [isError, setIsError] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [selectedOptions, setSelectedOption] = useState<string[]>([])
 
-  const defaultElement = useMemo(() => {
+  useEffect(() => {
     if (isError) {
       setColor((curColor) => {
         const newColor = { ...curColor }
@@ -331,16 +422,6 @@ function AddNewSection({
         setIsError(false)
       }, 2000)
     } else setColor(defaultColors)
-    return {
-      displayElement: (
-        <div className={style.defaultOption}>
-          <FaPlus />
-          {isError ? <p>Ошибка</p> : <p>Добавить</p>}
-        </div>
-      ),
-      value: "0",
-      active: true,
-    }
   }, [addableSections, isError])
 
   return (
@@ -349,7 +430,11 @@ function AddNewSection({
         options={addableSections.map((section) => {
           return {
             displayElement: (
-              <div className={style.addSectionOptionContainer}>
+              <div
+                className={clsx(style.addSectionOptionContainer, {
+                  [style.selectedSection]: selectedOptions.find((v) => v === section.id.toString()) !== undefined,
+                })}
+              >
                 <ProblemSection key={section.id} section={section} problemId={problemId} />
               </div>
             ),
@@ -357,18 +442,51 @@ function AddNewSection({
             active: true,
           }
         })}
-        defaultSelection={defaultElement}
-        onOptionSelect={async (e) => {
-          const sel = e.selection
-          const color = addableSections.find((val) => val.id.toString() === sel)?.tile_color
-          setColor((curColor) => {
-            const newColor = { ...curColor }
-            newColor["--border-color"] = color ?? "var(--primary-accent)"
-            newColor["--bg-color"] = "rgba(from var(--border-color) r g b / 0.125)"
-            newColor.opacity = 0.5
-            return newColor
+        defaultSelection={{
+          displayElement: (
+            <div className={style.defaultOption}>
+              <FaPlus />
+              {isError || isLoading ? (
+                isError ? (
+                  <p>Ошибка</p>
+                ) : (
+                  <p>Добавляем...</p>
+                )
+              ) : selectedOptions.length > 0 ? (
+                <p>Добавить {selectedOptions.length}</p>
+              ) : (
+                <p>Добавить</p>
+              )}
+            </div>
+          ),
+          value: "0",
+          active: true,
+        }}
+        onOptionSelect={(e) => {
+          e.isDefaultPrevented = true
+          const elem = selectedOptions.find((v) => v === e.selection)
+          if (elem === undefined)
+            setSelectedOption((prev) => {
+              return [...prev, e.selection]
+            })
+          else
+            setSelectedOption((prev) => {
+              return [...prev.filter((v) => v !== e.selection)]
+            })
+        }}
+        onToggle={async (isOpened) => {
+          if (isOpened) return
+          if (selectedOptions.length === 0) return
+          setSelectedOption([])
+          console.log("fetch->add")
+          setColor({
+            "--border-color": "rgb(255, 204, 0)",
+            "--bg-color": "rgba(255, 204, 0, 0.25)",
+            opacity: 0.5,
           })
-          const res = await fetchModifySectionOnTask(problemId.toString(), sel, "add_section")
+          setIsLoading(true)
+          const res = await fetchModifySectionOnTask(problemId.toString(), selectedOptions, "add_section")
+          setIsLoading(false)
           if (res) {
             startTransition(() => {
               router.refresh()
@@ -379,7 +497,7 @@ function AddNewSection({
         }}
         className={style.addNewSectionDropdown}
         style={color as CSSProperties}
-        disabled={isPending || isError}
+        disabled={isPending || isError || isLoading}
       />
     </>
   )

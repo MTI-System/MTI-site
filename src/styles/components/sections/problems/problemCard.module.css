@@ -153,6 +153,9 @@ body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
   background: none !important;
   padding: 0 0.25rem !important;
 }
+.selectedSection {
+  opacity: 0.5;
+}
 
 .defaultOption {
   width: 100% !important;

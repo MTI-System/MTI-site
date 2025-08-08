@@ -156,14 +156,14 @@ async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesIn
 
 async function fetchModifySectionOnTask(
   problemId: string,
-  sectionId: string,
+  sectionIds: string[],
   action: "add_section" | "delete_section"
 ): Promise<boolean> {
   if (action !== "add_section" && action !== "delete_section") return false
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
   const formData = new FormData()
   formData.set("token", token)
-  formData.set("sectionId", sectionId)
+  formData.set("sectionId", sectionIds.toString())
   formData.set("problemId", problemId)
   const response = await fetchWithRetryAndTimeout(PROBLEM_API + `sections/${action}`, {
     method: action === "delete_section" ? "DELETE" : "POST",
