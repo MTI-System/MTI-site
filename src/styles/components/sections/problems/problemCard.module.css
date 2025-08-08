@@ -85,6 +85,23 @@
   padding: 0.5rem 1rem;
 }
 
+.sciencesListContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  gap: 1rem;
+}
+.scienceList {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  gap: 0.5rem;
+}
+
 .sectionListContainer {
   padding: 0rem 2rem;
 }
@@ -190,9 +207,7 @@ body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
   width: 100%;
 }
 
-.problemText{
+.problemText {
   white-space: pre-wrap;
   /* text-wrap: wrap; */
 }
-
-

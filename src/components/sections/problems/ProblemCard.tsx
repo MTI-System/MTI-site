@@ -20,6 +20,7 @@ import { router } from "next/client"
 import { useAppDispatch } from "@/redux_stores/tournamentTypeRedixStore"
 import { setSections, setIsLoaded } from "@/redux_stores/ProblemSlice"
 import { useStore } from "react-redux"
+import DotWithTooltip from "@/components/ui/DotWithTooltip"
 
 export default function ProblemCard({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
@@ -169,7 +170,6 @@ export function ProblemCardContent({
             const isok = await handletaskEdit()
             if (isok) {
               startTransition(() => {
-                
                 router.replace(`/problems/${problem.id}`)
               })
             } else {
@@ -184,7 +184,7 @@ export function ProblemCardContent({
       )}
 
       <div className={style.sectionListContainer}>
-        <h3>Разделы физики:</h3>
+        <ScienceList problem={problem} />
         <SectionsList problem={problem} isEditable={is_edit_page || isEditable} />
       </div>
     </>
@@ -233,6 +233,19 @@ function EditButtons({
   )
 }
 
+function ScienceList({ problem }: { problem: ProblemInterface }) {
+  return (
+    <div className={style.sciencesListContainer}>
+      <h3>Разделы {problem.tournament_type === 1 ? "физики" : "наук"}:</h3>
+      {problem.tournament_type !== 1 && <div className={style.scienceList}>
+        <DotWithTooltip dotColor="red" dotTooltipText="Test" />
+        <DotWithTooltip dotColor="green" dotTooltipText="Test 2" />
+        </div>}
+    </div>
+  )
+}
+
+
 function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
   // const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])\
   const store = useStore<RootState>()
@@ -260,7 +273,8 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
     setAddableSections(
       (allSections ?? []).filter(
         (section) =>
-          problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined
+          problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined &&
+          section.tournament_type === problem.tournament_type
       )
     )
   }, [problem.problem_sections.length, allSections])
