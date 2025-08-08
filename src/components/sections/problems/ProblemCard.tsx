@@ -45,7 +45,7 @@ export function ProblemCardContent({
 
   const editedProblemNumberRef = useRef<number>(problem.global_number)
   const editedProblemNameRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_name)
-  const editedProblemTextRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_name)
+  const editedProblemTextRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_text)
   const [isEdited, setIsEdited] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
@@ -86,6 +86,13 @@ export function ProblemCardContent({
                 onChange={(event) => {
                   editedProblemNumberRef.current = Number(event.target.value)
                   !isEdited && setIsEdited(true)
+                  if (!isEdited) return
+                  if (editedProblemNameRef.current !== problem.problem_translations[selectedTrnslation].problem_name)
+                    return
+                  if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
+                    return
+                  if (editedProblemNumberRef.current !== problem.global_number) return
+                  setIsEdited(false)
                 }}
               />
               <Input
@@ -96,6 +103,13 @@ export function ProblemCardContent({
                 onChange={(event) => {
                   editedProblemNameRef.current = event.target.value
                   !isEdited && setIsEdited(true)
+                  if (!isEdited) return
+                  if (editedProblemNameRef.current !== problem.problem_translations[selectedTrnslation].problem_name)
+                    return
+                  if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
+                    return
+                  if (editedProblemNumberRef.current !== problem.global_number) return
+                  setIsEdited(false)
                 }}
               />
             </div>
@@ -126,6 +140,13 @@ export function ProblemCardContent({
               onChange={(event) => {
                 editedProblemTextRef.current = event.target.value
                 !isEdited && setIsEdited(true)
+                if (!isEdited) return
+                if (editedProblemNameRef.current !== problem.problem_translations[selectedTrnslation].problem_name)
+                  return
+                if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
+                  return
+                if (editedProblemNumberRef.current !== problem.global_number) return
+                setIsEdited(false)
               }}
             />
           </div>
@@ -148,6 +169,7 @@ export function ProblemCardContent({
             const isok = await handletaskEdit()
             if (isok) {
               startTransition(() => {
+                
                 router.replace(`/problems/${problem.id}`)
               })
             } else {

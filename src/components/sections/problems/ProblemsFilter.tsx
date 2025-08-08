@@ -53,7 +53,9 @@ function YearFilter({
       optionList.push({ displayName: year.toString(), value: year, active: true })
       return
     }
-    for (let i = year + 1; i < array[index - 1]; i++) optionList.push({ displayName: `+${i}`, value: i, active: true })
+    if (isModerator)
+      for (let i = year + 1; i < array[index - 1]; i++)
+        optionList.push({ displayName: `+${i}`, value: i, active: true })
     optionList.push({ displayName: year.toString(), value: year, active: true })
   })
   if (isModerator) {
