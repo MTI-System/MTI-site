@@ -102,7 +102,6 @@ function DropdownMenu<ValueType>({
   const [isDown, setIsDown] = useState(true)
 
   useEffect(() => {
-    console.log("WTF?")
     const handleTransitionEnd = (e: TransitionEvent) => {
       if (e.target !== menuRef.current) return
       if (e.propertyName !== "opacity") return

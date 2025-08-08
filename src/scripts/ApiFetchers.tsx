@@ -160,7 +160,7 @@ async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesIn
 
 async function fetchModifySectionOnTask(
   problemId: string,
-  sectionIds: string[],
+  sectionIds: string[]|string,
   action: "add_section" | "delete_section"
 ): Promise<boolean> {
   if (action !== "add_section" && action !== "delete_section") return false
