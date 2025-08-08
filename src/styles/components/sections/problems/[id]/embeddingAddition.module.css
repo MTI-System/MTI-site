@@ -79,6 +79,8 @@ div.additionalDataContainer:has(.errorText) {
 .errorText {
   color: var(--warning-accent);
   text-align: center;
+  height: 2rem;
+  line-height: 100%;
 }
 .typeSettingsContainer {
   width: 100%;

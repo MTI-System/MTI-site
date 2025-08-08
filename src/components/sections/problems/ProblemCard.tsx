@@ -359,7 +359,8 @@ function AddNewSection({
           }
         })}
         defaultSelection={defaultElement}
-        onOptionSelect={async (sel) => {
+        onOptionSelect={async (e) => {
+          const sel = e.selection
           const color = addableSections.find((val) => val.id.toString() === sel)?.tile_color
           setColor((curColor) => {
             const newColor = { ...curColor }

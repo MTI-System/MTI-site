@@ -76,8 +76,8 @@ function YearFilter({
           value: year,
           active: true,
         }}
-        onOptionSelect={(newValue) => {
-          dispatcher(setYear(newValue))
+        onOptionSelect={(e) => {
+          dispatcher(setYear(e.selection))
         }}
         disabled={isPending}
       ></TextDropdown>

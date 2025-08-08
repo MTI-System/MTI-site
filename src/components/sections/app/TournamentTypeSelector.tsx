@@ -27,7 +27,8 @@ export default function TournamentTypeSelector({ className }: { className?: stri
               options={availableTournamentTypes.map((tt) => {
                 return { displayName: tt.name.toUpperCase(), value: tt.name, active: true }
               })}
-              onOptionSelect={(selectedValue) => {
+              onOptionSelect={(event) => {
+                const selectedValue = event.selection
                 cookies.set(TOURNAMENT_TYPE_KEY_NAME, selectedValue ?? "ТЮФ")
                 dispatcher(setTT(selectedValue!!))
               }}

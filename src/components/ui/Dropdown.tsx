@@ -1,7 +1,7 @@
 "use client"
 import style from "@/styles/components/ui/dropdown.module.css"
 import { FaChevronDown } from "react-icons/fa"
-import { useState, useRef, useEffect, ReactNode, HTMLAttributes, useLayoutEffect } from "react"
+import { useState, useRef, useEffect, ReactNode, HTMLAttributes } from "react"
 import clsx from "clsx"
 
 interface DropdownOption<ValueType> {
@@ -10,13 +10,14 @@ interface DropdownOption<ValueType> {
   active: boolean
 }
 
-interface DropdownParams<ValueType> extends HTMLAttributes<HTMLDivElement> {
+interface DropdownParams<ValueType> extends Omit<HTMLAttributes<HTMLDivElement>, "onToggle"> {
   options: DropdownOption<ValueType>[]
-  onOptionSelect: (selection: ValueType) => void
+  onOptionSelect: (e: { selection: ValueType; isDefaultPrevented: boolean; closeDropdown: () => void }) => void
   defaultSelection: number | DropdownOption<ValueType>
   className?: string
   disabled?: boolean
   isAlwaysUp?: boolean
+  onToggle?: (isOpened: boolean) => void
 }
 
 type TextOption<ValueType> = { displayName: string; value: ValueType; active: boolean }
@@ -32,6 +33,7 @@ export function Dropdown<ValueType>({
   className,
   disabled,
   isAlwaysUp,
+  onToggle,
   ...rest
 }: DropdownParams<ValueType>) {
   const [selectedOption, setSelectedOption] = useState<number | DropdownOption<ValueType>>(defaultSelection)
@@ -46,20 +48,27 @@ export function Dropdown<ValueType>({
         selectedOption={typeof selectedOption === "number" ? options[selectedOption] : selectedOption}
         onClick={(e) => {
           if (disabled) return
-          setIsOpened((prev) => !prev)
+          setIsOpened(!isOpened)
+          onToggle && onToggle(!isOpened)
         }}
         isOpened={isOpened}
       />
       <DropdownMenu
         options={options}
         onOptionSelect={(selection) => {
-          setIsOpened(false)
           if (!selection || disabled) return
+          const selectEvent = {
+            selection: selection.value,
+            isDefaultPrevented: false,
+            closeDropdown: () => setIsOpened(false),
+          }
+          onOptionSelect(selectEvent)
+          if (selectEvent.isDefaultPrevented) return
+          setIsOpened(false)
           setSelectedOption(selection)
-          onOptionSelect(selection.value)
         }}
         isOpened={isOpened}
-        isAlwaysUp={isAlwaysUp??false}
+        isAlwaysUp={isAlwaysUp ?? false}
       />
     </div>
   )
@@ -85,7 +94,7 @@ function DropdownMenu<ValueType>({
 }: {
   options: DropdownOption<ValueType>[]
   onOptionSelect: (selection: DropdownOption<ValueType> | null) => void
-  isOpened: boolean,
+  isOpened: boolean
   isAlwaysUp: boolean
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
@@ -111,27 +120,39 @@ function DropdownMenu<ValueType>({
     }
   }, [isOpened])
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("Is down: ", isDown)
   }, [isDown])
 
-  useEffect(()=>{
-    const isOverflowUp = positionRef.current?.getBoundingClientRect().y!! - menuRef.current?.getBoundingClientRect().height!! < 0
-    const isOverflowDown = menuRef.current?.getBoundingClientRect().height!! + positionRef.current?.getBoundingClientRect().y!! > window.innerHeight
-    console.log("up: ", isOverflowUp, "down: ", isOverflowDown, "height: ", menuRef.current?.getBoundingClientRect().height!!)
-    if(isOverflowDown){
+  useEffect(() => {
+    const isOverflowUp =
+      positionRef.current?.getBoundingClientRect().y!! - menuRef.current?.getBoundingClientRect().height!! < 0
+    const isOverflowDown =
+      menuRef.current?.getBoundingClientRect().height!! + positionRef.current?.getBoundingClientRect().y!! >
+      window.innerHeight
+    console.log(
+      "up: ",
+      isOverflowUp,
+      "down: ",
+      isOverflowDown,
+      "height: ",
+      menuRef.current?.getBoundingClientRect().height!!
+    )
+    if (isOverflowDown) {
       setIsDown(false)
-    }
-    else{
+    } else {
       setIsDown(true)
     }
   }, [isOpened])
 
-
   return (
     <>
-      <div ref={positionRef} style={{border: "none"}}/>
-      <div className={clsx(style.dropdownMenu, {[style.down]: !isDown || isAlwaysUp}, {[style.shown]: isOpened})} style={{ position: "absolute"}} ref={menuRef}>
+      <div ref={positionRef} style={{ border: "none" }} />
+      <div
+        className={clsx(style.dropdownMenu, { [style.down]: !isDown || isAlwaysUp }, { [style.shown]: isOpened })}
+        style={{ position: "absolute" }}
+        ref={menuRef}
+      >
         {(!options || options.length == 0) && <p className={style.dropdownText}>--------</p>}
         {options &&
           options.map((option, index) => (

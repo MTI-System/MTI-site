@@ -296,7 +296,10 @@ function AddFileModal({
                     options={typeList.map((value) => ({ displayName: value.display_name, value: value.id, active: true }))}
                     defaultSelection={defaultOption}
                     isAlwaysUp={true}
-                    onOptionSelect={(opt) => {
+                    onOptionSelect={(e) => {
+                      const opt = e.selection
+                      e.isDefaultPrevented = true
+                      e.closeDropdown()
                       dataRef.current.contentType = opt ?? 0
                       const newOpt = typeList.find((value) => opt === value.id)
                       if (newOpt === undefined) return
