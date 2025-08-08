@@ -52,7 +52,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
   const possibleYears = await fetchYears(availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1)
   let isUndefYear = false
   const year = sp.year
-  if (!possibleYears.find(y => y===year)){
+  if (!possibleYears.find(y => Number(y) === Number(year))){
     isUndefYear = true
   }
   const userAuth = await fetchPermissions()
