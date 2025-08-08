@@ -4,7 +4,7 @@ import { MdDeleteOutline } from "react-icons/md"
 import { ProblemInterface, ProblemSectionInterface, ProblemSectionWithSciencesInterface } from "@/types/problemAPI"
 import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
-import {usePathname, useRouter, useSearchParams} from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections } from "@/scripts/ApiFetchers"
 import { CSSProperties, useEffect, useMemo, useRef, useState, useTransition } from "react"
 import clsx from "clsx"
@@ -46,6 +46,7 @@ export function ProblemCardContent({
 
   const editedProblemNumberRef = useRef<number>(problem.global_number)
   const editedProblemNameRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_name)
+  const editedProblemByRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_by)
   const editedProblemTextRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_text)
   const [isEdited, setIsEdited] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -62,6 +63,7 @@ export function ProblemCardContent({
     formData.set("newProblemGlobalNumber", editedProblemNumberRef.current.toString())
     formData.set("newProblemFirstTranslationName", editedProblemNameRef.current)
     formData.set("newProblemFirstTranslationText", editedProblemTextRef.current)
+    formData.set("newProblemFirstTranslationBy", editedProblemByRef.current)
     formData.set("token", token)
     const resp = await fetch(PROBLEM_API + "edit_problem", { method: "POST", body: formData })
     return resp.ok
@@ -94,6 +96,8 @@ export function ProblemCardContent({
                   if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
                     return
                   if (editedProblemNumberRef.current !== problem.global_number) return
+                  if (editedProblemByRef.current !== problem.problem_translations[selectedTrnslation].problem_by) return
+
                   setIsEdited(false)
                 }}
               />
@@ -111,6 +115,7 @@ export function ProblemCardContent({
                   if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
                     return
                   if (editedProblemNumberRef.current !== problem.global_number) return
+                  if (editedProblemByRef.current !== problem.problem_translations[selectedTrnslation].problem_by) return
                   setIsEdited(false)
                 }}
               />
@@ -118,7 +123,11 @@ export function ProblemCardContent({
           )}
           {!is_edit_page && (
             <Link href={"/problems/" + problem.id.toString()}>
-              <h2 className={clsx(style.problemTitle, {[style.hover]: !pathname.startsWith("/problems/" + problem.id.toString())})}>
+              <h2
+                className={clsx(style.problemTitle, {
+                  [style.hover]: !pathname.startsWith("/problems/" + problem.id.toString()),
+                })}
+              >
                 {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
               </h2>
             </Link>
@@ -126,21 +135,40 @@ export function ProblemCardContent({
           {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
         </div>
 
-
-        {is_edit_page && <div className={style.translationContainer}>
-          <PiGlobeLight/>
-          <div className={style.translationSelector}>
-            {/*<h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>*/}
-            <input className={clsx(style.problemByInput)} defaultValue={problem.problem_translations[selectedTrnslation].problem_by}/>
+        {is_edit_page && (
+          <div className={style.translationContainer}>
+            <PiGlobeLight />
+            <div className={style.translationSelector}>
+              {/*<h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>*/}
+              <input
+                className={clsx(style.problemByInput)}
+                defaultValue={problem.problem_translations[selectedTrnslation].problem_by}
+                name="newProblemFirstTranslationBy"
+                type="text"
+                onChange={(event) => {
+                  editedProblemByRef.current = event.target.value
+                  !isEdited && setIsEdited(true)
+                  if (!isEdited) return
+                  if (editedProblemNameRef.current !== problem.problem_translations[selectedTrnslation].problem_name)
+                    return
+                  if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
+                    return
+                  if (editedProblemNumberRef.current !== problem.global_number) return
+                  if (editedProblemByRef.current !== problem.problem_translations[selectedTrnslation].problem_by) return
+                  setIsEdited(false)
+                }}
+              />
+            </div>
           </div>
-        </div>}
-        {!is_edit_page && <div className={style.translationContainer}>
-          <PiGlobeLight/>
-          <div className={style.translationSelector}>
-            <h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>
+        )}
+        {!is_edit_page && (
+          <div className={style.translationContainer}>
+            <PiGlobeLight />
+            <div className={style.translationSelector}>
+              <h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>
+            </div>
           </div>
-        </div>}
-
+        )}
       </div>
       <div className={style.textContainer}>
         {is_edit_page && (
@@ -158,6 +186,7 @@ export function ProblemCardContent({
                 if (editedProblemTextRef.current !== problem.problem_translations[selectedTrnslation].problem_text)
                   return
                 if (editedProblemNumberRef.current !== problem.global_number) return
+                if (editedProblemByRef.current !== problem.problem_translations[selectedTrnslation].problem_by) return
                 setIsEdited(false)
               }}
             />
@@ -244,7 +273,9 @@ function EditButtons({
 function ScienceList({ problem }: { problem: ProblemInterface }) {
   return (
     <div className={style.sciencesListContainer}>
-      <h3>Разделы {problem.sciences.length === 1 ? problem.sciences[0].title.toLowerCase().slice(0, -1) + "и" : "наук"}:</h3>
+      <h3>
+        Разделы {problem.sciences.length === 1 ? problem.sciences[0].title.toLowerCase().slice(0, -1) + "и" : "наук"}:
+      </h3>
       {problem.sciences.length !== 1 && (
         <div className={style.scienceList}>
           {problem.sciences.map((value, index) => (

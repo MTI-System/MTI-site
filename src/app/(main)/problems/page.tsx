@@ -27,6 +27,7 @@ export async function generateMetadata({
   const descriptionText = ttype
     ? `Опубликованные задачи для ${ttype.longName}: смотри актуальные задачи для научных турниров.`
     : "Список задач научных турниров в системе МТИ."
+  
 
   return {
     title: titleText,

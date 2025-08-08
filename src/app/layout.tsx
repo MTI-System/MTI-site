@@ -9,12 +9,24 @@ import StoreProvider from "@/components/Redux/StoreProvider"
 import LayoutComponent from "@/components/sections/app/Layout"
 import ThemeUpdator from "@/components/service/ThemeUpdator"
 
+
+export function generateMetadata(): Metadata {
+  const titleText = "Вход в аккаунт · МТИ"
+  const descriptionText = "Вход в аккаунт Менеджера Турнирной Информации"
+
+  return {
+    title: titleText,
+    description: descriptionText,
+    verification: { yandex: "aa838087dd1ef992" },
+  }
+}
+
 export default async function Template({ children }: { children: React.ReactNode }) {
   const cookiesStore = await cookies()
   return (
     <html>
       <head>
-        <link rel="shortcut icon" href={FILES_SERVER + "favicon1.ico"} />
+        <link rel="icon" href="https://mtiyt.ru/favicon.ico" type="image/x-icon"/>
         <Script
           id="yandex-metrika"
           strategy="afterInteractive"
