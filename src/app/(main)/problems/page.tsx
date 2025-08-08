@@ -1,17 +1,18 @@
 import style from "@/styles/routes/(main)/problems/page.module.css"
 import ProblemFilters from "@/components/sections/problems/ProblemsFilter"
 import ProblemsList from "@/components/sections/problems/ProblemsList"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import { Suspense } from "react"
-import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
-import { fetchPermissions, fetchYears } from "@/scripts/ApiFetchers"
+import {availableTournamentTypes} from "@/constants/AvailableTournaments"
+import {Suspense} from "react"
+import {TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys"
+import {fetchPermissions, fetchYears} from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/service/SearchParamsUpdator"
-import UnlockTournamentType from "@/components/Redux/UnlockTournamentType"
-import type { Metadata } from "next"
+import type {Metadata} from "next"
+import {cookies} from "next/headers";
+import Loading from "@/app/loading";
 
 export async function generateMetadata({
-  searchParams,
-}: {
+                                         searchParams,
+                                       }: {
   searchParams: Promise<{ year: number; tt: string }>
 }): Promise<Metadata> {
   const searchP = await searchParams
@@ -30,20 +31,27 @@ export async function generateMetadata({
   return {
     title: titleText,
     description: descriptionText,
-    verification: { yandex: "aa838087dd1ef992" },
+    verification: {yandex: "aa838087dd1ef992"},
   }
 }
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
+export default async function Page({searchParams}: { searchParams: Promise<{ year: number; tt: string }> }) {
   const sp = await searchParams
-  let tt = sp[TOURNAMENT_TYPE_SEARCH_PARAM_NAME] ?? undefined
-  console.log("tt", tt)
+  if (!sp.year || !sp.tt) {
+    return (
+      <>
+        <Suspense fallback={<></>}>
+          <SearchParamsUpdator/>
+        </Suspense>
+        <Loading/>
+      </>
+    )
 
+  }
+  let tt = sp.tt ?? undefined
   const possibleYears = await fetchYears(availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1)
   let isUndefYear = false
-  if (sp.year && possibleYears.find((year) => sp.year == year) === undefined) isUndefYear = true
-  const year = sp.year ?? possibleYears[0]
-
+  const year = sp.year
   const userAuth = await fetchPermissions()
   let isEditable = false
   if (userAuth && userAuth.rights.length !== 0) {
@@ -54,23 +62,20 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
       )
       .some((x) => x)
   }
-
   return (
     <>
-      <UnlockTournamentType />
       <Suspense fallback={"Load search params"}>
-        <SearchParamsUpdator />
+        <SearchParamsUpdator/>
       </Suspense>
       <div className={style.problemPage}>
         <div className={style.problemsContainer}>
           <h2>Задачи на {availableTournamentTypes.find((val) => val.name === tt)?.longName}</h2>
-
           {tt && (
             <ProblemFilters possibleYears={possibleYears} isModerator={isEditable}>
               {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
               {!isUndefYear && (
                 <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-                  <ProblemsList year={year} tt={tt} isEditable={isEditable} />
+                  <ProblemsList year={year} tt={tt} isEditable={isEditable}/>
                 </Suspense>
               )}
             </ProblemFilters>

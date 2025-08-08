@@ -56,7 +56,6 @@ export function ExpandableImage({ className, onExpand, embedding, problemId, isM
               (e)=>{
                 e.stopPropagation()
                 e.preventDefault()
-                console.log("delete")
                 setIsDeleteDialogOpen(true)
               }
             }/>}
@@ -80,7 +79,6 @@ export function ExpandableImage({ className, onExpand, embedding, problemId, isM
         problem_global_number={1} problem_title={embedding.title} onConfirm={async ()=>{
             const s = await deleteMaterial(problemId, embedding.id)
             if (!s) throw new Error("Deletion has failed")
-            console.log("Delete fetch completed")
             startTransition(() => {
                 router.refresh()
             })

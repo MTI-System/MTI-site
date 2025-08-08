@@ -9,9 +9,6 @@ export default function ProfilePicture({className}: { className: string }) {
   const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
   const auth = useAppSelector(state => state.auth.authInfo)
   const path = usePathname()
-  useEffect(() => {
-    console.log("IS AUTH", isAuthenticated)
-  }, [isAuthenticated]);
 
   return <>
     {isAuthenticated && (

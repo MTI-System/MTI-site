@@ -36,7 +36,6 @@ async function fetchWithRetryAndTimeout(
     const timeoutId =
       timeout > 0
         ? setTimeout(() => {
-            console.log("Request timeout")
             controller.abort()
           }, timeout)
         : undefined
@@ -111,7 +110,6 @@ async function fetchPermissions(redirectPath?: string): Promise<User | null> {
     const data: User = UserSchema.parse(await response.json())
     return data
   } catch (e) {
-    console.log(`Permissions fetching error: ${e}`)
     return null
   }
 }

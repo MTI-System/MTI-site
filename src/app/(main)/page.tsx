@@ -2,8 +2,8 @@ import mainStyle from "@/styles//routes/(main)/mainPage.module.css"
 import ClickableCard from "@/components/ui/ClickableCard"
 import { Button } from "@/components/ui/Buttons"
 import clsx from "clsx"
-import UnlockTournamentType from "@/components/Redux/UnlockTournamentType"
 import type {Metadata} from "next";
+import {cookies} from "next/headers";
 
 export const metadata: Metadata = {
   title: {
@@ -16,13 +16,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Home() {
+export default async function Home() {
+  const cookie = await cookies()
   return (
     <div style={{marginBottom: "1rem"}}>
-      <UnlockTournamentType />
       {/*<video src={"https://files.mofius-server.ru/media/get/AQPUtp1tpdS06ThMCbWYoHohuk19_muVSo55Nqu5VSwfkPXd3SC2z_BTPcPFCDZ.mp4"} controls></video>*/}
       <div className={mainStyle.cardGrid}>
-        <ClickableCard className={clsx(mainStyle.card, mainStyle.problems)} href="/problems">
+        <ClickableCard className={clsx(mainStyle.card, mainStyle.problems)} href={`/problems`}>
           <div className={mainStyle.cardMainDiv}>
             <div>
               <p className={mainStyle.upHeaderDescription}>РАЗДЕЛ СО ВСЕМИ ЗАДАНИЯМИ</p>
@@ -66,9 +66,6 @@ export default function Home() {
             </div>
           </div>
         </ClickableCard>
-        {/* <ClickableCard className={mainStyle.savedTournament} href="/underconstruction">
-        сохранённое
-      </ClickableCard> */}
         <ClickableCard
           className={clsx(mainStyle.card, mainStyle.fights, mainStyle.underConstruction)}
           href="/"

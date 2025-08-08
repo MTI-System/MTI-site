@@ -11,7 +11,6 @@ import ThemeUpdator from "@/components/service/ThemeUpdator"
 
 export default async function Template({ children }: { children: React.ReactNode }) {
   const cookiesStore = await cookies()
-  // console.log("COOKIES", )
   return (
     <html>
       <head>

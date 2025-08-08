@@ -1,0 +1,44 @@
+name: Deploy new version
+on:
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: mof1us/frontend_mti
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker HUB
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: mof1us/frontend_mti:latest
+          load: true
+          push: true
+
+      - name: SHH and restart service
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          username: ${{ secrets.DEPLOY_SSH_USERNAME }}
+          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            systemctl restart "${{ secrets.DEPLOY_SERVICE_NAME }}"

@@ -17,7 +17,7 @@ export default function ProblemFilters({
   possibleYears: number[]
   isModerator: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year)
+  const year = useAppSelector((state) => state.searchParams.year??possibleYears[0])
   const tt = useAppSelector((state) => state.searchParams.tt)
   const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
   const isPending = useAppSelector((state) => state.system.isPending)
@@ -43,7 +43,7 @@ function YearFilter({
   isPending: boolean
   isModerator: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year)
+  const year = useAppSelector((state) => state.searchParams.year)??possibleYears[0]
   const dispatcher = useAppDispatch()
 
   const optionList: { displayName: string; value: number; active: boolean }[] = []

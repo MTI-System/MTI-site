@@ -44,7 +44,6 @@ export default function LoadingFileEmbedding({
       })
       .then((data) => {
         if (data.status === 200) {
-          console.log("File loaded succesfull")
           progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
           progresRef.current?.style.setProperty("--progress-color", "#00FF00")
           onUploadComplete()

@@ -36,7 +36,6 @@ export default function LoadingImageEmbedding({
       .post(PROBLEM_API + "add_material", formData, {
         onUploadProgress: (event) => {
           if (!event.progress) return
-          console.log(event.progress)
           progresRef.current?.style.setProperty("--progress-shift", `${event.progress * 100 - 100}%`)
           setProgress(event.progress * 100)
         },
@@ -44,7 +43,6 @@ export default function LoadingImageEmbedding({
       })
       .then((data) => {
         if (data.status === 200) {
-          console.log("File loaded succesfull")
           progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
           progresRef.current?.style.setProperty("--progress-color", "#00FF00")
           onUploadComplete()
