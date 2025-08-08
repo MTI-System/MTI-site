@@ -10,7 +10,7 @@ export default function AuthReduxUpdator() {
   const token = useAppSelector(state => state.auth.token)
   useEffect(() => {
     const getUser = async () => {
-      const user = await fetchPermissions(token)
+      const user = await fetchPermissions()
       dispatch(setAuth(user))
     }
     getUser()
