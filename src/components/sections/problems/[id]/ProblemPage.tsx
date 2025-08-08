@@ -16,6 +16,8 @@ import { MdOutlineClose } from "react-icons/md"
 import { RiFileAddLine } from "react-icons/ri"
 import { BiImageAdd } from "react-icons/bi"
 import { AiOutlineVideoCameraAdd } from "react-icons/ai"
+import ProblemTTUpdator from "./ProblemTTUpdator"
+import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 
 async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const userAuth = await fetchPermissions()
@@ -37,6 +39,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
 
   return (
     <div className={style.pageRoot}>
+      <ProblemTTUpdator newTT={availableTournamentTypes.find(tt=>tt.id===problem.tournament_type)?.name??"ТЮФ"}/>
       <div className={style.main}>
         <div className={style.problemWithGif}>
           <div className={style.problem}>

@@ -55,8 +55,10 @@ export default function SearchParamsUpdator() {
     } else {
       const ttSP = searchParams.get("tt") ?? cookies.get("mtiyt_tournamentType");
       const yearSP = searchParams.get("year");
-      dispatch(setTT(ttSP ?? "ТЮФ"), setYear(Number(yearSP)));
+      // dispatch(setTT(ttSP ?? "ТЮФ"), setYear(Number(yearSP)));
     }
+    dispatch(setTT(params.get("tt")??"ТЮФ"), setYear(Number(params.get("year"))??2026))
+    
     setIsMounted(true);
   }, []);
 

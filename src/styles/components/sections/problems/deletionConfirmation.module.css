@@ -43,6 +43,7 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+  gap: 1.5rem;
   @media (max-width: 1200px){
     justify-content: center;
     gap: 0.5rem;

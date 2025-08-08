@@ -28,7 +28,6 @@ export async function generateMetadata({
     ? `Опубликованные задачи для ${ttype.longName}: смотри актуальные задачи для научных турниров.`
     : "Список задач научных турниров в системе МТИ."
   
-    
 
   return {
     title: titleText,
@@ -53,6 +52,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
   const possibleYears = await fetchYears(availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1)
   let isUndefYear = false
   const year = sp.year
+  if (!possibleYears.find(y => y===year)){
+    isUndefYear = true
+  }
   const userAuth = await fetchPermissions()
   let isEditable = false
   if (userAuth && userAuth.rights.length !== 0) {
