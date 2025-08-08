@@ -34,6 +34,10 @@
   color: var(--main-text-color);
 }
 
+.problemTitle.hover:hover {
+  color: var(--text-hover-color);
+}
+
 .translationContainer {
   display: flex;
   justify-content: flex-start;
@@ -45,6 +49,8 @@
 }
 
 .translationSelector {
+  height: 0.7rem;
+  width:  100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -154,7 +160,7 @@ body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
   width: 15rem !important;
   height: 3rem;
   border-radius: calc(var(--block-radius) / 2) !important;
-  margin-left: 1rem;
+  margin-left: 2rem;
   font-size: 1.25rem;
   color: var(--main-text-color) !important;
 }
@@ -179,12 +185,26 @@ body[data-theme="dark"] .addNewSectionDropdown > div:not([style]):hover {
 
 .problemNameInput {
   width: 79%;
+  height: 100%;
   border-width: 1px;
   border-radius: 1rem;
   padding: 0.5rem;
   margin-left: 1%;
   border-color: var(--border-color);
 }
+
+.problemByInput{
+  font-size: 0.8rem;
+  width: 100%;
+  height: 100%;
+  border-width: 1px;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  margin-left: 1%;
+  border-color: var(--border-color);
+}
+
+
 
 .editProblemLineDiv {
   width: 100%;

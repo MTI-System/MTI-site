@@ -53,9 +53,7 @@ export default function AddFileField({
           horizontalLineAnim.play()
           angleAnim.play()
           boxAnim.play()
-          // console.log(fileInputRef.current, anim.backwards)
-          // if (!fileInputRef.current?.value || !anim.backwards) return
-          // console.log("Yeeeaaahhh!")
+
         },
       })
       self.add("uploadPlay", () => {

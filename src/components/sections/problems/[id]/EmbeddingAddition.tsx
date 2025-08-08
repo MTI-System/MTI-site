@@ -61,12 +61,8 @@ export default function PendingEmbeddingsList({
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  useEffect(() => {
-    console.log(embeddings)
-  }, [embeddings])
 
   useEffect(() => {
-    console.log(deleteKeyRef.current, isPending)
     if (isPending === true || deleteKeyRef.current === "") return
     setEmbeddings((prev) => {
       const newEmbeddingsDict = { ...prev }
@@ -82,14 +78,12 @@ export default function PendingEmbeddingsList({
           form={value}
           key={key}
           onUploadComplete={() => {
-            console.log("Upload complete")
             deleteKeyRef.current = key
             startTransition(() => {
               router.refresh()
             })
           }}
           onUploadCancel={(noWait) => {
-            console.log("upload canceled")
             setTimeout(
               () =>
                 setEmbeddings((prev) => {
@@ -120,7 +114,6 @@ export default function PendingEmbeddingsList({
         problemId={problemId}
         openState={isOpenState}
         onFileAdd={(fileForm) => {
-          console.log(fileForm)
           uploadedRef.current += 1
           setEmbeddings((prev) => {
             const newEmbeddingsDict = { ...prev }
@@ -253,7 +246,6 @@ function AddFileModal({
                     <AddFileField
                       onFileSet={(f) => {
                         setSelectedFile(f)
-                        console.log(f)
                         if (errorText === UploadingErrors.InvalidFileType) setErrorText("")
                       }}
                       accept={acceptedEmbeddingTypes}
@@ -305,7 +297,6 @@ function AddFileModal({
                       if (errorText === UploadingErrors.EmptyType || errorText === UploadingErrors.InvalidFileType)
                         setErrorText("")
                       setAcceptedEmbeddingTypes(newOpt.allowed_mime_types ?? "*")
-                      console.log(newOpt.allowed_mime_types)
                     }}
                   ></TextDropdown>
                 </div>
@@ -354,38 +345,28 @@ function AddFileModal({
                     return
                   }
                   const fileType = attachedFile?.type
-                  console.log(
-                    fileType,
-                    embeddingtypes,
-                    embeddingtypes?.find((value) => value.id === dataRef.current.contentType)
-                  )
+
                   const allowed_types = embeddingtypes
                     ?.find((value) => value.id === dataRef.current.contentType)
                     ?.allowed_mime_types?.split(",")
-                  console.log(fileType, allowed_types)
                   if (
                     allowed_types &&
                     allowed_types.find((mimeType) => {
                       if (!fileType) return false
                       const mimeTypeStarIndex = mimeType.indexOf("/*")
                       const filetypeSlashIndex = fileType.indexOf("/")
-                      console.log("Check first")
-                      console.log(fileType, mimeType)
                       if (mimeTypeStarIndex > 0) {
                         return fileType.slice(0, filetypeSlashIndex) === mimeType.slice(0, mimeTypeStarIndex)
                       }
-                      console.log("Check extension")
                       if (mimeType[0] === ".") {
                         return mimeType.slice(1) === fileType.slice(filetypeSlashIndex + 1)
                       }
-                      console.log("full check")
                       return fileType === mimeType
                     }) === undefined
                   ) {
                     setErrorText(UploadingErrors.InvalidFileType)
                     return
                   }
-                  console.log("Added file with isPrimary:", dataRef.current.isPrimary)
                   onFileAdd({
                     file: attachedFile,
                     ...dataRef.current,

@@ -62,12 +62,10 @@ function LoginPage() {
     setFormState(FormState.Loading)
     const token = await fetchSendLogin(formData)
     if (token === null) {
-      console.log("Error?")
       setFormState(FormState.UnknownError)
       return
     }
     if (!token) {
-      console.log("Wrong credentials")
       setFormState(FormState.IncorrectData)
       return
     }

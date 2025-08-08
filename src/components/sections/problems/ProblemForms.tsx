@@ -21,9 +21,6 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState("")
 
-  useEffect(()=>{
-    console.log("error: ", error)
-  }, [error])
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -74,7 +71,6 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     if (resp.status != 200){
       return null
     }
-    // console.log("RESPONSE", await resp.text())
     return await resp.text()
   }
 

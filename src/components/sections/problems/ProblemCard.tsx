@@ -4,7 +4,7 @@ import { MdDeleteOutline } from "react-icons/md"
 import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
 import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import {usePathname, useRouter, useSearchParams} from "next/navigation"
 import { deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections } from "@/scripts/ApiFetchers"
 import { CSSProperties, useEffect, useMemo, useRef, useState, useTransition } from "react"
 import clsx from "clsx"
@@ -52,6 +52,7 @@ export function ProblemCardContent({
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const router = useRouter()
   const token = useAppSelector((state) => state.auth.token)
+  const pathname = usePathname()
   if (!startTransition) startTransition = useTransition()[1]
   const handletaskEdit = async () => {
     if (!isAuthenticated) return
@@ -102,26 +103,36 @@ export function ProblemCardContent({
           )}
           {!is_edit_page && (
             <Link href={"/problems/" + problem.id.toString()}>
-              <h2 className={style.problemTitle}>
+              <h2 className={clsx(style.problemTitle, {[style.hover]: !pathname.startsWith("/problems/" + problem.id.toString())})}>
                 {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
               </h2>
             </Link>
           )}
           {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
         </div>
-        <div className={style.translationContainer}>
-          <PiGlobeLight />
+
+
+        {is_edit_page && <div className={style.translationContainer}>
+          <PiGlobeLight/>
+          <div className={style.translationSelector}>
+            {/*<h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>*/}
+            <input className={clsx(style.problemByInput)} defaultValue={problem.problem_translations[selectedTrnslation].problem_by}/>
+          </div>
+        </div>}
+        {!is_edit_page && <div className={style.translationContainer}>
+          <PiGlobeLight/>
           <div className={style.translationSelector}>
             <h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>
           </div>
-        </div>
+        </div>}
+
       </div>
       <div className={style.textContainer}>
         {is_edit_page && (
           <div>
             <textarea
               className={style.problemTextEditArea}
-              name="firstTranslationName"
+              name="firstTranslationText"
               defaultValue={problem.problem_translations[selectedTrnslation].problem_text}
               onChange={(event) => {
                 editedProblemTextRef.current = event.target.value
@@ -188,7 +199,6 @@ function EditButtons({
         </Link>
         <MdDeleteOutline
           onClick={() => {
-            console.log(problem)
             setIsDelModalOpen(true)
           }}
         />
@@ -198,10 +208,8 @@ function EditButtons({
         problem_title={problem.problem_translations[0].problem_name}
         openState={isDelModalOpenState}
         onConfirm={async () => {
-          console.log(problem)
           const s = await deleteProblem(problem.id, problem.tournament_type)
           if (!s) throw new Error("Deletion has failed")
-          console.log("Delete fetch completed")
           startTransition(() => {
             router.refresh()
           })
@@ -225,7 +233,6 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
       if (!freshLoaded) {
         dispatcher(setIsLoaded())
         fetchAllAvailableSections().then((sections) => {
-          console.log("Sections", sections)
           dispatcher(setSections(sections))
           setAddableSections(sections)
         })
@@ -234,7 +241,6 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
   }, [allSections, dispatcher])
 
   useEffect(() => {
-    console.log("Filter Sections", allSections)
     setAddableSections(
       (allSections ?? []).filter(
         (section) =>

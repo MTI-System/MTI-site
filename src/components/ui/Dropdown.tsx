@@ -111,14 +111,10 @@ function DropdownMenu<ValueType>({
     }
   }, [isOpened])
 
-  useEffect(()=>{
-    console.log("Is down: ", isDown)
-  }, [isDown])
 
   useEffect(()=>{
     const isOverflowUp = positionRef.current?.getBoundingClientRect().y!! - menuRef.current?.getBoundingClientRect().height!! < 0
     const isOverflowDown = menuRef.current?.getBoundingClientRect().height!! + positionRef.current?.getBoundingClientRect().y!! > window.innerHeight
-    console.log("up: ", isOverflowUp, "down: ", isOverflowDown, "height: ", menuRef.current?.getBoundingClientRect().height!!)
     if(isOverflowDown){
       setIsDown(false)
     }

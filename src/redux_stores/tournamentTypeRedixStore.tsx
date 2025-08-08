@@ -6,7 +6,7 @@ import { SystemSlice } from "@/redux_stores/SystemSlice"
 import { ProblemsSlice } from "@/redux_stores/ProblemSlice"
 import { ProblemSectionInterface } from "@/types/problemAPI"
 
-export default function makeStore(theme: string, tt: string, token: string) {
+export default function makeStore(theme: string, tt: string, token: string, year: string|null) {
   return configureStore({
     reducer: {
       searchParams: SPSlice.reducer,
@@ -21,8 +21,7 @@ export default function makeStore(theme: string, tt: string, token: string) {
       },
       searchParams: {
         tt: tt,
-        year: 2026,
-        isTTLocked: false,
+        year: year === null? null: Number(year),
       },
       auth: {
         token: token,
