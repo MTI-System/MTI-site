@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const ttype = availableTournamentTypes.find((t) => t.id === problem.tournament_type);
 
   return {
-    title: `Задача № ${problem.global_number} - ${problem.problem_translations[0].problem_name} · ${ttype?.longName??""} – МТИ`,
-    description: `Задача для ${ttype?.name??"научного турнира"} № ${problem.global_number} - ${problem.problem_translations[0].problem_name || "Описание отсутствует"}.`,
+    title: `Задача № ${problem.global_number} · ${problem.problem_translations[0].problem_name} · ${ttype?.longName??""} · ${problem.year} год – МТИ`,
+    description: `Задача для ${ttype?.name??"научного турнира"} № ${problem.global_number} - ${problem.problem_translations[0].problem_name || "Описание отсутствует"} ${problem.year} года.`,
     verification: { yandex: "aa838087dd1ef992" },
   };
 }

@@ -22,10 +22,10 @@ export async function generateMetadata({
 
   const ttype = availableTournamentTypes.find((t) => t.name === tt)
 
-  const titleText = ttype ? `Задачи · ${ttype.longName} – МТИ` : "Задачи – МТИ"
+  const titleText = ttype ? `Задачи · ${ttype.longName} · ${searchP.year} год – МТИ` : "Задачи – МТИ"
 
   const descriptionText = ttype
-    ? `Опубликованные задачи для ${ttype.longName}: смотри актуальные задачи для научных турниров.`
+    ? `Опубликованные задачи для ${ttype.longName} ${searchP.year} года: смотри актуальные задачи для научных турниров.`
     : "Список задач научных турниров в системе МТИ."
   
 
