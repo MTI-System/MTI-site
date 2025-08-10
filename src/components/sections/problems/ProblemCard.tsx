@@ -332,7 +332,7 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
             id: 0,
             title: "Не определено",
             icon_src: "forbidden.svg",
-            dark_theme_tile_color: "#FF0000",
+            dark_theme_tile_color: "#AAAAAA",
             tile_color: "#AAAAAA",
             section_science: 0,
             tournament_type: 0,
