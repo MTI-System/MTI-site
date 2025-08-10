@@ -1,37 +1,54 @@
 .sectionCard {
-  --section-svg-url: "";
-  --bg-color: #444;
-  background-color: rgba(from var(--bg-color) r g b / 0.125);
-  border-width: var(--border-width);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  gap: 0.5rem;
-  padding: 0.5vh 1vw;
-  border-radius: 10rem;
-  font-weight: bold;
-  transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+    --section-svg-url: "";
+    --bg-color: #444;
+    --bg-color-dark: #444;
+    background-color: rgba(from var(--bg-color) r g b / 0.125);
+    border-width: var(--border-width);
+    border-color: var(--bg-color);
+    color: var(--bg-color);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    gap: 0.5rem;
+    padding: 0.5vh 1vw;
+    border-radius: 10rem;
+    font-weight: bold;
+    transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+}
+
+body[data-theme="dark"] .sectionCard {
+    background-color: rgba(from var(--bg-color-dark) r g b / 0.125);
+    border-width: var(--border-width);
+    border-color: var(--bg-color-dark);
+    color: var(--bg-color-dark);
 }
 
 .sectionLogo {
-  mask-size: contain;
-  height: 1.5rem;
-  width: 1.5rem;
+    background-color: var(--bg-color);
+    mask-size: contain;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+body[data-theme="dark"] .sectionLogo{
+    background-color: var(--bg-color-dark);
 }
 
 .sectionCard.deletionPending {
-  opacity: 0.5;
+    opacity: 0.5;
 }
+
 .bareSection {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  gap: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    gap: 0.5rem;
 }
+
 .icon {
 }
+
 .deleteIcon {
-  font-size: 0.8rem!important;
+    font-size: 0.8rem !important;
 }

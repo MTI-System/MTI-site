@@ -3,18 +3,19 @@ import style from "@/styles/components/sections/app/themeSwitcher.module.css"
 import { Button } from "@/components/ui/Buttons"
 import { animate, createScope, Scope } from "animejs"
 import clsx from "clsx"
-import { useEffect, useRef } from "react"
+import {useEffect, useRef, useState} from "react"
 import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { setTheme } from "@/redux_stores/SystemSlice"
 
 export default function ThemeSwitchingButton({ className }: { className: string }) {
   const theme = useAppSelector((state) => state.system.theme)
   const dispatcher = useAppDispatch()
-
   const themeRef = useRef(theme)
   useEffect(() => {
     themeRef.current = theme
   }, [theme])
+
+
 
   const targetRef = useRef<SVGSVGElement>(null)
   const scopeRef = useRef<Scope>(null)

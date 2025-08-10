@@ -14,6 +14,7 @@ export const ProblemSectionSchema = z.object({
   title: z.string(),
   icon_src: z.string(),
   tile_color: z.string().length(7).startsWith("#"),
+  dark_theme_tile_color: z.string().length(7).startsWith("#"),
   section_science: z.number(),
   tournament_type: z.number(),
 })

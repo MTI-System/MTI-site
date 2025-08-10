@@ -25,8 +25,7 @@ export default function ProblemSection({
       style={
         {
           "--bg-color": section.tile_color,
-          borderColor: section.tile_color,
-          color: section.tile_color,
+          "--bg-color-dark": section.dark_theme_tile_color,
         } as CSSProperties
       }
     >
@@ -36,7 +35,6 @@ export default function ProblemSection({
           {
             mask: `url(${FILES_SERVER + section.icon_src}) no-repeat  center/contain`,
             WebkitMask: `url(${FILES_SERVER + section.icon_src}) no-repeat center/contain`,
-            backgroundColor: section.tile_color,
           } as CSSProperties
         }
       ></div>
