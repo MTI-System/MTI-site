@@ -2,13 +2,13 @@ import { CSSProperties } from "react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip"
 import style from "@/styles/components/ui/dotWithTooltim.module.css"
 
-export default function DotWithTooltip({ dotColor, dotTooltipText }: { dotColor: string; dotTooltipText: string }) {
+export default function DotWithTooltip({ dotColor, dotDarkColor, dotTooltipText }: { dotColor: string; dotDarkColor: string; dotTooltipText: string }) {
   return (
     <Tooltip>
       <TooltipTrigger>
         <div
           className={style.dot}
-          style={{ "--color": dotColor } as CSSProperties}
+          style={{ "--color": dotColor, "--dark-color": dotDarkColor } as CSSProperties}
         ></div>
       </TooltipTrigger>
       <TooltipContent>

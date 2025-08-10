@@ -31,6 +31,7 @@ export const ScienceShenma = z.object({
   id: z.number(),
   title: z.string(),
   color: z.string(),
+  dark_theme_color: z.string()
 })
 
 export const ProblemSchema = z.object({

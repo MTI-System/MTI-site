@@ -279,7 +279,7 @@ function ScienceList({ problem }: { problem: ProblemInterface }) {
       {problem.sciences.length !== 1 && (
         <div className={style.scienceList}>
           {problem.sciences.map((value, index) => (
-            <DotWithTooltip dotColor={value.color} dotTooltipText={value.title} key={index} />
+            <DotWithTooltip dotColor={value.color} dotDarkColor={value.dark_theme_color} dotTooltipText={value.title} key={index} />
           ))}
         </div>
       )}
