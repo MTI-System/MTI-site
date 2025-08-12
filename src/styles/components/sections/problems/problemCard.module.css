@@ -49,7 +49,6 @@
 }
 
 .translationSelector {
-  height: 0.7rem;
   width:  100%;
   display: flex;
   justify-content: flex-start;
