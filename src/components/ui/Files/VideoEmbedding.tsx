@@ -88,7 +88,6 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
       <div className={style.videoContainer}
           style={{ opacity: isPending ? 0.5 : 1 }}
       >
-         (
           <>
             {isModerator && <MdOutlineClose className={styleDelete.deleteIcons} style={{
             position:"absolute",
@@ -158,7 +157,6 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
               timeoutRef.current && clearTimeout(timeoutRef.current)
             }}/>}
           </>
-        )
       {/* <Button onClick={
         ()=>router.refresh()
       }>Reload</Button> */}
