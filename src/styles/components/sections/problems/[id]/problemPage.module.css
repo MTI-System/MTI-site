@@ -127,8 +127,8 @@
 .materialContainer {
   padding: 1rem;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  flex-wrap: nowrap;
   gap: 1rem;
 }
 .addIcon {

@@ -144,7 +144,10 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
                   (e)=>{
                   }
                 }
-               onReady={()=>setIsVideoLoaded(true)}/>
+               onReady={()=> {
+                 setIsVideoLoaded(true)
+                 timeoutRef.current && clearTimeout(timeoutRef.current)
+               }}/>
                 </div>}
             {!isYouTube && <video ref={videoRef}
             onError={(e)=>{

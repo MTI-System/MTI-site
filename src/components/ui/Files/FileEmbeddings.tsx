@@ -1,7 +1,8 @@
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import style from "@/styles/components/ui/Files/fileEmbeddings.module.css"
 import { EmbeddingInterface } from "@/types/embeddings"
-import { ReactNode } from "react"
+import {ReactNode, SyntheticEvent} from "react"
+import Image from "next/image";
 
 
 
@@ -38,7 +39,13 @@ export function EmbeddingCard({ children, title, subtitle, isExternal, ...rest }
       <EmbeddingIcon {...rest} />
       <div className={style.textContainer}>
         <h4 className={style.embeddingName}>{title}</h4>
-        <p className={style.embeddingSize}>{subtitle}</p>
+        <div className="flex items-center gap-1 ">
+          {isExternal && <img className="size-4" src={`https://${subtitle}/favicon.ico`} onError={(e: SyntheticEvent<HTMLImageElement, Event>)=>{
+            (e.target as HTMLImageElement).src = "/err_favicon.svg"
+          }} />}
+          <p className={style.embeddingSize}>{subtitle}</p>
+        </div>
+
       </div>
       {children}
 

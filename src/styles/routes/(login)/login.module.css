@@ -41,18 +41,10 @@
     height: 40%;
     width: 80%;
   }
-  background-color: var(--button-alt-color);
-  border-width: var(--border-width);
-  border-radius: var(--block-radius);
-  border-color: var(--primary-accent);
-  color: var(--text-primary-accent);
   font-size: 2rem;
   font-weight: bold;
 }
 
-.loginButton:hover {
-  background-color: var(--alt-bg);
-}
 
 .infoDiv {
   border-width: var(--border-width);
