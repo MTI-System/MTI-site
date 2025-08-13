@@ -7,6 +7,9 @@ import { CSSProperties, useTransition, useRef } from "react"
 import { useRouter } from "next/navigation"
 import clsx from "clsx"
 import { fetchModifySectionOnTask } from "@/scripts/ApiFetchers"
+import {useDispatch} from "react-redux";
+import {useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
+import {setSectionList} from "@/redux_stores/SearchParamsSlice";
 
 export default function ProblemSection({
   problemId,
@@ -14,16 +17,16 @@ export default function ProblemSection({
   isEditable,
   isHidden=false,
   isFiltered=false,
-  addToFilterHandler
 }: {
   problemId?: number
   section: ProblemSectionInterface
   isEditable?: boolean
   isHidden?: boolean
   isFiltered?: boolean
-  addToFilterHandler?: (sectionId: number) => void
 }) {
   const [isPending, startTransition] = useTransition()
+  const dispatcher = useDispatch()
+  const filteredSections = useAppSelector(state => state.searchParams.sectionList)
   const router = useRouter()
   return (
     <div
@@ -63,7 +66,19 @@ export default function ProblemSection({
         />
       )}
       {isFiltered && (
-        <button className="size-3 bg-white">
+        <button className="size-3 bg-white"
+        onClick={()=>{
+          if (filteredSections === null){
+            const newSections = [section.id]
+            dispatcher(setSectionList(newSections))
+          }
+          else if(!filteredSections?.find(sec => sec=== section.id)) {
+            const newSections = [...filteredSections]
+            newSections.push(section.id)
+            dispatcher(setSectionList(newSections))
+          }
+
+        }}>
 
         </button>
       )}
