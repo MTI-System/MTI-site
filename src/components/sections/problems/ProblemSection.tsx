@@ -13,7 +13,7 @@ export default function ProblemSection({
   section,
   isEditable,
 }: {
-  problemId: number
+  problemId?: number
   section: ProblemSectionInterface
   isEditable?: boolean
 }) {
@@ -39,7 +39,7 @@ export default function ProblemSection({
         }
       ></div>
       <p>{section.title}</p>
-      {isEditable && (
+      {isEditable && problemId && (
         <FaTimes
           className={style.deleteIcon}
           onClick={() => {

@@ -11,3 +11,30 @@
   font-size: 2rem;
   font-weight: bold;
 }
+
+.addSectionOptionContainer {
+  padding: 0.25rem !important;
+}
+.selectedSection {
+  opacity: 0.5;
+}
+
+.selectSectionDropdown > div:not([style]) > div {
+  width: 90%;
+}
+.selectSectionDropdown > div:not([style]) p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  height: 100%;
+}
+
+.selectSectionDropdown > div:not([style]) .addSectionOptionContainer {
+  padding: 0 !important;
+}
+
+.selectSectionDropdown > div:not([style]) .addSectionOptionContainer div {
+  border: none !important;
+  background: none !important;
+  padding: 0 0.25rem !important;
+}
