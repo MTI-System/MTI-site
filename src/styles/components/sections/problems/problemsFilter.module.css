@@ -1,4 +1,7 @@
 .filters {
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
