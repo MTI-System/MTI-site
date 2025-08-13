@@ -51,6 +51,7 @@ export function ProblemCardContent({
   const [isEdited, setIsEdited] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
+  const [hoveredScience, setHoveredScience] = useState<number | null>(null)
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const router = useRouter()
   const token = useAppSelector((state) => state.auth.token)
@@ -128,7 +129,9 @@ export function ProblemCardContent({
                   [style.hover]: !pathname.startsWith("/problems/" + problem.id.toString()),
                 })}
               >
-                {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
+                {problem.global_number}
+                <span className="font-sans">. </span>
+                {problem.problem_translations[selectedTrnslation].problem_name}
               </h2>
             </Link>
           )}
@@ -224,8 +227,8 @@ export function ProblemCardContent({
       )}
 
       <div className={style.sectionListContainer}>
-        <ScienceList problem={problem} />
-        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} />
+        <ScienceList problem={problem} setHovered={setHoveredScience} />
+        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
       </div>
     </>
   )
@@ -270,7 +273,7 @@ function EditButtons({
   )
 }
 
-function ScienceList({ problem }: { problem: ProblemInterface }) {
+function ScienceList({ problem, setHovered }: { problem: ProblemInterface; setHovered: (id: number | null) => void }) {
   return (
     <div className={style.sciencesListContainer}>
       <h3>
@@ -279,7 +282,14 @@ function ScienceList({ problem }: { problem: ProblemInterface }) {
       {problem.sciences.length !== 1 && (
         <div className={style.scienceList}>
           {problem.sciences.map((value, index) => (
-            <DotWithTooltip dotColor={value.color} dotDarkColor={value.dark_theme_color} dotTooltipText={value.title} key={index} />
+            <DotWithTooltip
+              dotColor={value.color}
+              dotDarkColor={value.dark_theme_color}
+              dotTooltipText={value.title}
+              key={index}
+              onMouseEnter={() => setHovered(value.id)}
+              onMouseLeave={() => setHovered(null)}
+            />
           ))}
         </div>
       )}
@@ -287,7 +297,15 @@ function ScienceList({ problem }: { problem: ProblemInterface }) {
   )
 }
 
-function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
+function SectionsList({
+  problem,
+  isEditable,
+  hoveredScience,
+}: {
+  problem: ProblemInterface
+  isEditable: boolean
+  hoveredScience: number | null
+}) {
   // const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])\
   const store = useStore<RootState>()
   const allSections = useAppSelector((state) => state.problems.sections)
@@ -307,7 +325,6 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
       }
     }
   }, [allSections, dispatcher])
-
   useEffect(() => {
     setAddableSections(
       (allSections ?? [])
@@ -323,7 +340,16 @@ function SectionsList({ problem, isEditable }: { problem: ProblemInterface; isEd
   return (
     <div className={style.sectionsList}>
       {problem.problem_sections.map((section) => {
-        return <ProblemSection key={section.id} section={section} isEditable={isEditable} problemId={problem.id} />
+        return (
+          <ProblemSection
+            isFiltered={true}
+            isHidden={hoveredScience !== section.section_science && hoveredScience !== null}
+            key={section.id}
+            section={section}
+            isEditable={isEditable}
+            problemId={problem.id}
+          />
+        )
       })}
       {problem.problem_sections.length == 0 && (
         <ProblemSection

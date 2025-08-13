@@ -4,11 +4,12 @@ import ProblemsList from "@/components/sections/problems/ProblemsList"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import { Suspense } from "react"
 import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
-import { fetchPermissions, fetchYears } from "@/scripts/ApiFetchers"
+import { fetchPermissions, fetchProblems, fetchYears } from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/service/SearchParamsUpdator"
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import Loading from "@/app/loading"
+import { ProblemListInterface, ProblemSectionInterface } from "@/types/problemAPI"
 
 export async function generateMetadata({
   searchParams,
@@ -27,7 +28,6 @@ export async function generateMetadata({
   const descriptionText = ttype
     ? `Опубликованные задачи для ${ttype.longName} ${searchP.year} года: смотри актуальные задачи для научных турниров.`
     : "Список задач научных турниров в системе МТИ."
-  
 
   return {
     title: titleText,
@@ -36,7 +36,11 @@ export async function generateMetadata({
   }
 }
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ year: number; tt: string }> }) {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ year: string; tt: string; sections: string | null }>
+}) {
   const sp = await searchParams
   if (!sp.year || !sp.tt) {
     return (
@@ -52,7 +56,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
   const possibleYears = await fetchYears(availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1)
   let isUndefYear = false
   const year = sp.year
-  if (!possibleYears.find(y => Number(y) === Number(year))){
+  const sectionsFilter: number[] | null =
+    sp.sections
+      ?.split(",")
+      .filter((val) => val !== "")
+      .map((sectionId) => Number(sectionId)) ?? null
+  if (!possibleYears.find((y) => Number(y) === Number(year))) {
     isUndefYear = true
   }
   const userAuth = await fetchPermissions()
@@ -65,6 +74,22 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
       )
       .some((x) => x)
   }
+  const ttid = availableTournamentTypes.find((value) => value.name === tt)?.id.toString()
+  const problems: ProblemListInterface | null = ttid ? await fetchProblems(ttid, Number(year)) : null
+
+  const availableProblemSections: ProblemSectionInterface[] = []
+  problems?.forEach((problem) => {
+    problem.problem_sections.forEach((section) => {
+      if (!availableProblemSections.find((sec) => sec.id === section.id)) {
+        availableProblemSections.push(section)
+      }
+    })
+  })
+  availableProblemSections.sort(
+    (section_1, section_2) =>
+      section_1.section_science - section_2.section_science || section_1.title.localeCompare(section_2.title)
+  )
+
   return (
     <>
       <Suspense fallback={"Load search params"}>
@@ -74,11 +99,15 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ y
         <div className={style.problemsContainer}>
           {/* <h2>Задачи на {availableTournamentTypes.find((val) => val.name === tt)?.longName}</h2> */}
           {tt && (
-            <ProblemFilters possibleYears={possibleYears} isModerator={isEditable}>
+            <ProblemFilters
+              possibleSections={availableProblemSections}
+              possibleYears={possibleYears}
+              isModerator={isEditable}
+            >
               {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
               {!isUndefYear && (
                 <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-                  <ProblemsList year={year} tt={tt} isEditable={isEditable} />
+                  <ProblemsList sectionsFilter={sectionsFilter ?? []} problems={problems} isEditable={isEditable} />
                 </Suspense>
               )}
             </ProblemFilters>

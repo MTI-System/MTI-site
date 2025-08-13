@@ -101,16 +101,22 @@ function DropdownMenu<ValueType>({
   const positionRef = useRef<HTMLDivElement>(null)
   const [isDown, setIsDown] = useState(true)
 
+
+
   useEffect(() => {
     const handleTransitionEnd = (e: TransitionEvent) => {
       if (e.target !== menuRef.current) return
-      if (e.propertyName !== "opacity") return
+      if (e.propertyName !== "transform") return
       menuRef.current?.classList.remove(style.animating)
+      console.log("isOpened", isOpened)
+
+      console.log("TransitionEnd", e.propertyName)
     }
     const handleTransitionStart = (e: TransitionEvent) => {
       if (e.target !== menuRef.current) return
-      if (e.propertyName !== "opacity") return
+      if (e.propertyName !== "transform") return
       menuRef.current?.classList.add(style.animating)
+      console.log("TransitionStart", e.propertyName)
     }
     menuRef.current?.addEventListener("transitionend", handleTransitionEnd)
     menuRef.current?.addEventListener("transitionstart", handleTransitionStart)
