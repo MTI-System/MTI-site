@@ -2,14 +2,24 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-content: center;
+  align-content: start;
   align-items: center;
   width: 100%;
   gap: 1.25rem;
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
 }
 .filtersTitle {
   font-size: 2rem;
   font-weight: bold;
+}
+
+.yearFilter {
+  flex: 0 0 auto;
+  min-width: 4rem;
 }
 
 .addSectionOptionContainer {
@@ -19,8 +29,13 @@
   opacity: 0.5;
 }
 
-.selectSectionDropdown > div:not([style]) > div {
-  width: 90%;
+.selectSectionDropdown {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+.selectSectionDropdown > div:not([style]) div {
+  width: 100%;
 }
 .selectSectionDropdown > div:not([style]) p {
   overflow: hidden;

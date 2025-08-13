@@ -1,11 +1,9 @@
 .dropdownContainer {
   position: relative;
-  width: 100%;
   height: 1.5rem;
 }
 
 .dropdownButton {
-  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -30,6 +28,8 @@
 }
 
 .dropdownButton .arrowIcon {
+  flex: 0 0 auto;
+  min-width: 1rem;
   font-size: calc(var(--medium-text) / 1.3);
   transition-property: translate, rotate, color, background-color, border-color;
   transition-duration: 250ms;
@@ -98,6 +98,8 @@
   visibility: visible;
 }
 .dropdownOption {
+  flex: 1 1 auto;
+  min-width: 0;
   transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
   user-select: none;
 }

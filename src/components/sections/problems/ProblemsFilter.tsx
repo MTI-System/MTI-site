@@ -29,13 +29,15 @@ export default function ProblemFilters({
   const isPending = useAppSelector((state) => state.system.isPending)
   return (
     <>
-      <div className={style.filters}>
+      <div className="flex items-center content-center gap-5 w-full">
         <p className={style.filtersTitle}>Задачи</p>
         <LogoWithTT logoSize={"2rem"} margin={"0rem"}>
           <></>
         </LogoWithTT>
-        <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
-        <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
+        <div className={style.filters}>
+          <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
+          <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
+        </div>
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
       {!isPending && children}
@@ -172,6 +174,7 @@ function YearFilter({
         dispatcher(setYear(e.selection))
       }}
       disabled={isPending}
+      className={style.yearFilter}
     ></TextDropdown>
   )
 }
