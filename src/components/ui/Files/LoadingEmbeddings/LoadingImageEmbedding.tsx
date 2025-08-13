@@ -76,7 +76,7 @@ export default function LoadingImageEmbedding({
               setIsError(false)
               uploadFile()
               progresRef.current?.style.setProperty("--progress-shift", `${-100}%`)
-              progresRef.current?.style.setProperty("--progress-color", "#var(--primary-accent)")
+              progresRef.current?.style.setProperty("--progress-color", "var(--primary-accent)")
             }}
           />
         )}

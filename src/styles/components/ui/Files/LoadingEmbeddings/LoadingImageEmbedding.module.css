@@ -48,3 +48,9 @@
   color: var(--alt-text);
   font-size: 1.5rem;
 }
+.retryIcon:hover{
+  color: var(--alt-text);
+}
+.abortIcon:hover{
+  color: var(--alt-text);
+}

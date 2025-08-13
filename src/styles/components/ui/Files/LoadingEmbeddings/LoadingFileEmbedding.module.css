@@ -31,3 +31,9 @@
   font-size: 2rem;
   /* width: 2.5rem; */
 }
+.retryIcon:hover{
+  color: var(--alt-text);
+}
+.abortIcon:hover{
+  color: var(--alt-text);
+}
