@@ -79,7 +79,8 @@
   z-index: 2000;
   backface-visibility: hidden;
   transform: translateY(-16px);
-  transition: transform 250ms ease, opacity 250ms ease;
+  transition: transform 250ms ease, opacity 250ms ease, background-color 250ms ease, color 250ms ease,
+    border-color 250ms ease;
   opacity: 0;
 }
 .dropdownMenu.down {
