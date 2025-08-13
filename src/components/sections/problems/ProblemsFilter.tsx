@@ -71,7 +71,7 @@ function SectionFilter({
   }, [year, tt])
 
   return (
-    <div className="flex items-center content-center w-full">
+    <div className="flex min-w-0 items-center content-center w-full">
       <Dropdown
         options={possibleSections.map((section) => {
           return {
@@ -129,7 +129,7 @@ function SectionFilter({
         disabled={isPending}
       />
       <FaTimes
-        className={clsx("text-2xl", {
+        className={clsx("text-[1.5rem] w-20", {
           "text-[var(--alt-text)]": isPending || selectedOptions.length === 0,
           "hover:text-[var(--alt-text)]": !isPending && selectedOptions.length !== 0,
         })}
