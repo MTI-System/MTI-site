@@ -12,10 +12,16 @@ export default function ProblemSection({
   problemId,
   section,
   isEditable,
+  isHidden=false,
+  isFiltered=false,
+  addToFilterHandler
 }: {
   problemId?: number
   section: ProblemSectionInterface
   isEditable?: boolean
+  isHidden?: boolean
+  isFiltered?: boolean
+  addToFilterHandler?: (sectionId: number) => void
 }) {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
@@ -26,6 +32,7 @@ export default function ProblemSection({
         {
           "--bg-color": section.tile_color,
           "--bg-color-dark": section.dark_theme_tile_color,
+          opacity: isHidden? 0.5: 1
         } as CSSProperties
       }
     >
@@ -54,6 +61,11 @@ export default function ProblemSection({
             })
           }}
         />
+      )}
+      {isFiltered && (
+        <button className="size-3 bg-white">
+
+        </button>
       )}
     </div>
   )

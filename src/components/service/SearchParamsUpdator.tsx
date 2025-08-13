@@ -9,6 +9,11 @@ import { setAuth } from "@/redux_stores/AuthSlice"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import cookies from "js-cookie"
 
+function isDigit(char: string): boolean {
+    return /\d/.test(char);
+}
+
+
 export default function SearchParamsUpdator() {
   const tt = useAppSelector((state) => state.searchParams.tt)
   const year = useAppSelector((state) => state.searchParams.year)
@@ -17,6 +22,7 @@ export default function SearchParamsUpdator() {
     const possibleYears = await fetchYears(Number(availableTournamentTypes.find((t) => t.name === usingTT)?.id ?? 1))
     return possibleYears[0]
   }
+
 
   const [isPending, startTransition] = useTransition()
   const searchParams = useSearchParams()
@@ -31,12 +37,15 @@ export default function SearchParamsUpdator() {
   }, [isPending])
 
   useEffect(() => {
-    const ttSP = getSearchParams.get("tt") ?? cookies.get("mtiyt_tournamentType") ?? availableTournamentTypes[0].name
+    let ttSP = getSearchParams.get("tt") ?? cookies.get("mtiyt_tournamentType") ?? availableTournamentTypes[0].name
     const sectionsListFilter = getSearchParams.get("sections")
     const params = new URLSearchParams(searchParams.toString())
-    console.log(ttSP, year)
     if (ttSP) {
+      if (!availableTournamentTypes.find(t=>t.name===ttSP)){
+        ttSP = "ТЮФ"
+      }
       params.set("tt", ttSP)
+
       if (!year) {
         get_last_year_func(ttSP).then((lastYear) => {
           console.log("year", lastYear)
@@ -47,7 +56,8 @@ export default function SearchParamsUpdator() {
             router.replace(next)
           }
         })
-      } else {
+      }
+      else {
         params.set("year", year.toString())
         const next = `${pathname}?${params.toString()}`
         if (next !== `${pathname}?${searchParams}`) {

@@ -29,7 +29,7 @@ export default function ProblemFilters({
   const isPending = useAppSelector((state) => state.system.isPending)
   return (
     <>
-      <div className="flex items-center content-center gap-5 w-full">
+      <div className="flex items-center content-center gap-5 w-full h-[2rem] h-fit">
         <p className={style.filtersTitle}>Задачи</p>
         <LogoWithTT logoSize={"2rem"} margin={"0rem"}>
           <></>
