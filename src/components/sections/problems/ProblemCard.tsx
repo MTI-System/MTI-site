@@ -1,41 +1,41 @@
 "use client"
-import {FaEdit, FaPlus} from "react-icons/fa"
-import {MdDeleteOutline} from "react-icons/md"
-import {ProblemInterface, ProblemSectionInterface, ProblemSectionWithSciencesInterface} from "@/types/problemAPI"
+import { FaEdit, FaPlus } from "react-icons/fa"
+import { MdDeleteOutline } from "react-icons/md"
+import { ProblemInterface, ProblemSectionInterface, ProblemSectionWithSciencesInterface } from "@/types/problemAPI"
 import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
-import {usePathname, useRouter, useSearchParams} from "next/navigation"
-import {deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections} from "@/scripts/ApiFetchers"
-import {CSSProperties, useEffect, useMemo, useRef, useState, useTransition} from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections } from "@/scripts/ApiFetchers"
+import { CSSProperties, useEffect, useMemo, useRef, useState, useTransition } from "react"
 import clsx from "clsx"
-import {PiGlobeLight} from "react-icons/pi"
+import { PiGlobeLight } from "react-icons/pi"
 import ProblemSection from "@/components/sections/problems/ProblemSection"
 import DeletionConfirmationModal from "./DeletionConfirmationModal"
-import {Dropdown} from "@/components/ui/Dropdown"
-import {Input, TitledInput} from "@/components/ui/Input"
-import {Button} from "@/components/ui/Buttons"
-import {PROBLEM_API} from "@/constants/APIEndpoints"
-import {useAppSelector, RootState} from "@/redux_stores/tournamentTypeRedixStore"
-import {router} from "next/client"
-import {useAppDispatch} from "@/redux_stores/tournamentTypeRedixStore"
-import {setSections, setIsLoaded} from "@/redux_stores/ProblemSlice"
-import {useStore} from "react-redux"
+import { Dropdown } from "@/components/ui/Dropdown"
+import { Input, TitledInput } from "@/components/ui/Input"
+import { Button } from "@/components/ui/Buttons"
+import { PROBLEM_API } from "@/constants/APIEndpoints"
+import { useAppSelector, RootState } from "@/redux_stores/tournamentTypeRedixStore"
+import { router } from "next/client"
+import { useAppDispatch } from "@/redux_stores/tournamentTypeRedixStore"
+import { setSections, setIsLoaded } from "@/redux_stores/ProblemSlice"
+import { useStore } from "react-redux"
 import DotWithTooltip from "@/components/ui/DotWithTooltip"
 
-export default function ProblemCard({problem, isEditable}: { problem: ProblemInterface; isEditable: boolean }) {
+export default function ProblemCard({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
   return (
-    <div className={clsx(style.problemCard, {[style.cardPendingDeletion]: isPendingDeletion})}>
-      <ProblemCardContent problem={problem} isEditable={isEditable} startTransition={startTransition}/>
+    <div className={clsx(style.problemCard, { [style.cardPendingDeletion]: isPendingDeletion })}>
+      <ProblemCardContent problem={problem} isEditable={isEditable} startTransition={startTransition} />
     </div>
   )
 }
 
 export function ProblemCardContent({
-                                     problem,
-                                     isEditable,
-                                     startTransition,
-                                   }: {
+  problem,
+  isEditable,
+  startTransition,
+}: {
   problem: ProblemInterface
   isEditable: boolean
   startTransition?: (trh: () => void) => void
@@ -66,7 +66,7 @@ export function ProblemCardContent({
     formData.set("newProblemFirstTranslationText", editedProblemTextRef.current)
     formData.set("newProblemFirstTranslationBy", editedProblemByRef.current)
     formData.set("token", token)
-    const resp = await fetch(PROBLEM_API + "edit_problem", {method: "POST", body: formData})
+    const resp = await fetch(PROBLEM_API + "edit_problem", { method: "POST", body: formData })
     return resp.ok
   }
   useEffect(() => {
@@ -129,16 +129,18 @@ export function ProblemCardContent({
                   [style.hover]: !pathname.startsWith("/problems/" + problem.id.toString()),
                 })}
               >
-                {problem.global_number}.{problem.problem_translations[selectedTrnslation].problem_name}
+                {problem.global_number}
+                <span className="font-sans">. </span>
+                {problem.problem_translations[selectedTrnslation].problem_name}
               </h2>
             </Link>
           )}
-          {isEditable && <EditButtons startTransition={startTransition} problem={problem}/>}
+          {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
         </div>
 
         {is_edit_page && (
           <div className={style.translationContainer}>
-            <PiGlobeLight/>
+            <PiGlobeLight />
             <div className={style.translationSelector}>
               {/*<h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>*/}
               <input
@@ -164,7 +166,7 @@ export function ProblemCardContent({
         )}
         {!is_edit_page && (
           <div className={style.translationContainer}>
-            <PiGlobeLight/>
+            <PiGlobeLight />
             <div className={style.translationSelector}>
               <h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>
             </div>
@@ -225,17 +227,17 @@ export function ProblemCardContent({
       )}
 
       <div className={style.sectionListContainer}>
-        <ScienceList problem={problem} setHovered={setHoveredScience}/>
-        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience}/>
+        <ScienceList problem={problem} setHovered={setHoveredScience} />
+        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
       </div>
     </>
   )
 }
 
 function EditButtons({
-                       startTransition,
-                       problem,
-                     }: {
+  startTransition,
+  problem,
+}: {
   startTransition: (transitionHandler: () => void) => void
   problem: ProblemInterface
 }) {
@@ -247,7 +249,7 @@ function EditButtons({
     <>
       <div className={style.editButtons}>
         <Link href={"/problems/" + problem.id.toString() + "?is_edit=true"}>
-          <FaEdit/>
+          <FaEdit />
         </Link>
         <MdDeleteOutline
           onClick={() => {
@@ -271,7 +273,7 @@ function EditButtons({
   )
 }
 
-function ScienceList({problem, setHovered}: { problem: ProblemInterface, setHovered: (id: number | null) => void }) {
+function ScienceList({ problem, setHovered }: { problem: ProblemInterface; setHovered: (id: number | null) => void }) {
   return (
     <div className={style.sciencesListContainer}>
       <h3>
@@ -295,9 +297,13 @@ function ScienceList({problem, setHovered}: { problem: ProblemInterface, setHove
   )
 }
 
-function SectionsList({problem, isEditable, hoveredScience}: {
-  problem: ProblemInterface;
-  isEditable: boolean,
+function SectionsList({
+  problem,
+  isEditable,
+  hoveredScience,
+}: {
+  problem: ProblemInterface
+  isEditable: boolean
   hoveredScience: number | null
 }) {
   // const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])\
@@ -309,12 +315,12 @@ function SectionsList({problem, isEditable, hoveredScience}: {
 
   useEffect(() => {
     if (allSections === null && !isSectionLoading) {
-      const {isLoaded: freshLoaded} = store.getState().problems
+      const { isLoaded: freshLoaded } = store.getState().problems
       if (!freshLoaded) {
         dispatcher(setIsLoaded())
         fetchAllAvailableSections().then((sections) => {
           dispatcher(setSections(sections))
-          setAddableSections(sections.map((value) => ({...value, section_science: value.section_science.id})))
+          setAddableSections(sections.map((value) => ({ ...value, section_science: value.section_science.id })))
         })
       }
     }
@@ -327,16 +333,23 @@ function SectionsList({problem, isEditable, hoveredScience}: {
             problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined &&
             section.tournament_type === problem.tournament_type
         )
-        .map((value) => ({...value, section_science: value.section_science.id}))
+        .map((value) => ({ ...value, section_science: value.section_science.id }))
     )
   }, [problem.problem_sections.length, allSections])
 
   return (
     <div className={style.sectionsList}>
       {problem.problem_sections.map((section) => {
-        return <ProblemSection isFiltered={true}
-                               isHidden={(hoveredScience !== section.section_science) && hoveredScience !== null}
-                               key={section.id} section={section} isEditable={isEditable} problemId={problem.id}/>
+        return (
+          <ProblemSection
+            isFiltered={true}
+            isHidden={hoveredScience !== section.section_science && hoveredScience !== null}
+            key={section.id}
+            section={section}
+            isEditable={isEditable}
+            problemId={problem.id}
+          />
+        )
       })}
       {problem.problem_sections.length == 0 && (
         <ProblemSection
@@ -352,15 +365,15 @@ function SectionsList({problem, isEditable, hoveredScience}: {
           }}
         />
       )}
-      {isEditable && <AddNewSection problemId={problem.id} addableSections={addableSections ?? []}/>}
+      {isEditable && <AddNewSection problemId={problem.id} addableSections={addableSections ?? []} />}
     </div>
   )
 }
 
 function AddNewSection({
-                         problemId,
-                         addableSections,
-                       }: {
+  problemId,
+  addableSections,
+}: {
   problemId: number
   addableSections: ProblemSectionInterface[]
 }) {
@@ -379,7 +392,7 @@ function AddNewSection({
   useEffect(() => {
     if (isError) {
       setColor((curColor) => {
-        const newColor = {...curColor}
+        const newColor = { ...curColor }
         newColor["--border-color"] = "var(--warning-accent)"
         newColor["--bg-color"] = "rgba(from var(--border-color) r g b / 0.125)"
         newColor.opacity = 1
@@ -402,7 +415,7 @@ function AddNewSection({
                   [style.selectedSection]: selectedOptions.find((v) => v === section.id.toString()) !== undefined,
                 })}
               >
-                <ProblemSection key={section.id} section={section} problemId={problemId}/>
+                <ProblemSection key={section.id} section={section} problemId={problemId} />
               </div>
             ),
             value: section.id.toString(),
@@ -412,7 +425,7 @@ function AddNewSection({
         defaultSelection={{
           displayElement: (
             <div className={style.defaultOption}>
-              <FaPlus/>
+              <FaPlus />
               {isError || isLoading ? (
                 isError ? (
                   <p>Ошибка</p>

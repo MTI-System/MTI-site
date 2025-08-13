@@ -11,6 +11,7 @@ import LogoWithTT from "../app/LogoWithTT"
 import { ProblemSectionInterface } from "@/types/problemAPI"
 import ProblemSection from "./ProblemSection"
 import clsx from "clsx"
+import { FaTimes } from "react-icons/fa"
 
 export default function ProblemFilters({
   children,
@@ -29,7 +30,7 @@ export default function ProblemFilters({
   const isPending = useAppSelector((state) => state.system.isPending)
   return (
     <>
-      <div className="flex items-center content-center gap-5 w-full h-[2rem] h-fit">
+      <div className="flex items-center content-center gap-5 w-full h-fit">
         <p className={style.filtersTitle}>Задачи</p>
         <LogoWithTT logoSize={"2rem"} margin={"0rem"}>
           <></>
@@ -70,62 +71,75 @@ function SectionFilter({
   }, [year, tt])
 
   return (
-    <Dropdown
-      options={possibleSections.map((section) => {
-        return {
+    <div className="flex items-center content-center w-full">
+      <Dropdown
+        options={possibleSections.map((section) => {
+          return {
+            displayElement: (
+              <div
+                className={clsx(style.addSectionOptionContainer, {
+                  [style.selectedSection]: selectedOptions.find((v) => v === section.id) !== undefined,
+                })}
+              >
+                <ProblemSection key={section.id} section={section} />
+              </div>
+            ),
+            value: section.id,
+            active: true,
+          }
+        })}
+        defaultSelection={{
           displayElement: (
-            <div
-              className={clsx(style.addSectionOptionContainer, {
-                [style.selectedSection]: selectedOptions.find((v) => v === section.id) !== undefined,
-              })}
-            >
-              <ProblemSection key={section.id} section={section} />
+            <div className={style.defaultOption}>
+              {isPending ? (
+                <p>Выбираем...</p>
+              ) : selectedOptions.length > 0 ? (
+                <p>
+                  Выбрано:{" "}
+                  {selectedOptions
+                    .map((selected) => possibleSections.find((sec) => sec.id === selected)?.title)
+                    .join(", ")}
+                </p>
+              ) : (
+                <p>Выбрать разделы</p>
+              )}
             </div>
           ),
-          value: section.id,
+          value: null,
           active: true,
-        }
-      })}
-      defaultSelection={{
-        displayElement: (
-          <div className={style.defaultOption}>
-            {isPending ? (
-              <p>Выбираем...</p>
-            ) : selectedOptions.length > 0 ? (
-              <p>
-                Выбрано:{" "}
-                {selectedOptions
-                  .map((selected) => possibleSections.find((sec) => sec.id === selected)?.title)
-                  .join(", ")}
-              </p>
-            ) : (
-              <p>Выбрать разделы</p>
-            )}
-          </div>
-        ),
-        value: null,
-        active: true,
-      }}
-      onOptionSelect={(e) => {
-        e.isDefaultPrevented = true
-        const elem = selectedOptions.find((v) => v === e.selection)
-        if (elem === undefined)
-          setSelectedOption((prev) => {
-            if (!e.selection) return prev
-            return [...prev, e.selection]
-          })
-        else
-          setSelectedOption((prev) => {
-            return [...prev.filter((v) => v !== e.selection)]
-          })
-      }}
-      onToggle={async (isOpened) => {
-        if (isOpened) return
-        dispatcher(setSectionList(selectedOptions.length === 0 ? null : selectedOptions))
-      }}
-      className={style.selectSectionDropdown}
-      disabled={isPending}
-    />
+        }}
+        onOptionSelect={(e) => {
+          e.isDefaultPrevented = true
+          const elem = selectedOptions.find((v) => v === e.selection)
+          if (elem === undefined)
+            setSelectedOption((prev) => {
+              if (!e.selection) return prev
+              return [...prev, e.selection]
+            })
+          else
+            setSelectedOption((prev) => {
+              return [...prev.filter((v) => v !== e.selection)]
+            })
+        }}
+        onToggle={async (isOpened) => {
+          if (isOpened) return
+          dispatcher(setSectionList(selectedOptions.length === 0 ? null : selectedOptions))
+        }}
+        className={style.selectSectionDropdown}
+        disabled={isPending}
+      />
+      <FaTimes
+        className={clsx("text-2xl", {
+          "text-[var(--alt-text)]": isPending || selectedOptions.length === 0,
+          "hover:text-[var(--alt-text)]": !isPending && selectedOptions.length !== 0,
+        })}
+        onClick={() => {
+          if (isPending || selectedOptions.length === 0) return
+          setSelectedOption([])
+          dispatcher(setSectionList(null))
+        }}
+      />
+    </div>
   )
 }
 

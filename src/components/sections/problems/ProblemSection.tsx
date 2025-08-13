@@ -7,16 +7,18 @@ import { CSSProperties, useTransition, useRef } from "react"
 import { useRouter } from "next/navigation"
 import clsx from "clsx"
 import { fetchModifySectionOnTask } from "@/scripts/ApiFetchers"
-import {useDispatch} from "react-redux";
-import {useAppSelector} from "@/redux_stores/tournamentTypeRedixStore";
-import {setSectionList} from "@/redux_stores/SearchParamsSlice";
+import { useDispatch } from "react-redux"
+import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { setSectionList } from "@/redux_stores/SearchParamsSlice"
+import { FaFilter } from "react-icons/fa"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 
 export default function ProblemSection({
   problemId,
   section,
   isEditable,
-  isHidden=false,
-  isFiltered=false,
+  isHidden = false,
+  isFiltered = false,
 }: {
   problemId?: number
   section: ProblemSectionInterface
@@ -26,7 +28,7 @@ export default function ProblemSection({
 }) {
   const [isPending, startTransition] = useTransition()
   const dispatcher = useDispatch()
-  const filteredSections = useAppSelector(state => state.searchParams.sectionList)
+  const filteredSections = useAppSelector((state) => state.searchParams.sectionList)
   const router = useRouter()
   return (
     <div
@@ -35,7 +37,7 @@ export default function ProblemSection({
         {
           "--bg-color": section.tile_color,
           "--bg-color-dark": section.dark_theme_tile_color,
-          opacity: isHidden? 0.5: 1
+          opacity: isHidden ? 0.5 : 1,
         } as CSSProperties
       }
     >
@@ -66,21 +68,30 @@ export default function ProblemSection({
         />
       )}
       {isFiltered && (
-        <button className="size-3 bg-white"
-        onClick={()=>{
-          if (filteredSections === null){
-            const newSections = [section.id]
-            dispatcher(setSectionList(newSections))
-          }
-          else if(!filteredSections?.find(sec => sec=== section.id)) {
-            const newSections = [...filteredSections]
-            newSections.push(section.id)
-            dispatcher(setSectionList(newSections))
-          }
+        <Tooltip>
+          <TooltipTrigger>
+            <FaFilter
+              className="text-[0.6rem]"
+              onClick={() => {
+                if (filteredSections === null) {
+                  const newSections = [section.id]
+                  dispatcher(setSectionList(newSections))
+                } else if (!filteredSections?.find((sec) => sec === section.id)) {
+                  const newSections = [...filteredSections]
+                  newSections.push(section.id)
+                  dispatcher(setSectionList(newSections))
+                }
+              }}
+            />
+            {/* <button
+              className="size-3"
 
-        }}>
-
-        </button>
+            ></button> */}
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="bg-[var(--inactive-color)] px-2 py-1 rounded-xl">Добавить в фильтр</p>
+          </TooltipContent>
+        </Tooltip>
       )}
     </div>
   )
