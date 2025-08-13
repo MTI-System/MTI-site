@@ -228,7 +228,7 @@ export function ProblemCardContent({
 
       <div className={style.sectionListContainer}>
         <ScienceList problem={problem} setHovered={setHoveredScience} />
-        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
+        <SectionsList problem={problem } isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
       </div>
     </>
   )
@@ -337,12 +337,14 @@ function SectionsList({
     )
   }, [problem.problem_sections.length, allSections])
 
+  const pathname = usePathname()
+
   return (
     <div className={style.sectionsList}>
       {problem.problem_sections.map((section) => {
         return (
           <ProblemSection
-            isFiltered={true}
+            isFiltered={!pathname.startsWith("/problems/" + problem.id.toString())}
             isHidden={hoveredScience !== section.section_science && hoveredScience !== null}
             key={section.id}
             section={section}
