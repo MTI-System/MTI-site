@@ -77,7 +77,7 @@ function SectionFilter({
           return {
             displayElement: (
               <div
-                className={clsx(style.addSectionOptionContainer, {
+                className={clsx("max-[1200px]:text-[0.6rem]", style.addSectionOptionContainer, {
                   [style.selectedSection]: selectedOptions.find((v) => v === section.id) !== undefined,
                 })}
               >

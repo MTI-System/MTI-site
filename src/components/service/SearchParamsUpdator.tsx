@@ -45,7 +45,6 @@ export default function SearchParamsUpdator() {
         ttSP = "ТЮФ"
       }
       params.set("tt", ttSP)
-
       if (!year) {
         get_last_year_func(ttSP).then((lastYear) => {
           console.log("year", lastYear)
@@ -55,6 +54,7 @@ export default function SearchParamsUpdator() {
           if (next !== `${pathname}?${searchParams}`) {
             router.replace(next)
           }
+          dispatch(setYear(Number(params.get("year")) ?? 2026))
         })
       }
       else {
@@ -64,7 +64,8 @@ export default function SearchParamsUpdator() {
           router.replace(next)
         }
       }
-    } else {
+    }
+    else {
       const ttSP = searchParams.get("tt") ?? cookies.get("mtiyt_tournamentType")
       const yearSP = searchParams.get("year")
     }
