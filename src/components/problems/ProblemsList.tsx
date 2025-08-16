@@ -1,5 +1,5 @@
 "use server"
-import ProblemCard from "@/components/sections/problems/ProblemCard"
+import ProblemCard from "@/components/problems/ProblemCard"
 import { ProblemInterface, ProblemListInterface } from "@/types/problemAPI"
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner"
 export default async function ProblemsList({

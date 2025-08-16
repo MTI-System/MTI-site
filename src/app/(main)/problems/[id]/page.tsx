@@ -1,7 +1,7 @@
 import {PROBLEM_API} from "@/constants/APIEndpoints"
-import ProblemPage from "@/components/sections/problems/[id]/ProblemPage"
+import ProblemPage from "@/components/problems/ProblemPage"
 import {ProblemInterface} from "@/types/problemAPI"
-import NotFound from "@/components/sections/problems/[id]/NotFound"
+import NotFound from "@/components/service/NotFound"
 import {availableTournamentTypes} from "@/constants/AvailableTournaments"
 import {Metadata} from "next";
 import { cache } from 'react'

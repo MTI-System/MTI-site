@@ -1,5 +1,5 @@
 import footerStyle from "@/styles/components/sections/app/footer.module.css"
-import LogoWithTT from "@/components/sections/app/LogoWithTT"
+import LogoWithTT from "@/components/ui/LogoWithTT"
 import Link from "next/link"
 
 export default function Footer() {

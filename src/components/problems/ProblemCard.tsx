@@ -9,7 +9,7 @@ import { deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections } fr
 import { CSSProperties, useEffect, useMemo, useRef, useState, useTransition } from "react"
 import clsx from "clsx"
 import { PiGlobeLight } from "react-icons/pi"
-import ProblemSection from "@/components/sections/problems/ProblemSection"
+import ProblemSection from "@/components/problems/ProblemSection"
 import DeletionConfirmationModal from "./DeletionConfirmationModal"
 import { Dropdown } from "@/components/ui/Dropdown"
 import { Input, TitledInput } from "@/components/ui/Input"

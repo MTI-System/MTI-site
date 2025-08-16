@@ -10,7 +10,7 @@ import { DeletionMaterialConfirmationModal } from "./UniversalEmbedding"
 import { deleteMaterial } from "@/scripts/ApiFetchers"
 import { useEffect, useRef, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "../Buttons"
+import { Button } from "../ui/Buttons"
 import Link from "next/link"
 
 interface UniversalPlayerProps {

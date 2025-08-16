@@ -1,5 +1,5 @@
 import { User } from "@/types/authApi"
-import ProfileMainPage from "@/components/sections/profile/ProfileMainPage"
+import ProfileMainPage from "@/components/profile/ProfileMainPage"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { Metadata } from "next";
 

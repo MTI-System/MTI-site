@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRed
 import { setSectionList, setYear } from "@/redux_stores/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import LogoWithTT from "../app/LogoWithTT"
+import LogoWithTT from "../ui/LogoWithTT"
 import { ProblemSectionInterface } from "@/types/problemAPI"
 import ProblemSection from "./ProblemSection"
 import clsx from "clsx"

@@ -19,7 +19,7 @@ import style from "@/styles/components/sections/problems/[id]/embeddingAddition.
 import { RiFileAddLine } from "react-icons/ri"
 import Modal from "@/components/ui/Modals"
 import ContentContainer from "@/components/ui/ContentContainer"
-import AddFileField from "@/components/ui/Files/AddFileField"
+import AddFileField from "@/components/materials/AddFileField"
 import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import clsx from "clsx"
 // import LoadingFileEmbedding from "@/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding"

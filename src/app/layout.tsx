@@ -6,8 +6,8 @@ import { FILES_SERVER } from "@/constants/APIEndpoints"
 import Script from "next/script"
 import { cookies } from "next/headers"
 import StoreProvider from "@/components/Redux/StoreProvider"
-import LayoutComponent from "@/components/sections/app/Layout"
-import ThemeUpdator from "@/components/service/ThemeUpdator"
+import LayoutComponent from "@/components/main/Layout"
+import ThemeUpdator from "@/components/Redux/ThemeUpdator"
 
 
 export function generateMetadata(): Metadata {

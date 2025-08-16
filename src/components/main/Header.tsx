@@ -1,12 +1,12 @@
 import headerStyle from "@/styles/components/sections/app/header.module.css"
 import Link from "next/link"
-import TournamentTypeSelector from "@/components/sections/app/TournamentTypeSelector"
+import TournamentTypeSelector from "@/components/Redux/TournamentTypeSelector"
 import { FaMoon } from "react-icons/fa"
-import ProfilePicture from "@/components/sections/app/Profile"
+import ProfilePicture from "@/components/main/Profile"
 import { Button } from "@/components/ui/Buttons"
 import { FiMenu } from "react-icons/fi"
 import { FaBell } from "react-icons/fa"
-import ThemeSwitchingButton from "./ThemeSwitcher"
+import ThemeSwitchingButton from "../Redux/ThemeSwitcher"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 
 export default function Header() {
