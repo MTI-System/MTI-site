@@ -1,4 +1,4 @@
-export const GATEWAY_API = process.env.IS_ON_DEV === "true" ? "host.docker.internal:host-gateway:8095/" : "https://api.mtiyt.ru/"
+export const GATEWAY_API = process.env.IS_ON_DEV === "true" ? "host.docker.internal:8095/" : "https://api.mtiyt.ru/"
 export const AUTH_API = GATEWAY_API + "auth/"
 export const PROBLEM_API = GATEWAY_API + "problems/"
 export const FILES_SERVER = GATEWAY_API + "files/get/"
