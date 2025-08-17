@@ -5,7 +5,12 @@ import { ProblemInterface, ProblemSectionInterface, ProblemSectionWithSciencesIn
 import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections } from "@/scripts/ApiFetchers"
+import {
+  deleteProblem,
+  fetchModifySectionOnTask,
+  fetchAllAvailableSections,
+  fetchEditProblem,
+} from "@/scripts/ApiFetchers"
 import { CSSProperties, useEffect, useMemo, useRef, useState, useTransition } from "react"
 import clsx from "clsx"
 import { PiGlobeLight } from "react-icons/pi"
@@ -66,8 +71,7 @@ export function ProblemCardContent({
     formData.set("newProblemFirstTranslationText", editedProblemTextRef.current)
     formData.set("newProblemFirstTranslationBy", editedProblemByRef.current)
     formData.set("token", token)
-    const resp = await fetch(PROBLEM_API + "edit_problem", { method: "POST", body: formData })
-    return resp.ok
+    return await fetchEditProblem(formData)
   }
   useEffect(() => {
     if (is_edit_page && !isAuthenticated) {
@@ -228,7 +232,7 @@ export function ProblemCardContent({
 
       <div className={style.sectionListContainer}>
         <ScienceList problem={problem} setHovered={setHoveredScience} />
-        <SectionsList problem={problem } isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
+        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
       </div>
     </>
   )

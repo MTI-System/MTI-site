@@ -61,7 +61,6 @@ export default function PendingEmbeddingsList({
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-
   useEffect(() => {
     if (isPending === true || deleteKeyRef.current === "") return
     setEmbeddings((prev) => {
@@ -179,6 +178,10 @@ function AddFileModal({
     if (embeddingtypes.length === 0) {
       fetchAllAvailableEmbeddingTypes()
         .then((response) => {
+          if (!response) {
+            setEmbeddingtypes(null)
+            return
+          }
           if (!lockedContentTypes) {
             setEmbeddingtypes(response)
             return
@@ -202,8 +205,7 @@ function AddFileModal({
       setTypeList(embeddingtypes)
       return
     }
-    setTypeList(embeddingtypes.filter((et)=>et.type_name!=="Link"))
-
+    setTypeList(embeddingtypes.filter((et) => et.type_name !== "Link"))
   }, [attachedFile])
 
   const handleLinkAttach = (text: string) => {
@@ -285,7 +287,11 @@ function AddFileModal({
                   />
                   <TextDropdown
                     className={style.typeSelectDropdown}
-                    options={typeList.map((value) => ({ displayName: value.display_name, value: value.id, active: true }))}
+                    options={typeList.map((value) => ({
+                      displayName: value.display_name,
+                      value: value.id,
+                      active: true,
+                    }))}
                     defaultSelection={defaultOption}
                     isAlwaysUp={true}
                     onOptionSelect={(e) => {

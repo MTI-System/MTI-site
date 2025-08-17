@@ -66,6 +66,16 @@ async function fetchProblems(tournament: string, year: number): Promise<ProblemL
   return null
 }
 
+async function fetchEditProblem(data: FormData): Promise<boolean> {
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "edit_problem", { method: "POST", body: data })
+  return response !== null && response.ok
+}
+
+async function fetchAddProblem(formData: FormData): Promise<Boolean> {
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "add_problem", { method: "POST", body: formData })
+  return response !== null && response.ok
+}
+
 async function fetchProblemById(problemId: number): Promise<ProblemInterface | null> {
   await connection()
   const response = await fetchWithRetryAndTimeout(PROBLEM_API + `get_problem_by_global_id/${problemId}`)
@@ -160,7 +170,7 @@ async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesIn
 
 async function fetchModifySectionOnTask(
   problemId: string,
-  sectionIds: string[]|string,
+  sectionIds: string[] | string,
   action: "add_section" | "delete_section"
 ): Promise<boolean> {
   if (action !== "add_section" && action !== "delete_section") return false
@@ -201,9 +211,9 @@ async function fetchAddLinkEmbedding(embedding: Omit<LoadFileForm, "file">): Pro
   return response != null
 }
 
-async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface[]> {
+async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface[] | null> {
   const response = await fetchWithRetryAndTimeout(MATERIAL_API + "get_available_content_types")
-  if (!response) return []
+  if (!response) return null
   const parsed = z.array(EmbeddingTypeSchema).safeParse(await response.json())
   if (parsed.success) return parsed.data
   console.error(`Unexpected response while parsing embedding types content types: ${parsed.error}`)
@@ -213,6 +223,8 @@ async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface
 export {
   fetchProblems,
   fetchProblemById,
+  fetchEditProblem,
+  fetchAddProblem,
   fetchSendLogin,
   fetchPermissions,
   deleteProblem,

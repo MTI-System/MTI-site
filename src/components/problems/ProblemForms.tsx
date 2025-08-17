@@ -8,6 +8,7 @@ import { Input, TitledInput } from "@/components/ui/Input"
 import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { useRouter } from "next/navigation"
+import { fetchAddProblem } from "@/scripts/ApiFetchers"
 
 export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; targetYear: number }) {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
@@ -20,7 +21,6 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   const [isLoading, setIsLoading] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState("")
-
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -35,7 +35,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     setError("")
     e.preventDefault()
     setIsLoading(true)
-    
+
     const formData = new FormData(e.currentTarget)
 
     const isok = await handletaskCreation(e.currentTarget)
@@ -45,12 +45,10 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
         router.refresh()
       })
       return
-    }
-    else{
-      if (error == ""){
+    } else {
+      if (error == "") {
         setError("При добавлении задачи произошла ошибка")
       }
-      
     }
     setIsLoading(false)
   }
@@ -58,7 +56,12 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   const handletaskCreation = async (form: HTMLFormElement) => {
     if (!isAuthenticated) return
     const formData = new FormData(form)
-    if(formData.get("globalNumber") === "" || formData.get("firstTranslationName") === "" || formData.get("firstTranslationText")==="" || formData.get("firstTranslationBy") === ""){
+    if (
+      formData.get("globalNumber") === "" ||
+      formData.get("firstTranslationName") === "" ||
+      formData.get("firstTranslationText") === "" ||
+      formData.get("firstTranslationBy") === ""
+    ) {
       setError("Все поля должны быть заполнены")
       setIsLoading(false)
       return null
@@ -67,12 +70,8 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     formData.set("tournamentType", targetTTID.toString())
     formData.set("authToken", token)
     console.log("request to api, ", PROBLEM_API + "add_problem")
-    const resp = await fetch(PROBLEM_API + "add_problem", { method: "POST", body: formData })
-    if (resp) form.reset()
-    if (resp.status != 200){
-      return null
-    }
-    return await resp.text()
+    const resp = await fetchAddProblem(formData)
+    return resp ? "ok" : null
   }
 
   return (
@@ -104,7 +103,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
         <TitledInput title="Перевод" className={style.problemByInput}>
           <Input className={style.problemByInputField} name="firstTranslationBy" defaultValue={"Официальный перевод"} />
         </TitledInput>
-        {error!="" && <p className={style.errorMessage}>{error}</p>}
+        {error != "" && <p className={style.errorMessage}>{error}</p>}
         <div className={style.confirmContainer}>
           <Button type="submit" className={style.editOnOtherPageButton} disabled={isLoading || isPending}>
             Создать задачу
@@ -124,9 +123,8 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
                   router.push("/problems/" + isok + "?is_edit=true")
                 })
                 return
-              }
-              else {
-                if (error == ""){
+              } else {
+                if (error == "") {
                   setError("При добавлении задачи произошла ошибка")
                 }
               }
