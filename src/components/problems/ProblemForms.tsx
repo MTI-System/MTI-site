@@ -66,6 +66,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     formData.set("year", targetYear.toString())
     formData.set("tournamentType", targetTTID.toString())
     formData.set("authToken", token)
+    console.log("request to api, ", PROBLEM_API + "add_problem")
     const resp = await fetch(PROBLEM_API + "add_problem", { method: "POST", body: formData })
     if (resp) form.reset()
     if (resp.status != 200){
