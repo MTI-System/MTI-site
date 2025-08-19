@@ -78,7 +78,7 @@ export function TextDropdown<ValueType>({ options, defaultSelection, ...rest }: 
   const option2TextOption = (option: TextOption<ValueType>) => ({
     value: option.value,
     active: option.active,
-    displayElement: <p className={style.dropdownText}>{option.displayName}</p>,
+    displayElement: <p className="">{option.displayName}</p>,
   })
   const optionList = options.map(option2TextOption)
   const defaultSel =
@@ -151,7 +151,7 @@ function DropdownMenu<ValueType>({
         style={{ position: "absolute" }}
         ref={menuRef}
       >
-        {(!options || options.length == 0) && <p className={style.dropdownText}>--------</p>}
+        {(!options || options.length == 0) && <p className="">--------</p>}
         {options &&
           options.map((option, index) => (
             <DropdownOption option={option} onClick={() => onOptionSelect(option)} key={index + 1}></DropdownOption>

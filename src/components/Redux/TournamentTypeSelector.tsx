@@ -6,7 +6,6 @@ import {setTT, setYear} from "@/redux_stores/SearchParamsSlice"
 import {useEffect, useState} from "react"
 import cookies from "js-cookie"
 import {TOURNAMENT_TYPE_KEY_NAME} from "@/constants/CookieKeys"
-import headerStyle from "@/styles/components/sections/app/header.module.css"
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/Tooltip"
 import {usePathname, useRouter} from "next/navigation";
 
@@ -25,7 +24,7 @@ export default function TournamentTypeSelector({className}: { className?: string
   }, [])
 
   useEffect(() => {
-    if (!hasMounted){
+    if (!hasMounted) {
       return
     }
     lockedPages.forEach(page => {
@@ -40,7 +39,7 @@ export default function TournamentTypeSelector({className}: { className?: string
 
   return (
     <>
-      <div className={headerStyle.hoverTextContainer}>
+      <div className="">
         <Tooltip disabled={!isTTLocked}>
           <TooltipTrigger>
             <TextDropdown
@@ -56,7 +55,8 @@ export default function TournamentTypeSelector({className}: { className?: string
               defaultSelection={
                 tt !== null
                   ? {
-                    displayName: tt.toUpperCase(),
+                    displayName: <>{tt.toUpperCase().slice(0, -1)}<span
+                      style={{color: availableTournamentTypes.find(t => tt === t.name)?.color}}>{tt.toUpperCase().slice(-1)}</span></>,
                     value: tt,
                     active: true,
                   }
@@ -72,7 +72,7 @@ export default function TournamentTypeSelector({className}: { className?: string
           </TooltipTrigger>
 
           <TooltipContent>
-            <p className={headerStyle.hoverText}>На этой странице нельзя изменить тип турнира</p>
+            <p className="">На этой странице нельзя изменить тип турнира</p>
           </TooltipContent>
         </Tooltip>
       </div>

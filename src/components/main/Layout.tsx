@@ -14,7 +14,7 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
   const theme = useAppSelector((state) => state.system.theme)
   return (
     <>
-      <body data-theme={theme}>
+      <body className="h-[100vh]" data-theme={theme}>
         <InitRedux/>
         {children}
       </body>

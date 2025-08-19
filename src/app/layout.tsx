@@ -24,7 +24,7 @@ export function generateMetadata(): Metadata {
 export default async function Template({ children }: { children: React.ReactNode }) {
   const cookiesStore = await cookies()
   return (
-    <html>
+    <html className="bg-bg-main">
       <head>
         <link rel="icon" href="https://mtiyt.ru/favicon.ico" type="image/x-icon"/>
         <Script
