@@ -8,6 +8,7 @@ import cookies from "js-cookie"
 import {TOURNAMENT_TYPE_KEY_NAME} from "@/constants/CookieKeys"
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/Tooltip"
 import {usePathname, useRouter} from "next/navigation";
+import ColoredTType from "@/components/ui/ColoredTType";
 
 export default function TournamentTypeSelector({className}: { className?: string }) {
   const tt = useAppSelector((state) => state.searchParams.tt)
@@ -44,7 +45,7 @@ export default function TournamentTypeSelector({className}: { className?: string
           <TooltipTrigger>
             <TextDropdown
               options={availableTournamentTypes.map((tt) => {
-                return {displayName: tt.name.toUpperCase(), value: tt.name, active: true}
+                return {displayName: <ColoredTType ttColor={tt.color} ttName={tt.name}/>, value: tt.name, active: true}
               })}
               onOptionSelect={(event) => {
                 const selectedValue = event.selection
@@ -55,8 +56,7 @@ export default function TournamentTypeSelector({className}: { className?: string
               defaultSelection={
                 tt !== null
                   ? {
-                    displayName: <>{tt.toUpperCase().slice(0, -1)}<span
-                      style={{color: availableTournamentTypes.find(t => tt === t.name)?.color}}>{tt.toUpperCase().slice(-1)}</span></>,
+                    displayName: <ColoredTType ttColor={availableTournamentTypes.find(t=>t.name===tt)?.color??""} ttName={tt}/>,
                     value: tt,
                     active: true,
                   }
@@ -70,7 +70,6 @@ export default function TournamentTypeSelector({className}: { className?: string
               disabled={isPending || isTTLocked}
             ></TextDropdown>
           </TooltipTrigger>
-
           <TooltipContent>
             <p className="">На этой странице нельзя изменить тип турнира</p>
           </TooltipContent>
