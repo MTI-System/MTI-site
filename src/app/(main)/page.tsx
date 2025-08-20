@@ -24,7 +24,7 @@ export default async function Home() {
     <div className="h-full">
       {/*<video src={"https://files.mofius-server.ru/media/get/AQPUtp1tpdS06ThMCbWYoHohuk19_muVSo55Nqu5VSwfkPXd3SC2z_BTPcPFCDZ.mp4"} controls></video>*/}
       <div className="flex flex-col min-h-[70rem] sm:min-h-[55rem] h-[50vh] gap-5 sm:gap-2 py-10 sm:grid sm:grid-cols-3 sm:grid-rows-4">
-        <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt sm:row-[1/3] sm:overflow-hidden border-border border-[1px]`} href={`/problems`}>
+        <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt sm:row-[1/3] overflow-hidden border-border border-[1px]`} href={`/problems`}>
           <div className="relative z-10 size-full"> {/* Контейнер с относительным позиционированием */}
             <div className="z-10 flex flex-col justify-between size-full relative"> {/* Добавляем relative */}
               <div className="w-full pl-5 sm:pl-0 md:pl-5 pt-4 sm:flex sm:flex-col  sm:items-center md:items-start">
@@ -95,12 +95,12 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="absolute inset-0 z-0 opacity-30 hidden sm:block">
+          <div className="absolute inset-0 pt-3 z-0 opacity-30 hidden sm:block">
             <MaskLineForMenuCard className="bg-[#A020F0] h-[33%] ms-[1.5rem]"
-                                 maskIcon={`${FILES_SERVER}StatsMask.svg`}/>
-            <MaskLineForMenuCard className="bg-[#A020F0] h-[33%] ms-[-2rem]" maskIcon={`${FILES_SERVER}StatsMask.svg`}/>
+                                 maskIcon={`${FILES_SERVER}FightsMask.svg`}/>
+            <MaskLineForMenuCard className="bg-[#A020F0] h-[33%] ms-[-2rem]" maskIcon={`${FILES_SERVER}FightsMask.svg`}/>
             <MaskLineForMenuCard className="bg-[#A020F0] h-[33%] ms-[1.5rem]"
-                                 maskIcon={`${FILES_SERVER}StatsMask.svg`}/>
+                                 maskIcon={`${FILES_SERVER}FightsMask.svg`}/>
           </div>
         </ClickableCard>
         <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt overflow-hidden border-border border-[1px]`} href={`/peoples`}>
