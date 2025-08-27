@@ -17,7 +17,7 @@ type ButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> & 
  */
 export function Button({ children, className = "", style, ...rest }: ButtonProps) {
   return (
-    <button className={clsx(className, styleModule.button)} style={style} {...rest}>
+    <button className={clsx(className)} style={style} {...rest}>
       {children}
     </button>
   )

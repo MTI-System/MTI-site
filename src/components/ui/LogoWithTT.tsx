@@ -17,7 +17,7 @@ export default function LogoWithTT({
   return (
     <div>
       {children}
-      <p className={footerStyle.ttBioHeaderText} style={{ fontSize: logoSize, marginTop: margin }}>
+      <p className="" style={{ fontSize: logoSize, marginTop: margin }}>
         {tt?.slice(0, -1)}
         <span style={{ color: availableTournamentTypes.find((type) => type.name === tt)?.color }}>{tt?.slice(-1)}</span>
       </p>

@@ -1,19 +1,16 @@
 "use client"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import {
   useAppDispatch,
   useAppSelector,
 } from "@/redux_stores/tournamentTypeRedixStore"
-import { setTT, setYear } from "@/redux_stores/SearchParamsSlice"
 import { useEffect, useState } from "react"
-import { TOURNAMENT_TYPE_KEY_NAME } from "@/constants/CookieKeys"
 import headerStyle from "@/styles/components/sections/app/header.module.css"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import {
   Dropdown,
   DropdownElement,
@@ -69,7 +66,6 @@ export default function TournamentTypeSelector({
               <DropdownElement value="ТЮЕ">Test ТЮЕ</DropdownElement>
             </Dropdown>
           </TooltipTrigger>
-
           <TooltipContent>
             <p className={headerStyle.hoverText}>
               На этой странице нельзя изменить тип турнира
