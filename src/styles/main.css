@@ -51,14 +51,6 @@
   }
 }
 
-* {
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease,
-    opacity 250ms ease;
-
-  scrollbar-color:  var(--alt-primary-accent) transparent;
-  scrollbar-width: thin;
-}
-
 body {
   font-family: "Roboto Mono Variable", monospace;
   color: var(--main-text-color);

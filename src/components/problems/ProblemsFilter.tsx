@@ -1,9 +1,17 @@
 "use client"
-import { Dropdown, TextDropdown } from "@/components/ui/Dropdown"
+import {
+  Dropdown,
+  DropdownElement,
+  DropdownOptionInterface,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown"
 import style from "@/styles/components/sections/problems/problemsFilter.module.css"
 import { ReactNode, useEffect, useState } from "react"
 import Loading from "@/app/loading"
-import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "@/redux_stores/tournamentTypeRedixStore"
 import { setSectionList, setYear } from "@/redux_stores/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
@@ -24,20 +32,29 @@ export default function ProblemFilters({
   possibleSections: ProblemSectionInterface[]
   isModerator: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year ?? possibleYears[0])
+  const year = useAppSelector(
+    (state) => state.searchParams.year ?? possibleYears[0],
+  )
   const tt = useAppSelector((state) => state.searchParams.tt)
   const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
   const isPending = useAppSelector((state) => state.system.isPending)
   return (
     <>
-      <div className="flex items-center content-center gap-5 w-full h-fit">
+      <div className="flex h-fit w-full content-center items-center gap-5">
         <p className={style.filtersTitle}>Задачи</p>
         <LogoWithTT logoSize={"2rem"} margin={"0rem"}>
           <></>
         </LogoWithTT>
         <div className={style.filters}>
-          <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
-          <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
+          <YearFilter
+            possibleYears={possibleYears}
+            isPending={isPending}
+            isModerator={isModerator}
+          />
+          <SectionFilter
+            possibleSections={possibleSections}
+            isPending={isPending}
+          ></SectionFilter>
         </div>
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
@@ -71,8 +88,9 @@ function SectionFilter({
   }, [year, tt])
 
   return (
-    <div className="flex min-w-0 items-center content-center w-full">
-      <Dropdown
+    <div className="flex w-full min-w-0 content-center items-center">
+      {/* TODO: rewrite for new dropdown */}
+      {/* <Dropdown
         options={possibleSections.map((section) => {
           return {
             displayElement: (
@@ -127,11 +145,12 @@ function SectionFilter({
         }}
         className={style.selectSectionDropdown}
         disabled={isPending}
-      />
+      /> */}
       <FaTimes
-        className={clsx("text-[1.5rem] w-20", {
+        className={clsx("w-20 text-[1.5rem]", {
           "text-[var(--alt-text)]": isPending || selectedOptions.length === 0,
-          "hover:text-[var(--alt-text)]": !isPending && selectedOptions.length !== 0,
+          "hover:text-[var(--alt-text)]":
+            !isPending && selectedOptions.length !== 0,
         })}
         onClick={() => {
           if (isPending || selectedOptions.length === 0) return
@@ -152,43 +171,54 @@ function YearFilter({
   isPending: boolean
   isModerator: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year) ?? possibleYears[0]
+  const year =
+    useAppSelector((state) => state.searchParams.year) ?? possibleYears[0]
   const dispatcher = useAppDispatch()
 
-  const optionList: { displayName: string; value: number; active: boolean }[] = []
+  const optionList: { children: string; value: number; active: boolean }[] = []
   possibleYears.forEach((year, index, array) => {
     if (index === 0) {
-      if (isModerator) optionList.push({ displayName: `+${year + 1}`, value: year + 1, active: true })
-      optionList.push({ displayName: year.toString(), value: year, active: true })
+      if (isModerator)
+        optionList.push({
+          children: `+${year + 1}`,
+          value: year + 1,
+          active: true,
+        })
+      optionList.push({
+        children: year.toString(),
+        value: year,
+        active: true,
+      })
       return
     }
     if (isModerator)
       for (let i = year + 1; i < array[index - 1]; i++)
-        optionList.push({ displayName: `+${i}`, value: i, active: true })
-    optionList.push({ displayName: year.toString(), value: year, active: true })
+        optionList.push({ children: `+${i}`, value: i, active: true })
+    optionList.push({ children: year.toString(), value: year, active: true })
   })
   if (isModerator) {
-    const firstYear = possibleYears.length > 0 ? possibleYears[possibleYears.length - 1] : new Date().getFullYear() + 1
+    const firstYear =
+      possibleYears.length > 0
+        ? possibleYears[possibleYears.length - 1]
+        : new Date().getFullYear() + 1
     optionList.push({
-      displayName: `+${firstYear - 1}`,
+      children: `+${firstYear - 1}`,
       value: firstYear - 1,
       active: true,
     })
   }
 
   return (
-    <TextDropdown
-      options={optionList}
-      defaultSelection={{
-        displayName: year.toString(),
-        value: year,
-        active: true,
+    <Dropdown
+      trigger={<DropdownTrigger>{year}</DropdownTrigger>}
+      onOptionSelect={(option: DropdownOptionInterface<number> | null) => {
+        if (!option) return
+        dispatcher(setYear(option.value))
       }}
-      onOptionSelect={(e) => {
-        dispatcher(setYear(e.selection))
-      }}
-      disabled={isPending}
-      className={style.yearFilter}
-    ></TextDropdown>
+    >
+      {optionList.map((opts, i) => (
+        <DropdownElement key={i + 1} {...opts} />
+      ))}
+    </Dropdown>
   )
 }

@@ -16,16 +16,16 @@ import {
   useTransition,
 } from "react"
 import style from "@/styles/components/sections/problems/[id]/embeddingAddition.module.css"
-import { RiFileAddLine } from "react-icons/ri"
 import Modal from "@/components/ui/Modals"
 import ContentContainer from "@/components/ui/ContentContainer"
 import AddFileField from "@/components/materials/AddFileField"
 import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import clsx from "clsx"
-// import LoadingFileEmbedding from "@/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding"
 import { LoadFileForm } from "@/types/embeddings"
-import { TextDropdown } from "@/components/ui/Dropdown"
-import { fetchAddLinkEmbedding, fetchAllAvailableEmbeddingTypes } from "@/scripts/ApiFetchers"
+import {
+  fetchAddLinkEmbedding,
+  fetchAllAvailableEmbeddingTypes,
+} from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
 
 type FileFromModalInterface = Omit<LoadFileForm, "link">
@@ -57,7 +57,9 @@ export default function PendingEmbeddingsList({
   const deleteKeyRef = useRef<string>("")
   const isOpenState = useState(false)
   const [isOpen, setIsOpen] = isOpenState
-  const [embeddings, setEmbeddings] = useState<{ [key: string]: FileFromModalInterface }>({})
+  const [embeddings, setEmbeddings] = useState<{
+    [key: string]: FileFromModalInterface
+  }>({})
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
@@ -90,7 +92,7 @@ export default function PendingEmbeddingsList({
                   delete newEmbeddingsDict[key]
                   return newEmbeddingsDict
                 }),
-              noWait ? 0 : 1000
+              noWait ? 0 : 1000,
             )
           }}
         />
@@ -153,7 +155,9 @@ function AddFileModal({
 }) {
   const router = useRouter()
 
-  const [embeddingtypes, setEmbeddingtypes] = useState<EmbeddingTypeInterface[] | null>([])
+  const [embeddingtypes, setEmbeddingtypes] = useState<
+    EmbeddingTypeInterface[] | null
+  >([])
   const [acceptedEmbeddingTypes, setAcceptedEmbeddingTypes] = useState("*")
   const [isModalOpen, setIsModalOpen] = openState
   const [attachedFile, setSelectedFile] = useState<File | null>(null)
@@ -163,7 +167,11 @@ function AddFileModal({
   const user = useAppSelector((state) => state.auth.authInfo)
   const token = useAppSelector((state) => state.auth.token)
   const [typeList, setTypeList] = useState<EmbeddingTypeInterface[]>([])
-  let defaultOptionConstant = { displayName: "Выберите тип файла", value: 0, active: true }
+  let defaultOptionConstant = {
+    displayName: "Выберите тип файла",
+    value: 0,
+    active: true,
+  }
   const [defaultOption, setDefaultOption] = useState(defaultOptionConstant)
   const dataRef = useRef<Omit<FileFromModalInterface, "file" | "link">>({
     materialTitle: "",
@@ -188,7 +196,10 @@ function AddFileModal({
           }
 
           const validOptions = response.filter(
-            (value) => lockedContentTypes.find((lctValue) => value.type_name === lctValue) !== undefined
+            (value) =>
+              lockedContentTypes.find(
+                (lctValue) => value.type_name === lctValue,
+              ) !== undefined,
           )
           setEmbeddingtypes(validOptions)
         })
@@ -243,12 +254,14 @@ function AddFileModal({
           <>
             <ContentContainer containerTitle="Контент">
               <div className={style.contentSlectContainer}>
-                {user?.rights.find((val) => val.right_flag === "ADD_FILES") !== undefined && (
+                {user?.rights.find((val) => val.right_flag === "ADD_FILES") !==
+                  undefined && (
                   <>
                     <AddFileField
                       onFileSet={(f) => {
                         setSelectedFile(f)
-                        if (errorText === UploadingErrors.InvalidFileType) setErrorText("")
+                        if (errorText === UploadingErrors.InvalidFileType)
+                          setErrorText("")
                       }}
                       accept={acceptedEmbeddingTypes}
                       disabled={attachedLink !== null}
@@ -276,7 +289,11 @@ function AddFileModal({
             </ContentContainer>
             <ContentContainer containerTitle="Настройки">
               <div className={style.additionalDataContainer}>
-                <div>{errorText !== "" && <p className={style.errorText}>{errorText}</p>}</div>
+                <div>
+                  {errorText !== "" && (
+                    <p className={style.errorText}>{errorText}</p>
+                  )}
+                </div>
                 <div className={style.typeSettingsContainer}>
                   <TextInput
                     placeholder="Введите имя файла"
@@ -285,7 +302,8 @@ function AddFileModal({
                     onBlur={handleTitleSet}
                     maxLength={255}
                   />
-                  <TextDropdown
+                  {/* TODO: reimplement on new dropdown */}
+                  {/* <TextDropdown
                     className={style.typeSelectDropdown}
                     options={typeList.map((value) => ({
                       displayName: value.display_name,
@@ -307,13 +325,16 @@ function AddFileModal({
                         setErrorText("")
                       setAcceptedEmbeddingTypes(newOpt.allowed_mime_types ?? "*")
                     }}
-                  ></TextDropdown>
+                  ></TextDropdown> */}
                 </div>
               </div>
             </ContentContainer>
             <div className={style.confirmButtons}>
               <Button
-                style={{ "--main-color": "var(--warning-accent)", "--main-light-color": "var(--alt-warning-accent)" }}
+                style={{
+                  "--main-color": "var(--warning-accent)",
+                  "--main-light-color": "var(--alt-warning-accent)",
+                }}
                 onClick={() => {
                   clearForm()
                   setIsModalOpen(false)
@@ -328,7 +349,11 @@ function AddFileModal({
                     setErrorText(UploadingErrors.EmptyName)
                     return
                   }
-                  if (typeList.find((value) => dataRef.current.contentType === value.id) === undefined) {
+                  if (
+                    typeList.find(
+                      (value) => dataRef.current.contentType === value.id,
+                    ) === undefined
+                  ) {
                     setErrorText(UploadingErrors.EmptyType)
                     return
                   }
@@ -340,7 +365,10 @@ function AddFileModal({
                       return
                     }
                     setIsLoading(true)
-                    const res = await fetchAddLinkEmbedding({ link: attachedLink, ...dataRef.current })
+                    const res = await fetchAddLinkEmbedding({
+                      link: attachedLink,
+                      ...dataRef.current,
+                    })
                     setIsLoading(false)
                     if (res) {
                       setIsModalOpen(false)
@@ -365,10 +393,16 @@ function AddFileModal({
                       const mimeTypeStarIndex = mimeType.indexOf("/*")
                       const filetypeSlashIndex = fileType.indexOf("/")
                       if (mimeTypeStarIndex > 0) {
-                        return fileType.slice(0, filetypeSlashIndex) === mimeType.slice(0, mimeTypeStarIndex)
+                        return (
+                          fileType.slice(0, filetypeSlashIndex) ===
+                          mimeType.slice(0, mimeTypeStarIndex)
+                        )
                       }
                       if (mimeType[0] === ".") {
-                        return mimeType.slice(1) === fileType.slice(filetypeSlashIndex + 1)
+                        return (
+                          mimeType.slice(1) ===
+                          fileType.slice(filetypeSlashIndex + 1)
+                        )
                       }
                       return fileType === mimeType
                     }) === undefined
@@ -385,7 +419,8 @@ function AddFileModal({
                 }}
                 disabled={
                   (!attachedFile && !attachedLink) ||
-                  (errorText !== "" && errorText !== UploadingErrors.UnknownError) ||
+                  (errorText !== "" &&
+                    errorText !== UploadingErrors.UnknownError) ||
                   isLoading
                 }
               >
@@ -399,7 +434,8 @@ function AddFileModal({
   )
 }
 
-interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "onBlur"> {
+interface TextInputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "onBlur"> {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   onEnter?: (text: string) => void
   onBlur?: (text: string) => void
