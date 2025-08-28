@@ -30,16 +30,18 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const allMaterialIds = problem.materials
   const allMaterials = await fetchEmbeddingsInfo(allMaterialIds)
   const primaryGifMaterial = allMaterials.filter(
-    (mat) => mat.content_type.type_name === "Picture" && mat.metadata.is_primary === "true"
+    (mat) => mat.content_type.type_name === "Picture" && mat.metadata.is_primary === "true",
   )
   const primaryVideoMaterial = allMaterials.find(
-    (mat) => mat.content_type.type_name === "Video" && mat.metadata.is_primary === "true"
+    (mat) => mat.content_type.type_name === "Video" && mat.metadata.is_primary === "true",
   )
   const listOfMaterials = allMaterials.filter((mat) => mat.metadata.is_primary !== "true")
 
   return (
     <div className={style.pageRoot}>
-      <ProblemTTUpdator newTT={availableTournamentTypes.find(tt=>tt.id===problem.tournament_type)?.name??"ТЮФ"}/>
+      <ProblemTTUpdator
+        newTT={availableTournamentTypes.find((tt) => tt.id === problem.tournament_type)?.name ?? "ТЮФ"}
+      />
       <div className={style.main}>
         <div className={style.problemWithGif}>
           <div className={style.problem}>
@@ -47,49 +49,50 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
           </div>
           {(primaryGifMaterial.length > 0 || isModerator) && (
             <div className={style.scrollableContainer}>
-                          <div className={style.gifContainer}>
-              
-                            {isModerator && (
-                <PendingEmbeddingsList
-                  problemId={problem.id}
-                  LoadingFileEmbedding={LoadingImageEmbedding}
-                  buttonIcon={<BiImageAdd />}
-                  buttonClassName={style.gif}
-                  isPrimary={true}
-                  lockedContentTypes={["Picture"]}
-                />
-              )}
-              {primaryGifMaterial.map((gifMaterial, index) => {
-                const imageSrc =
-                  gifMaterial.metadata.is_external == "false" ? FILES_SERVER + gifMaterial.content : gifMaterial.content
-                return (
-                  <ExpandableImage
-                    isModerator={isModerator}
-                    className={style.gif}
-                    src={imageSrc}
-                    embedding={gifMaterial}
+              <div className={style.gifContainer}>
+                {isModerator && (
+                  <PendingEmbeddingsList
                     problemId={problem.id}
-                    key={index + 1}
+                    LoadingFileEmbedding={LoadingImageEmbedding}
+                    buttonIcon={<BiImageAdd />}
+                    buttonClassName={style.gif}
+                    isPrimary={true}
+                    lockedContentTypes={["Picture"]}
                   />
-                )
-              })}
-
+                )}
+                {primaryGifMaterial.map((gifMaterial, index) => {
+                  const imageSrc =
+                    gifMaterial.metadata.is_external == "false"
+                      ? FILES_SERVER + gifMaterial.content
+                      : gifMaterial.content
+                  return (
+                    <ExpandableImage
+                      isModerator={isModerator}
+                      className={style.gif}
+                      src={imageSrc}
+                      embedding={gifMaterial}
+                      problemId={problem.id}
+                      key={index + 1}
+                    />
+                  )
+                })}
+              </div>
             </div>
-            </div>
-
           )}
         </div>
         <div className={style.spacer}>
           {(primaryVideoMaterial || isModerator) && (
             <ContentContainer containerTitle="Видео">
               <div className={style.videoContainer}>
-                {primaryVideoMaterial && <UniversalPlayer embedding={primaryVideoMaterial} problemId={problem.id} isModerator={isModerator}/>}
+                {primaryVideoMaterial && (
+                  <UniversalPlayer embedding={primaryVideoMaterial} problemId={problem.id} isModerator={isModerator} />
+                )}
                 {!primaryVideoMaterial && (
                   <div className={style.addingVideoContainer}>
                     <PendingEmbeddingsList
                       problemId={problem.id}
                       LoadingFileEmbedding={LoadingFileEmbedding}
-                      buttonIcon={<AiOutlineVideoCameraAdd className={style.addImgButton}/>}
+                      buttonIcon={<AiOutlineVideoCameraAdd className={style.addImgButton} />}
                       buttonClassName={style.video}
                       isPrimary={true}
                       lockedContentTypes={["Video"]}

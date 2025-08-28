@@ -6,10 +6,10 @@ import clsx from "clsx"
 export default function AddFileField({
   onFileSet,
   disabled,
-  accept
+  accept,
 }: {
   onFileSet: (file: File | null) => void
-  disabled: boolean,
+  disabled: boolean
   accept: string
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -53,7 +53,6 @@ export default function AddFileField({
           horizontalLineAnim.play()
           angleAnim.play()
           boxAnim.play()
-
         },
       })
       self.add("uploadPlay", () => {

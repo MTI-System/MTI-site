@@ -76,7 +76,7 @@ export function useTooltip({
       ...interactions,
       ...data,
     }),
-    [open, setOpen, interactions, data, disabled]
+    [open, setOpen, interactions, data, disabled],
   )
 }
 
@@ -116,7 +116,7 @@ export const TooltipTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTML
           ...props,
           ...(children.props && typeof children.props === "object" ? children.props : {}),
           ...{ ["data-state"]: context.open ? "open" : "closed" },
-        })
+        }),
       )
     }
 
@@ -130,12 +130,12 @@ export const TooltipTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTML
         {children}
       </button>
     )
-  }
+  },
 )
 
 export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(function TooltipContent(
   { style, ...props },
-  propRef
+  propRef,
 ) {
   const context = useTooltipContext()
   const ref = useMergeRefs([context.refs.setFloating, propRef])

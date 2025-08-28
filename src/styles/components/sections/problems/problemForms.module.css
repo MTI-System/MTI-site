@@ -3,7 +3,11 @@
   font-size: 2rem;
   height: 3rem;
   border-radius: 1rem;
-  transition: opacity 500ms ease, height 500ms ease, color 250ms ease, background-color 250ms ease;
+  transition:
+    opacity 500ms ease,
+    height 500ms ease,
+    color 250ms ease,
+    background-color 250ms ease;
   overflow: hidden;
   background-color: var(--alt-primary-accent);
   border: 0.15em solid var(--primary-accent);
@@ -33,7 +37,11 @@
   align-items: center;
   align-content: center;
   height: 2.4rem;
-  transition: height 500ms ease, translate 500ms ease, color 250ms ease, background-color 250ms ease,
+  transition:
+    height 500ms ease,
+    translate 500ms ease,
+    color 250ms ease,
+    background-color 250ms ease,
     border-color 250ms ease;
 }
 
@@ -42,8 +50,13 @@
   translate: calc(50% - 2rem);
 }
 .plusContaner svg {
-  transition: filter 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease,
-    padding 500ms ease, rotate 500ms ease;
+  transition:
+    filter 250ms ease,
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease,
+    padding 500ms ease,
+    rotate 500ms ease;
   rotate: 0deg;
 }
 .expandedButton .plusContaner svg {
@@ -68,7 +81,10 @@
   border: 0.15rem rgba(0, 0, 0, 0.164) solid;
   background-color: transparent;
   width: 100%;
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  transition:
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease;
   resize: none;
   border-radius: 0.5rem;
 }
@@ -119,7 +135,7 @@
   background: transparent !important;
 }
 
-.problemByInput{
+.problemByInput {
   width: 80% !important;
   font-size: 1.25rem !important;
   color: var(--main-text-color) !important;
@@ -128,7 +144,7 @@
   padding: 0 !important;
   background: transparent !important;
 }
-.problemByInputField{
+.problemByInputField {
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
 }
@@ -154,13 +170,13 @@
   border-radius: 1rem;
 }
 
-.editOnOtherPageButton{
+.editOnOtherPageButton {
   overflow: hidden;
   text-overflow: ellipsis;
   text-wrap: nowrap;
 }
 
-.errorMessage{
+.errorMessage {
   color: red;
   font-size: 1rem;
 }

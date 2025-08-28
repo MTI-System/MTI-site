@@ -3,7 +3,7 @@ import style from "@/styles/components/sections/app/themeSwitcher.module.css"
 import { Button } from "@/components/ui/Buttons"
 import { animate, createScope, Scope } from "animejs"
 import clsx from "clsx"
-import {useEffect, useRef, useState} from "react"
+import { useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { setTheme } from "@/redux_stores/SystemSlice"
 
@@ -14,8 +14,6 @@ export default function ThemeSwitchingButton({ className }: { className: string 
   useEffect(() => {
     themeRef.current = theme
   }, [theme])
-
-
 
   const targetRef = useRef<SVGSVGElement>(null)
   const scopeRef = useRef<Scope>(null)
@@ -87,13 +85,13 @@ export default function ThemeSwitchingButton({ className }: { className: string 
   }, [])
   return (
     <Button
-      className={clsx("h-16 aspect-square", className)} //, { [style.toDark]: theme === "light" }
+      className={clsx("aspect-square h-16", className)} //, { [style.toDark]: theme === "light" }
       onClick={() => {
         if (!scopeRef.current) return
         scopeRef.current.methods.toggleTheme()
       }}
     >
-      <svg ref={targetRef} className="w-full text-text-main aspect-square" viewBox="0 0 24 24" fill="currentColor">
+      <svg ref={targetRef} className="text-text-main aspect-square w-full" viewBox="0 0 24 24" fill="currentColor">
         <path
           className={style.sunCenter}
           d="M 12 7 C 9.24 7 7 9.24 7 12 S 9.24 17 12 17 S 17 14.76 17 12 S 14.76 7 12 7 L 12 7 Z"

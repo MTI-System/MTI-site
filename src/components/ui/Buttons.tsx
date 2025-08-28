@@ -44,8 +44,7 @@ export function HoldButton({
   useEffect(() => {
     scope.current = createScope({ root: target }).add((self) => {
       if (!self) return
-      const confirmationAnim = animate(
-        `.${styleModule.holdOverlay}`, {
+      const confirmationAnim = animate(`.${styleModule.holdOverlay}`, {
         left: ["-100%", 0],
         ease: "outCubic",
         duration: holdTimeout,

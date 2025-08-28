@@ -9,7 +9,9 @@
   height: 80%;
   /*fill: var(--main-color);*/
   stroke: var(--main-color);
-  transition: 250ms ease, stroke 250ms ease;
+  transition:
+    250ms ease,
+    stroke 250ms ease;
   overflow: visible;
 }
 

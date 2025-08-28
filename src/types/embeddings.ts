@@ -16,8 +16,8 @@ export const EmbeddingMetadataSchema = z.record(z.string(), z.union([z.string(),
     is_external: z.string().optional(),
     file_size: z.string().optional(),
     is_primary: z.string().optional(),
-    extension_color: z.string().optional().nullable()
-  })
+    extension_color: z.string().optional().nullable(),
+  }),
 )
 
 export type EmbeddingmetadataInterface = z.infer<typeof EmbeddingMetadataSchema>

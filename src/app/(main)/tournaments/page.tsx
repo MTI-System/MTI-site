@@ -1,7 +1,3 @@
-export default async function TournamentsPage(){
-  return (
-    <>
-      Турниры
-    </>
-  )
+export default async function TournamentsPage() {
+  return <>Турниры</>
 }

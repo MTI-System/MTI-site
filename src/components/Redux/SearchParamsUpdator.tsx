@@ -10,9 +10,8 @@ import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import cookies from "js-cookie"
 
 function isDigit(char: string): boolean {
-    return /\d/.test(char);
+  return /\d/.test(char)
 }
-
 
 export default function SearchParamsUpdator() {
   const tt = useAppSelector((state) => state.searchParams.tt)
@@ -22,7 +21,6 @@ export default function SearchParamsUpdator() {
     const possibleYears = await fetchYears(Number(availableTournamentTypes.find((t) => t.name === usingTT)?.id ?? 1))
     return possibleYears[0]
   }
-
 
   const [isPending, startTransition] = useTransition()
   const searchParams = useSearchParams()
@@ -41,7 +39,7 @@ export default function SearchParamsUpdator() {
     const sectionsListFilter = getSearchParams.get("sections")
     const params = new URLSearchParams(searchParams.toString())
     if (ttSP) {
-      if (!availableTournamentTypes.find(t=>t.name===ttSP)){
+      if (!availableTournamentTypes.find((t) => t.name === ttSP)) {
         ttSP = "ТЮФ"
       }
       params.set("tt", ttSP)
@@ -56,16 +54,14 @@ export default function SearchParamsUpdator() {
           }
           dispatch(setYear(Number(params.get("year")) ?? 2026))
         })
-      }
-      else {
+      } else {
         params.set("year", year.toString())
         const next = `${pathname}?${params.toString()}`
         if (next !== `${pathname}?${searchParams}`) {
           router.replace(next)
         }
       }
-    }
-    else {
+    } else {
       const ttSP = searchParams.get("tt") ?? cookies.get("mtiyt_tournamentType")
       const yearSP = searchParams.get("year")
     }
@@ -77,8 +73,8 @@ export default function SearchParamsUpdator() {
         sectionsListFilter
           ?.split(",")
           .filter((val) => val !== "")
-          .map((val: string) => Number(val)) ?? null
-      )
+          .map((val: string) => Number(val)) ?? null,
+      ),
     )
     setIsMounted(true)
   }, [])

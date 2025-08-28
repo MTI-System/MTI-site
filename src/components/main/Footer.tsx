@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <>
       <footer className="bg-bg-alt">
-        <div className="flex flex-row sm:px-32 text-text-main justify-between items-center">
+        <div className="text-text-main flex flex-row items-center justify-between sm:px-32">
           <div className="flex gap-4">
             <LogoWithTT logoSize={"var(--main-header-text)"} margin={"-2vh"}>
               <h2 className="" style={{ fontSize: "var(--main-header-text)" }}>

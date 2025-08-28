@@ -19,8 +19,8 @@ export default async function ProblemsList({
           : problems.filter(
               (problemValue) =>
                 problemValue.problem_sections.find(
-                  (section) => sectionsFilter.find((sec) => sec === section.id) !== undefined
-                ) !== undefined
+                  (section) => sectionsFilter.find((sec) => sec === section.id) !== undefined,
+                ) !== undefined,
             )
         ).map((problem: ProblemInterface, index: number) => (
           <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>

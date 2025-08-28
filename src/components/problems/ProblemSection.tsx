@@ -4,7 +4,7 @@ import style from "@/styles/components/sections/problems/problemSection.module.c
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { FaTimes } from "react-icons/fa"
 import { CSSProperties, useTransition, useRef } from "react"
-import {usePathname, useRouter} from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import clsx from "clsx"
 import { fetchModifySectionOnTask } from "@/scripts/ApiFetchers"
 import { useDispatch } from "react-redux"
@@ -12,7 +12,6 @@ import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { setSectionList } from "@/redux_stores/SearchParamsSlice"
 import { FaFilter } from "react-icons/fa"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
-
 
 export default function ProblemSection({
   problemId,
@@ -60,7 +59,7 @@ export default function ProblemSection({
               const response = await fetchModifySectionOnTask(
                 problemId.toString(),
                 section.id.toString(),
-                "delete_section"
+                "delete_section",
               )
               if (!response) return
               router.refresh()
@@ -90,7 +89,7 @@ export default function ProblemSection({
             ></button> */}
           </TooltipTrigger>
           <TooltipContent>
-            <p className="bg-[var(--inactive-color)] px-2 py-1 rounded-xl">Добавить в фильтр</p>
+            <p className="rounded-xl bg-[var(--inactive-color)] px-2 py-1">Добавить в фильтр</p>
           </TooltipContent>
         </Tooltip>
       )}

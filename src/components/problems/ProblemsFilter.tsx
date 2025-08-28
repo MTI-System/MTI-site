@@ -1,17 +1,9 @@
 "use client"
-import {
-  Dropdown,
-  DropdownElement,
-  DropdownOptionInterface,
-  DropdownTrigger,
-} from "@/components/ui/Dropdown"
+import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "@/components/ui/Dropdown"
 import style from "@/styles/components/sections/problems/problemsFilter.module.css"
 import { ReactNode, useEffect, useState } from "react"
 import Loading from "@/app/loading"
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "@/redux_stores/tournamentTypeRedixStore"
+import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { setSectionList, setYear } from "@/redux_stores/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
@@ -32,9 +24,7 @@ export default function ProblemFilters({
   possibleSections: ProblemSectionInterface[]
   isModerator: boolean
 }) {
-  const year = useAppSelector(
-    (state) => state.searchParams.year ?? possibleYears[0],
-  )
+  const year = useAppSelector((state) => state.searchParams.year ?? possibleYears[0])
   const tt = useAppSelector((state) => state.searchParams.tt)
   const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
   const isPending = useAppSelector((state) => state.system.isPending)
@@ -46,15 +36,8 @@ export default function ProblemFilters({
           <></>
         </LogoWithTT>
         <div className={style.filters}>
-          <YearFilter
-            possibleYears={possibleYears}
-            isPending={isPending}
-            isModerator={isModerator}
-          />
-          <SectionFilter
-            possibleSections={possibleSections}
-            isPending={isPending}
-          ></SectionFilter>
+          <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
+          <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
         </div>
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
@@ -149,8 +132,7 @@ function SectionFilter({
       <FaTimes
         className={clsx("w-20 text-[1.5rem]", {
           "text-[var(--alt-text)]": isPending || selectedOptions.length === 0,
-          "hover:text-[var(--alt-text)]":
-            !isPending && selectedOptions.length !== 0,
+          "hover:text-[var(--alt-text)]": !isPending && selectedOptions.length !== 0,
         })}
         onClick={() => {
           if (isPending || selectedOptions.length === 0) return
@@ -171,8 +153,7 @@ function YearFilter({
   isPending: boolean
   isModerator: boolean
 }) {
-  const year =
-    useAppSelector((state) => state.searchParams.year) ?? possibleYears[0]
+  const year = useAppSelector((state) => state.searchParams.year) ?? possibleYears[0]
   const dispatcher = useAppDispatch()
 
   const optionList: { children: string; value: number; active: boolean }[] = []
@@ -192,15 +173,11 @@ function YearFilter({
       return
     }
     if (isModerator)
-      for (let i = year + 1; i < array[index - 1]; i++)
-        optionList.push({ children: `+${i}`, value: i, active: true })
+      for (let i = year + 1; i < array[index - 1]; i++) optionList.push({ children: `+${i}`, value: i, active: true })
     optionList.push({ children: year.toString(), value: year, active: true })
   })
   if (isModerator) {
-    const firstYear =
-      possibleYears.length > 0
-        ? possibleYears[possibleYears.length - 1]
-        : new Date().getFullYear() + 1
+    const firstYear = possibleYears.length > 0 ? possibleYears[possibleYears.length - 1] : new Date().getFullYear() + 1
     optionList.push({
       children: `+${firstYear - 1}`,
       value: firstYear - 1,
@@ -210,7 +187,7 @@ function YearFilter({
 
   return (
     <Dropdown
-      trigger={<DropdownTrigger>{year}</DropdownTrigger>}
+      trigger={<DropdownTrigger disabled={isPending}>{year}</DropdownTrigger>}
       onOptionSelect={(option: DropdownOptionInterface<number> | null) => {
         if (!option) return
         dispatcher(setYear(option.value))

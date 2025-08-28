@@ -70,7 +70,7 @@ export default async function Page({
     isEditable = userAuth.rights
       .map(
         (right) =>
-          right.right_flag == "MODERATE_PROBLEMS_" + availableTournamentTypes.find((val) => val.name === tt)?.id
+          right.right_flag == "MODERATE_PROBLEMS_" + availableTournamentTypes.find((val) => val.name === tt)?.id,
       )
       .some((x) => x)
   }
@@ -87,7 +87,7 @@ export default async function Page({
   })
   availableProblemSections.sort(
     (section_1, section_2) =>
-      section_1.section_science - section_2.section_science || section_1.title.localeCompare(section_2.title)
+      section_1.section_science - section_2.section_science || section_1.title.localeCompare(section_2.title),
   )
 
   return (

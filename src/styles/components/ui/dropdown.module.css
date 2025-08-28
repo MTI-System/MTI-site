@@ -12,7 +12,10 @@
   gap: 0.5rem;
   background-color: var(--alt-bg);
   border-radius: 0.25rem;
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  transition:
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease;
   padding: 0.5rem;
 }
 
@@ -83,7 +86,10 @@
   z-index: 2000;
   backface-visibility: hidden;
   transform: translateY(-16px);
-  transition: transform 250ms ease, opacity 250ms ease, visibility 250ms ease;
+  transition:
+    transform 250ms ease,
+    opacity 250ms ease,
+    visibility 250ms ease;
   opacity: 0;
 }
 .dropdownMenu.down {
@@ -96,8 +102,13 @@
   visibility: visible;
   transform: translateY(0);
   opacity: 1;
-  transition: transform 250ms ease, opacity 250ms ease, visibility 250ms ease, background-color 250ms ease,
-    color 250ms ease, border-color 250ms ease;
+  transition:
+    transform 250ms ease,
+    opacity 250ms ease,
+    visibility 250ms ease,
+    background-color 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease;
 }
 
 .dropdownMenu.animating {
@@ -106,7 +117,10 @@
 .dropdownOption {
   flex: 1 1 auto;
   min-width: 0;
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  transition:
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease;
   user-select: none;
 }
 

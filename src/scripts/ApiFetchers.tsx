@@ -26,7 +26,7 @@ async function fetchWithRetryAndTimeout(
   url: string,
   init?: RequestInit,
   retry: number = 0,
-  timeout: number = 5000
+  timeout: number = 5000,
 ): Promise<Response | null> {
   if (!init) init = {}
   try {
@@ -57,7 +57,7 @@ async function fetchWithRetryAndTimeout(
 async function fetchProblems(tournament: string, year: number): Promise<ProblemListInterface | null> {
   await connection()
   const response = await fetchWithRetryAndTimeout(
-    PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`
+    PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`,
   )
   if (!response) return null
   const respJSON = z.array(ProblemSchema).safeParse(await response.json())
@@ -154,7 +154,7 @@ async function deleteMaterial(problemId: number, materialId: number): Promise<bo
 async function fetchYears(tournamentTypeId: number): Promise<number[]> {
   return (
     (await fetchWithRetryAndTimeout(PROBLEM_API + "years?tournamentTypeId=" + tournamentTypeId.toString()).then(
-      (response) => response?.json()
+      (response) => response?.json(),
     )) ?? [new Date().getFullYear()]
   )
 }
@@ -171,7 +171,7 @@ async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesIn
 async function fetchModifySectionOnTask(
   problemId: string,
   sectionIds: string[] | string,
-  action: "add_section" | "delete_section"
+  action: "add_section" | "delete_section",
 ): Promise<boolean> {
   if (action !== "add_section" && action !== "delete_section") return false
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""

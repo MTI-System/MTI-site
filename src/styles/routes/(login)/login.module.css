@@ -13,7 +13,7 @@
   border-radius: var(--block-radius);
   height: 55rem;
   width: 50rem;
-  @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     height: 90%;
     width: 90%;
     font-size: 0.5rem;
@@ -37,14 +37,13 @@
 .loginButton {
   width: 40rem;
   height: 5rem;
-  @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     height: 40%;
     width: 80%;
   }
   font-size: 2rem;
   font-weight: bold;
 }
-
 
 .infoDiv {
   border-width: var(--border-width);
@@ -54,7 +53,7 @@
   padding: 1rem;
   margin-top: 1.5rem;
   width: 35rem;
-  @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     width: 80%;
   }
 }

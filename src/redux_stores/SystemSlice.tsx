@@ -1,26 +1,26 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 interface SystemState {
-  theme: string,
+  theme: string
   isPending: boolean
 }
 
 const initialState: SystemState = {
-  theme: 'light',
+  theme: "light",
   isPending: false,
 }
 
 export const SystemSlice = createSlice({
-  name: 'System',
+  name: "System",
   initialState,
   reducers: {
     setTheme: (state, action: PayloadAction<string>) => {
-      state.theme = action.payload;
+      state.theme = action.payload
     },
-    setIsPending: (state,  action: PayloadAction<boolean>) => {
-      state.isPending = action.payload;
-    }
-  }
+    setIsPending: (state, action: PayloadAction<boolean>) => {
+      state.isPending = action.payload
+    },
+  },
 })
 
-export const {setTheme, setIsPending} = SystemSlice.actions
+export const { setTheme, setIsPending } = SystemSlice.actions

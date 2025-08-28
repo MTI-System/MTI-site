@@ -24,10 +24,9 @@
   box-shadow: 0 0 0.3em 0.1em rgba(0, 0, 0, 0.25);
   max-width: 90%;
   max-height: 90%;
-  @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     width: 90%;
     border-radius: 1rem;
-    
   }
   padding: 3vw 3vh;
   overflow: auto;
@@ -40,9 +39,12 @@
   margin: 1.5rem;
   line-height: 100%;
   color: var(--main-text-color);
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  transition:
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease;
   cursor: pointer;
-  @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     margin-right: 2rem;
   }
 }

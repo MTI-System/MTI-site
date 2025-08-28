@@ -16,7 +16,6 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-
 }
 .contentSlectContainer {
   padding: 2rem;
@@ -31,8 +30,8 @@
   outline: none;
   border-radius: var(--block-radius) 0 0 var(--block-radius);
   border-right: var(--border-width) var(--alt-text) solid;
-  @media(max-width: 1200px){
-    border-radius: var(--block-radius) var(--block-radius) 0  0  ;
+  @media (max-width: 1200px) {
+    border-radius: var(--block-radius) var(--block-radius) 0 0;
     border-width: 0px;
   }
   padding: 0.75rem;
@@ -84,7 +83,7 @@ div.additionalDataContainer:has(.errorText) {
 }
 .typeSettingsContainer {
   width: 100%;
-  
+
   height: auto;
   display: flex;
   justify-content: space-between;
@@ -92,7 +91,7 @@ div.additionalDataContainer:has(.errorText) {
   align-content: center;
   border-radius: var(--block-radius);
   border: calc(var(--border-width)) var(--alt-text) solid;
-  @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     justify-content: center;
     flex-direction: column;
     /* overflow: hidden; */
@@ -100,13 +99,13 @@ div.additionalDataContainer:has(.errorText) {
 }
 .typeSelectDropdown {
   /* height: 100% !important; */
-    height: 3rem!important;
+  height: 3rem !important;
 }
 .typeSelectDropdown > div:not([style]) {
   border-radius: 0 var(--block-radius) var(--block-radius) 0 !important;
-  @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     border-top-width: 1px;
-    border-radius: 0 0  var(--block-radius) var(--block-radius)!important;
+    border-radius: 0 0 var(--block-radius) var(--block-radius) !important;
     border-color: var(--alt-text);
   }
   height: 100% !important;
@@ -136,7 +135,7 @@ div.additionalDataContainer:has(.errorText) {
   align-items: center;
   align-content: center;
   justify-content: space-between;
-  @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     /* width: 20rem; */
     justify-content: center;
     flex-direction: column;
@@ -149,9 +148,9 @@ div.additionalDataContainer:has(.errorText) {
   width: 25% !important;
   height: 100% !important;
   border-radius: calc(var(--block-radius) / 2) !important;
-  @media(max-width: 1200px){
-    width: 100%!important;
-    
+  @media (max-width: 1200px) {
+    width: 100% !important;
+
     /* height: 3rem!important; */
   }
 }

@@ -16,8 +16,13 @@
   height: 0.5rem;
   width: 100%;
   background-color: var(--progress-color);
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease,
-    opacity 250ms ease, left 250ms ease;
+  transition:
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease,
+    box-shadow 250ms ease,
+    opacity 250ms ease,
+    left 250ms ease;
 }
 
 .iconButtons {
@@ -31,9 +36,9 @@
   font-size: 2rem;
   /* width: 2.5rem; */
 }
-.retryIcon:hover{
+.retryIcon:hover {
   color: var(--alt-text);
 }
-.abortIcon:hover{
+.abortIcon:hover {
   color: var(--alt-text);
 }

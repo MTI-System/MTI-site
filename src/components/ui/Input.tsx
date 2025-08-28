@@ -61,7 +61,7 @@ export const IconInput = forwardRef<HTMLInputElement, IconInputProps>(
         </div>
       </div>
     )
-  }
+  },
 )
 export const Input = forwardRef<HTMLInputElement, InputProps>(({ onChange, onEnter, ...rest }, ref) => {
   const registerFocus = useFocusRegistration()

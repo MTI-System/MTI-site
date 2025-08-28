@@ -7,7 +7,6 @@ export default function ContentContainer({
 }: {
   children: ReactNode
   containerTitle: string
-
 }) {
   return (
     <div className={style.contentContainer}>

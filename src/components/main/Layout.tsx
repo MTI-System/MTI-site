@@ -15,7 +15,7 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
   return (
     <>
       <body className="h-[100vh]" data-theme={theme}>
-        <InitRedux/>
+        <InitRedux />
         {children}
       </body>
     </>

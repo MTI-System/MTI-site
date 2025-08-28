@@ -99,8 +99,8 @@ function LoginPage() {
               formState === FormState.EmptyUsername
                 ? "Username can't be empty"
                 : formState === FormState.IncorrectData
-                ? "Incorrect username"
-                : "Username"
+                  ? "Incorrect username"
+                  : "Username"
             }
             isError={formState === FormState.EmptyUsername || formState === FormState.IncorrectData}
           >
@@ -119,8 +119,8 @@ function LoginPage() {
               formState === FormState.EmptyPassword
                 ? "Password field can't be empty"
                 : formState === FormState.IncorrectData
-                ? "Or password"
-                : "Password"
+                  ? "Or password"
+                  : "Password"
             }
             isError={formState === FormState.EmptyPassword || formState === FormState.IncorrectData}
           >

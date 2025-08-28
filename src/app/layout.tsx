@@ -9,7 +9,6 @@ import StoreProvider from "@/components/Redux/StoreProvider"
 import LayoutComponent from "@/components/main/Layout"
 import ThemeUpdator from "@/components/Redux/ThemeUpdator"
 
-
 export function generateMetadata(): Metadata {
   const titleText = "Вход в аккаунт · МТИ"
   const descriptionText = "Вход в аккаунт Менеджера Турнирной Информации"
@@ -26,7 +25,7 @@ export default async function Template({ children }: { children: React.ReactNode
   return (
     <html className="bg-bg-main">
       <head>
-        <link rel="icon" href="https://mtiyt.ru/favicon.ico" type="image/x-icon"/>
+        <link rel="icon" href="https://mtiyt.ru/favicon.ico" type="image/x-icon" />
         <Script
           id="yandex-metrika"
           strategy="afterInteractive"
