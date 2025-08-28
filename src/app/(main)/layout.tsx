@@ -8,7 +8,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
     <>
       <Header />
       <AuthReduxUpdator/>
-      <main className="px-9 min-h-full sm:px-[2rem] lg:px-24 bg-bg-main">
+      <main className="px-2 min-h-full sm:px-[2rem] lg:px-10 bg-bg-main">
         {children}
       </main>
       <Footer />

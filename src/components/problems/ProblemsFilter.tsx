@@ -1,24 +1,25 @@
 "use client"
-import { Dropdown, TextDropdown } from "@/components/ui/Dropdown"
+import {Dropdown, TextDropdown} from "@/components/ui/Dropdown"
 import style from "@/styles/components/sections/problems/problemsFilter.module.css"
-import { ReactNode, useEffect, useState } from "react"
+import {ReactNode, useEffect, useState} from "react"
 import Loading from "@/app/loading"
-import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
-import { setSectionList, setYear } from "@/redux_stores/SearchParamsSlice"
-import { AddProblem } from "./ProblemForms"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import LogoWithTT from "../ui/LogoWithTT"
-import { ProblemSectionInterface } from "@/types/problemAPI"
+import {useAppDispatch, useAppSelector} from "@/redux_stores/tournamentTypeRedixStore"
+import {setSectionList, setYear} from "@/redux_stores/SearchParamsSlice"
+import {AddProblem} from "./ProblemForms"
+import {availableTournamentTypes} from "@/constants/AvailableTournaments"
+import {ProblemSectionInterface} from "@/types/problemAPI"
 import ProblemSection from "./ProblemSection"
 import clsx from "clsx"
-import { FaTimes } from "react-icons/fa"
+import {FaTimes} from "react-icons/fa"
+import ColoredTType from "@/components/ui/ColoredTType";
+import {LuSettings2} from "react-icons/lu";
 
 export default function ProblemFilters({
-  children,
-  possibleYears,
-  possibleSections,
-  isModerator,
-}: {
+                                         children,
+                                         possibleYears,
+                                         possibleSections,
+                                         isModerator,
+                                       }: {
   children: ReactNode
   possibleYears: number[]
   possibleSections: ProblemSectionInterface[]
@@ -26,31 +27,39 @@ export default function ProblemFilters({
 }) {
   const year = useAppSelector((state) => state.searchParams.year ?? possibleYears[0])
   const tt = useAppSelector((state) => state.searchParams.tt)
-  const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
+  const tt_obj = availableTournamentTypes.find((val) => val.name === tt)
+  const ttid = tt_obj?.id ?? 1
   const isPending = useAppSelector((state) => state.system.isPending)
   return (
     <>
-      <div className="flex items-center content-center gap-5 w-full h-fit">
-        <p className={style.filtersTitle}>Задачи</p>
-        <LogoWithTT logoSize={"2rem"} margin={"0rem"}>
-          <></>
-        </LogoWithTT>
-        <div className={style.filters}>
-          <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
+      <div className="flex justify-center sm:justify-start content-center gap-5 h-15 w-full pt-5">
+        <div className="flex items-center gap-2">
+          <p className="font-bold text-text-main text-4xl">Задачи</p>
+          <p className="font-bold text-4xl text-text-main"><ColoredTType ttName={tt ?? "???"}
+                                                                         ttColor={tt_obj?.color ?? "#FFFFFF"}/></p>
+        </div>
+        <div className="sm:flex items-center gap-1 flex-col sm:flex-row hidden">
+          <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator}/>
           <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
         </div>
+        <div className="aspect-square h-full w-fit">
+          <div className="flex sm:hidden items-center justify-center border-1  text-text-main border-text-main rounded-full aspect-square h-full p-1">
+            <LuSettings2/>
+          </div>
+        </div>
+
       </div>
-      <AddProblem targetTTID={ttid} targetYear={year} />
+      <AddProblem targetTTID={ttid} targetYear={year}/>
       {!isPending && children}
-      {isPending && <Loading />}
+      {isPending && <Loading/>}
     </>
   )
 }
 
 function SectionFilter({
-  possibleSections,
-  isPending,
-}: {
+                         possibleSections,
+                         isPending,
+                       }: {
   possibleSections: ProblemSectionInterface[]
   isPending: boolean
 }) {
@@ -77,11 +86,11 @@ function SectionFilter({
           return {
             displayElement: (
               <div
-                className={clsx("max-[1200px]:text-[0.6rem]", style.addSectionOptionContainer, {
+                className={clsx("", style.addSectionOptionContainer, {
                   [style.selectedSection]: selectedOptions.find((v) => v === section.id) !== undefined,
                 })}
               >
-                <ProblemSection key={section.id} section={section} />
+                <ProblemSection key={section.id} section={section}/>
               </div>
             ),
             value: section.id,
@@ -125,7 +134,7 @@ function SectionFilter({
           if (isOpened) return
           dispatcher(setSectionList(selectedOptions.length === 0 ? null : selectedOptions))
         }}
-        className={style.selectSectionDropdown}
+        className=""
         disabled={isPending}
       />
       <FaTimes
@@ -144,10 +153,10 @@ function SectionFilter({
 }
 
 function YearFilter({
-  possibleYears,
-  isPending,
-  isModerator,
-}: {
+                      possibleYears,
+                      isPending,
+                      isModerator,
+                    }: {
   possibleYears: number[]
   isPending: boolean
   isModerator: boolean
@@ -158,14 +167,14 @@ function YearFilter({
   const optionList: { displayName: string; value: number; active: boolean }[] = []
   possibleYears.forEach((year, index, array) => {
     if (index === 0) {
-      if (isModerator) optionList.push({ displayName: `+${year + 1}`, value: year + 1, active: true })
-      optionList.push({ displayName: year.toString(), value: year, active: true })
+      if (isModerator) optionList.push({displayName: `+${year + 1}`, value: year + 1, active: true})
+      optionList.push({displayName: year.toString(), value: year, active: true})
       return
     }
     if (isModerator)
       for (let i = year + 1; i < array[index - 1]; i++)
-        optionList.push({ displayName: `+${i}`, value: i, active: true })
-    optionList.push({ displayName: year.toString(), value: year, active: true })
+        optionList.push({displayName: `+${i}`, value: i, active: true})
+    optionList.push({displayName: year.toString(), value: year, active: true})
   })
   if (isModerator) {
     const firstYear = possibleYears.length > 0 ? possibleYears[possibleYears.length - 1] : new Date().getFullYear() + 1
@@ -188,7 +197,7 @@ function YearFilter({
         dispatcher(setYear(e.selection))
       }}
       disabled={isPending}
-      className={style.yearFilter}
+      className=""
     ></TextDropdown>
   )
 }

@@ -33,17 +33,19 @@ export default function ProblemSection({
   const router = useRouter()
   return (
     <div
-      className={clsx(style.sectionCard, { [style.deletionPending]: isPending })}
+      className={clsx("flex gap-2 items-center border-2 font-bold text-[var(--border-color)] dark:text-[var(--border-color-dark)] border-[var(--border-color)] dark:border-[var(--border-color-dark)] px-2 py-0.3 rounded-full bg-[var(--bg-color)] dark:bg-[var(--bg-color-dark)]", { [style.deletionPending]: isPending })}
       style={
         {
-          "--bg-color": section.tile_color,
-          "--bg-color-dark": section.dark_theme_tile_color,
+          "--bg-color": section.tile_color + "33",
+          "--border-color": section.tile_color,
+          "--bg-color-dark": section.dark_theme_tile_color + "33",
+          "--border-color-dark": section.dark_theme_tile_color,
           opacity: isHidden ? 0.5 : 1,
         } as CSSProperties
       }
     >
       <div
-        className={style.sectionLogo}
+        className={style.sectionLogo} //TODO Иконку на tailwind переделать
         style={
           {
             mask: `url(${FILES_SERVER + section.icon_src}) no-repeat  center/contain`,
@@ -51,7 +53,7 @@ export default function ProblemSection({
           } as CSSProperties
         }
       ></div>
-      <p>{section.title}</p>
+      <p className="text-base">{section.title}</p>
       {isEditable && problemId && (
         <FaTimes
           className={style.deleteIcon}
@@ -84,10 +86,6 @@ export default function ProblemSection({
                 }
               }}
             />
-            {/* <button
-              className="size-3"
-
-            ></button> */}
           </TooltipTrigger>
           <TooltipContent>
             <p className="bg-[var(--inactive-color)] px-2 py-1 rounded-xl">Добавить в фильтр</p>

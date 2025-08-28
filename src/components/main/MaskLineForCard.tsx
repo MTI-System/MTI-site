@@ -14,7 +14,6 @@ export function MaskLineForMenuCard({ className, maskIcon, iconH=100, iconW=120 
         maskRepeat: 'repeat no-repeat',
         WebkitMaskPosition: '0 center',       // одна строка по центру по Y
         maskPosition: '0 center',
-        // transform: "rotate(45deg)",
       }}
     />
   );

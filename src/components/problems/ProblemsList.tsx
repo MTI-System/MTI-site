@@ -12,7 +12,7 @@ export default async function ProblemsList({
   sectionsFilter: number[]
 }) {
   return (
-    <>
+    <div className="flex flex-col gap-2 mt-5">
       {problems !== null &&
         (sectionsFilter.length === 0
           ? problems
@@ -26,7 +26,7 @@ export default async function ProblemsList({
           <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>
         ))}
       {problems === null && <FetchingErrorBanner />}
-    </>
+    </div>
   )
 }
 //

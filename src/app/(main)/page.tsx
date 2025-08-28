@@ -1,7 +1,5 @@
-import mainStyle from "@/styles//routes/(main)/mainPage.module.css"
 import ClickableCard from "@/components/ui/ClickableCard"
 import {Button} from "@/components/ui/Buttons"
-import clsx from "clsx"
 import type {Metadata} from "next";
 import {cookies} from "next/headers";
 import {FILES_SERVER} from "@/constants/APIEndpoints";
@@ -20,11 +18,10 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const cookie = await cookies()
+  const clickableCardStyle = "flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt"
   return (
-    <div className="h-full">
-      {/*<video src={"https://files.mofius-server.ru/media/get/AQPUtp1tpdS06ThMCbWYoHohuk19_muVSo55Nqu5VSwfkPXd3SC2z_BTPcPFCDZ.mp4"} controls></video>*/}
-      <div className="flex flex-col min-h-[70rem] sm:min-h-[55rem] h-[50vh] gap-5 sm:gap-2 py-10 sm:grid sm:grid-cols-3 sm:grid-rows-4">
-        <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt sm:row-[1/3] overflow-hidden border-border border-[1px]`} href={`/problems`}>
+    <div className="flex flex-col min-h-[70rem] sm:min-h-[55rem] h-[100vh] gap-5 sm:gap-2 py-10 sm:grid sm:grid-cols-3 sm:grid-rows-4">
+        <ClickableCard className={`${clickableCardStyle} sm:row-[1/3] overflow-hidden border-border border-[1px]`} href={`/problems`}>
           <div className="relative z-10 size-full"> {/* Контейнер с относительным позиционированием */}
             <div className="z-10 flex flex-col justify-between size-full relative"> {/* Добавляем relative */}
               <div className="w-full pl-5 sm:pl-0 md:pl-5 pt-4 sm:flex sm:flex-col  sm:items-center md:items-start">
@@ -51,9 +48,8 @@ export default async function Home() {
                                  maskIcon={`${FILES_SERVER}problemMask.svg`}/>
           </div>
 
-
         </ClickableCard>
-        <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt sm:row-span-3 md:row-span-3 lg:row-span-4  overflow-hidden border-border border-[1px]`} href={`/tournaments`}>
+        <ClickableCard className={`${clickableCardStyle} sm:row-span-3 md:row-span-3 lg:row-span-4  overflow-hidden border-border border-[1px]`} href={`/tournaments`}>
           <div className="relative z-10 size-full"> {/* Контейнер с относительным позиционированием */}
             <div className="z-10 flex flex-col justify-between size-full relative"> {/* Добавляем relative */}
 
@@ -86,7 +82,7 @@ export default async function Home() {
                                  maskIcon={`${FILES_SERVER}TournametnsMask.svg`}/>
           </div>
         </ClickableCard>
-        <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt sm:row-span-2 overflow-hidden border-border border-[1px]`} href={`/fights`}>
+        <ClickableCard className={`${clickableCardStyle} sm:row-span-2 overflow-hidden border-border border-[1px]`} href={`/fights`}>
           <div className="relative z-10 size-full"> {/* Контейнер с относительным позиционированием */}
             <div className="z-10 flex flex-col justify-between size-full relative"> {/* Добавляем relative */}
               <div className="w-full pl-5 sm:pl-0 md:pl-5 pt-4 sm:flex sm:flex-col  sm:items-center md:items-start">
@@ -103,7 +99,7 @@ export default async function Home() {
                                  maskIcon={`${FILES_SERVER}FightsMask.svg`}/>
           </div>
         </ClickableCard>
-        <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt overflow-hidden border-border border-[1px]`} href={`/peoples`}>
+        <ClickableCard className={`${clickableCardStyle} overflow-hidden border-border border-[1px]`} href={`/peoples`}>
           <div className="relative z-10 size-full"> {/* Контейнер с относительным позиционированием */}
             <div className="z-10 flex flex-col justify-between size-full relative"> {/* Добавляем relative */}
               <div className="w-full pl-5 sm:pl-0 md:pl-5 pt-4 sm:flex sm:flex-col  sm:items-center md:items-start">
@@ -120,7 +116,7 @@ export default async function Home() {
                                  maskIcon={`${FILES_SERVER}PeoplesMask.svg`}/>
           </div>
         </ClickableCard>
-        <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt sm:row-[3/5] overflow-hidden border-border border-[1px]`} href={`/stats`}>
+        <ClickableCard className={`${clickableCardStyle} sm:row-[3/5] overflow-hidden border-border border-[1px]`} href={`/stats`}>
           <div className="relative z-10 size-full"> {/* Контейнер с относительным позиционированием */}
             <div className="z-10 flex flex-col justify-between size-full relative"> {/* Добавляем relative */}
               <div className="w-full pl-5 sm:pl-0 md:pl-5 pt-4 sm:flex sm:flex-col  sm:items-center md:items-start">
@@ -141,7 +137,7 @@ export default async function Home() {
                                  maskIcon={`${FILES_SERVER}StatsMask.svg`}/>
           </div>
         </ClickableCard>
-        <ClickableCard className={`flex hover:opacity-80 transition-opacity relative h-[10rem] sm:h-auto bg-bg-alt sm:col-span-2 md:col-span-2 lg:col-span-1 overflow-hidden border-border border-[1px]`} href={`/organizators`}>
+        <ClickableCard className={`${clickableCardStyle} sm:col-span-2 md:col-span-2 lg:col-span-1 overflow-hidden border-border border-[1px]`} href={`/organizators`}>
           <div className="relative z-10 size-full"> {/* Контейнер с относительным позиционированием */}
             <div className="z-10 flex flex-col justify-between size-full relative"> {/* Добавляем relative */}
               <div className="w-full pl-5 sm:pl-0 md:pl-5 pt-4 sm:flex sm:flex-col  sm:items-center md:items-start">
@@ -157,6 +153,6 @@ export default async function Home() {
           </div>
         </ClickableCard>
       </div>
-    </div>
+
   )
 }

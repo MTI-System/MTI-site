@@ -12,7 +12,7 @@ import {FILES_SERVER} from "@/constants/APIEndpoints"
 export default function Header() {
   return (
     <>
-      <header className="flex justify-between px-5 py-3 bg-bg-alt transition">
+      <header className="flex justify-between px-10 py-3 bg-bg-alt transition">
         <div className="flex gap-1 items-center h-fit font-bold">
           <Link href={"/"} className="flex items-center h-fit">
             <div className="size-[4rem] bg-text-main  mask-[url('https://api.mtiyt.ru/files/get/LogoType.svg')] mask-no-repeat mask-center mask-contain"></div>
