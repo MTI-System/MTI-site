@@ -55,6 +55,7 @@ export function Dropdown<T>({
           setIsOpen(open)
           rest.onOpenChange && rest.onOpenChange(open, e, reason)
         }}
+        modal={false}
         {...rest}
       >
         {trigger}
