@@ -10,10 +10,12 @@ export default function TournamentCardsSpinner({tournamentsCards}: { tournaments
   const itemsPerPage = 3;
   const totalPages = Math.ceil(tournamentsCards.length / itemsPerPage);
 
+
   const currentItems = tournamentsCards.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
-  );
+  )
+
 
   const goToPage = async (pageIndex: number) => {
     setIsAnimating(true);
@@ -23,22 +25,22 @@ export default function TournamentCardsSpinner({tournamentsCards}: { tournaments
     setIsAnimating(false);
   };
 
+
   return (
     <div className="relative">
       <div className="flex items-center justify-center">
         <div className="flex flex-1/6 items-center justify-center">
-           <button className="size-10 bg-bg-alt rounded-full border border-border" onClick={
-             async ()=>{
-               if (currentPage <= 0) {
+          <button className="size-10 bg-bg-alt rounded-full border border-border" onClick={
+            async () => {
+              if (currentPage <= 0) {
                 await goToPage(totalPages - 1)
-               }
-               else {
+              } else {
                 await goToPage(currentPage - 1)
-               }
-             }
-           }>
-             <MdChevronLeft className="size-full text-text-main"/>
-           </button>
+              }
+            }
+          }>
+            <MdChevronLeft className="size-full text-text-main"/>
+          </button>
         </div>
         <div className={`flex  flex-4/6 gap-2 justify-start transition-opacity duration-300 ${
           isAnimating ? 'opacity-0' : 'opacity-100'
@@ -51,18 +53,17 @@ export default function TournamentCardsSpinner({tournamentsCards}: { tournaments
           ))}
         </div>
         <div className="flex flex-1/6 items-center justify-center">
-           <button className="size-10 bg-bg-alt rounded-full border border-border" onClick={
-             async ()=>{
-               if (currentPage >= totalPages - 1) {
+          <button className="size-10 bg-bg-alt rounded-full border border-border" onClick={
+            async () => {
+              if (currentPage >= totalPages - 1) {
                 await goToPage(0)
-               }
-               else {
+              } else {
                 await goToPage(currentPage + 1)
-               }
-             }
-           }>
-             <MdChevronRight className="size-full text-text-main"/>
-           </button>
+              }
+            }
+          }>
+            <MdChevronRight className="size-full text-text-main"/>
+          </button>
         </div>
       </div>
 

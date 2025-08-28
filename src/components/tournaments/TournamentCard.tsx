@@ -12,8 +12,6 @@ export default function TournamentCard({tournamentCard}: { tournamentCard: Tourn
           <img src={FILES_SERVER + tournamentCard.tournamentLogo}
                className="border-border border rounded-full size-20 aspect-square mb-6 object-cover" alt="лого"/>
         </div>
-
-
         <div className="flex flex-col gap-2 h-fit w-full px-2 pt-10 pb-5 text-text-main">
           <h3 className="font-medium text-base">{tournamentCard.title}</h3>
           <div className="flex text-text-alt items-center">
