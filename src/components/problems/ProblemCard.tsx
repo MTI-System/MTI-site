@@ -1,47 +1,42 @@
 "use client"
-import { FaEdit, FaPlus } from "react-icons/fa"
-import { MdDeleteOutline } from "react-icons/md"
-import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
+import {FaEdit, FaPlus} from "react-icons/fa"
+import {MdDeleteOutline} from "react-icons/md"
+import {ProblemInterface, ProblemSectionInterface, ProblemSectionWithSciencesInterface} from "@/types/problemAPI"
 import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import {
-  deleteProblem,
-  fetchModifySectionOnTask,
-  fetchAllAvailableSections,
-  fetchEditProblem,
-} from "@/scripts/ApiFetchers"
-import { CSSProperties, useEffect, useRef, useState, useTransition } from "react"
+import {usePathname, useRouter, useSearchParams} from "next/navigation"
+import {deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections} from "@/scripts/ApiFetchers"
+import {CSSProperties, useEffect, useMemo, useRef, useState, useTransition} from "react"
 import clsx from "clsx"
-import { PiGlobeLight } from "react-icons/pi"
+import {PiGlobeBold, PiGlobeLight} from "react-icons/pi"
 import ProblemSection from "@/components/problems/ProblemSection"
 import DeletionConfirmationModal from "./DeletionConfirmationModal"
-import { Dropdown } from "@/components/ui/Dropdown"
-import { Input } from "@/components/ui/Input"
-import { Button } from "@/components/ui/Buttons"
-import { useAppSelector, RootState } from "@/redux_stores/tournamentTypeRedixStore"
-import { setSections, setIsLoaded } from "@/redux_stores/ProblemSlice"
-import { useStore } from "react-redux"
+import {Dropdown} from "@/components/ui/Dropdown"
+import {Input, TitledInput} from "@/components/ui/Input"
+import {Button} from "@/components/ui/Buttons"
+import {PROBLEM_API} from "@/constants/APIEndpoints"
+import {useAppSelector, RootState} from "@/redux_stores/tournamentTypeRedixStore"
+import {router} from "next/client"
+import {useAppDispatch} from "@/redux_stores/tournamentTypeRedixStore"
+import {setSections, setIsLoaded} from "@/redux_stores/ProblemSlice"
+import {useStore} from "react-redux"
 import DotWithTooltip from "@/components/ui/DotWithTooltip"
 
-export default function ProblemCard({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
+export default function ProblemCard({problem, isEditable}: { problem: ProblemInterface; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
   return (
     <div
-      className={clsx(style.problemCard, {
-        [style.cardPendingDeletion]: isPendingDeletion,
-      })}
-    >
-      <ProblemCardContent problem={problem} isEditable={isEditable} startTransition={startTransition} />
+      className={clsx("bg-bg-alt rounded-2xl py-4 border-[1px] border-border", {[style.cardPendingDeletion]: isPendingDeletion})}>
+      <ProblemCardContent problem={problem} isEditable={isEditable} startTransition={startTransition}/>
     </div>
   )
 }
 
 export function ProblemCardContent({
-  problem,
-  isEditable,
-  startTransition,
-}: {
+                                     problem,
+                                     isEditable,
+                                     startTransition,
+                                   }: {
   problem: ProblemInterface
   isEditable: boolean
   startTransition?: (trh: () => void) => void
@@ -72,7 +67,8 @@ export function ProblemCardContent({
     formData.set("newProblemFirstTranslationText", editedProblemTextRef.current)
     formData.set("newProblemFirstTranslationBy", editedProblemByRef.current)
     formData.set("token", token)
-    return await fetchEditProblem(formData)
+    const resp = await fetch(PROBLEM_API + "edit_problem", {method: "POST", body: formData})
+    return resp.ok
   }
   useEffect(() => {
     if (is_edit_page && !isAuthenticated) {
@@ -82,12 +78,12 @@ export function ProblemCardContent({
 
   return (
     <>
-      <div className={style.cardHeader}>
-        <div className={style.titleContainer}>
+      <div className="flex flex-col px-7 border-b-[1px] gap-2 pb-3 border-b-border">
+        <div className="flex items-center justify-between">
           {is_edit_page && (
-            <div className={style.editProblemLineDiv}>
+            <div className="">
               <Input
-                className={style.problemNumberInput}
+                className=""
                 name="globalNumber"
                 type="number"
                 min={1}
@@ -108,7 +104,7 @@ export function ProblemCardContent({
                 }}
               />
               <Input
-                className={style.problemNameInput}
+                className=""
                 name="firstTranslationName"
                 type="text"
                 defaultValue={problem.problem_translations[selectedTrnslation].problem_name}
@@ -130,7 +126,7 @@ export function ProblemCardContent({
           {!is_edit_page && (
             <Link href={"/problems/" + problem.id.toString()}>
               <h2
-                className={clsx(style.problemTitle, {
+                className={clsx("font-bold text-xl text-text-main", {
                   [style.hover]: !pathname.startsWith("/problems/" + problem.id.toString()),
                 })}
               >
@@ -140,14 +136,13 @@ export function ProblemCardContent({
               </h2>
             </Link>
           )}
-          {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
+          {isEditable && <EditButtons startTransition={startTransition} problem={problem}/>}
         </div>
 
         {is_edit_page && (
-          <div className={style.translationContainer}>
-            <PiGlobeLight />
-            <div className={style.translationSelector}>
-              {/*<h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>*/}
+          <div className="">
+            <PiGlobeLight/>
+            <div className="">
               <input
                 className={clsx(style.problemByInput)}
                 defaultValue={problem.problem_translations[selectedTrnslation].problem_by}
@@ -170,15 +165,14 @@ export function ProblemCardContent({
           </div>
         )}
         {!is_edit_page && (
-          <div className={style.translationContainer}>
-            <PiGlobeLight />
-            <div className={style.translationSelector}>
-              <h2 className={style.translationName}>{problem.problem_translations[selectedTrnslation].problem_by}</h2>
-            </div>
+          <div className="flex items-center gap-2 text-text-alt text-base">
+            <PiGlobeBold className="text-2xl"/>
+            <h2 className="font-bold">{problem.problem_translations[selectedTrnslation].problem_by}</h2>
           </div>
         )}
       </div>
-      <div className={style.textContainer}>
+      <div className="px-7 pt-3">
+        <p className="text-xl text-text-alt font-medium pt-3 pb-2">Условие</p>
         {is_edit_page && (
           <div>
             <textarea
@@ -202,10 +196,12 @@ export function ProblemCardContent({
         )}
         {!is_edit_page && (
           <pre>
-            <p className={style.problemText}>{problem.problem_translations[selectedTrnslation].problem_text}</p>
+            <p
+              className="text-wrap text-xl text-text-main font-medium">{problem.problem_translations[selectedTrnslation].problem_text}</p>
           </pre>
         )}
       </div>
+
       {is_edit_page && isError && <p className={style.errormessage}>Произошла ошибка</p>}
       {is_edit_page && (
         <Button
@@ -231,18 +227,18 @@ export function ProblemCardContent({
         </Button>
       )}
 
-      <div className={style.sectionListContainer}>
-        <ScienceList problem={problem} setHovered={setHoveredScience} />
-        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
+      <div className="px-7">
+        <ScienceList problem={problem} setHovered={setHoveredScience}/>
+        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience}/>
       </div>
     </>
   )
 }
 
 function EditButtons({
-  startTransition,
-  problem,
-}: {
+                       startTransition,
+                       problem,
+                     }: {
   startTransition: (transitionHandler: () => void) => void
   problem: ProblemInterface
 }) {
@@ -252,11 +248,12 @@ function EditButtons({
 
   return (
     <>
-      <div className={style.editButtons}>
+      <div className="flex  gap-1">
         <Link href={"/problems/" + problem.id.toString() + "?is_edit=true"}>
-          <FaEdit />
+          <FaEdit className="text-accent-primary"/>
         </Link>
         <MdDeleteOutline
+          className="text-red-600"
           onClick={() => {
             setIsDelModalOpen(true)
           }}
@@ -278,10 +275,10 @@ function EditButtons({
   )
 }
 
-function ScienceList({ problem, setHovered }: { problem: ProblemInterface; setHovered: (id: number | null) => void }) {
+function ScienceList({problem, setHovered}: { problem: ProblemInterface; setHovered: (id: number | null) => void }) {
   return (
-    <div className={style.sciencesListContainer}>
-      <h3>
+    <div className="flex gap-3">
+      <h3 className="text-text-alt font-medium text-xl py-2  pt-3">
         Разделы {problem.sciences.length === 1 ? problem.sciences[0].title.toLowerCase().slice(0, -1) + "и" : "наук"}:
       </h3>
       {problem.sciences.length !== 1 && (
@@ -303,10 +300,10 @@ function ScienceList({ problem, setHovered }: { problem: ProblemInterface; setHo
 }
 
 function SectionsList({
-  problem,
-  isEditable,
-  hoveredScience,
-}: {
+                        problem,
+                        isEditable,
+                        hoveredScience,
+                      }: {
   problem: ProblemInterface
   isEditable: boolean
   hoveredScience: number | null
@@ -320,17 +317,12 @@ function SectionsList({
 
   useEffect(() => {
     if (allSections === null && !isSectionLoading) {
-      const { isLoaded: freshLoaded } = store.getState().problems
+      const {isLoaded: freshLoaded} = store.getState().problems
       if (!freshLoaded) {
         dispatcher(setIsLoaded())
         fetchAllAvailableSections().then((sections) => {
           dispatcher(setSections(sections))
-          setAddableSections(
-            sections.map((value) => ({
-              ...value,
-              section_science: value.section_science.id,
-            })),
-          )
+          setAddableSections(sections.map((value) => ({...value, section_science: value.section_science.id})))
         })
       }
     }
@@ -341,19 +333,16 @@ function SectionsList({
         .filter(
           (section) =>
             problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined &&
-            section.tournament_type === problem.tournament_type,
+            section.tournament_type === problem.tournament_type
         )
-        .map((value) => ({
-          ...value,
-          section_science: value.section_science.id,
-        })),
+        .map((value) => ({...value, section_science: value.section_science.id}))
     )
   }, [problem.problem_sections.length, allSections])
 
   const pathname = usePathname()
 
   return (
-    <div className={style.sectionsList}>
+    <div className="flex  flex-wrap gap-4 pt-3">
       {problem.problem_sections.map((section) => {
         return (
           <ProblemSection
@@ -380,15 +369,15 @@ function SectionsList({
           }}
         />
       )}
-      {isEditable && <AddNewSection problemId={problem.id} addableSections={addableSections ?? []} />}
+      {isEditable && <AddNewSection problemId={problem.id} addableSections={addableSections ?? []}/>}
     </div>
   )
 }
 
 function AddNewSection({
-  problemId,
-  addableSections,
-}: {
+                         problemId,
+                         addableSections,
+                       }: {
   problemId: number
   addableSections: ProblemSectionInterface[]
 }) {
@@ -418,93 +407,82 @@ function AddNewSection({
       }, 2000)
     } else setColor(defaultColors)
   }, [addableSections, isError])
-
+  {/* TODO: reimplement using new dropdown */}
   return (
     <>
-      {/* TODO: reimplement using new dropdown */}
-      {/* <Dropdown
-        options={addableSections.map((section) => {
-          return {
-            displayElement: (
-              <div
-                className={clsx(style.addSectionOptionContainer, {
-                  [style.selectedSection]:
-                    selectedOptions.find((v) => v === section.id.toString()) !==
-                    undefined,
-                })}
-              >
-                <ProblemSection
-                  key={section.id}
-                  section={section}
-                  problemId={problemId}
-                />
-              </div>
-            ),
-            value: section.id.toString(),
-            active: true,
-          }
-        })}
-        defaultSelection={{
-          displayElement: (
-            <div className={style.defaultOption}>
-              <FaPlus />
-              {isError || isLoading ? (
-                isError ? (
-                  <p>Ошибка</p>
-                ) : (
-                  <p>Добавляем...</p>
-                )
-              ) : selectedOptions.length > 0 ? (
-                <p>Добавить {selectedOptions.length}</p>
-              ) : (
-                <p>Добавить</p>
-              )}
-            </div>
-          ),
-          value: "0",
-          active: true,
-        }}
-        onOptionSelect={(e) => {
-          e.isDefaultPrevented = true
-          const elem = selectedOptions.find((v) => v === e.selection)
-          if (elem === undefined)
-            setSelectedOption((prev) => {
-              return [...prev, e.selection]
-            })
-          else
-            setSelectedOption((prev) => {
-              return [...prev.filter((v) => v !== e.selection)]
-            })
-        }}
-        onToggle={async (isOpened) => {
-          if (isOpened) return
-          if (selectedOptions.length === 0) return
-          setSelectedOption([])
-          console.log("fetch->add")
-          setColor({
-            "--border-color": "rgb(255, 204, 0)",
-            "--bg-color": "rgba(255, 204, 0, 0.25)",
-            opacity: 0.5,
-          })
-          setIsLoading(true)
-          const res = await fetchModifySectionOnTask(
-            problemId.toString(),
-            selectedOptions,
-            "add_section",
-          )
-          setIsLoading(false)
-          if (res) {
-            startTransition(() => {
-              router.refresh()
-            })
-            return
-          }
-          setIsError(true)
-        }}
-        className={style.addNewSectionDropdown}
-        style={color as CSSProperties}
-        disabled={isPending || isError || isLoading}
-      /> */}
+      {/*<Dropdown*/}
+      {/*  options={addableSections.map((section) => {*/}
+      {/*    return {*/}
+      {/*      displayElement: (*/}
+      {/*        <div*/}
+      {/*          className={clsx(style.addSectionOptionContainer, {*/}
+      {/*            [style.selectedSection]: selectedOptions.find((v) => v === section.id.toString()) !== undefined,*/}
+      {/*          })}*/}
+      {/*        >*/}
+      {/*          <ProblemSection key={section.id} section={section} problemId={problemId}/>*/}
+      {/*        </div>*/}
+      {/*      ),*/}
+      {/*      value: section.id.toString(),*/}
+      {/*      active: true,*/}
+      {/*    }*/}
+      {/*  })}*/}
+      {/*  defaultSelection={{*/}
+      {/*    displayElement: (*/}
+      {/*      <div className={style.defaultOption}>*/}
+      {/*        <FaPlus/>*/}
+      {/*        {isError || isLoading ? (*/}
+      {/*          isError ? (*/}
+      {/*            <p>Ошибка</p>*/}
+      {/*          ) : (*/}
+      {/*            <p>Добавляем...</p>*/}
+      {/*          )*/}
+      {/*        ) : selectedOptions.length > 0 ? (*/}
+      {/*          <p>Добавить {selectedOptions.length}</p>*/}
+      {/*        ) : (*/}
+      {/*          <p>Добавить</p>*/}
+      {/*        )}*/}
+      {/*      </div>*/}
+      {/*    ),*/}
+      {/*    value: "0",*/}
+      {/*    active: true,*/}
+      {/*  }}*/}
+      {/*  onOptionSelect={(e) => {*/}
+      {/*    e.isDefaultPrevented = true*/}
+      {/*    const elem = selectedOptions.find((v) => v === e.selection)*/}
+      {/*    if (elem === undefined)*/}
+      {/*      setSelectedOption((prev) => {*/}
+      {/*        return [...prev, e.selection]*/}
+      {/*      })*/}
+      {/*    else*/}
+      {/*      setSelectedOption((prev) => {*/}
+      {/*        return [...prev.filter((v) => v !== e.selection)]*/}
+      {/*      })*/}
+      {/*  }}*/}
+      {/*  onToggle={async (isOpened) => {*/}
+      {/*    if (isOpened) return*/}
+      {/*    if (selectedOptions.length === 0) return*/}
+      {/*    setSelectedOption([])*/}
+      {/*    console.log("fetch->add")*/}
+      {/*    setColor({*/}
+      {/*      "--border-color": "rgb(255, 204, 0)",*/}
+      {/*      "--bg-color": "rgba(255, 204, 0, 0.25)",*/}
+      {/*      opacity: 0.5,*/}
+      {/*    })*/}
+      {/*    setIsLoading(true)*/}
+      {/*    const res = await fetchModifySectionOnTask(problemId.toString(), selectedOptions, "add_section")*/}
+      {/*    setIsLoading(false)*/}
+      {/*    if (res) {*/}
+      {/*      startTransition(() => {*/}
+      {/*        router.refresh()*/}
+      {/*      })*/}
+      {/*      return*/}
+      {/*    }*/}
+      {/*    setIsError(true)*/}
+      {/*  }}*/}
+      {/*  className={style.addNewSectionDropdown}*/}
+      {/*  style={color as CSSProperties}*/}
+      {/*  disabled={isPending || isError || isLoading}*/}
+      {/*/>*/}
     </>
   )
 }
