@@ -1,7 +1,7 @@
 "use client"
 import { useRef } from "react"
 import { Provider } from "react-redux"
-import makeStore, { AppStore } from "@/redux_stores/tournamentTypeRedixStore"
+import makeStore, { AppStore } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { useSearchParams } from "next/navigation"
 
 export default function StoreProvider({

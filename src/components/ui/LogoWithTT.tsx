@@ -1,6 +1,6 @@
 "use client"
 import footerStyle from "@/styles/components/sections/app/footer.module.css"
-import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import { ReactNode } from "react"
 

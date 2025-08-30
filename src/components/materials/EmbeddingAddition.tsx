@@ -19,7 +19,7 @@ import style from "@/styles/components/sections/problems/[id]/embeddingAddition.
 import Modal from "@/components/ui/Modals"
 import ContentContainer from "@/components/ui/ContentContainer"
 import AddFileField from "@/components/materials/AddFileField"
-import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import clsx from "clsx"
 import { LoadFileForm } from "@/types/embeddings"
 import { fetchAddLinkEmbedding, fetchAllAvailableEmbeddingTypes } from "@/scripts/ApiFetchers"

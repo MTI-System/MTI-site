@@ -1,10 +1,9 @@
 import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit"
 import { useDispatch, useSelector, useStore } from "react-redux"
-import { SPSlice } from "@/redux_stores/SearchParamsSlice"
-import { AuthSlice } from "@/redux_stores/AuthSlice"
-import { SystemSlice } from "@/redux_stores/SystemSlice"
-import { ProblemsSlice } from "@/redux_stores/ProblemSlice"
-import { ProblemSectionInterface } from "@/types/problemAPI"
+import { SPSlice } from "@/redux_stores/Global/SearchParamsSlice"
+import { AuthSlice } from "@/redux_stores/Global/AuthSlice"
+import { SystemSlice } from "@/redux_stores/Global/SystemSlice"
+import { ProblemsSlice } from "@/redux_stores/Global/ProblemSlice"
 
 export default function makeStore(theme: string, tt: string, token: string, year: string | null) {
   return configureStore({

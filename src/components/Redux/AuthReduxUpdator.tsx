@@ -1,9 +1,9 @@
 "use client"
 
-import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { useEffect } from "react"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
-import { setAuth } from "@/redux_stores/AuthSlice"
+import { setAuth } from "@/redux_stores/Global/AuthSlice"
 
 export default function AuthReduxUpdator() {
   const dispatch = useAppDispatch()

@@ -3,8 +3,8 @@ import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } f
 import style from "@/styles/components/sections/problems/problemsFilter.module.css"
 import { ReactNode, useEffect, useState } from "react"
 import Loading from "@/app/loading"
-import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
-import { setSectionList, setYear } from "@/redux_stores/SearchParamsSlice"
+import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { setSectionList, setYear } from "@/redux_stores/Global/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import LogoWithTT from "../ui/LogoWithTT"
@@ -12,6 +12,7 @@ import { ProblemSectionInterface } from "@/types/problemAPI"
 import ProblemSection from "./ProblemSection"
 import clsx from "clsx"
 import { FaTimes } from "react-icons/fa"
+import ColoredTType from "@/components/ui/ColoredTType"
 
 export default function ProblemFilters({
   children,
@@ -31,10 +32,13 @@ export default function ProblemFilters({
   return (
     <>
       <div className="flex h-fit w-full content-center items-center gap-5">
-        <p className={style.filtersTitle}>Задачи</p>
-        <LogoWithTT logoSize={"2rem"} margin={"0rem"}>
-          <></>
-        </LogoWithTT>
+        <p className="font-bold text-4xl">
+          Задачи
+        </p>
+        <p className="font-bold text-4xl"><ColoredTType
+            ttName={tt ?? "ТЮФ"}
+            ttColor={availableTournamentTypes.find((t) => t.name === tt)?.color ?? "#000000"}
+          /></p>
         <div className={style.filters}>
           <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
           <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>

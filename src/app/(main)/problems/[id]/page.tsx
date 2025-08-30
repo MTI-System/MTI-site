@@ -6,6 +6,7 @@ import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import { Metadata } from "next"
 import { cache } from "react"
 import { fetchProblemById } from "@/scripts/ApiFetchers"
+import TournamentsPageTabs from "@/components/tournaments/TournamentsPageTabs";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params
@@ -32,6 +33,7 @@ async function ProblemPageMain({ params }: PageProps) {
   if (problem === null) return <NotFound />
   return (
     <>
+
       <ProblemPage problem={problem} />
     </>
   )

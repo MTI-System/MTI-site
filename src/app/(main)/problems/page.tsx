@@ -95,7 +95,6 @@ export default async function Page({
       </Suspense>
       <div>
         <div>
-          {/* <h2>Задачи на {availableTournamentTypes.find((val) => val.name === tt)?.longName}</h2> */}
           {tt && (
             <ProblemFilters
               possibleSections={availableProblemSections}

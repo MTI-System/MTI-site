@@ -5,7 +5,7 @@ import style from "@/styles/components/sections/problems/problemForms.module.css
 import { FormEvent, useEffect, useRef, useState, useTransition } from "react"
 import clsx from "clsx"
 import { Input, TitledInput } from "@/components/ui/Input"
-import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { useRouter } from "next/navigation"
 import { fetchAddProblem } from "@/scripts/ApiFetchers"
