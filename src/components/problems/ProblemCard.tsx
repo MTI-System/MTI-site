@@ -16,13 +16,14 @@ import clsx from "clsx"
 import { PiGlobeLight } from "react-icons/pi"
 import ProblemSection from "@/components/problems/ProblemSection"
 import DeletionConfirmationModal from "./DeletionConfirmationModal"
-import { Dropdown } from "@/components/ui/Dropdown"
+import { DropdownMulti, DropdownMultiElement, DropdownOptionInterface, DropdownTrigger } from "@/components/ui/Dropdown"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Buttons"
 import { useAppSelector, RootState } from "@/redux_stores/tournamentTypeRedixStore"
 import { setSections, setIsLoaded } from "@/redux_stores/ProblemSlice"
 import { useStore } from "react-redux"
 import DotWithTooltip from "@/components/ui/DotWithTooltip"
+import { Menu } from "@base-ui-components/react"
 
 export default function ProblemCard({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
@@ -397,18 +398,19 @@ function AddNewSection({
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const defaultColors = {
-    "--border-color": "var(--primary-accent)",
-    "--bg-color": "var(--alt-primary-accent)",
+    "--border-color": "var(--color-accent-primary)",
+    "--bg-color": "rgba(from var(--border-color) r g b / 0.125)",
     opacity: 1,
   }
   const [color, setColor] = useState(defaultColors)
-  const [selectedOptions, setSelectedOption] = useState<string[]>([])
+  const selectionState = useState<DropdownOptionInterface<number>[] | null>(null)
+  const [selectedOptions, setSelectedOption] = selectionState
 
   useEffect(() => {
     if (isError) {
       setColor((curColor) => {
         const newColor = { ...curColor }
-        newColor["--border-color"] = "var(--warning-accent)"
+        newColor["--border-color"] = "var(--color-accent-warning)"
         newColor["--bg-color"] = "rgba(from var(--border-color) r g b / 0.125)"
         newColor.opacity = 1
         return newColor
@@ -420,91 +422,73 @@ function AddNewSection({
   }, [addableSections, isError])
 
   return (
-    <>
-      {/* TODO: reimplement using new dropdown */}
-      {/* <Dropdown
-        options={addableSections.map((section) => {
-          return {
-            displayElement: (
-              <div
-                className={clsx(style.addSectionOptionContainer, {
-                  [style.selectedSection]:
-                    selectedOptions.find((v) => v === section.id.toString()) !==
-                    undefined,
-                })}
-              >
-                <ProblemSection
-                  key={section.id}
-                  section={section}
-                  problemId={problemId}
-                />
-              </div>
-            ),
-            value: section.id.toString(),
-            active: true,
-          }
-        })}
-        defaultSelection={{
-          displayElement: (
-            <div className={style.defaultOption}>
-              <FaPlus />
-              {isError || isLoading ? (
-                isError ? (
-                  <p>Ошибка</p>
-                ) : (
-                  <p>Добавляем...</p>
-                )
-              ) : selectedOptions.length > 0 ? (
-                <p>Добавить {selectedOptions.length}</p>
+    <DropdownMulti
+      selectionState={selectionState}
+      trigger={
+        <DropdownTrigger
+          style={color as CSSProperties}
+          className="hover:bg-bg-alt rounded-full border-4 border-[var(--border-color)] bg-[var(--bg-color)] font-bold text-[var(--border-color)]"
+          disabled={isPending || isError || isLoading}
+          dontDisplaySelection
+        >
+          <div className="flex w-40 flex-row content-center items-center justify-start gap-2">
+            <FaPlus />
+            {isError || isLoading ? (
+              isError ? (
+                <p>Ошибка</p>
               ) : (
-                <p>Добавить</p>
-              )}
-            </div>
-          ),
-          value: "0",
-          active: true,
-        }}
-        onOptionSelect={(e) => {
-          e.isDefaultPrevented = true
-          const elem = selectedOptions.find((v) => v === e.selection)
-          if (elem === undefined)
-            setSelectedOption((prev) => {
-              return [...prev, e.selection]
-            })
-          else
-            setSelectedOption((prev) => {
-              return [...prev.filter((v) => v !== e.selection)]
-            })
-        }}
-        onToggle={async (isOpened) => {
-          if (isOpened) return
-          if (selectedOptions.length === 0) return
-          setSelectedOption([])
-          console.log("fetch->add")
-          setColor({
-            "--border-color": "rgb(255, 204, 0)",
-            "--bg-color": "rgba(255, 204, 0, 0.25)",
-            opacity: 0.5,
+                <p>Добавляем...</p>
+              )
+            ) : selectedOptions && selectedOptions?.length > 0 ? (
+              <p className="text-nowrap">Добавить {selectedOptions.length} разделов</p>
+            ) : (
+              <p>Добавить</p>
+            )}
+          </div>
+        </DropdownTrigger>
+      }
+      onOpenChange={async (open, e, reason, selected) => {
+        if (open) return
+        if (reason !== "trigger-press") {
+          setSelectedOption(null)
+          return
+        }
+        if (!selected || selected.length === 0) return
+        setSelectedOption([])
+        console.log("fetch->add")
+        setColor({
+          "--border-color": "rgb(255, 204, 0)",
+          "--bg-color": "rgba(255, 204, 0, 0.25)",
+          opacity: 0.5,
+        })
+        setIsLoading(true)
+        const res = await fetchModifySectionOnTask(
+          problemId.toString(),
+          selected.map((s) => s.value.toString()),
+          "add_section",
+        )
+        setIsLoading(false)
+        if (res) {
+          startTransition(() => {
+            router.refresh()
           })
-          setIsLoading(true)
-          const res = await fetchModifySectionOnTask(
-            problemId.toString(),
-            selectedOptions,
-            "add_section",
-          )
-          setIsLoading(false)
-          if (res) {
-            startTransition(() => {
-              router.refresh()
-            })
-            return
-          }
-          setIsError(true)
-        }}
-        className={style.addNewSectionDropdown}
-        style={color as CSSProperties}
-        disabled={isPending || isError || isLoading}
-      /> */}
-    </>
+          return
+        }
+        setIsError(true)
+      }}
+    >
+      {addableSections.map((section, i) => (
+        <DropdownMultiElement value={section.id} key={i + 1}>
+          <div className="grid cursor-default grid-cols-[2rem_1fr] items-center gap-1">
+            <Menu.CheckboxItemIndicator className="col-start-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill={section.tile_color}>
+                <path d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z" />
+              </svg>
+            </Menu.CheckboxItemIndicator>
+            <ProblemSection key={section.id} section={section} problemId={problemId} className="col-start-2" />
+          </div>
+        </DropdownMultiElement>
+      ))}
+    </DropdownMulti>
   )
 }

@@ -19,12 +19,14 @@ export default function ProblemSection({
   isEditable,
   isHidden = false,
   isFiltered = false,
+  className,
 }: {
   problemId?: number
   section: ProblemSectionInterface
   isEditable?: boolean
   isHidden?: boolean
   isFiltered?: boolean
+  className?: string
 }) {
   const [isPending, startTransition] = useTransition()
   const dispatcher = useDispatch()
@@ -32,7 +34,7 @@ export default function ProblemSection({
   const router = useRouter()
   return (
     <div
-      className={clsx(style.sectionCard, { [style.deletionPending]: isPending })}
+      className={clsx(className, style.sectionCard, { [style.deletionPending]: isPending })}
       style={
         {
           "--bg-color": section.tile_color,
