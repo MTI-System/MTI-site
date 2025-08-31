@@ -29,13 +29,13 @@ body[data-theme="dark"] .sectionCard {
 }
 
 .sectionLogo {
-  background-color: var(--bg-color);
+  background-color: var(--border-color);
   mask-size: contain;
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.2rem;
+  width: 1.2rem;
 }
 body[data-theme="dark"] .sectionLogo {
-  background-color: var(--bg-color-dark);
+  background-color: var(--border-color-dark);
 }
 
 .sectionCard.deletionPending {

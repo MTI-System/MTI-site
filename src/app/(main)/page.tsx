@@ -23,18 +23,13 @@ export default async function Home() {
   const cookie = await cookies()
   return (
     <div className="h-full">
-      {/*<video src={"https://files.mofius-server.ru/media/get/AQPUtp1tpdS06ThMCbWYoHohuk19_muVSo55Nqu5VSwfkPXd3SC2z_BTPcPFCDZ.mp4"} controls></video>*/}
       <div className="flex h-[50vh] min-h-[70rem] flex-col gap-5 py-10 sm:grid sm:min-h-[55rem] sm:grid-cols-3 sm:grid-rows-4 sm:gap-2">
         <ClickableCard
           className={`bg-bg-alt border-border relative flex h-[10rem] overflow-hidden border-[1px] transition-opacity hover:opacity-80 sm:row-[1/3] sm:h-auto`}
           href={`/problems`}
         >
-          <div className="relative size-full">
-            {" "}
-            {/* Контейнер с относительным позиционированием */}
+          <div className="relative z-1 size-full">
             <div className="relative flex size-full flex-col justify-between">
-              {" "}
-              {/* Добавляем relative */}
               <div className="w-full pt-4 pl-5 sm:flex sm:flex-col sm:items-center sm:pl-0 md:items-start md:pl-5">
                 <p className="text-text-alt font-bold sm:text-center md:text-start">РАЗДЕЛ СО ВСЕМИ ЗАДАНИЯМИ</p>
                 <h2 className="text-text-main text-3xl font-bold">Задачи</h2>
@@ -66,7 +61,7 @@ export default async function Home() {
           className={`bg-bg-alt border-border relative flex h-[10rem] overflow-hidden border-[1px] transition-opacity hover:opacity-80 sm:row-span-3 sm:h-auto md:row-span-3 lg:row-span-4`}
           href={`/tournaments`}
         >
-          <div className="relative size-full">
+          <div className="relative z-1 size-full">
             {" "}
             {/* Контейнер с относительным позиционированием */}
             <div className="relative flex size-full flex-col justify-between">
@@ -88,7 +83,7 @@ export default async function Home() {
           </div>
           <div className="absolute inset-0 z-0 hidden flex-col pt-8 opacity-50 sm:flex">
             <MaskLineForMenuCard
-              className="bg-accent-primary ms-[-4rem] flex-[1]"
+              className="bg-accent-primary z-0 ms-[-4rem] flex-[1]"
               maskIcon={`${FILES_SERVER}TournametnsMask.svg`}
             />
             <MaskLineForMenuCard
@@ -113,12 +108,8 @@ export default async function Home() {
           className={`bg-bg-alt border-border relative flex h-[10rem] overflow-hidden border-[1px] transition-opacity hover:opacity-80 sm:row-span-2 sm:h-auto`}
           href={`/fights`}
         >
-          <div className="relative size-full">
-            {" "}
-            {/* Контейнер с относительным позиционированием */}
+          <div className="relative z-1 size-full">
             <div className="relative flex size-full flex-col justify-between">
-              {" "}
-              {/* Добавляем relative */}
               <div className="w-full pt-4 pl-5 sm:flex sm:flex-col sm:items-center sm:pl-0 md:items-start md:pl-5">
                 <p className="text-text-alt font-bold sm:text-center md:text-start">БЛИЖАЙШИЕ, ИДУЩИЕ, ПРОШЕДШИЕ</p>
                 <h2 className="text-text-main text-3xl font-bold">Бои</h2>
@@ -144,12 +135,8 @@ export default async function Home() {
           className={`bg-bg-alt border-border relative flex h-[10rem] overflow-hidden border-[1px] transition-opacity hover:opacity-80 sm:h-auto`}
           href={`/peoples`}
         >
-          <div className="relative size-full">
-            {" "}
-            {/* Контейнер с относительным позиционированием */}
+          <div className="relative z-1 size-full">
             <div className="relative flex size-full flex-col justify-between">
-              {" "}
-              {/* Добавляем relative */}
               <div className="w-full pt-4 pl-5 sm:flex sm:flex-col sm:items-center sm:pl-0 md:items-start md:pl-5">
                 <p className="text-text-alt font-bold sm:text-center md:text-start">ВСЕ, КТО СВЯЗАН С ТУРНИРАМИ</p>
                 <h2 className="text-text-main text-3xl font-bold">Люди</h2>
@@ -181,12 +168,8 @@ export default async function Home() {
           className={`bg-bg-alt border-border relative flex h-[10rem] overflow-hidden border-[1px] transition-opacity hover:opacity-80 sm:row-[3/5] sm:h-auto`}
           href={`/stats`}
         >
-          <div className="relative size-full">
-            {" "}
-            {/* Контейнер с относительным позиционированием */}
+          <div className="relative z-1 size-full">
             <div className="relative flex size-full flex-col justify-between">
-              {" "}
-              {/* Добавляем relative */}
               <div className="w-full pt-4 pl-5 sm:flex sm:flex-col sm:items-center sm:pl-0 md:items-start md:pl-5">
                 <p className="text-text-alt font-bold sm:text-center md:text-start">СТАТИСТИЧЕСКИЙ ГЕНЕРАТОР</p>
                 <h2 className="text-text-main text-3xl font-bold">Статистика</h2>
@@ -215,12 +198,8 @@ export default async function Home() {
           className={`bg-bg-alt border-border relative flex h-[10rem] overflow-hidden border-[1px] transition-opacity hover:opacity-80 sm:col-span-2 sm:h-auto md:col-span-2 lg:col-span-1`}
           href={`/organizators`}
         >
-          <div className="relative size-full">
-            {" "}
-            {/* Контейнер с относительным позиционированием */}
+          <div className="relative z-1 size-full">
             <div className="relative flex size-full flex-col justify-between">
-              {" "}
-              {/* Добавляем relative */}
               <div className="w-full pt-4 pl-5 sm:flex sm:flex-col sm:items-center sm:pl-0 md:items-start md:pl-5">
                 <p className="text-text-alt font-bold sm:text-center md:text-start">ЛИЧНЫЙ КАБИНЕТ</p>
                 <h2 className="text-text-main text-3xl font-bold">Организаторам</h2>

@@ -1,4 +1,3 @@
-import style from "@/styles/routes/(main)/problems/page.module.css"
 import ProblemFilters from "@/components/problems/ProblemsFilter"
 import ProblemsList from "@/components/problems/ProblemsList"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
@@ -7,7 +6,6 @@ import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
 import { fetchPermissions, fetchProblems, fetchYears } from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/Redux/SearchParamsUpdator"
 import type { Metadata } from "next"
-import { cookies } from "next/headers"
 import Loading from "@/app/loading"
 import { ProblemListInterface, ProblemSectionInterface } from "@/types/problemAPI"
 
@@ -95,8 +93,8 @@ export default async function Page({
       <Suspense fallback={"Load search params"}>
         <SearchParamsUpdator />
       </Suspense>
-      <div className={style.problemPage}>
-        <div className={style.problemsContainer}>
+      <div>
+        <div>
           {/* <h2>Задачи на {availableTournamentTypes.find((val) => val.name === tt)?.longName}</h2> */}
           {tt && (
             <ProblemFilters

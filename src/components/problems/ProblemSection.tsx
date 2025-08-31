@@ -4,14 +4,14 @@ import style from "@/styles/components/sections/problems/problemSection.module.c
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { FaTimes } from "react-icons/fa"
 import { CSSProperties, useTransition, useRef } from "react"
-import { usePathname, useRouter } from "next/navigation"
-import clsx from "clsx"
+import { useRouter } from "next/navigation"
 import { fetchModifySectionOnTask } from "@/scripts/ApiFetchers"
 import { useDispatch } from "react-redux"
 import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
 import { setSectionList } from "@/redux_stores/SearchParamsSlice"
 import { FaFilter } from "react-icons/fa"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import twclsx from "@/utils/twClassMerge"
 
 export default function ProblemSection({
   problemId,
@@ -34,17 +34,22 @@ export default function ProblemSection({
   const router = useRouter()
   return (
     <div
-      className={clsx(className, style.sectionCard, { [style.deletionPending]: isPending })}
+      className={twclsx(
+        "py-0.3 flex items-center gap-2 rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] px-2 font-bold text-[var(--border-color)] dark:border-[var(--border-color-dark)] dark:bg-[var(--bg-color-dark)] dark:text-[var(--border-color-dark)]",
+        { "opacity-50": isPending },
+      )}
       style={
         {
-          "--bg-color": section.tile_color,
-          "--bg-color-dark": section.dark_theme_tile_color,
+          "--bg-color": section.tile_color + "33",
+          "--border-color": section.tile_color,
+          "--bg-color-dark": section.dark_theme_tile_color + "33",
+          "--border-color-dark": section.dark_theme_tile_color,
           opacity: isHidden ? 0.5 : 1,
         } as CSSProperties
       }
     >
       <div
-        className={style.sectionLogo}
+        className={style.sectionLogo} //TODO Иконку на tailwind переделать
         style={
           {
             mask: `url(${FILES_SERVER + section.icon_src}) no-repeat  center/contain`,
@@ -52,7 +57,7 @@ export default function ProblemSection({
           } as CSSProperties
         }
       ></div>
-      <p>{section.title}</p>
+      <p className="text-base">{section.title}</p>
       {isEditable && problemId && (
         <FaTimes
           className={style.deleteIcon}
@@ -85,10 +90,6 @@ export default function ProblemSection({
                 }
               }}
             />
-            {/* <button
-              className="size-3"
-
-            ></button> */}
           </TooltipTrigger>
           <TooltipContent>
             <p className="rounded-xl bg-[var(--inactive-color)] px-2 py-1">Добавить в фильтр</p>
