@@ -4,14 +4,14 @@ import style from "@/styles/components/sections/problems/problemSection.module.c
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { FaTimes } from "react-icons/fa"
 import { CSSProperties, useTransition, useRef } from "react"
-import { usePathname, useRouter } from "next/navigation"
-import clsx from "clsx"
+import { useRouter } from "next/navigation"
 import { fetchModifySectionOnTask } from "@/scripts/ApiFetchers"
 import { useDispatch } from "react-redux"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { setSectionList } from "@/redux_stores/Global/SearchParamsSlice"
 import { FaFilter } from "react-icons/fa"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import twclsx from "@/utils/twClassMerge"
 
 export default function ProblemSection({
   problemId,
@@ -19,12 +19,14 @@ export default function ProblemSection({
   isEditable,
   isHidden = false,
   isFiltered = false,
+  className,
 }: {
   problemId?: number
   section: ProblemSectionInterface
   isEditable?: boolean
   isHidden?: boolean
   isFiltered?: boolean
+  className?: string
 }) {
   const [isPending, startTransition] = useTransition()
   const dispatcher = useDispatch()
@@ -32,7 +34,10 @@ export default function ProblemSection({
   const router = useRouter()
   return (
     <div
-      className={clsx("flex gap-2 items-center border-2 font-bold text-[var(--border-color)] dark:text-[var(--border-color-dark)] border-[var(--border-color)] dark:border-[var(--border-color-dark)] px-2 py-0.3 rounded-full bg-[var(--bg-color)] dark:bg-[var(--bg-color-dark)]", { [style.deletionPending]: isPending })}
+      className={twclsx(
+        "py-0.3 flex items-center gap-2 rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] px-2 font-bold text-[var(--border-color)] dark:border-[var(--border-color-dark)] dark:bg-[var(--bg-color-dark)] dark:text-[var(--border-color-dark)]",
+        { "opacity-50": isPending },
+      )}
       style={
         {
           "--bg-color": section.tile_color + "33",
