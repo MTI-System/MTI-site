@@ -2,12 +2,10 @@
 import { FaEdit, FaPlus } from "react-icons/fa"
 import { MdDeleteOutline } from "react-icons/md"
 import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
-import style from "@/styles/components/sections/problems/problemCard.module.css"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections } from "@/scripts/ApiFetchers"
 import { CSSProperties, useEffect, useRef, useState, useTransition } from "react"
-import clsx from "clsx"
 import { PiGlobeBold, PiGlobeLight } from "react-icons/pi"
 import ProblemSection from "@/components/problems/ProblemSection"
 import DeletionConfirmationModal from "./DeletionConfirmationModal"
@@ -20,13 +18,14 @@ import { useStore } from "react-redux"
 import DotWithTooltip from "@/components/ui/DotWithTooltip"
 import { Menu } from "@base-ui-components/react"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
+import twclsx from "@/utils/twClassMerge"
 
 export default function ProblemCard({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
   return (
     <div
-      className={clsx("bg-bg-alt border-border rounded-2xl border-[1px] py-4", {
-        [style.cardPendingDeletion]: isPendingDeletion,
+      className={twclsx("bg-bg-alt border-border rounded-2xl border-[1px] py-4", {
+        "opacity-25": isPendingDeletion,
       })}
     >
       <ProblemCardContent problem={problem} isEditable={isEditable} startTransition={startTransition} />
@@ -128,8 +127,8 @@ export function ProblemCardContent({
           {!is_edit_page && (
             <Link href={"/problems/" + problem.id.toString()}>
               <h2
-                className={clsx("text-text-main text-xl font-bold", {
-                  [style.hover]: !pathname.startsWith("/problems/" + problem.id.toString()),
+                className={twclsx("text-text-main text-xl font-bold transition-colors duration-300", {
+                  "hover:text-text-hover": !pathname.startsWith("/problems/" + problem.id.toString()),
                 })}
               >
                 {problem.global_number}
@@ -146,7 +145,7 @@ export function ProblemCardContent({
             <PiGlobeLight />
             <div className="">
               <input
-                className={clsx(style.problemByInput)}
+                className="border-border h-full w-full rounded-2xl border-[1px] p-2 text-[0.8rem]"
                 defaultValue={problem.problem_translations[selectedTrnslation].problem_by}
                 name="newProblemFirstTranslationBy"
                 type="text"
@@ -178,7 +177,7 @@ export function ProblemCardContent({
         {is_edit_page && (
           <div>
             <textarea
-              className={style.problemTextEditArea}
+              className="border-border h-20 w-full resize-none rounded-2xl border-[1px] p-2"
               name="firstTranslationText"
               defaultValue={problem.problem_translations[selectedTrnslation].problem_text}
               onChange={(event) => {
@@ -205,10 +204,10 @@ export function ProblemCardContent({
         )}
       </div>
 
-      {is_edit_page && isError && <p className={style.errormessage}>Произошла ошибка</p>}
+      {is_edit_page && isError && <p className="px-4 py-2 text-[0.9rem] text-[rgb(252_71_71)]">Произошла ошибка</p>}
       {is_edit_page && (
         <Button
-          className={style.confirmEditButton}
+          className="text-text-main h-12 w-2xs rounded-xs text-[1.25rem]"
           disabled={isLoading || !isEdited}
           onClick={async () => {
             setIsLoading(true)
@@ -285,7 +284,7 @@ function ScienceList({ problem, setHovered }: { problem: ProblemInterface; setHo
         Разделы {problem.sciences.length === 1 ? problem.sciences[0].title.toLowerCase().slice(0, -1) + "и" : "наук"}:
       </h3>
       {problem.sciences.length !== 1 && (
-        <div className={style.scienceList}>
+        <div className="flex flex-row content-center items-center justify-start gap-2">
           {problem.sciences.map((value, index) => (
             <DotWithTooltip
               dotColor={value.color}
@@ -411,20 +410,20 @@ function AddNewSection({
       }, 2000)
     } else setColor(defaultColors)
   }, [addableSections, isError])
-  {
-    /* TODO: reimplement using new dropdown */
-  }
   return (
     <DropdownMulti
       selectionState={selectionState}
       trigger={
         <DropdownTrigger
           style={color as CSSProperties}
-          className="hover:bg-bg-alt rounded-full border-4 border-[var(--border-color)] bg-[var(--bg-color)] font-bold text-[var(--border-color)]"
+          className={twclsx(
+            "hover:bg-bg-alt rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] font-bold text-[var(--border-color)] opacity-100!",
+            { "hover:bg-[var(--bg-color)]!": isPending || isError || isLoading },
+          )}
           disabled={isPending || isError || isLoading}
           dontDisplaySelection
         >
-          <div className="flex w-40 flex-row content-center items-center justify-start gap-2">
+          <div className="flex min-w-70 flex-row content-center items-center justify-start gap-2">
             <FaPlus />
             {isError || isLoading ? (
               isError ? (
@@ -452,7 +451,7 @@ function AddNewSection({
         setColor({
           "--border-color": "rgb(255, 204, 0)",
           "--bg-color": "rgba(255, 204, 0, 0.25)",
-          opacity: 0.5,
+          opacity: 1,
         })
         setIsLoading(true)
         const res = await fetchModifySectionOnTask(

@@ -24,6 +24,7 @@ import clsx from "clsx"
 import { LoadFileForm } from "@/types/embeddings"
 import { fetchAddLinkEmbedding, fetchAllAvailableEmbeddingTypes } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
+import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "../ui/Dropdown"
 
 type FileFromModalInterface = Omit<LoadFileForm, "link">
 
@@ -162,12 +163,8 @@ function AddFileModal({
   const user = useAppSelector((state) => state.auth.authInfo)
   const token = useAppSelector((state) => state.auth.token)
   const [typeList, setTypeList] = useState<EmbeddingTypeInterface[]>([])
-  let defaultOptionConstant = {
-    displayName: "Выберите тип файла",
-    value: 0,
-    active: true,
-  }
-  const [defaultOption, setDefaultOption] = useState(defaultOptionConstant)
+  const fileTypeState = useState<DropdownOptionInterface<number> | null>(null)
+  const [fileType, setFileType] = fileTypeState
   const dataRef = useRef<Omit<FileFromModalInterface, "file" | "link">>({
     materialTitle: "",
     contentType: 0,
@@ -229,7 +226,7 @@ function AddFileModal({
     dataRef.current.materialTitle = ""
     dataRef.current.isPrimary = isPrimary ?? false
     setErrorText("")
-    setDefaultOption(defaultOptionConstant)
+    setFileType(null)
     setAcceptedEmbeddingTypes("*")
     dataRef.current.contentType = 0
   }
@@ -288,30 +285,25 @@ function AddFileModal({
                     onBlur={handleTitleSet}
                     maxLength={255}
                   />
-                  {/* TODO: reimplement on new dropdown */}
-                  {/* <TextDropdown
-                    className={style.typeSelectDropdown}
-                    options={typeList.map((value) => ({
-                      displayName: value.display_name,
-                      value: value.id,
-                      active: true,
-                    }))}
-                    defaultSelection={defaultOption}
-                    isAlwaysUp={true}
-                    onOptionSelect={(e) => {
-                      const opt = e.selection
-                      e.isDefaultPrevented = true
-                      e.closeDropdown()
+                  <Dropdown
+                    selectionState={fileTypeState}
+                    trigger={<DropdownTrigger>Выберите тип файла</DropdownTrigger>}
+                    onOptionSelect={(option: DropdownOptionInterface<number> | null) => {
+                      const opt = option?.value
                       dataRef.current.contentType = opt ?? 0
                       const newOpt = typeList.find((value) => opt === value.id)
                       if (newOpt === undefined) return
-                      setDefaultOption({ displayName: newOpt.display_name, value: newOpt.id, active: true })
+                      setFileType(null)
                       dataRef.current.contentType = newOpt.id
                       if (errorText === UploadingErrors.EmptyType || errorText === UploadingErrors.InvalidFileType)
                         setErrorText("")
                       setAcceptedEmbeddingTypes(newOpt.allowed_mime_types ?? "*")
                     }}
-                  ></TextDropdown> */}
+                  >
+                    {typeList.map((value) => (
+                      <DropdownElement value={value.id}>{value.display_name}</DropdownElement>
+                    ))}
+                  </Dropdown>
                 </div>
               </div>
             </ContentContainer>

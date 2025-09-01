@@ -1,6 +1,5 @@
 "use client"
 import { ProblemSectionInterface } from "@/types/problemAPI"
-import style from "@/styles/components/sections/problems/problemSection.module.css"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { FaTimes } from "react-icons/fa"
 import { CSSProperties, useTransition, useRef } from "react"
@@ -35,8 +34,9 @@ export default function ProblemSection({
   return (
     <div
       className={twclsx(
-        "py-0.3 flex items-center gap-2 rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] px-2 font-bold text-[var(--border-color)] dark:border-[var(--border-color-dark)] dark:bg-[var(--bg-color-dark)] dark:text-[var(--border-color-dark)]",
-        { "opacity-50": isPending },
+        "flex items-center gap-2 rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] px-3 py-2 font-bold text-[var(--border-color)] dark:border-[var(--border-color-dark)] dark:bg-[var(--bg-color-dark)] dark:text-[var(--border-color-dark)]",
+        className,
+        { "opacity-50": isPending || isHidden },
       )}
       style={
         {
@@ -44,12 +44,11 @@ export default function ProblemSection({
           "--border-color": section.tile_color,
           "--bg-color-dark": section.dark_theme_tile_color + "33",
           "--border-color-dark": section.dark_theme_tile_color,
-          opacity: isHidden ? 0.5 : 1,
         } as CSSProperties
       }
     >
       <div
-        className={style.sectionLogo} //TODO Иконку на tailwind переделать
+        className="h-5 w-5 bg-[var(--border-color)] mask-contain"
         style={
           {
             mask: `url(${FILES_SERVER + section.icon_src}) no-repeat  center/contain`,
@@ -57,10 +56,10 @@ export default function ProblemSection({
           } as CSSProperties
         }
       ></div>
-      <p className="text-base">{section.title}</p>
+      <p className="text-base select-none">{section.title}</p>
       {isEditable && problemId && (
         <FaTimes
-          className={style.deleteIcon}
+          className="text-[0.8rem]"
           onClick={() => {
             startTransition(async () => {
               const response = await fetchModifySectionOnTask(
