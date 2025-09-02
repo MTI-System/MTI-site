@@ -19,6 +19,7 @@ import ProblemSection from "./ProblemSection"
 import { FaTimes } from "react-icons/fa"
 import twclsx from "@/utils/twClassMerge"
 import { Menu } from "@base-ui-components/react"
+import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 
 export default function ProblemFilters({
   children,

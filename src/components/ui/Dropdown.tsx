@@ -20,7 +20,7 @@ function DropdownRoot({ children, trigger, className, ...rest }: DropdownRootPro
     <Menu.Root {...rest}>
       {trigger}
       <Menu.Portal>
-        <Menu.Positioner sideOffset={4}>
+        <Menu.Positioner sideOffset={4} className="z-10">
           <Menu.Popup
             className={twclsx(
               "dark:outline-gray-30 bg-bg-alt border-border max-h-[50vh] origin-[var(--transform-origin)] overflow-auto rounded-md border-1 shadow-md! shadow-black/50! transition-[transform,translate,opacity] data-[ending-style]:-translate-y-2 data-[ending-style]:opacity-0 data-[starting-style]:-translate-y-2 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1",
