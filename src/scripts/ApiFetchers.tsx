@@ -3,8 +3,6 @@ import {
   ProblemInterface,
   ProblemListInterface,
   ProblemSchema,
-  ProblemSectionInterface,
-  ProblemSectionSchema,
   ProblemSectionWithSciencesInterface,
   ProblemSectionWithSciencesSchema,
 } from "@/types/problemAPI"
@@ -16,12 +14,13 @@ import {
   LoadFileForm,
 } from "@/types/embeddings"
 import { connection } from "next/server"
-import {PROBLEM_API, AUTH_API, MATERIAL_API, TOURNAMENTS_API} from "@/constants/APIEndpoints"
+import { PROBLEM_API, AUTH_API, MATERIAL_API, TOURNAMENTS_API } from "@/constants/APIEndpoints"
 import { User, UserSchema } from "@/types/authApi"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import z from "zod"
-import {TournamentCard, TournamentCardInterface} from "@/types/TournamentsAPI";
+import { TournamentCard, TournamentCardInterface } from "@/types/TournamentsAPI"
+import { TournamentTypeIntarface, TournamentTypeSchema } from "@/types/TournamentTypeIntarface"
 
 async function fetchWithRetryAndTimeout(
   url: string,
@@ -152,6 +151,17 @@ async function deleteMaterial(problemId: number, materialId: number): Promise<bo
   return response != null
 }
 
+async function fetchTournamentTypes(): Promise<TournamentTypeIntarface[] | null> {
+  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + "/get_available_tt", {
+    cache: "force-cache",
+  })
+  if (!response) return null
+  const parsed = z.array(TournamentTypeSchema).safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding data: ${parsed.error}`)
+  return []
+}
+
 async function fetchYears(tournamentTypeId: number): Promise<number[]> {
   return (
     (await fetchWithRetryAndTimeout(PROBLEM_API + "years?tournamentTypeId=" + tournamentTypeId.toString()).then(
@@ -221,8 +231,10 @@ async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface
   return []
 }
 
-async function fetchTournamentsCards(tt: number, year: number): Promise<TournamentCardInterface[]>{
-  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + `get_tournament_cards_by_year_and_tt?tt=${tt}&year=${year}`)
+async function fetchTournamentsCards(tt: number, year: number): Promise<TournamentCardInterface[]> {
+  const response = await fetchWithRetryAndTimeout(
+    TOURNAMENTS_API + `get_tournament_cards_by_year_and_tt?tt=${tt}&year=${year}`,
+  )
 
   if (!response) return []
   const parsed = z.array(TournamentCard).safeParse(await response.json())
@@ -230,7 +242,6 @@ async function fetchTournamentsCards(tt: number, year: number): Promise<Tourname
   console.error(`Unexpected response while parsing embedding types content types: ${parsed.error}`)
   return []
 }
-
 
 export {
   fetchProblems,
@@ -242,12 +253,11 @@ export {
   deleteProblem,
   fetchYears,
   fetchAllAvailableSections,
-  // fetchAddSectionToTask,
   deleteMaterial,
   fetchModifySectionOnTask,
-  // fetchDeleteSectionFromTask,
+  fetchTournamentTypes,
   fetchEmbeddingsInfo,
   fetchAddLinkEmbedding,
   fetchAllAvailableEmbeddingTypes,
-  fetchTournamentsCards
+  fetchTournamentsCards,
 }

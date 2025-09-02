@@ -5,13 +5,17 @@ import headerStyle from "@/styles/components/sections/app/header.module.css"
 import cookies from "js-cookie"
 import { usePathname } from "next/navigation"
 import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "../ui/Dropdown"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import ColoredTType from "../ui/ColoredTType"
 import { setTT, setYear } from "@/redux_stores/SearchParamsSlice"
 import { TOURNAMENT_TYPE_KEY_NAME } from "@/constants/CookieKeys"
 import { Tooltip } from "@base-ui-components/react"
+import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
 
-export default function TournamentTypeSelector() {
+export default function TournamentTypeSelector({
+  availableTournamentTypes,
+}: {
+  availableTournamentTypes: TournamentTypeIntarface[]
+}) {
   const ttddElements = availableTournamentTypes.map((value) => ({
     children: (
       <p className="text-text-main text-[1.8rem] font-bold">
