@@ -75,7 +75,7 @@ export default function ProblemSection({
       )}
       {isFiltered && (
         <Tooltip.Provider>
-          <Tooltip.Root>
+          <Tooltip.Root delay={200}>
             <Tooltip.Trigger>
               <FaFilter
                 className="text-[0.6rem]"
