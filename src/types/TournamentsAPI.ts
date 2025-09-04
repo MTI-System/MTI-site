@@ -4,28 +4,28 @@ export const TournamentCard = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string(),
-  mainImage: z.string(),
-  tournamentLogo: z.string(),
+  main_image: z.string(),
+  tournament_logo: z.string(),
   year: z.number(),
-  tournamentStatus: z.string(),
+  tournament_status: z.string(),
 })
 
 export const TournamentScoreEntity = z.object({
-  fightContainerId: z.number(),
-  fightContainerName: z.string(),
+  fight_container_id: z.number(),
+  fight_container_name: z.string(),
   score: z.number(),
 })
 
 export const TournamentResultsTableLine = z.object({
-  teamId: z.number(),
-  teamName: z.string(),
-  isUnknownTeam: z.boolean(),
+  team_id: z.number(),
+  team_name: z.string(),
+  is_unknown_team: z.boolean(),
   scores: z.array(TournamentScoreEntity),
   resultScore: z.number(),
 })
 
 export const TournamentResultsTableEntity = z.object({
-  tableLines: z.array(TournamentResultsTableLine),
+  table_lines: z.array(TournamentResultsTableLine),
 })
 
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>

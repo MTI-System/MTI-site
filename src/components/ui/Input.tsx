@@ -82,7 +82,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ onChange, onEnt
         if (onEnter && e.key === "Enter" && inputRef.current) onEnter(inputRef.current)
       }}
       {...rest}
-    />
+    ></input>
   )
 })
 

@@ -16,7 +16,7 @@ import {
   LoadFileForm,
 } from "@/types/embeddings"
 import {connection} from "next/server"
-import {PROBLEM_API, AUTH_API, MATERIAL_API, TOURNAMENTS_API} from "@/constants/APIEndpoints"
+import {PROBLEM_API, AUTH_API, MATERIAL_API, TOURNAMENTS_API, REGISTRATION_API} from "@/constants/APIEndpoints"
 import {User, UserSchema} from "@/types/authApi"
 import {redirect} from "next/navigation"
 import {cookies} from "next/headers"
@@ -26,6 +26,11 @@ import {
   TournamentCardInterface,
   TournamentResultsTableEntity
 } from "@/types/TournamentsAPI";
+import {
+  TournamentRegistrationFormField,
+  TournamentRegistrationFormInfo,
+  TournamentRegistrationFormInfoInterface
+} from "@/types/TournamentRegistrationApi";
 
 async function fetchWithRetryAndTimeout(
   url: string,
@@ -254,7 +259,24 @@ async function fetchTournamentTable(id: number): Promise<TournamentResultsTableE
   return null
 }
 
+async function fetchRegistrationForm(id: number): Promise<TournamentRegistrationFormInfoInterface | null> {
+  const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `get_form_for_tournament/${id}`)
+  if (!response) return null
+  const parsed = TournamentRegistrationFormInfo.safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding types content types: ${parsed.error}`)
+  return null
+}
+
+async function sendFormAnswer(form: FormData): Promise<boolean> {
+  const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `answer_form`, {method: 'POST', body: form})
+  if (!response?.ok) return true
+  return false
+}
+
 export {
+  sendFormAnswer,
+  fetchRegistrationForm,
   fetchTournamentTable,
   fetchTournamentsCard,
   fetchProblems,

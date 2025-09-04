@@ -10,12 +10,12 @@ export default async function ResultsTable({tournamentId}: { tournamentId: numbe
           <tbody>
           <tr key={0}>
             <td className={trStyle}>Название команды</td>
-            {table?.tableLines[0].scores.map((score, idx) => <td key={idx} className={trStyle}>{score.fightContainerName}</td>)}
+            {table?.table_lines[0].scores.map((score, idx) => <td key={idx} className={trStyle}>{score.fight_container_name}</td>)}
             <td className={trStyle}>Итого</td>
           </tr>
-          {table?.tableLines.map((line, idx) => {
+          {table?.table_lines.map((line, idx) => {
             return <tr key={idx}>
-              <td className={trStyle}>{line.teamName}</td>
+              <td className={trStyle}>{line.team_name}</td>
               {line.scores.map((score, idx) => <td key={idx} className={trStyle}>{score.score}</td>)}
               <td className={trStyle}>{line.resultScore}</td>
             </tr>
