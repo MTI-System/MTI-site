@@ -1,3 +1,5 @@
+import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
+
 export const availableTournamentTypes: TournamentTypeIntarface[] = [
   {
     id: 1,

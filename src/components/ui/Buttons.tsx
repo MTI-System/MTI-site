@@ -1,7 +1,7 @@
 "use client"
 import styleModule from "@/styles/components/ui/button.module.css"
+import twclsx from "@/utils/twClassMerge"
 import { animate, createScope, Scope } from "animejs"
-import clsx from "clsx"
 import { ButtonHTMLAttributes, CSSProperties, PropsWithChildren, useEffect, useRef } from "react"
 
 type CSSVariableStyle = CSSProperties & {
@@ -17,7 +17,7 @@ type ButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> & 
  */
 export function Button({ children, className = "", style, ...rest }: ButtonProps) {
   return (
-    <button className={clsx(className)} style={style} {...rest}>
+    <button className={twclsx(className)} style={style} {...rest}>
       {children}
     </button>
   )
@@ -69,7 +69,7 @@ export function HoldButton({
   }, [isDisabled])
   return (
     <button
-      className={clsx(styleModule.button, styleModule.holdButton, className)}
+      className={twclsx(styleModule.button, styleModule.holdButton, className)}
       onPointerDown={() => {
         if (!scope.current || rest.disabled) return
         scope.current.methods.caPlay()

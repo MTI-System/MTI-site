@@ -1,15 +1,12 @@
-import headerStyle from "@/styles/components/sections/app/header.module.css"
 import Link from "next/link"
 import TournamentTypeSelector from "@/components/Redux/TournamentTypeSelector"
-import { FaMoon } from "react-icons/fa"
 import ProfilePicture from "@/components/main/Profile"
 import { Button } from "@/components/ui/Buttons"
-import { FiMenu } from "react-icons/fi"
-import { FaBell } from "react-icons/fa"
 import ThemeSwitchingButton from "../Redux/ThemeSwitcher"
-import { FILES_SERVER } from "@/constants/APIEndpoints"
+import { fetchTournamentTypes } from "@/scripts/ApiFetchers"
 
-export default function Header() {
+export default async function Header() {
+  const tts = await fetchTournamentTypes()
   return (
     <>
       <header className="bg-bg-alt flex justify-between px-5 py-3 transition">
@@ -21,7 +18,7 @@ export default function Header() {
             <Link href={"/"} className="w-full">
               <h1 className="w-full pl-2 text-start">МТИ</h1>
             </Link>
-            <TournamentTypeSelector />
+            <TournamentTypeSelector availableTournamentTypes={tts ?? []} />
           </div>
         </div>
         <div className="text-text-main flex flex-row items-center gap-[1vw]">

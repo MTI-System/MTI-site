@@ -20,7 +20,7 @@ function DropdownRoot({ children, trigger, className, ...rest }: DropdownRootPro
     <Menu.Root {...rest}>
       {trigger}
       <Menu.Portal>
-        <Menu.Positioner sideOffset={4}>
+        <Menu.Positioner sideOffset={4} className="z-10">
           <Menu.Popup
             className={twclsx(
               "dark:outline-gray-30 bg-bg-alt border-border max-h-[50vh] origin-[var(--transform-origin)] overflow-auto rounded-md border-1 shadow-md! shadow-black/50! transition-[transform,translate,opacity] data-[ending-style]:-translate-y-2 data-[ending-style]:opacity-0 data-[starting-style]:-translate-y-2 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1",
@@ -131,12 +131,14 @@ export function DropdownMulti<T>({
 interface DropdownTriggerParams extends Menu.Trigger.Props {
   dontDisplaySelection?: boolean
   className?: string
+  rootClassName?: string
 }
 
 export function DropdownTrigger({
   children,
   dontDisplaySelection,
   className,
+  rootClassName,
   disabled,
   ...rest
 }: DropdownTriggerParams) {
@@ -147,13 +149,13 @@ export function DropdownTrigger({
     !ddCtx?.selectedOption || dontDisplaySelection ? (
       children
     ) : Array.isArray(ddCtx.selectedOption) ? (
-      <p>Выбрано {ddCtx.selectedOption.length} элементов</p>
+      <p className="flex-1">Выбрано {ddCtx.selectedOption.length} элементов</p>
     ) : (
       ddCtx.selectedOption.children
     )
 
   return (
-    <Menu.Trigger disabled={disabled} {...rest}>
+    <Menu.Trigger disabled={disabled} {...rest} className={rootClassName}>
       <div
         className={twclsx(
           "text-text-main ddtrig group/dropdownButton bg-bg-alt border-border flex flex-row content-between items-center gap-2 rounded-md border-1 p-2 transition hover:bg-black/10 dark:hover:bg-white/10",
@@ -163,13 +165,10 @@ export function DropdownTrigger({
       >
         {displayNode}
         <FaChevronDown
-          className={twclsx(
-            "w-[25%] min-w-4 transition-transform duration-300 group-hover/dropdownButton:translate-y-0.5",
-            {
-              "rotate-180 group-hover/dropdownButton:-translate-y-0.5": ddCtx?.isOpen,
-              "group-hover/dropdownButton:translate-0": disabled,
-            },
-          )}
+          className={twclsx("w-4 transition-transform duration-300 group-hover/dropdownButton:translate-y-0.5", {
+            "rotate-180 group-hover/dropdownButton:-translate-y-0.5": ddCtx?.isOpen,
+            "group-hover/dropdownButton:translate-0": disabled,
+          })}
         />
       </div>
     </Menu.Trigger>

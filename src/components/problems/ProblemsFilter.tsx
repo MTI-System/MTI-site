@@ -1,5 +1,12 @@
 "use client"
-import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "@/components/ui/Dropdown"
+import {
+  Dropdown,
+  DropdownElement,
+  DropdownMulti,
+  DropdownMultiElement,
+  DropdownOptionInterface,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown"
 import style from "@/styles/components/sections/problems/problemsFilter.module.css"
 import { ReactNode, useEffect, useState } from "react"
 import Loading from "@/app/loading"
@@ -7,12 +14,13 @@ import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournament
 import { setSectionList, setYear } from "@/redux_stores/Global/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
 import { availableTournamentTypes } from "@/constants/AvailableTournaments"
-import LogoWithTT from "../ui/LogoWithTT"
 import { ProblemSectionInterface } from "@/types/problemAPI"
 import ProblemSection from "./ProblemSection"
 import clsx from "clsx"
 import { FaTimes } from "react-icons/fa"
 import ColoredTType from "@/components/ui/ColoredTType"
+import twclsx from "@/utils/twClassMerge"
+import { Menu } from "@base-ui-components/react"
 
 export default function ProblemFilters({
   children,
@@ -32,12 +40,12 @@ export default function ProblemFilters({
   return (
     <>
       <div className="flex h-fit w-full content-center items-center gap-5">
-        <p className="font-bold text-4xl">
-          Задачи
-        </p>
-        <p className="font-bold text-4xl"><ColoredTType
-            ttName={tt ?? "ТЮФ"}
-            ttColor={availableTournamentTypes.find((t) => t.name === tt)?.color ?? "#000000"}
+          <p className="font-bold text-4xl">
+              Задачи
+          </p>
+          <p className="font-bold text-4xl"><ColoredTType
+              ttName={tt ?? "ТЮФ"}
+              ttColor={availableTournamentTypes.find((t) => t.name === tt)?.color ?? "#000000"}
           /></p>
         <div className={style.filters}>
           <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
@@ -76,65 +84,32 @@ function SectionFilter({
 
   return (
     <div className="flex w-full min-w-0 content-center items-center">
-      {/* TODO: rewrite for new dropdown */}
-      {/* <Dropdown
-        options={possibleSections.map((section) => {
-          return {
-            displayElement: (
-              <div
-                className={clsx("max-[1200px]:text-[0.6rem]", style.addSectionOptionContainer, {
-                  [style.selectedSection]: selectedOptions.find((v) => v === section.id) !== undefined,
-                })}
-              >
-                <ProblemSection key={section.id} section={section} />
-              </div>
-            ),
-            value: section.id,
-            active: true,
-          }
-        })}
-        defaultSelection={{
-          displayElement: (
-            <div className={style.defaultOption}>
-              {isPending ? (
-                <p>Выбираем...</p>
-              ) : selectedOptions.length > 0 ? (
-                <p>
-                  Выбрано:{" "}
-                  {selectedOptions
-                    .map((selected) => possibleSections.find((sec) => sec.id === selected)?.title)
-                    .join(", ")}
-                </p>
-              ) : (
-                <p>Выбрать разделы</p>
-              )}
+      <DropdownMulti
+        onOpenChange={(open, e, reason, selection: DropdownOptionInterface<number>[] | null) => {
+          if (open) return
+          dispatcher(setSectionList(selection?.map((s) => s.value) ?? null))
+        }}
+        trigger={
+          <DropdownTrigger rootClassName="flex-1" disabled={isPending}>
+            {isPending ? <p className="flex-1">Выбираем...</p> : <p className="flex-1">Выбрать разделы</p>}
+          </DropdownTrigger>
+        }
+      >
+        {possibleSections.map((section, i) => (
+          <DropdownMultiElement value={section.id} key={i + 1}>
+            <div className="grid cursor-default grid-cols-[2rem_1fr] items-center gap-1">
+              <Menu.CheckboxItemIndicator className="col-start-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill={section.tile_color}>
+                  <path d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z" />
+                </svg>
+              </Menu.CheckboxItemIndicator>
+              <ProblemSection key={section.id} section={section} className="col-start-2" />
             </div>
-          ),
-          value: null,
-          active: true,
-        }}
-        onOptionSelect={(e) => {
-          e.isDefaultPrevented = true
-          const elem = selectedOptions.find((v) => v === e.selection)
-          if (elem === undefined)
-            setSelectedOption((prev) => {
-              if (!e.selection) return prev
-              return [...prev, e.selection]
-            })
-          else
-            setSelectedOption((prev) => {
-              return [...prev.filter((v) => v !== e.selection)]
-            })
-        }}
-        onToggle={async (isOpened) => {
-          if (isOpened) return
-          dispatcher(setSectionList(selectedOptions.length === 0 ? null : selectedOptions))
-        }}
-        className={style.selectSectionDropdown}
-        disabled={isPending}
-      /> */}
+          </DropdownMultiElement>
+        ))}
+      </DropdownMulti>
       <FaTimes
-        className={clsx("w-20 text-[1.5rem]", {
+        className={twclsx("w-20 text-[1.5rem]", {
           "text-[var(--alt-text)]": isPending || selectedOptions.length === 0,
           "hover:text-[var(--alt-text)]": !isPending && selectedOptions.length !== 0,
         })}

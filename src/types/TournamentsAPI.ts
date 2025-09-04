@@ -4,8 +4,8 @@ export const TournamentCard = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string(),
-  main_image: z.string(),
-  tournament_logo: z.string(),
+  mainImage: z.string(),
+  tournamentLogo: z.string(),
   year: z.number(),
   tournament_status: z.string(),
 })
