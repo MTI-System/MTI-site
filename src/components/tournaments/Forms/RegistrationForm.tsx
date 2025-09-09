@@ -10,7 +10,7 @@ import {Button} from "@/components/ui/Buttons";
 import {sendFormAnswer} from "@/scripts/ApiFetchers";
 
 export default function RegistrationForm(
-  {formInfo, className}: {formInfo: TournamentRegistrationFormInfoInterface, className: string}
+  {formInfo, className}: {formInfo: TournamentRegistrationFormInfoInterface | null, className: string}
 ){
   const formReference = useRef(null)
    const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
@@ -20,15 +20,14 @@ export default function RegistrationForm(
 
   async function handleSend(form: HTMLFormElement) {
     const formData = new FormData(form);
-    formData.set("tournament_id", formInfo.tournament.toString())
-    console.log("form", formData, form, formData.get("field1"))
+    formData.set("formId", (formInfo?.id ?? 0).toString());
     await sendFormAnswer(formData)
   }
 
   return (
     <>
       <form className={className} onSubmit={submitHandler} ref={formReference}>
-        {formInfo.fields.map((field) => {
+        {formInfo?.fields.map((field) => {
           switch (field.type) {
             case 'text':
               return <TextFormField title={field.title} key={field.id} id_key={field.key}/>

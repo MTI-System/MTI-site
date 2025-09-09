@@ -266,8 +266,8 @@ async function fetchTournamentTable(id: number): Promise<TournamentResultsTableE
   return null
 }
 
-async function fetchRegistrationForm(id: number): Promise<TournamentRegistrationFormInfoInterface | null> {
-  const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `get_form_for_tournament/${id}`)
+async function fetchRegistrationForm(id: number, type: string): Promise<TournamentRegistrationFormInfoInterface | null> {
+  const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `get_form_for_tournament/${id}/${type}`)
   if (!response) return null
   const parsed = TournamentRegistrationFormInfo.safeParse(await response.json())
   if (parsed.success) return parsed.data

@@ -5,7 +5,7 @@ export default async function RegisterTournamentsPage(
   {params}: { params: Promise<{ id: string }> }
 ) {
   const id = (await params).id
-  const formInfo = await fetchRegistrationForm(Number(id))
+  const formInfo = await fetchRegistrationForm(Number(id), "registration");
   return (
     <>
       <div className="bg-bg-alt w-full rounded-2xl mt-2 mb-5 px-2 py-5">
