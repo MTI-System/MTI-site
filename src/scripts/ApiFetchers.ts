@@ -157,11 +157,11 @@ async function deleteMaterial(problemId: number, materialId: number): Promise<bo
   return response != null
 }
 
-async function fetchTournamentTypes(): Promise<TournamentTypeIntarface[] | null> {
+async function fetchTournamentTypes(): Promise<TournamentTypeIntarface[]> {
   const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + "/get_available_tt", {
     cache: "force-cache",
   })
-  if (!response) return null
+  if (!response) return []
   const parsed = z.array(TournamentTypeSchema).safeParse(await response.json())
   if (parsed.success) return parsed.data
   console.error(`Unexpected response while parsing embedding data: ${parsed.error}`)

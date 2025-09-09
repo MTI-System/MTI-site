@@ -1,24 +1,28 @@
 "use client"
-import { useRef } from "react"
+import React, {useMemo, useRef} from "react"
 import { Provider } from "react-redux"
 import makeStore, { AppStore } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { useSearchParams } from "next/navigation"
+import {TournamentTypeIntarface} from "@/types/TournamentTypeIntarface";
 
 export default function StoreProvider({
   children,
   theme,
   tt,
   token,
+  availableTournamentTypes,
 }: {
   children: React.ReactNode
   theme: string
   tt: string
   token: string
+  availableTournamentTypes: TournamentTypeIntarface[]
 }) {
   const storeRef = useRef<AppStore | null>(null)
   const year = useSearchParams().get("year")
+
   if (!storeRef.current) {
-    storeRef.current = makeStore(theme, tt, token, year)
+    storeRef.current = makeStore(theme, Number(tt), token, year, availableTournamentTypes)
   }
   return <Provider store={storeRef.current}>{children}</Provider>
 }

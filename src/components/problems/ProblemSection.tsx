@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation"
 import { fetchModifySectionOnTask } from "@/scripts/ApiFetchers"
 import { useDispatch } from "react-redux"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
-import { setSectionList } from "@/redux_stores/Global/SearchParamsSlice"
 import { FaFilter } from "react-icons/fa"
 import twclsx from "@/utils/twClassMerge"
 import { Tooltip } from "@base-ui-components/react"
+import {setSectionList} from "@/redux_stores/Problems/ProblemsFiltersSlice";
+import {useProblemsSelector} from "@/components/Redux/ProblemsStoreContext";
 
 export default function ProblemSection({
   problemId,
@@ -29,7 +30,7 @@ export default function ProblemSection({
 }) {
   const [isPending, startTransition] = useTransition()
   const dispatcher = useDispatch()
-  const filteredSections = useAppSelector((state) => state.searchParams.sectionList)
+  const filteredSections = useProblemsSelector((state) => state.problemsPageFilters.sectionList)
   const router = useRouter()
   return (
     <div

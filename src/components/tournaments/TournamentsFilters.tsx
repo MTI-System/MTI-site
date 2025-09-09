@@ -1,9 +1,9 @@
 "use client"
 import ColoredTType from "@/components/ui/ColoredTType";
-import {availableTournamentTypes} from "@/constants/AvailableTournaments";
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 
 export default function TournamentsFilters() {
+  const availableTournamentTypes = useAppSelector(state=>state.searchParams.availableTournamentTypes) ?? []
   const tt = useAppSelector((state) => state.searchParams.tt)
   return (
     <>
@@ -13,8 +13,8 @@ export default function TournamentsFilters() {
             Турниры
           </p>
           <p className="font-bold text-4xl"><ColoredTType
-            ttName={tt ?? "ТЮФ"}
-            ttColor={availableTournamentTypes.find((t) => t.name === tt)?.color ?? "#000000"}
+            ttName={tt?.toString() ?? "1"}
+            ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
           /></p>
         </div>
 

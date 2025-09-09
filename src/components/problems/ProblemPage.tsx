@@ -17,7 +17,6 @@ import { RiFileAddLine } from "react-icons/ri"
 import { BiImageAdd } from "react-icons/bi"
 import { AiOutlineVideoCameraAdd } from "react-icons/ai"
 import ProblemTTUpdator from "../Redux/ProblemTTUpdator"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 
 async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const userAuth = await fetchPermissions()
@@ -40,7 +39,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   return (
     <div className={style.pageRoot}>
       <ProblemTTUpdator
-        newTT={availableTournamentTypes.find((tt) => tt.id === problem.tournament_type)?.name ?? "ТЮФ"}
+        newTT={problem.tournament_type ?? 1}
       />
       <div className={style.main}>
         <div className={style.problemWithGif}>

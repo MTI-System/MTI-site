@@ -19,10 +19,10 @@ export default function TournamentsSearchParams(
   const [isMounted, setMounted] = useState(false)
   useEffect(() => {
     if (searchParams.tt){
-      dispatch(setTT(searchParams.tt));
+      dispatch(setTT(Number(searchParams.tt)));
     }
     else if(!tt){
-      dispatch(setTT("ТЮФ"));
+      dispatch(setTT(1));
     }
     if(searchParams.year){
       localDispatch(setYear(Number(searchParams.year)))
@@ -44,7 +44,7 @@ export default function TournamentsSearchParams(
     console.log("UPDATE SEARCH LINE")
     if (!isMounted) return
     const params = new URLSearchParams()
-    params.set("tt", tt??"ТЮФ");
+    params.set("tt", tt?.toString() ?? "1");
     params.set("year", (year??2025).toString());
     params.set("page", (page??1).toString());
     router.replace(`${pathname}?${params.toString()}`);

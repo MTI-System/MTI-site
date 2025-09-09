@@ -11,9 +11,7 @@ import style from "@/styles/components/sections/problems/problemsFilter.module.c
 import { ReactNode, useEffect, useState } from "react"
 import Loading from "@/app/loading"
 import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
-import { setSectionList, setYear } from "@/redux_stores/Global/SearchParamsSlice"
 import { AddProblem } from "./ProblemForms"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import { ProblemSectionInterface } from "@/types/problemAPI"
 import ProblemSection from "./ProblemSection"
 import clsx from "clsx"
@@ -21,6 +19,8 @@ import { FaTimes } from "react-icons/fa"
 import ColoredTType from "@/components/ui/ColoredTType"
 import twclsx from "@/utils/twClassMerge"
 import { Menu } from "@base-ui-components/react"
+import {setSectionList, setYear} from "@/redux_stores/Problems/ProblemsFiltersSlice";
+import {useProblemsDispatch, useProblemsSelector} from "@/components/Redux/ProblemsStoreContext";
 
 export default function ProblemFilters({
   children,
@@ -33,9 +33,10 @@ export default function ProblemFilters({
   possibleSections: ProblemSectionInterface[]
   isModerator: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year ?? possibleYears[0])
+  const year = useProblemsSelector((state) => state.problemsPageFilters.year ?? possibleYears[0])
   const tt = useAppSelector((state) => state.searchParams.tt)
-  const ttid = availableTournamentTypes.find((val) => val.name === tt)?.id ?? 1
+  const ttid = Number(tt) ?? 1
+  const availableTournamentTypes = useAppSelector(state=>state.searchParams.availableTournamentTypes) ?? []
   const isPending = useAppSelector((state) => state.system.isPending)
   return (
     <>
@@ -44,8 +45,8 @@ export default function ProblemFilters({
               Задачи
           </p>
           <p className="font-bold text-4xl"><ColoredTType
-              ttName={tt ?? "ТЮФ"}
-              ttColor={availableTournamentTypes.find((t) => t.name === tt)?.color ?? "#000000"}
+              ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
+              ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
           /></p>
         <div className={style.filters}>
           <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
@@ -66,10 +67,10 @@ function SectionFilter({
   possibleSections: ProblemSectionInterface[]
   isPending: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year)
+  const year = useProblemsSelector((state) => state.problemsPageFilters.year)
   const tt = useAppSelector((state) => state.searchParams.tt)
-  const sectionList = useAppSelector((state) => state.searchParams.sectionList)
-  const dispatcher = useAppDispatch()
+  const sectionList = useProblemsSelector((state) => state.problemsPageFilters.sectionList)
+  const problemDispatcher = useProblemsDispatch()
 
   const [selectedOptions, setSelectedOption] = useState<number[]>([])
 
@@ -79,7 +80,7 @@ function SectionFilter({
 
   useEffect(() => {
     setSelectedOption([])
-    dispatcher(setSectionList(null))
+    // problemDispatcher(setSectionList(null))
   }, [year, tt])
 
   return (
@@ -87,14 +88,13 @@ function SectionFilter({
       <DropdownMulti
         onOpenChange={(open, e, reason, selection: DropdownOptionInterface<number>[] | null) => {
           if (open) return
-          dispatcher(setSectionList(selection?.map((s) => s.value) ?? null))
+          problemDispatcher(setSectionList(selection?.map((s) => s.value) ?? null))
         }}
         trigger={
           <DropdownTrigger rootClassName="flex-1" disabled={isPending}>
             {isPending ? <p className="flex-1">Выбираем...</p> : <p className="flex-1">Выбрать разделы</p>}
           </DropdownTrigger>
-        }
-      >
+        }>
         {possibleSections.map((section, i) => (
           <DropdownMultiElement value={section.id} key={i + 1}>
             <div className="grid cursor-default grid-cols-[2rem_1fr] items-center gap-1">
@@ -116,7 +116,7 @@ function SectionFilter({
         onClick={() => {
           if (isPending || selectedOptions.length === 0) return
           setSelectedOption([])
-          dispatcher(setSectionList(null))
+          problemDispatcher(setSectionList(null))
         }}
       />
     </div>
@@ -132,8 +132,8 @@ function YearFilter({
   isPending: boolean
   isModerator: boolean
 }) {
-  const year = useAppSelector((state) => state.searchParams.year) ?? possibleYears[0]
-  const dispatcher = useAppDispatch()
+  const year = useProblemsSelector((state) => state.problemsPageFilters.year) ?? possibleYears[0]
+  const problemDispatcher = useProblemsDispatch()
 
   const optionList: { children: string; value: number; active: boolean }[] = []
   possibleYears.forEach((year, index, array) => {
@@ -169,7 +169,7 @@ function YearFilter({
       trigger={<DropdownTrigger disabled={isPending}>{year}</DropdownTrigger>}
       onOptionSelect={(option: DropdownOptionInterface<number> | null) => {
         if (!option) return
-        dispatcher(setYear(option.value))
+        problemDispatcher(setYear(option.value))
       }}
     >
       {optionList.map((opts, i) => (

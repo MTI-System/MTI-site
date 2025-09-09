@@ -6,17 +6,18 @@ import cookies from "js-cookie"
 import { usePathname } from "next/navigation"
 import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "../ui/Dropdown"
 import ColoredTType from "../ui/ColoredTType"
-import { setTT, setYear } from "@/redux_stores/Global/SearchParamsSlice"
+import { setTT } from "@/redux_stores/Global/SearchParamsSlice"
 import { TOURNAMENT_TYPE_KEY_NAME } from "@/constants/CookieKeys"
 import { Tooltip } from "@base-ui-components/react"
 import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
+import {setYear} from "@/redux_stores/Problems/ProblemsFiltersSlice";
 
 export default function TournamentTypeSelector({
-  availableTournamentTypes,
 }: {
-  availableTournamentTypes: TournamentTypeIntarface[]
 }) {
+  const availableTournamentTypes = useAppSelector(state=> state.searchParams.availableTournamentTypes)??[]
   const ttddElements = availableTournamentTypes.map((value) => ({
+    id: value.id,
     children: (
       <p className="text-text-main text-[1.8rem] font-bold">
         <ColoredTType ttColor={value.color} ttName={value.name} />
@@ -31,12 +32,24 @@ export default function TournamentTypeSelector({
   const [isTTLocked, setIsTTLocked] = useState(false)
   const pathname = usePathname()
   const [hasMounted, setHasMounted] = useState(false)
-  const selectedTT = availableTournamentTypes.find((t) => tt === t.name)
+
   const selectedState = useState<DropdownOptionInterface<string> | null>(
-    ttddElements.find((e) => e.value === selectedTT?.name) ?? null,
+    ttddElements.find((e) => {
+      console.log("Select condition", e.id, Number(tt), e.id === Number(tt))
+      return e.id === Number(tt)
+    }) ?? null,
   )
+  useEffect(() => {
+    console.log("bbbb", selectedState)
+  }, [selectedState]);
+
 
   const lockedPages = ["/problems/"]
+
+  useEffect(() => {
+    console.log("bbbb tt", tt)
+    selectedState[1](ttddElements.find(e=>e.id === tt)??null)
+  }, [tt]);
 
   useEffect(() => {
     setHasMounted(true)
@@ -75,14 +88,13 @@ export default function TournamentTypeSelector({
         }
         onOptionSelect={(option) => {
           if (!option) return
-          console.log(option.value)
           cookies.set(TOURNAMENT_TYPE_KEY_NAME, option.value)
           dispatcher(setYear(null))
-          dispatcher(setTT(option.value))
+          dispatcher(setTT(Number(option.value)))
         }}
       >
         {ttddElements.map((e, i) => (
-          <DropdownElement value={e.value} key={i + 1}>
+          <DropdownElement value={e.id} key={i + 1}>
             {e.children}
           </DropdownElement>
         ))}

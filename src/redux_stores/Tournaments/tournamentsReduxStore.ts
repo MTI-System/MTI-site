@@ -14,7 +14,3 @@ export default function makeTournamentsStore() {
 export type TournamentsStore = ReturnType<typeof makeTournamentsStore>
 export type RootTournamentsState = ReturnType<TournamentsStore["getState"]>
 export type TournamentsDispatch = TournamentsStore["dispatch"]
-
-export const useTournamentsDispatch = useDispatch.withTypes<TournamentsDispatch>()
-export const useTournamentsSelector = useSelector.withTypes<RootTournamentsState>()
-export const useTournamentsStore = useStore.withTypes<TournamentsStore>()

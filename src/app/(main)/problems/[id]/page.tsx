@@ -2,11 +2,11 @@ import { PROBLEM_API } from "@/constants/APIEndpoints"
 import ProblemPage from "@/components/problems/ProblemPage"
 import { ProblemInterface } from "@/types/problemAPI"
 import NotFound from "@/components/service/NotFound"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
 import { Metadata } from "next"
 import { cache } from "react"
-import { fetchProblemById } from "@/scripts/ApiFetchers"
+import {fetchProblemById, fetchTournamentTypes} from "@/scripts/ApiFetchers"
 import TournamentsPageTabs from "@/components/tournaments/TournamentsPageTabs";
+import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const ttype = availableTournamentTypes.find((t) => t.id === problem.tournament_type)
+  const ttype = (await fetchTournamentTypes()).find((t) => t.id === problem.tournament_type)
 
   return {
     title: `Задача № ${problem.global_number} · ${problem.problem_translations[0].problem_name} · ${ttype?.longName ?? ""} · ${problem.year} год – МТИ`,
@@ -33,8 +33,10 @@ async function ProblemPageMain({ params }: PageProps) {
   if (problem === null) return <NotFound />
   return (
     <>
+      <ProblemsReduxProviderWrapper>
+        <ProblemPage problem={problem} />
+      </ProblemsReduxProviderWrapper>
 
-      <ProblemPage problem={problem} />
     </>
   )
 }
