@@ -1,13 +1,14 @@
 import { MetadataRoute } from "next"
 import { GATEWAY_API, PROBLEM_API } from "@/constants/APIEndpoints"
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
+import {fetchTournamentTypes} from "@/scripts/ApiFetchers";
 export const dynamic = "force-dynamic"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapResponse = await fetch(PROBLEM_API + "sitemap_problems_data")
   const sitemapJson: SitemapResponse = await sitemapResponse.json()
   const resultMetadata: MetadataRoute.Sitemap = []
-  const availableTournamentTypes = useAppSelector(state=>state.searchParams.availableTournamentTypes) ?? []
+  const availableTournamentTypes = await fetchTournamentTypes()
 
 
   sitemapJson.problems_ids.forEach((problem) => {

@@ -18,6 +18,7 @@ export default function TournamentsSearchParams(
   const pathname = usePathname()
   const [isMounted, setMounted] = useState(false)
   useEffect(() => {
+    console.log("TournamentsSearchParams loaded", searchParams)
     if (searchParams.tt){
       dispatch(setTT(Number(searchParams.tt)));
     }
@@ -28,7 +29,7 @@ export default function TournamentsSearchParams(
       localDispatch(setYear(Number(searchParams.year)))
     }
     else if(!year){
-      localDispatch(setYear(2026))
+      localDispatch(setYear(2025))
     }
     if(searchParams.page){
       console.log("UPDATE PARAMS",  searchParams.page);

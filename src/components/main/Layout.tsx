@@ -36,7 +36,7 @@ function InitRedux() {
     }
 
     if (tt) {
-      dispatch(setTT(tt))
+      dispatch(setTT(Number(tt)))
     }
     if (token) {
       dispatch(setToken(token))

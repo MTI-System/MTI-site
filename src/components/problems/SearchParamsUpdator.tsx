@@ -130,7 +130,7 @@ import {useProblemsDispatch, useProblemsSelector} from "@/components/Redux/Probl
 import {useAppDispatch, useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 
 export default function SearchParamsUpdator(
-    {searchParams}: {searchParams: { year: string; tt: string; sections: string|null }
+    {searchParams}: {searchParams: { year: string; tt: string; sections?: string }
     }) {
   const localDispatch = useProblemsDispatch();
   const dispatch = useAppDispatch();

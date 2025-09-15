@@ -247,6 +247,19 @@ async function fetchTournamentsCards(tt: number, year: number): Promise<Tourname
   return []
 }
 
+async function fetchOrganizatorTournamentsCards(tt: number, year: number): Promise<TournamentCardInterface[]> {
+  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+  const formData = new FormData()
+  formData.set("token", token)
+  formData.set("year", year.toString())
+  formData.set("tournamentType", tt.toString())
+  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + "get_organizator_tournaments", {method: "POST", body: formData})
+  if (!response) return []
+  const parsed = z.array(TournamentCard).safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  return []
+}
+
 async function fetchTournamentsCard(id: number): Promise<TournamentCardInterface | null> {
   const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + `get_tournament_card/${id}`)
 
@@ -282,6 +295,7 @@ async function sendFormAnswer(form: FormData): Promise<boolean> {
 }
 
 export {
+  fetchOrganizatorTournamentsCards,
   sendFormAnswer,
   fetchRegistrationForm,
   fetchTournamentTable,

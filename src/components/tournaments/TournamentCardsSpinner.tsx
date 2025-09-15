@@ -9,10 +9,8 @@ import { setPage } from '@/redux_stores/Tournaments/TournamentsPageFiltersSlice'
 import Loading from "@/app/loading";
 import {useTournamentsDispatch, useTournamentsSelector} from "@/components/Redux/tournamentsStoreContext";
 
-export default function TournamentCardsSpinner({tournamentsCards}: { tournamentsCards: TournamentCardInterface[] }) {
+export default function TournamentCardsSpinner({tournamentsCards, isModerator}: { tournamentsCards: TournamentCardInterface[], isModerator: boolean }) {
   const currentPage = useTournamentsSelector(state=>state.tournamentsPageFilters.page)
-
-
   const dispatch = useTournamentsDispatch();
   const [isAnimating, setIsAnimating] = useState(false);
   const itemsPerPage = 3;
@@ -20,7 +18,7 @@ export default function TournamentCardsSpinner({tournamentsCards}: { tournaments
   console.log("CURRENT PAGE IN SPINNER", currentPage)
   if (!currentPage) return <Loading />
   const currentItems = tournamentsCards.slice(
-    (currentPage - 1) * itemsPerPage ,
+    (currentPage - 1) * itemsPerPage,
     (currentPage) * itemsPerPage
   )
 
@@ -33,7 +31,11 @@ export default function TournamentCardsSpinner({tournamentsCards}: { tournaments
     setIsAnimating(false);
   };
 
-
+  if (tournamentsCards.length === 0) {
+    return <>
+      <h1>Нет турниров по выбранным фильтрам</h1>
+    </>
+  }
 
   return (
     <div className="relative">
@@ -59,6 +61,7 @@ export default function TournamentCardsSpinner({tournamentsCards}: { tournaments
               key={tournamentCard.id}
               tournamentCard={tournamentCard}
               isExtended={false}
+              isModerator={isModerator}
             />
           ))}
         </div>

@@ -35,7 +35,7 @@ export default function ProblemSection({
   return (
     <div
       className={twclsx(
-        "flex items-center gap-2 rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] px-3 py-2 font-bold text-[var(--border-color)] dark:border-[var(--border-color-dark)] dark:bg-[var(--bg-color-dark)] dark:text-[var(--border-color-dark)]",
+        "flex items-center gap-2 rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] px-3 py-0.5 font-bold text-[var(--border-color)] dark:border-[var(--border-color-dark)] dark:bg-[var(--bg-color-dark)] dark:text-[var(--border-color-dark)]",
         className,
         { "opacity-50": isPending || isHidden },
       )}

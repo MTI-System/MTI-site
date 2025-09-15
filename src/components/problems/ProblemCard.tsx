@@ -417,7 +417,7 @@ function AddNewSection({
         <DropdownTrigger
           style={color as CSSProperties}
           className={twclsx(
-            "hover:bg-bg-alt rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] font-bold text-[var(--border-color)] opacity-100!",
+            "hover:bg-bg-alt rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] font-bold text-[var(--border-color)] opacity-100!  py-0.5",
             { "hover:bg-[var(--bg-color)]!": isPending || isError || isLoading },
           )}
           disabled={isPending || isError || isLoading}

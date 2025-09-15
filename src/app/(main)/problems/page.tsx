@@ -11,11 +11,12 @@ import {resolveAppleWebApp} from "next/dist/lib/metadata/resolvers/resolve-basic
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 import {ProblemsStoreProvider} from "@/components/Redux/ProblemsStoreContext";
 import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider";
+import ShareButton from "@/components/problems/ShareButton";
 
 export async function generateMetadata({
                                            searchParams,
                                        }: {
-    searchParams: Promise<{ year: number; tt: string }>
+    searchParams: Promise<{ year: string; tt: string }>
 }): Promise<Metadata> {
     const searchP = await searchParams
     const tt = Array.isArray(searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME])
@@ -42,7 +43,7 @@ export async function generateMetadata({
 export default async function Page({
                                        searchParams,
                                    }: {
-    searchParams: Promise<{ year: string; tt: string; sections: string | null }>
+    searchParams: Promise<{ year: string; tt: string; sections: string }>
 }) {
     const sp = await searchParams
     if (!sp.year || !sp.tt) {
@@ -54,10 +55,10 @@ export default async function Page({
                     </Suspense>
                     <Loading/>
                 </ProblemsReduxProviderWrapper>
-
             </>
         )
     }
+
     let tt = sp.tt ?? undefined
     const possibleYears = await fetchYears(Number(tt))
     let isUndefYear = false
@@ -94,7 +95,7 @@ export default async function Page({
         (section_1, section_2) =>
             section_1.section_science - section_2.section_science || section_1.title.localeCompare(section_2.title),
     )
-
+    console.log("SearchParams", sp, new URLSearchParams(sp).toString())
     return (
         <>
             <ProblemsReduxProviderWrapper>
@@ -109,9 +110,14 @@ export default async function Page({
                                 possibleYears={possibleYears}
                                 isModerator={isEditable}
                             >
+
+
                                 {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
                                 {!isUndefYear && (
                                     <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
+                                        <div className="w-full h-fit flex justify-end px-3 pt-3" >
+                                            <ShareButton searchParams={sp}/>
+                                        </div>
                                         <ProblemsList sectionsFilter={sectionsFilter ?? []} problems={problems}
                                                       isEditable={isEditable}/>
                                     </Suspense>
