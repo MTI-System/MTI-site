@@ -17,7 +17,7 @@ export default function TournamentCard({tournamentCard, isExtended = false, isMo
     return (
         <>
             {!isExtended ? (
-                <Link href={`/tournaments/${tournamentCard.id}/${isModerator ? "moderate/info" : "info"}`}>
+                <Link href={`/tournaments/${tournamentCard.id}/${isModerator ? "info/about" : "info/about"}`}>
                     <CardContent tournamentCard={tournamentCard} isExtended={isExtended} isModerator={isModerator}/>
                 </Link>
             ) : (

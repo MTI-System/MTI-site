@@ -1,138 +1,134 @@
 "use client"
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import clsx from "clsx";
 import React from "react";
 import {FILES_SERVER} from "@/constants/APIEndpoints";
 import {NavigationMenu} from "@base-ui-components/react";
 import Link from "next/link";
+import {TournamentCardInterface} from "@/types/TournamentsAPI";
+import {MdLock} from "react-icons/md";
+
+interface LinkInterface {
+    href: string;
+    title: string;
+    description?: string;
+    isLocked: boolean;
+}
 
 export default function TournamentsPageTabs(
-    // {tab, children}: { tab: string, children: React.ReactNode }
+    {tournamentCard}: { tournamentCard: TournamentCardInterface }
 ) {
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const isModerate = searchParams.get("isModerate") ?? false
+
+    const infoLinks: LinkInterface[] = [
+        {
+            href: `/tournaments/${tournamentCard.id}/info/about`,
+            title: 'О турнире',
+            description: 'Информация о турнирe от организатора',
+            isLocked: false
+        },
+        {
+            href: `/tournaments/${tournamentCard.id}/info/problems`,
+            title: 'Задачи',
+            description: 'Задачи, которые играются на турнире',
+            isLocked: false
+        },
+    ];
+
+    const resultsLinks: LinkInterface[] = [
+        {
+            href: `/tournaments/${tournamentCard.id}/results/team`,
+            title: 'Командный зачет',
+            isLocked: false,
+        },
+        {
+            href: `/tournaments/${tournamentCard.id}/results/personal`,
+            title: 'Личный зачет',
+            isLocked: false,
+        },
+    ];
+
+    const fightsLinks: LinkInterface[] = [
+        {
+            href: `/tournaments/${tournamentCard.id}/fights/all`,
+            title: `Все бои`,
+            isLocked: true
+        },
+        ...(tournamentCard.fight_containers_cards.map((container) => (
+            {
+                href: `/tournaments/${tournamentCard.id}/fights/${container.id}`,
+                title: container.title,
+                isLocked: true
+            }
+        ))),
+
+    ];
+
+    const statsLinks: LinkInterface[] = [
+        {
+            href: `/tournaments/${tournamentCard.id}/stats/problems`,
+            title: 'Задачи',
+            description: 'Статистика по каждой задаче',
+            isLocked: true
+        },
+        {
+            href: `/tournaments/${tournamentCard.id}/stats/fights`,
+            title: 'Бои',
+            description:
+                'Статистика по боям',
+            isLocked: true
+        },
+        {
+            href: `/tournaments/${tournamentCard.id}/stats/persons`,
+            title: 'Участники',
+            description:
+                'Статистика по участникам',
+            isLocked: true
+        },
+    ];
+
     return (
         <NavigationMenu.Root className="w-full rounded-lg flex justify-center p-1 ">
-            <NavigationMenu.List className="relative flex bg-bg-alt rounded-2xl  text-gray-900 ">
-                <NavigationMenu.Item>
-                    <NavigationMenu.Trigger className={triggerClassName}>
-                        Информация
-                        <NavigationMenu.Icon className="transition-transform duration-200 ease-in-out data-[popup-open]:rotate-180">
-                            <ChevronDownIcon />
-                        </NavigationMenu.Icon>
-                    </NavigationMenu.Trigger>
+            <NavigationMenu.List className="relative flex bg-bg-alt rounded-2xl text-gray-900 ">
+                <NavigationItem hasDescription={true} items={infoLinks} itemTitle="Информация"/>
+                <NavigationItem hasDescription={false} items={resultsLinks} itemTitle="Результаты"/>
+                <NavigationItem hasDescription={false} items={fightsLinks} itemTitle="Бои"/>
+                <NavigationItem hasDescription={true} items={statsLinks} itemTitle="Статистика"/>
 
-                    <NavigationMenu.Content className={contentClassName}>
-                        <ul className="grid list-none grid-cols-1 gap-0 xs:grid-cols-[12rem_12rem]">
-                            {infoLinks.map((item) => (
-                                <li key={item.href}>
-                                    <Link href={item.href} className={linkCardClassName}>
-                                        <h3 className="m-0 mb-1 text-base leading-5 font-medium">{item.title}</h3>
-                                        <p className="m-0 text-sm leading-5 text-gray-500">{item.description}</p>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </NavigationMenu.Content>
-                </NavigationMenu.Item>
+                {tournamentCard.tournament_status === "futured" && <NavigationMenu.Item>
+                    <Link className={registrationTriggerClassName}
+                          href={`/tournaments/${tournamentCard.id}/registration`}>
+                        Регистрация на турнир
+                    </Link>
+                </NavigationMenu.Item>}
 
-                <NavigationMenu.Item>
-                    <NavigationMenu.Trigger className={triggerClassName}>
-                        Результаты
-                        <NavigationMenu.Icon className="transition-transform duration-200 ease-in-out data-[popup-open]:rotate-180">
-                            <ChevronDownIcon />
-                        </NavigationMenu.Icon>
-                    </NavigationMenu.Trigger>
-
-                    <NavigationMenu.Content className={contentClassName}>
-                        <ul className="flex max-w-[400px] flex-col justify-center">
-                            {resultsLinks.map((item) => (
-                                <li key={item.href}>
-                                    <Link href={item.href} className={linkCardClassName}>
-                                        <h3 className="m-0 mb-1 text-base leading-5 font-medium">{item.title}</h3>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </NavigationMenu.Content>
-                </NavigationMenu.Item>
-
-                <NavigationMenu.Item>
-                    <NavigationMenu.Trigger className={triggerClassName}>
-                        Бои
-                        <NavigationMenu.Icon className="transition-transform duration-200 ease-in-out data-[popup-open]:rotate-180">
-                            <ChevronDownIcon />
-                        </NavigationMenu.Icon>
-                    </NavigationMenu.Trigger>
-
-                    <NavigationMenu.Content className={contentClassName}>
-                        <ul className="flex max-w-[400px] flex-col justify-center">
-                            {fightsLinks.map((item) => (
-                                <li key={item.href}>
-                                    <Link href={item.href} className={linkCardClassName}>
-                                        <h3 className="m-0 mb-1 text-base leading-5 font-medium">{item.title}</h3>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </NavigationMenu.Content>
-                </NavigationMenu.Item>
-
-                <NavigationMenu.Item>
-                    <NavigationMenu.Trigger className={triggerClassName}>
-                        Статистика
-                        <NavigationMenu.Icon className="transition-transform duration-200 ease-in-out data-[popup-open]:rotate-180">
-                            <ChevronDownIcon />
-                        </NavigationMenu.Icon>
-                    </NavigationMenu.Trigger>
-
-                    <NavigationMenu.Content className={contentClassName}>
-                        <ul className="flex max-w-[400px] flex-col justify-center">
-                            {handbookLinks.map((item) => (
-                                <li key={item.href}>
-                                    <Link href={item.href} className={linkCardClassName}>
-                                        <h3 className="m-0 mb-1 text-base leading-5 font-medium">{item.title}</h3>
-                                        <p className="m-0 text-sm leading-5 text-gray-500">{item.description}</p>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </NavigationMenu.Content>
-                </NavigationMenu.Item>
             </NavigationMenu.List>
 
             <NavigationMenu.Portal>
                 <NavigationMenu.Positioner
                     sideOffset={10}
-                    collisionPadding={{ top: 5, bottom: 5, left: 20, right: 20 }}
-                    collisionAvoidance={{ side: 'none' }}
-                    className="box-border h-[var(--positioner-height)] w-[var(--positioner-width)] max-w-[var(--available-width)] transition-[top,left,right,bottom] duration-[var(--duration)] ease-[var(--easing)] before:absolute before:content-[''] data-[instant]:transition-none data-[side=bottom]:before:top-[-10px] data-[side=bottom]:before:right-0 data-[side=bottom]:before:left-0 data-[side=bottom]:before:h-2.5 data-[side=left]:before:top-0 data-[side=left]:before:right-[-10px] data-[side=left]:before:bottom-0 data-[side=left]:before:w-2.5 data-[side=right]:before:top-0 data-[side=right]:before:bottom-0 data-[side=right]:before:left-[-10px] data-[side=right]:before:w-2.5 data-[side=top]:before:right-0 data-[side=top]:before:bottom-[-10px] data-[side=top]:before:left-0 data-[side=top]:before:h-2.5"
+                    collisionPadding={{top: 5, bottom: 5, left: 20, right: 20}}
+                    collisionAvoidance={{side: 'none'}}
+                    className="box-border h-[var(--positioner-height)] w-[var(--positioner-width)] transition-[top,left,right,bottom] duration-[var(--duration)] ease-[var(--easing)] before:absolute before:content-[''] data-[instant]:transition-none data-[side=bottom]:before:top-[-10px] data-[side=bottom]:before:right-0 data-[side=bottom]:before:left-0 data-[side=bottom]:before:h-2.5 data-[side=left]:before:top-0 data-[side=left]:before:right-[-10px] data-[side=left]:before:bottom-0 data-[side=left]:before:w-2.5 data-[side=right]:before:top-0 data-[side=right]:before:bottom-0 data-[side=right]:before:left-[-10px] data-[side=right]:before:w-2.5 data-[side=top]:before:right-0 data-[side=top]:before:bottom-[-10px] data-[side=top]:before:left-0 data-[side=top]:before:h-2.5"
                     style={{
                         ['--duration' as string]: '0.35s',
                         ['--easing' as string]: 'cubic-bezier(0.22, 1, 0.36, 1)',
-                    }}
-                >
-                    <NavigationMenu.Popup className="data-[ending-style]:easing-[ease] relative h-[var(--popup-height)] origin-[var(--transform-origin)] rounded-lg bg-[canvas] text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[opacity,transform,width,height,scale,translate] duration-[var(--duration)] ease-[var(--easing)] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[ending-style]:duration-150 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 w-[var(--popup-width)] xs:w-[var(--popup-width)] dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
-                        <NavigationMenu.Arrow className="flex transition-[left] duration-[var(--duration)] ease-[var(--easing)] data-[side=bottom]:top-[-8px] data-[side=left]:right-[-13px] data-[side=left]:rotate-90 data-[side=right]:left-[-13px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-8px] data-[side=top]:rotate-180">
-                            <ArrowSvg />
+                    }}>
+                    <NavigationMenu.Popup
+                        className="data-[ending-style]:easing-[ease] relative h-[var(--popup-height)] origin-[var(--transform-origin)] rounded-lg bg-[canvas] text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[opacity,transform,width,height,scale,translate] duration-[var(--duration)] ease-[var(--easing)] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[ending-style]:duration-150 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 w-[var(--popup-width)] xs:w-[var(--popup-width)] dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                        <NavigationMenu.Arrow
+                            className="flex transition-[left] duration-[var(--duration)] ease-[var(--easing)] data-[side=bottom]:top-[-8px] data-[side=left]:right-[-13px] data-[side=left]:rotate-90 data-[side=right]:left-[-13px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-8px] data-[side=top]:rotate-180">
+                            <ArrowSvg/>
                         </NavigationMenu.Arrow>
-                        <NavigationMenu.Viewport className="relative h-full w-full overflow-hidden" />
+                        <NavigationMenu.Viewport className="relative h-full w-full overflow-hidden"/>
                     </NavigationMenu.Popup>
                 </NavigationMenu.Positioner>
             </NavigationMenu.Portal>
         </NavigationMenu.Root>
     );
 }
-
-// function Link(props: NavigationMenu.Link.Props) {
-//     return (
-//         <NavigationMenu.Link
-//             render={
-//                 <a/>
-//             }
-//             {...props}
-//         />
-//     );
-// }
 
 function ChevronDownIcon(props: React.ComponentProps<'svg'>) {
     return (
@@ -161,83 +157,64 @@ function ArrowSvg(props: React.ComponentProps<'svg'>) {
     );
 }
 
-const infoLinks = [
-    {
-        href: 'info',
-        title: 'О турнире',
-        description: 'Информация о проведении турнира от организатора',
-    },
-    {
-        href: 'problems',
-        title: 'Задачи',
-        description: 'Задачи, которые играются на турнире',
-    },
-] as const;
 
-const resultsLinks = [
-    {
-        href: 'results',
-        title: 'Командный зачет',
-    },
-    {
-        href: 'results_ind',
-        title: 'Личный зачет',
-    },
-] as const;
+function NavigationItem({hasDescription, items, itemTitle}: {
+    hasDescription: boolean; items: LinkInterface[]; itemTitle: string
+}) {
+    return (
+        <>
+            <NavigationMenu.Item>
+                <NavigationMenu.Trigger className={triggerClassName}>
+                    {itemTitle}
+                    <NavigationMenu.Icon
+                        className="transition-transform duration-200 ease-in-out data-[popup-open]:rotate-180">
+                        <ChevronDownIcon/>
+                    </NavigationMenu.Icon>
+                </NavigationMenu.Trigger>
 
-const fightsLinks = [
-    {
-        href: 'fights/1',
-        title: 'Первый отборочный бой',
-    },
-    {
-        href: 'fights/2',
-        title: 'Второй отборочный бой',
-    },
-    {
-        href: 'fights/3',
-        title: 'Третий отборочный бой',
-    },
-    {
-        href: 'fights/4',
-        title: 'Четвертый отборочный бой',
-    },
-    {
-        href: 'fights/5',
-        title: 'Финал',
-    },
-] as const;
+                <NavigationMenu.Content className={contentClassName}>
+                    <ul className="flex max-w-[400px] flex-col justify-center">
+                        {items.map((item) => (
+                            <li key={item.href} className="hover:bg-hover rounded-sm transition-colors">
+                                <Link href={item.isLocked ? "" : item.href}
+                                      className={linkCardClassName}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        {item.isLocked && <MdLock/>}
+                                        <div>
+                                            <h3 className="m-0 mb-1 text-base leading-5 font-medium text-nowrap">{item.title}</h3>
+                                            {hasDescription &&
+                                                <p className="m-0 text-sm leading-5 text-gray-500 text-nowrap">{item.description}</p>}
+                                        </div>
+                                    </div>
 
-const handbookLinks = [
-    {
-        href: '/react/handbook/styling',
-        title: 'Styling',
-        description:
-            'Base UI components can be styled with plain CSS, Tailwind CSS, CSS-in-JS, or CSS Modules.',
-    },
-    {
-        href: '/react/handbook/animation',
-        title: 'Animation',
-        description:
-            'Base UI components can be animated with CSS transitions, CSS animations, or JavaScript libraries.',
-    },
-    {
-        href: '/react/handbook/composition',
-        title: 'Composition',
-        description:
-            'Base UI components can be replaced and composed with your own existing components.',
-    },
-] as const;
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </NavigationMenu.Content>
+            </NavigationMenu.Item>
+        </>
+    )
+}
+
 
 const triggerClassName =
-    'box-border flex items-center justify-center gap-1.5 h-10 ' +
-    'px-2 xs:px-3.5 m-0 rounded-md bg-gray-50 text-gray-900 font-medium ' +
+    'box-border  flex items-center justify-center gap-1.5 h-10 bg-bg-alt ' +
+    'px-2 xs:px-3.5 m-0 rounded-md font-medium text-text-main ' +
     'text-[0.925rem] xs:text-base leading-6 select-none no-underline ' +
-    'hover:bg-gray-100 active:bg-gray-100 data-[popup-open]:bg-gray-100 ' +
+    'hover:bg-hover active:bg-hover data-[popup-open]:bg-hover ' +
+    'focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 focus-visible:relative';
+
+const registrationTriggerClassName =
+    'box-border  flex items-center justify-center gap-1.5 h-6 ms-5 my-2 me-2 ' +
+    'px-2 xs:px-3.5 m-0 rounded-md bg-accent-primary text-text-on-accent font-medium ' +
+    'text-[0.925rem] xs:text-base leading-6 select-none no-underline ' +
+    'hover:bg-accent-primary/70 hover:shadow-accent-primary/70 shadow-accent-primary shadow-[0_0_0_2px_var(--tw-shadow-color),0_0_30px_0_var(--tw-shadow-color)]  data-[popup-open]:bg-hover ' +
     'focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 focus-visible:relative';
 
 const contentClassName =
-    'w-fit h-full p-6 xs:w-max xs:min-w-[400px] xs:w-max ' +
+    'w-fit h-full p-2 xs:w-max xs:min-w-[400px] xs:w-max' +
     'transition-[opacity,transform,translate] duration-[var(--duration)] ease-[var(--easing)] ' +
     'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 ' +
     'data-[starting-style]:data-[activation-direction=left]:translate-x-[-50%] ' +
@@ -246,7 +223,7 @@ const contentClassName =
     'data-[ending-style]:data-[activation-direction=right]:translate-x-[-50%]';
 
 const linkCardClassName =
-    'block rounded-md p-2 xs:p-3 no-underline text-inherit ' +
-    'hover:bg-gray-100 focus-visible:relative focus-visible:outline focus-visible:outline-2 ' +
+    'block rounded-md p-2 xs:p-3 no-underline text-inherit' +
+    'hover:bg-black focus-visible:relative focus-visible:outline focus-visible:outline-2 ' +
     'focus-visible:-outline-offset-1 focus-visible:outline-blue-800';
 

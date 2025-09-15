@@ -16,6 +16,10 @@ export default async function TournamentPage(
 
     const tournamentId = Number(id)
     const tournament = await fetchTournamentsCard(tournamentId)
+    if (!tournament) {
+        return <>Error</>
+    }
+
     return (
         <>
             <Suspense fallback={<Loading/>}>
@@ -23,16 +27,8 @@ export default async function TournamentPage(
                     <TournamentCard tournamentCard={tournament} isExtended={true} isModerator={false}/>
                 </div>}
                 {!tournament && <NotFound/>}
-                <TournamentsPageTabs />
-                {/*<TournamentsPageTabs tab={"info"}>*/}
-                {/*    <TournamentTab currentTab={"info"} title={"Инфо"} linkFlag={"info"} iconSrc={"InfoTabIcon.svg"}/>*/}
-                {/*    /!*<TournamentTab currentTab={tab} title={"Результаты"} linkFlag={"results"}*!/*/}
-                {/*    /!*               iconSrc={"ResultsTabIcon.svg"}/>*!/*/}
-                {/*    /!*<TournamentTab currentTab={tab} title={"Бои"} linkFlag={"fights"} iconSrc={"FightsTabIcon.svg"}/>*!/*/}
-                {/*    /!*<TournamentTab currentTab={tab} title={"Статистика"} linkFlag={"stats"}*!/*/}
-                {/*    /!*               iconSrc={"StatsTabIcon.svg"}/>*!/*/}
-                {/*</TournamentsPageTabs>*/}
-                <div className="bg-bg-alt w-full rounded-2xl mb-5 px-2 py-5">
+                <TournamentsPageTabs tournamentCard={tournament}/>
+                <div className="bg-bg-alt w-full min-h-[50rem] rounded-2xl mb-5 px-2 py-5">
                     {children}
                 </div>
 

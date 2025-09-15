@@ -1,5 +1,10 @@
 import { z } from "zod"
 
+export const FightContainerCard = z.object({
+  id: z.number(),
+  title: z.string(),
+})
+
 export const TournamentCard = z.object({
   id: z.number(),
   title: z.string(),
@@ -8,7 +13,10 @@ export const TournamentCard = z.object({
   tournament_logo: z.string(),
   year: z.number(),
   tournament_status: z.string(),
+  fight_containers_cards: z.array(FightContainerCard),
 })
+
+
 
 export const TournamentScoreEntity = z.object({
   fight_container_id: z.number(),
