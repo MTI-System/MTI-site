@@ -439,9 +439,9 @@ function AddNewSection({
           </div>
         </DropdownTrigger>
       }
-      onOpenChange={async (open, e, reason, selected) => {
+      onOpenChange={async (open, e, selected) => {
         if (open) return
-        if (reason !== "trigger-press") {
+        if (e.reason !== "trigger-press") {
           setSelectedOption(null)
           return
         }

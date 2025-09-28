@@ -81,7 +81,7 @@ function SectionFilter({
   return (
     <div className="flex w-full min-w-0 content-center items-center">
       <DropdownMulti
-        onOpenChange={(open, e, reason, selection: DropdownOptionInterface<number>[] | null) => {
+        onOpenChange={(open, e, selection: DropdownOptionInterface<number>[] | null) => {
           if (open) return
           dispatcher(setSectionList(selection?.map((s) => s.value) ?? null))
         }}
