@@ -20,7 +20,7 @@ export default function StoreProvider({
 }) {
   const storeRef = useRef<AppStore | null>(null)
   const year = useSearchParams().get("year")
-
+  console.log("Make redux provider")
   if (!storeRef.current) {
     storeRef.current = makeStore(theme, Number(tt), token, year, availableTournamentTypes)
   }

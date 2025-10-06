@@ -30,6 +30,12 @@ export default function TournamentsPageTabs(
             isLocked: false
         },
         {
+            href: `/tournaments/${tournamentCard.id}/info/teams`,
+            title: 'Команды',
+            description: 'Все зарегистрированные команды',
+            isLocked: false
+        },
+        {
             href: `/tournaments/${tournamentCard.id}/info/problems`,
             title: 'Задачи',
             description: 'Задачи, которые играются на турнире',
@@ -41,12 +47,12 @@ export default function TournamentsPageTabs(
         {
             href: `/tournaments/${tournamentCard.id}/results/team`,
             title: 'Командный зачет',
-            isLocked: false,
+            isLocked: tournamentCard.tournament_status === "futured",
         },
         {
             href: `/tournaments/${tournamentCard.id}/results/personal`,
             title: 'Личный зачет',
-            isLocked: false,
+            isLocked: tournamentCard.tournament_status === "futured",
         },
     ];
 
@@ -54,13 +60,13 @@ export default function TournamentsPageTabs(
         {
             href: `/tournaments/${tournamentCard.id}/fights/all`,
             title: `Все бои`,
-            isLocked: true
+            isLocked: tournamentCard.tournament_status === "futured"
         },
         ...(tournamentCard.fight_containers_cards.map((container) => (
             {
                 href: `/tournaments/${tournamentCard.id}/fights/${container.id}`,
                 title: container.title,
-                isLocked: true
+                isLocked: tournamentCard.tournament_status === "futured"
             }
         ))),
 

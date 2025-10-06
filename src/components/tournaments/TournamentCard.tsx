@@ -4,66 +4,159 @@ import {CiLocationOn} from "react-icons/ci";
 import {CiClock2} from "react-icons/ci";
 import {FILES_SERVER} from "@/constants/APIEndpoints";
 import {redirect} from 'next/navigation'
-import {JSX} from "react";
+import {JSX, useState, useRef, ChangeEvent} from "react";
 import clsx from "clsx";
 import {GoPeople} from "react-icons/go";
 import Link from "next/link";
+import {Input} from "@/components/ui/Input";
+import Loading from "@/app/loading";
 
-export default function TournamentCard({tournamentCard, isExtended = false, isModerator}: {
+
+
+interface TournamentCardCallback {
+    (card: Partial<TournamentCardInterface>): void;
+}
+
+export default function TournamentCard({tournamentCard, isExtended = false, isCreate, onUpdateCreate=null}: {
     tournamentCard: TournamentCardInterface,
     isExtended: boolean,
-    isModerator: boolean,
+    isCreate: boolean,
+    onUpdateCreate: TournamentCardCallback | null,
 }): JSX.Element {
     return (
         <>
             {!isExtended ? (
-                <Link href={`/tournaments/${tournamentCard.id}/${isModerator ? "info/about" : "info/about"}`}>
-                    <CardContent tournamentCard={tournamentCard} isExtended={isExtended} isModerator={isModerator}/>
+                <Link href={`/tournaments/${tournamentCard.id}/${isCreate ? "info/about" : "info/about"}`}>
+                    <CardContent tournamentCard={tournamentCard} isExtended={isExtended} isCreate={isCreate}
+                                 onUpdateCreate={onUpdateCreate}/>
                 </Link>
             ) : (
-                <CardContent tournamentCard={tournamentCard} isExtended={isExtended} isModerator={isModerator}/>
+                <CardContent tournamentCard={tournamentCard} isExtended={isExtended} isCreate={isCreate}
+                             onUpdateCreate={onUpdateCreate}/>
             )}
         </>
     )
 }
 
-function CardContent({tournamentCard, isExtended, isModerator}: {
+function CardContent({tournamentCard, isExtended, isCreate, onUpdateCreate}: {
     tournamentCard: TournamentCardInterface,
     isExtended: boolean,
-    isModerator: boolean,
+    isCreate: boolean,
+    onUpdateCreate: TournamentCardCallback | null,
 }) {
+    const [isBigImageLoading, setIsBigImageLoading] = useState<boolean>(false);
+    const [isSmallImageLoading, setIsSmallImageLoading] = useState<boolean>(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    if (isCreate && !onUpdateCreate) {
+        return <>Ошибка!</>
+    }
+
+
+
+    const handleDivClick = () => {
+        if (!fileInputRef.current) return
+        fileInputRef.current?.click();
+    };
+
+    const handleFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files ? event.target.files[0] : null;
+        if (file) {
+            if (file.type.startsWith('image/')) {
+
+                console.log('Выбран файл:', file.name);
+                const imageUrl = URL.createObjectURL(file);
+                setIsBigImageLoading(true);
+            }
+        }
+    };
+
     return (
         <>
             <div
-                className={clsx("flex flex-col  bg-bg-alt  rounded-3xl overflow-hidden transition-all duration-500 border-2 border-bg-main",
+                className={clsx("flex  flex-col  bg-bg-alt  rounded-3xl overflow-hidden transition-all duration-500 border-2 border-bg-main",
                     {"hover:border-accent-primary aspect-[8/9] h-[37rem]": !isExtended},
                     {"w-full h-[33rem]": isExtended},
                 )}>
-                <img className="object-cover h-[64%]" src={FILES_SERVER + tournamentCard.main_image}
-                     alt="Картинка турнира"/>
-                <div className="pl-5 flex items-center w-full h-0">
-                    <img src={FILES_SERVER + tournamentCard.tournament_logo}
-                         className="border-border border rounded-full size-20 aspect-square mb-6 object-cover"
-                         alt="лого"/>
+                <div className="relative  h-[64%]">
+                    <img className="absolute object-cover h-full w-full z-0"
+                         src={FILES_SERVER + tournamentCard.main_image}
+                         loading="lazy"
+                         alt="Картинка турнира"/>
+                    {isCreate && !isBigImageLoading && (
+                        <>
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileSelect}
+                                accept="image/*" // Только изображения
+                                style={{ display: 'none' }}
+                            />
+                            <div
+                                onClick={()=>handleDivClick()}
+                                className="absolute justify-center items-center flex size-full bg-transparent hover:bg-black/50 opacity-0 hover:opacity-100 transition-all cursor-pointer">
+                                <p className="text-white font-bold text-2xl">Загрузить изображение</p>
+                            </div>
+                        </>
+                    )
+                    }
+                    {isBigImageLoading && (
+                        <div className="absolute size-full bg-black/50 z-1">
+                            <Loading/>
+                        </div>
+                    )}
+                </div>
+
+
+                <div className=" pl-5 flex items-center w-full h-0 z-1">
+                    <div
+                        className="relative bg-bg-alt border-border border rounded-full size-20 aspect-square mb-6 overflow-hidden">
+                        <img src={FILES_SERVER + tournamentCard.tournament_logo}
+                             loading="lazy"
+                             className="absolute size-full object-cover"
+                             alt="лого"/>
+                        {isCreate && <div
+                            className="absolute justify-center items-center flex size-full bg-transparent hover:bg-black/50 opacity-0 hover:opacity-100 transition-all cursor-pointer">
+                            <p className="text-white font-bold text-2xl">+</p>
+                        </div>}
+                    </div>
+
                 </div>
                 <div className="flex">
                     <div className="flex flex-col gap-2 h-fit w-full px-2 pt-10 pb-5 text-text-main">
-                        <h3 className="font-medium text-base">{tournamentCard.title}</h3>
+                        {!isCreate && <h3 className="font-medium text-base">{tournamentCard.title}</h3>}
+                        {isCreate && <Input onChange={(event) => {
+                            if (!onUpdateCreate) return;
+                            onUpdateCreate({title: event.target.value});
+                        }}
+                                            className="border-border w-[30rem] h-full rounded-2xl border-[1px] p-2 text-[0.8rem]"
+                                            defaultValue="Название турнира"/>}
                         <div className="flex text-text-alt items-center gap-2">
                             <CiLocationOn className="text-xl"/>
-                            <p className="text-xs">Где?</p>
+                            {!isCreate && <p className="text-xs">Где?</p>}
+                            {isCreate && <Input
+                                className="border-border w-[7rem] h-[1.5rem] rounded-2xl border-[1px] p-2 text-[0.8rem]"
+                                defaultValue="Место проведения (потом)"/>}
                         </div>
                         <div className="flex text-text-alt items-center gap-2">
                             <CiClock2 className="text-xl"/>
-                            <p className="text-xs">{tournamentCard.year}</p>
+                            {!isCreate && <p className="text-xs">{tournamentCard.year}</p>}
+                            {isCreate && <Input
+                                className="border-border w-[7rem] h-[1.5rem] rounded-2xl border-[1px] p-2 text-[0.8rem]"
+                                defaultValue="Даты (потом)"/>}
                         </div>
                         <div className="flex text-text-alt items-center gap-2">
                             <GoPeople className="text-xl"/>
                             <p className="text-xs">10 команд</p>
                         </div>
-                        <p className="text-xs">
+
+                        {!isCreate && <p className="text-xs">
                             {tournamentCard.description}
-                        </p>
+                        </p>}
+                        {isCreate && <textarea  onChange={(event)=>{
+                            if (!onUpdateCreate) return;
+                            onUpdateCreate({ description: event.target.value });}}
+                                                className="border-border text-xs h-20 w-full resize-none rounded-2xl border-[1px] p-2"
+                            defaultValue="Описание турнира"/>}
                     </div>
                     {isExtended &&
                         <div className={clsx("w-30 h-7 m-10 rounded-full flex justify-center items-center border",

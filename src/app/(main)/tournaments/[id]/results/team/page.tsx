@@ -1,4 +1,4 @@
-import ResultsTable from "@/components/tournaments/ResutsTable";
+import ResultsTable from "@/components/tournamentPage/ResutsTable";
 import {Suspense} from "react";
 
 export default async function TournamentResultPage(

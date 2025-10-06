@@ -5,7 +5,7 @@ import NotFound from "@/components/service/NotFound"
 import { Metadata } from "next"
 import { cache } from "react"
 import {fetchProblemById, fetchTournamentTypes} from "@/scripts/ApiFetchers"
-import TournamentsPageTabs from "@/components/tournaments/TournamentsPageTabs";
+import TournamentsPageTabs from "@/components/tournamentPage/TournamentsPageTabs";
 import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

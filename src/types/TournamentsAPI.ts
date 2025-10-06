@@ -14,6 +14,7 @@ export const TournamentCard = z.object({
   year: z.number(),
   tournament_status: z.string(),
   fight_containers_cards: z.array(FightContainerCard),
+  materials: z.array(z.number()),
 })
 
 

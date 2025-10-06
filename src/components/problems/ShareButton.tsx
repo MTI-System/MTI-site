@@ -6,7 +6,8 @@ import {FaRegCopy} from "react-icons/fa6";
 import {Checkbox, CheckboxGroup, Form, Tooltip} from "@base-ui-components/react"
 import {Field} from "@base-ui-components/react/field";
 import * as sea from "node:sea";
-import {usePathname} from "next/navigation";
+import {usePathname, useSearchParams} from "next/navigation";
+import {FaShare} from "react-icons/fa";
 
 function SearchParamTranscript(flag: string): string {
     switch (flag) {
@@ -28,9 +29,8 @@ interface EditableSearchParamInterface {
     transcription: string;
 }
 
-export default function ShareButton({searchParams}: {
-    searchParams: { [key: string]: string },
-}) {
+export default function ShareButton() {
+    const searchParams = Object.fromEntries(Array.from(useSearchParams().entries()));
     const [isExpanded, setExpanded] = useState(false);
     const pathname = usePathname()
     const [editableSearchParams, setEditableSearchParams] = useState<EditableSearchParamInterface[]>(Object.entries(searchParams)
@@ -52,11 +52,7 @@ export default function ShareButton({searchParams}: {
         })
         return spObj.toString()
     }
-    // const startSearchParams = new URLSearchParams(currentSearchParams);
-    // const searchParams = new URLSearchParams(currentSearchParams);
-    // const [searchParamsString, setSearchParamsString] = useState(searchParams.toString());
     const [isCopied, setCopied] = useState(false);
-    // console.log("SearchParams", currentSearchParams);
     const checkBoxHandler = function (key: string, state: boolean) {
         setEditableSearchParams(prevState => {
             return prevState.map(sp => {
@@ -68,20 +64,37 @@ export default function ShareButton({searchParams}: {
                 }
             })
         })
-
-
-        // setSearchParamsString(searchParams.toString());
     }
     return (
         <>
             <div className="relative z-10">
                 <Button
-                    className="border-3 border-green-400 bg-green-400/10 hover:bg-green-400 px-5 py-2 rounded-xl text-text-main"
+                    className="group relative border-3 border-green-400 bg-green-400/10 hover:bg-green-400 px-2 py-2 rounded-xl
+               text-text-main transition-all duration-300 ease-in-out overflow-hidden
+               w-auto min-w-[4px] hover:min-w-[7.5rem]"
                     onClick={() => setExpanded(!isExpanded)}>
-                    Поделиться страницей
+                    <div className="flex items-center justify-center gap-2">
+                        {/* Иконка - всегда видима */}
+                        <span className="transition-all duration-300 opacity-100 group-hover:opacity-0">
+                            <FaShare/>
+                        </span>
+
+                        {/* Текст - скрыт по умолчанию, появляется при наведении */}
+                        <span className="absolute left-2 transition-all duration-300 opacity-0 group-hover:opacity-100
+                        translate-x-[0px] group-hover:translate-x-0">
+                            Поделиться
+                        </span>
+
+                        {/* Иконка - дублируется для плавного перехода */}
+                        {/*<span className="transition-all duration-300 opacity-0 group-hover:opacity-100*/}
+                        {/*translate-x-[-10px] group-hover:translate-x-0">*/}
+                        {/*    <FaShare/>*/}
+                        {/*</span>*/}
+                    </div>
                 </Button>
                 {isExpanded &&
-                    <div className="absolute bg-bg-alt rounded-2xl border-1 border-border w-[30rem] h-fit right-0 mt-1 py-3">
+                    <div
+                        className="absolute bg-bg-alt rounded-2xl border-1 border-border w-[30rem] h-fit right-0 mt-1 py-3">
                         <div className="relative px-2 ">
                             <FaTimes className="absolute right-0 me-2" onClick={() => setExpanded(false)}/>
                             <h3 className="text-xl">Поделиться ссылкой на страницу!</h3>
@@ -113,7 +126,8 @@ export default function ShareButton({searchParams}: {
                                     </Tooltip.Root>
                                 </Tooltip.Provider>
                             </div>
-                            <p className="pb-2">Вы можете поделиться страницей с уже отфильтрованными значениями. В данном окне вы можете
+                            <p className="pb-2">Вы можете поделиться страницей с уже отфильтрованными значениями. В
+                                данном окне вы можете
                                 выбрать фильтры, которые
                                 будут учтены в ссылке. В поисковой строке вашего браузера вы можете скопировать
                                 ссылку <strong>со всеми параметрами</strong>
@@ -135,32 +149,32 @@ function SearchParamCheckBoxes({searchParams, onChecked}: {
     const formRef = useRef(null);
     return (
         <>
-                <CheckboxGroup
-                    aria-labelledby="apples-caption"
-                    defaultValue={searchParams.map((sp) => sp.key)}
-                    className="flex flex-col items-start gap-1 text-text-main"
-                >
-                    {searchParams.map((sp)  => <label key={sp.key} className="flex items-center gap-2">
-                            <Checkbox.Root
-                                name={sp.key}
-                                value={sp.key}
-                                onCheckedChange={(state) => {
-                                    onChecked(sp.key, state)
-                                    // console.log("SearchParams", new FormData(formRef.current??undefined), formRef.current)
-                                }}
-                                className="box-border flex w-5 h-5 items-center justify-center rounded outline-none p-0 m-0
+            <CheckboxGroup
+                aria-labelledby="apples-caption"
+                defaultValue={searchParams.map((sp) => sp.key)}
+                className="flex flex-col items-start gap-1 text-text-main"
+            >
+                {searchParams.map((sp) => <label key={sp.key} className="flex items-center gap-2">
+                        <Checkbox.Root
+                            name={sp.key}
+                            value={sp.key}
+                            onCheckedChange={(state) => {
+                                onChecked(sp.key, state)
+                                // console.log("SearchParams", new FormData(formRef.current??undefined), formRef.current)
+                            }}
+                            className="box-border flex w-5 h-5 items-center justify-center rounded outline-none p-0 m-0
                                    data-[checked]:bg-text-main border border-border
                                    focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-2
                                    transition-colors data-[checked]:border-transparent"
-                            >
-                                <Checkbox.Indicator className="flex text-bg-alt data-[unchecked]:hidden">
-                                    <CheckIcon className="w-3 h-3"/>
-                                </Checkbox.Indicator>
-                            </Checkbox.Root>
-                            {sp.transcription}
-                        </label>
-                    )}
-                </CheckboxGroup>
+                        >
+                            <Checkbox.Indicator className="flex text-bg-alt data-[unchecked]:hidden">
+                                <CheckIcon className="w-3 h-3"/>
+                            </Checkbox.Indicator>
+                        </Checkbox.Root>
+                        {sp.transcription}
+                    </label>
+                )}
+            </CheckboxGroup>
         </>
     )
 }

@@ -2,10 +2,11 @@ import {fetchTournamentsCard} from "@/scripts/ApiFetchers";
 import TournamentCard from "@/components/tournaments/TournamentCard";
 import NotFound from "@/components/service/NotFound";
 import {redirect} from "next/navigation";
-import TournamentsPageTabs from "@/components/tournaments/TournamentsPageTabs";
+import TournamentsPageTabs from "@/components/tournamentPage/TournamentsPageTabs";
 import {ReactNode, Suspense} from "react";
 import Loading from "@/app/loading";
-import ResultsTable from "@/components/tournaments/ResutsTable";
+import ResultsTable from "@/components/tournamentPage/ResutsTable";
+import TournamentPageStoreProviderWrapper from "@/components/Redux/TournamentPageStoreProvider";
 
 export default async function TournamentPage(
     {params, children}: { params: Promise<{ id: number }>, children: ReactNode }
@@ -22,18 +23,19 @@ export default async function TournamentPage(
 
     return (
         <>
-            <Suspense fallback={<Loading/>}>
-                {tournament && <div className="pt-5">
-                    <TournamentCard tournamentCard={tournament} isExtended={true} isModerator={false}/>
-                </div>}
-                {!tournament && <NotFound/>}
-                <TournamentsPageTabs tournamentCard={tournament}/>
-                <div className="bg-bg-alt w-full min-h-[50rem] rounded-2xl mb-5 px-2 py-5">
-                    {children}
-                </div>
+            <TournamentPageStoreProviderWrapper tournament={tournament}>
+                <Suspense fallback={<Loading/>}>
+                    {tournament && <div className="pt-5">
+                        <TournamentCard tournamentCard={tournament} isExtended={true} isModerator={false}/>
+                    </div>}
+                    {!tournament && <NotFound/>}
+                    <TournamentsPageTabs tournamentCard={tournament}/>
+                    <div className="bg-bg-alt w-full min-h-[50rem] rounded-2xl mb-5 px-2 py-5">
+                        {children}
+                    </div>
 
-            </Suspense>
-
+                </Suspense>
+            </TournamentPageStoreProviderWrapper>
 
         </>
     )

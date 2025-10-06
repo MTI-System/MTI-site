@@ -21,6 +21,8 @@ import twclsx from "@/utils/twClassMerge"
 import { Menu } from "@base-ui-components/react"
 import {setSectionList, setYear} from "@/redux_stores/Problems/ProblemsFiltersSlice";
 import {useProblemsDispatch, useProblemsSelector} from "@/components/Redux/ProblemsStoreContext";
+import ShareButton from "@/components/problems/ShareButton";
+import {useSearchParams} from "next/navigation";
 
 export default function ProblemFilters({
   children,
@@ -38,24 +40,29 @@ export default function ProblemFilters({
   const ttid = Number(tt) ?? 1
   const availableTournamentTypes = useAppSelector(state=>state.searchParams.availableTournamentTypes) ?? []
   const isPending = useAppSelector((state) => state.system.isPending)
+  const searchParams = useSearchParams()
+
   return (
     <>
-      <div className="flex h-fit w-full content-center items-center gap-5">
-          <p className="font-bold text-4xl">
+      <div className="flex h-fit pt-2 w-full content-center items-center gap-5">
+          <p className="font-bold text-4xl text-text-main">
               Задачи
           </p>
-          <p className="font-bold text-4xl"><ColoredTType
+            <ColoredTType
               ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
               ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
-          /></p>
+              className="font-bold text-4xl text-text-main"
+          />
         <div className={style.filters}>
           <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
           <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
+          <ShareButton/>
         </div>
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
       {!isPending && children}
       {isPending && <Loading />}
+
     </>
   )
 }
@@ -75,6 +82,7 @@ function SectionFilter({
   const [selectedOptions, setSelectedOption] = useState<number[]>([])
 
   useEffect(() => {
+    console.log("Update section list", sectionList)
     setSelectedOption(sectionList ?? [])
   }, [sectionList])
 
@@ -91,10 +99,17 @@ function SectionFilter({
           problemDispatcher(setSectionList(selection?.map((s) => s.value) ?? null))
         }}
         trigger={
-          <DropdownTrigger rootClassName="flex-1" disabled={isPending}>
+          <DropdownTrigger rootClassName="flex-1" disabled={isPending}
+               className={twclsx(
+                   "bg-bg-alt rounded-full h-8 hover:bg-hover",
+                   { "hover:bg-[var(--bg-color)]!": isPending },
+               )}
+          >
             {isPending ? <p className="flex-1">Выбираем...</p> : <p className="flex-1">Выбрать разделы</p>}
           </DropdownTrigger>
-        }>
+        }
+
+      >
         {possibleSections.map((section, i) => (
           <DropdownMultiElement value={section.id} key={i + 1}>
             <div className="grid cursor-default grid-cols-[2rem_1fr] items-center gap-1">
@@ -166,7 +181,11 @@ function YearFilter({
 
   return (
     <Dropdown
-      trigger={<DropdownTrigger disabled={isPending}>{year}</DropdownTrigger>}
+      trigger={<DropdownTrigger disabled={isPending}
+          className={twclsx(
+          "bg-bg-alt rounded-full h-8 hover:bg-hover",
+          { "hover:bg-[var(--bg-color)]!": isPending },
+      )}>{year}</DropdownTrigger>}
       onOptionSelect={(option: DropdownOptionInterface<number> | null) => {
         if (!option) return
         problemDispatcher(setYear(option.value))

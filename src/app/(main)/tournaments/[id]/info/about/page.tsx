@@ -1,7 +1,12 @@
-export default async function InfoTournamentPage(){
+import AboutPage from "@/app/(main)/about/page";
+import AboutTournamentPage from "@/components/tournaments/AboutPage";
+
+export default async function InfoTournamentPage(
+    {params}: { params: Promise<{ id: number }>}
+){
     return (
         <>
-            <h1>Раздел Инфо</h1>
+            <AboutTournamentPage/>
         </>
     )
 }

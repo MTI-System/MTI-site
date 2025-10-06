@@ -13,7 +13,7 @@ export default async function TournamentsPage({searchParams}: {
   searchParams: Promise<{ year: string; tt: string; page: string }>
 }) {
   const sp = await searchParams
-  const tournamentsCards = await fetchTournamentsCards(Number(sp.tt) ?? 1, Number(sp.year))
+
 
   if (!sp.year || !sp.tt || !sp.page) {
     return (
@@ -27,7 +27,7 @@ export default async function TournamentsPage({searchParams}: {
         </>
     )
   }
-
+  const tournamentsCards = await fetchTournamentsCards(Number(sp.tt) ?? 1, Number(sp.year))
   return (
     <>
       <TournamentsStoreProvider>
@@ -36,10 +36,10 @@ export default async function TournamentsPage({searchParams}: {
             <TournamentsSearchParams searchParams={sp}/>
             <TournamentsFilters/>
             <div className="w-full h-fit flex justify-end px-3 pt-3" >
-              <ShareButton searchParams={sp}/>
+              <ShareButton/>
             </div>
             {/*<ShareButton searchParams={sp}/>*/}
-            <TournamentCardsSpinner tournamentsCards={tournamentsCards} isModerator={false}/>
+            <TournamentCardsSpinner tournamentsCards={tournamentsCards} isModerating={false} />
           </div>
         </Suspense>
 

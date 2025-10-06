@@ -2,7 +2,13 @@ import ProblemFilters from "@/components/problems/ProblemsFilter"
 import ProblemsList from "@/components/problems/ProblemsList"
 import {Suspense} from "react"
 import {TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys"
-import {fetchPermissions, fetchProblems, fetchTournamentTypes, fetchYears} from "@/scripts/ApiFetchers"
+import {
+    fetchPermissions,
+    fetchProblems,
+    fetchTournamentsCard,
+    fetchTournamentTypes,
+    fetchYears
+} from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/problems/SearchParamsUpdator"
 import type {Metadata} from "next"
 import Loading from "@/app/loading"
@@ -12,6 +18,7 @@ import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 import {ProblemsStoreProvider} from "@/components/Redux/ProblemsStoreContext";
 import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider";
 import ShareButton from "@/components/problems/ShareButton";
+import TournamentCard from "@/components/tournaments/TournamentCard";
 
 export async function generateMetadata({
                                            searchParams,
@@ -43,9 +50,11 @@ export async function generateMetadata({
 export default async function Page({
                                        searchParams,
                                    }: {
-    searchParams: Promise<{ year: string; tt: string; sections: string }>
+    searchParams: Promise<{ year: string; tt: string; sections: string; tournament?: string }>
 }) {
     const sp = await searchParams
+    const currentTournament = sp.tournament ? await fetchTournamentsCard(Number(sp.tournament)) : null
+
     if (!sp.year || !sp.tt) {
         return (
             <>
@@ -58,7 +67,6 @@ export default async function Page({
             </>
         )
     }
-
     let tt = sp.tt ?? undefined
     const possibleYears = await fetchYears(Number(tt))
     let isUndefYear = false
@@ -95,7 +103,8 @@ export default async function Page({
         (section_1, section_2) =>
             section_1.section_science - section_2.section_science || section_1.title.localeCompare(section_2.title),
     )
-    console.log("SearchParams", sp, new URLSearchParams(sp).toString())
+
+
     return (
         <>
             <ProblemsReduxProviderWrapper>
@@ -110,16 +119,24 @@ export default async function Page({
                                 possibleYears={possibleYears}
                                 isModerator={isEditable}
                             >
-
-
                                 {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
                                 {!isUndefYear && (
                                     <Suspense fallback={<h1>Loading...</h1>} key={`${year} ${tt}`}>
-                                        <div className="w-full h-fit flex justify-end px-3 pt-3" >
-                                            <ShareButton searchParams={sp}/>
+                                        <div className="flex gap-5 mt-5">
+                                            <div>
+                                                <ProblemsList sectionsFilter={sectionsFilter ?? []} problems={problems}
+                                                              isEditable={isEditable}/>
+                                            </div>
+                                            {currentTournament !== null && <div className="aspect-[8/9] h-[37rem]">
+                                                <div className="fixed">
+                                                    <TournamentCard tournamentCard={currentTournament} isExtended={false}
+                                                                    isCreate={false} onUpdateCreate={null}/>
+                                                </div>
+
+                                            </div>}
+
                                         </div>
-                                        <ProblemsList sectionsFilter={sectionsFilter ?? []} problems={problems}
-                                                      isEditable={isEditable}/>
+
                                     </Suspense>
                                 )}
                             </ProblemFilters>

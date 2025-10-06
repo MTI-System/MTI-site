@@ -11,7 +11,7 @@ import {
   EmbeddingSchema,
   EmbeddingTypeInterface,
   EmbeddingTypeSchema,
-  LoadFileForm,
+  LoadMaterialForm,
 } from "@/types/embeddings"
 import { connection } from "next/server"
 import { PROBLEM_API, AUTH_API, MATERIAL_API, TOURNAMENTS_API, REGISTRATION_API } from "@/constants/APIEndpoints"
@@ -70,6 +70,18 @@ async function fetchProblems(tournament: string, year: number): Promise<ProblemL
   if (respJSON.success) return respJSON.data
   console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
   return null
+}
+
+async function fetchProblemsForTournament(tournamentId: number): Promise<ProblemListInterface | null> {
+    await connection()
+    const response = await fetchWithRetryAndTimeout(
+        PROBLEM_API + `get_problems_for_tournament/${tournamentId}`,
+    )
+    if (!response) return null
+    const respJSON = z.array(ProblemSchema).safeParse(await response.json())
+    if (respJSON.success) return respJSON.data
+    console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
+    return null
 }
 
 async function fetchEditProblem(data: FormData): Promise<boolean> {
@@ -213,7 +225,7 @@ async function fetchEmbeddingsInfo(embeddingIds: number[]): Promise<EmbeddingInt
   return []
 }
 
-async function fetchAddLinkEmbedding(embedding: Omit<LoadFileForm, "file">): Promise<boolean> {
+async function fetchAddLinkEmbedding(embedding: Omit<LoadMaterialForm, "file">): Promise<boolean> {
   const formData = new FormData()
   formData.set("link", embedding.link ?? "")
   formData.set("materialTitle", embedding.materialTitle)
@@ -229,6 +241,7 @@ async function fetchAddLinkEmbedding(embedding: Omit<LoadFileForm, "file">): Pro
 }
 
 async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface[] | null> {
+
   const response = await fetchWithRetryAndTimeout(MATERIAL_API + "get_available_content_types")
   if (!response) return null
   const parsed = z.array(EmbeddingTypeSchema).safeParse(await response.json())
@@ -262,7 +275,7 @@ async function fetchOrganizatorTournamentsCards(tt: number, year: number): Promi
 
 async function fetchTournamentsCard(id: number): Promise<TournamentCardInterface | null> {
   const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + `get_tournament_card/${id}`)
-
+  console.log("Fetch tournament")
   if (!response) return null
   const parsed = TournamentCard.safeParse(await response.json())
   if (parsed.success) return parsed.data
@@ -294,6 +307,9 @@ async function sendFormAnswer(form: FormData): Promise<boolean> {
   return false
 }
 
+
+
+
 export {
   fetchOrganizatorTournamentsCards,
   sendFormAnswer,
@@ -316,4 +332,5 @@ export {
   fetchAddLinkEmbedding,
   fetchAllAvailableEmbeddingTypes,
   fetchTournamentsCards,
+  fetchProblemsForTournament
 }

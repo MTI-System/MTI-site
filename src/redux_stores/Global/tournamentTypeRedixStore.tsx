@@ -8,6 +8,7 @@ import {TournamentTypeIntarface} from "@/types/TournamentTypeIntarface";
 
 export default function makeStore(theme: string, tt: number, token: string, year: string | null, availableTournamentTypes: TournamentTypeIntarface[]) {
   return configureStore({
+    devTools: {name: "Global store"},
     reducer: {
       searchParams: SPSlice.reducer,
       auth: AuthSlice.reducer,

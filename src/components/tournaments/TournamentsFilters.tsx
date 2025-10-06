@@ -11,11 +11,11 @@ export default function TournamentsFilters() {
         <div className="flex gap-5">
           <p className="font-bold text-4xl">
             Турниры
-          </p>
-          <p className="font-bold text-4xl"><ColoredTType
+          </p><ColoredTType
+              className="font-bold text-4xl"
             ttName={tt?.toString() ?? "1"}
             ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
-          /></p>
+          />
         </div>
 
       </div>

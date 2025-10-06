@@ -19,9 +19,7 @@ export default function TournamentTypeSelector({
   const ttddElements = availableTournamentTypes.map((value) => ({
     id: value.id,
     children: (
-      <p className="text-text-main text-[1.8rem] font-bold">
-        <ColoredTType ttColor={value.color} ttName={value.name} />
-      </p>
+        <ColoredTType ttColor={value.color} ttName={value.name} className="text-text-main text-[1.8rem] font-bold" />
     ),
     value: value.name,
   }))

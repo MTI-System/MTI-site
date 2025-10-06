@@ -21,12 +21,13 @@ import ContentContainer from "@/components/ui/ContentContainer"
 import AddFileField from "@/components/materials/AddFileField"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import clsx from "clsx"
-import { LoadFileForm } from "@/types/embeddings"
+import { LoadMaterialForm } from "@/types/embeddings"
 import { fetchAddLinkEmbedding, fetchAllAvailableEmbeddingTypes } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
 import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "../ui/Dropdown"
+import {MATERIAL_API} from "@/constants/APIEndpoints";
 
-type FileFromModalInterface = Omit<LoadFileForm, "link">
+type FileFromModalInterface = Omit<LoadMaterialForm, "link">
 
 interface LFEProps {
   form: FileFromModalInterface
@@ -174,10 +175,13 @@ function AddFileModal({
   })
 
   useEffect(() => {
+    console.log("EmbeddingTypes", embeddingtypes)
     if (embeddingtypes === null) return
     if (embeddingtypes.length === 0) {
+      console.log("EmbeddingTypesURL", MATERIAL_API + "get_available_content_types")
       fetchAllAvailableEmbeddingTypes()
         .then((response) => {
+          console.log("EmbeddingTypesResp", JSON.stringify(response))
           if (!response) {
             setEmbeddingtypes(null)
             return
@@ -193,6 +197,7 @@ function AddFileModal({
           setEmbeddingtypes(validOptions)
         })
         .catch(() => {
+          console.error("Error while getting availavle materials")
           setEmbeddingtypes(null)
         })
       return
@@ -293,7 +298,7 @@ function AddFileModal({
                       dataRef.current.contentType = opt ?? 0
                       const newOpt = typeList.find((value) => opt === value.id)
                       if (newOpt === undefined) return
-                      setFileType(null)
+                      setFileType(option)
                       dataRef.current.contentType = newOpt.id
                       if (errorText === UploadingErrors.EmptyType || errorText === UploadingErrors.InvalidFileType)
                         setErrorText("")
@@ -301,7 +306,7 @@ function AddFileModal({
                     }}
                   >
                     {typeList.map((value) => (
-                      <DropdownElement value={value.id}>{value.display_name}</DropdownElement>
+                      <DropdownElement key={value.id} value={value.id}>{value.display_name}</DropdownElement>
                     ))}
                   </Dropdown>
                 </div>

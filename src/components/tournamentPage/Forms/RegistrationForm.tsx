@@ -3,7 +3,7 @@ import {
   TournamentRegistrationFormFieldInterface,
   TournamentRegistrationFormInfoInterface
 } from "@/types/TournamentRegistrationApi";
-import TextFormField from "@/components/tournaments/Forms/TextFormField";
+import TextFormField from "@/components/tournamentPage/Forms/TextFormField";
 import {createConsoleError} from "next/dist/next-devtools/shared/console-error";
 import {FormEvent, useRef} from "react";
 import {Button} from "@/components/ui/Buttons";

@@ -5,6 +5,7 @@ import {TournamentsPageFiltersSlice} from "@/redux_stores/Tournaments/Tournament
 
 export default function makeTournamentsStore() {
   return configureStore({
+    devTools: {name: "Tournament store"},
     reducer: {
       tournamentsPageFilters: TournamentsPageFiltersSlice.reducer
     },

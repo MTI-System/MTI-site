@@ -34,7 +34,7 @@ export const EmbeddingSchema = z.object({
 //   title,
 // })
 
-export interface LoadFileForm {
+export interface LoadMaterialForm {
   materialTitle: string
   contentType: number
   link?: string | null
