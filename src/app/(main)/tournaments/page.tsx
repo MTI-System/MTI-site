@@ -1,5 +1,5 @@
 import TournamentsFilters from "@/components/tournaments/TournamentsFilters";
-import {fetchTournamentsCards} from "@/scripts/ApiFetchers";
+import {fetchTournamentsCards, fetchTournamentTypes} from "@/scripts/ApiFetchers";
 import TournamentCardsSpinner from "@/components/tournaments/TournamentCardsSpinner";
 import {Suspense} from "react";
 import Loading from "@/app/loading";
@@ -8,12 +8,38 @@ import TournamentsStoreProvider from "@/components/Redux/TournamentsReduxProvide
 import ShareButton from "@/components/problems/ShareButton";
 import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider";
 import SearchParamsUpdator from "@/components/problems/SearchParamsUpdator";
+import type {Metadata} from "next";
+import {TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys";
+
+
+export async function generateMetadata({
+                                         searchParams,
+                                       }: {
+  searchParams: Promise<{ year: string; tt: string; page: string }>
+}): Promise<Metadata> {
+  const searchP = await searchParams
+  const tt = Array.isArray(searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME])
+      ? searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME][0]
+      : searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME]
+
+  const ttype = (await fetchTournamentTypes()).find((t) => t.name === tt)
+  const titleText = ttype ? `Турниры · ${ttype.longName} · ${searchP.year} год – МТИ` : "Турниры – МТИ"
+
+  const descriptionText = ttype
+      ? `Турниры ${ttype.longName} ${searchP.year} года: регистрируйся на научные турниры!.`
+      : "Список научных турниров в системе МТИ."
+
+  return {
+    title: titleText,
+    description: descriptionText,
+    verification: {yandex: "aa838087dd1ef992"},
+  }
+}
 
 export default async function TournamentsPage({searchParams}: {
   searchParams: Promise<{ year: string; tt: string; page: string }>
 }) {
   const sp = await searchParams
-
 
   if (!sp.year || !sp.tt || !sp.page) {
     return (

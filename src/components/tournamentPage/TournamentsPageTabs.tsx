@@ -103,7 +103,7 @@ export default function TournamentsPageTabs(
                 <NavigationItem hasDescription={false} items={fightsLinks} itemTitle="Бои"/>
                 <NavigationItem hasDescription={true} items={statsLinks} itemTitle="Статистика"/>
 
-                {tournamentCard.tournament_status === "futured" && <NavigationMenu.Item>
+                {tournamentCard.tournament_status === "registration" && <NavigationMenu.Item>
                     <Link className={registrationTriggerClassName}
                           href={`/tournaments/${tournamentCard.id}/registration`}>
                         Регистрация на турнир

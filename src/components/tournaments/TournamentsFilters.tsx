@@ -8,13 +8,14 @@ export default function TournamentsFilters() {
   return (
     <>
       <div className="flex items-center pt-3 w-full h-10">
-        <div className="flex gap-5">
-          <p className="font-bold text-4xl">
+        <div className="flex h-fit pt-2 w-full content-center items-center gap-5">
+          <p className="font-bold text-4xl text-text-main">
             Турниры
-          </p><ColoredTType
-              className="font-bold text-4xl"
-            ttName={tt?.toString() ?? "1"}
-            ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
+          </p>
+          <ColoredTType
+              ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
+              ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
+              className="font-bold text-4xl text-text-main"
           />
         </div>
 
