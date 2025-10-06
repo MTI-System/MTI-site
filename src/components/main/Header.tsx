@@ -6,7 +6,6 @@ import ThemeSwitchingButton from "../Redux/ThemeSwitcher"
 import { fetchTournamentTypes } from "@/scripts/ApiFetchers"
 
 export default async function Header() {
-  const tts = await fetchTournamentTypes()
   return (
     <>
       <header className="bg-bg-alt flex justify-between px-5 py-3 transition">
@@ -18,7 +17,7 @@ export default async function Header() {
             <Link href={"/"} className="w-full">
               <h1 className="w-full pl-2 text-start">МТИ</h1>
             </Link>
-            <TournamentTypeSelector availableTournamentTypes={tts ?? []} />
+            <TournamentTypeSelector />
           </div>
         </div>
         <div className="text-text-main flex flex-row items-center gap-[1vw]">

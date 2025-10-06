@@ -1,7 +1,6 @@
 "use client"
 import footerStyle from "@/styles/components/sections/app/footer.module.css"
-import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
-import { availableTournamentTypes } from "@/constants/AvailableTournaments"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { ReactNode } from "react"
 
 export default function LogoWithTT({
@@ -14,12 +13,16 @@ export default function LogoWithTT({
   children: ReactNode
 }) {
   const tt = useAppSelector((state) => state.searchParams.tt)
+  const availableTournamentTypes = useAppSelector(state=>state.searchParams.availableTournamentTypes) ?? []
+
+  const ttObject = availableTournamentTypes.find(t => t.id === tt)
+
   return (
     <div>
       {children}
       <p className="" style={{ fontSize: logoSize, marginTop: margin }}>
-        {tt?.slice(0, -1)}
-        <span style={{ color: availableTournamentTypes.find((type) => type.name === tt)?.color }}>{tt?.slice(-1)}</span>
+        {ttObject?.name?.slice(0, -1)}
+        <span style={{ color: ttObject?.color }}>{ttObject?.name?.slice(-1)}</span>
       </p>
     </div>
   )

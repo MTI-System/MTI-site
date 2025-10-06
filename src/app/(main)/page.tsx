@@ -42,7 +42,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="absolute inset-0 z-0 hidden opacity-30 sm:block">
+          <div className="absolute  inset-0 z-0 hidden opacity-30 sm:block ">
             <MaskLineForMenuCard
               className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
               maskIcon={`${FILES_SERVER}problemMask.svg`}
@@ -55,6 +55,19 @@ export default async function Home() {
               className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
               maskIcon={`${FILES_SERVER}problemMask.svg`}
             />
+            <MaskLineForMenuCard
+                className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
+                maskIcon={`${FILES_SERVER}problemMask.svg`}
+            />
+            <MaskLineForMenuCard
+                className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
+                maskIcon={`${FILES_SERVER}problemMask.svg`}
+            />
+            <MaskLineForMenuCard
+                className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
+                maskIcon={`${FILES_SERVER}problemMask.svg`}
+            />
+
           </div>
         </ClickableCard>
         <ClickableCard

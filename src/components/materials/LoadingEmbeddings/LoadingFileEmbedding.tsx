@@ -1,6 +1,6 @@
 "use client"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
-import { LoadFileForm } from "@/types/embeddings"
+import { LoadMaterialForm } from "@/types/embeddings"
 import { useState, useEffect, useRef, CSSProperties, ReactNode } from "react"
 import { EmbeddingCard } from "../FileEmbeddings"
 import style from "@/styles/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding.module.css"
@@ -12,7 +12,7 @@ export default function LoadingFileEmbedding({
   onUploadComplete,
   onUploadCancel,
 }: {
-  form: Omit<LoadFileForm, "link">
+  form: Omit<LoadMaterialForm, "link">
   onUploadComplete: () => void
   onUploadCancel: (noWait: boolean) => void
 }) {

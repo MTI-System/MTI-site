@@ -121,6 +121,7 @@ export function DropdownMulti<T>({
           setIsOpen(open)
           onOpenChange && onOpenChange(open, e, selection)
         }}
+        modal={false}
         {...rest}
       />
     </DropdownContext>

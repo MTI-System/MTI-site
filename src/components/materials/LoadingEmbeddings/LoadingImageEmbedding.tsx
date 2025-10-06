@@ -1,6 +1,6 @@
 "use client"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
-import { LoadFileForm } from "@/types/embeddings"
+import { LoadMaterialForm } from "@/types/embeddings"
 import axios from "axios"
 import { MdOutlineClose, MdOutlineRefresh } from "react-icons/md"
 import style from "@/styles/components/ui/Files/LoadingEmbeddings/LoadingImageEmbedding.module.css"
@@ -11,7 +11,7 @@ export default function LoadingImageEmbedding({
   onUploadComplete,
   onUploadCancel,
 }: {
-  form: Omit<LoadFileForm, "link">
+  form: Omit<LoadMaterialForm, "link">
   onUploadComplete: () => void
   onUploadCancel: (noWait: boolean) => void
 }) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { useEffect } from "react"
 import cookies from "js-cookie"
 

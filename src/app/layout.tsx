@@ -8,6 +8,8 @@ import { cookies } from "next/headers"
 import StoreProvider from "@/components/Redux/StoreProvider"
 import LayoutComponent from "@/components/main/Layout"
 import ThemeUpdator from "@/components/Redux/ThemeUpdator"
+import {fetchTournamentTypes} from "@/scripts/ApiFetchers";
+import React, {ReactElement} from "react";
 
 export function generateMetadata(): Metadata {
   const titleText = "Вход в аккаунт · МТИ"
@@ -54,9 +56,11 @@ export default async function Template({ children }: { children: React.ReactNode
         tt={cookiesStore.get("mtiyt_tournamentType")?.value ?? "ТЮФ"}
         theme={cookiesStore.get("theme")?.value ?? "light"}
         token={cookiesStore.get("mtiyt_auth_token")?.value ?? ""}
+        availableTournamentTypes={await fetchTournamentTypes()}
       >
         <ThemeUpdator />
-        <LayoutComponent>{children}</LayoutComponent>
+        <LayoutComponent>
+            {children}</LayoutComponent>
       </StoreProvider>
     </html>
   )

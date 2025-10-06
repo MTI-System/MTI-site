@@ -9,7 +9,6 @@ import { DeletionMaterialConfirmationModal } from "./UniversalEmbedding"
 import { deleteMaterial } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
 import { EmbeddingInterface } from "@/types/embeddings"
-import ReactPlaceholder from "react-placeholder"
 import Image, { ImageProps } from "next/image"
 
 function isValidUrl(url: string) {

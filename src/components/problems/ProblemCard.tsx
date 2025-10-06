@@ -12,8 +12,8 @@ import DeletionConfirmationModal from "./DeletionConfirmationModal"
 import { DropdownMulti, DropdownMultiElement, DropdownOptionInterface, DropdownTrigger } from "@/components/ui/Dropdown"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Buttons"
-import { useAppSelector, RootState } from "@/redux_stores/tournamentTypeRedixStore"
-import { setSections, setIsLoaded } from "@/redux_stores/ProblemSlice"
+import {useAppSelector, RootState, useAppStore, useAppDispatch} from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { setSections, setIsLoaded } from "@/redux_stores/Global/ProblemSlice"
 import { useStore } from "react-redux"
 import DotWithTooltip from "@/components/ui/DotWithTooltip"
 import { Menu } from "@base-ui-components/react"
@@ -54,6 +54,7 @@ export function ProblemCardContent({
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const [hoveredScience, setHoveredScience] = useState<number | null>(null)
+
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const router = useRouter()
   const token = useAppSelector((state) => state.auth.token)
@@ -305,21 +306,22 @@ function SectionsList({
   problem,
   isEditable,
   hoveredScience,
+
 }: {
   problem: ProblemInterface
   isEditable: boolean
   hoveredScience: number | null
 }) {
   // const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])\
-  const store = useStore<RootState>()
   const allSections = useAppSelector((state) => state.problems.sections)
   const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])
   const isSectionLoading = useAppSelector((state) => state.problems.isLoaded)
-  const dispatcher = store.dispatch
+  const dispatcher = useAppDispatch()
+  const problems = useAppSelector(state=>state.problems)
 
   useEffect(() => {
     if (allSections === null && !isSectionLoading) {
-      const { isLoaded: freshLoaded } = store.getState().problems
+      const { isLoaded: freshLoaded } = problems
       if (!freshLoaded) {
         dispatcher(setIsLoaded())
         fetchAllAvailableSections().then((sections) => {
@@ -348,7 +350,7 @@ function SectionsList({
       {problem.problem_sections.map((section) => {
         return (
           <ProblemSection
-            isFiltered={!pathname.startsWith("/problems/" + problem.id.toString())}
+            isFiltered={pathname == "/problems"}
             isHidden={hoveredScience !== section.section_science && hoveredScience !== null}
             key={section.id}
             section={section}
@@ -417,7 +419,7 @@ function AddNewSection({
         <DropdownTrigger
           style={color as CSSProperties}
           className={twclsx(
-            "hover:bg-bg-alt rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] font-bold text-[var(--border-color)] opacity-100!",
+            "hover:bg-bg-alt rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] font-bold text-[var(--border-color)] opacity-100!  py-0.5",
             { "hover:bg-[var(--bg-color)]!": isPending || isError || isLoading },
           )}
           disabled={isPending || isError || isLoading}
