@@ -1,6 +1,6 @@
 .loading-div {
   background-color: var(--alt-bg);
-  height: 100vh;
+  height: 100%;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -12,11 +12,10 @@
   height: 48px;
   border-radius: 50%;
   display: inline-block;
-  border-top: 3px solid var(--main-text-color);
+  border-top: 3px solid;
   border-right: 3px solid transparent;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
-  background-color: var(--alt-bg);
 }
 
 @keyframes rotation {

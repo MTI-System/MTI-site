@@ -3,7 +3,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useContext, useEffect } from "react"
 import { FaSignInAlt, FaUserCircle } from "react-icons/fa"
-import { useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 
 export default function ProfilePicture({ className }: { className: string }) {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)

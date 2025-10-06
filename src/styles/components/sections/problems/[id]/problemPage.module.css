@@ -52,8 +52,7 @@
   gap: 1.5vh;
 }
 .gifContainer {
-
-  height: 30vh; 
+  height: 30vh;
   width: fit-content;
   display: flex;
   flex-direction: row;
@@ -61,7 +60,7 @@
   align-items: center;
   gap: 1vw;
 }
-.scrollableContainer{
+.scrollableContainer {
   display: flex;
   height: 100%;
   width: 100%;
@@ -106,7 +105,7 @@
   align-content: center;
   padding: 1rem;
 }
-.addingVideoContainer{
+.addingVideoContainer {
   padding: 1rem;
 }
 .video {

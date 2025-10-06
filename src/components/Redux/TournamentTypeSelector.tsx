@@ -1,16 +1,29 @@
 "use client"
-import {availableTournamentTypes} from "@/constants/AvailableTournaments"
-import {TextDropdown} from "@/components/ui/Dropdown"
-import {useAppDispatch, useAppSelector} from "@/redux_stores/tournamentTypeRedixStore"
-import {setTT, setYear} from "@/redux_stores/SearchParamsSlice"
-import {useEffect, useState} from "react"
-import cookies from "js-cookie"
-import {TOURNAMENT_TYPE_KEY_NAME} from "@/constants/CookieKeys"
+import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { useEffect, useState } from "react"
 import headerStyle from "@/styles/components/sections/app/header.module.css"
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/Tooltip"
-import {usePathname, useRouter} from "next/navigation";
+import cookies from "js-cookie"
+import { usePathname } from "next/navigation"
+import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "../ui/Dropdown"
+import ColoredTType from "../ui/ColoredTType"
+import { setTT } from "@/redux_stores/Global/SearchParamsSlice"
+import { TOURNAMENT_TYPE_KEY_NAME } from "@/constants/CookieKeys"
+import { Tooltip } from "@base-ui-components/react"
+import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
+import {setYear} from "@/redux_stores/Problems/ProblemsFiltersSlice";
 
-export default function TournamentTypeSelector({className}: { className?: string }) {
+export default function TournamentTypeSelector({
+}: {
+}) {
+  const availableTournamentTypes = useAppSelector(state=> state.searchParams.availableTournamentTypes)??[]
+  const ttddElements = availableTournamentTypes.map((value) => ({
+    id: value.id,
+    children: (
+        <ColoredTType ttColor={value.color} ttName={value.name} className="text-text-main text-[1.8rem] font-bold" />
+    ),
+    value: value.name,
+  }))
+
   const tt = useAppSelector((state) => state.searchParams.tt)
   const isPending = useAppSelector((state) => state.system.isPending)
   const dispatcher = useAppDispatch()
@@ -18,64 +31,72 @@ export default function TournamentTypeSelector({className}: { className?: string
   const pathname = usePathname()
   const [hasMounted, setHasMounted] = useState(false)
 
+  const selectedState = useState<DropdownOptionInterface<string> | null>(
+    ttddElements.find((e) => {
+      console.log("Select condition", e.id, Number(tt), e.id === Number(tt))
+      return e.id === Number(tt)
+    }) ?? null,
+  )
+  useEffect(() => {
+    console.log("bbbb", selectedState)
+  }, [selectedState]);
+
+
   const lockedPages = ["/problems/"]
+
+  useEffect(() => {
+    console.log("bbbb tt", tt)
+    selectedState[1](ttddElements.find(e=>e.id === tt)??null)
+  }, [tt]);
 
   useEffect(() => {
     setHasMounted(true)
   }, [])
 
   useEffect(() => {
-    if (!hasMounted){
+    if (!hasMounted) {
       return
     }
-    lockedPages.forEach(page => {
-        setIsTTLocked(lockedPages.some((path) => pathname.startsWith(path)))
-      }
-    )
-
-  }, [pathname, hasMounted]);
-
-  useEffect(() => {
-  }, [isTTLocked]);
+    lockedPages.forEach((page) => {
+      setIsTTLocked(lockedPages.some((path) => pathname.startsWith(path)))
+    })
+  }, [pathname, hasMounted])
 
   return (
-    <>
-      <div className={headerStyle.hoverTextContainer}>
-        <Tooltip disabled={!isTTLocked}>
-          <TooltipTrigger>
-            <TextDropdown
-              options={availableTournamentTypes.map((tt) => {
-                return {displayName: tt.name.toUpperCase(), value: tt.name, active: true}
-              })}
-              onOptionSelect={(event) => {
-                const selectedValue = event.selection
-                cookies.set(TOURNAMENT_TYPE_KEY_NAME, selectedValue ?? "ТЮФ")
-                dispatcher(setYear(null))
-                dispatcher(setTT(selectedValue!!))
-              }}
-              defaultSelection={
-                tt !== null
-                  ? {
-                    displayName: tt.toUpperCase(),
-                    value: tt,
-                    active: true,
-                  }
-                  : {
-                    displayName: "???",
-                    value: tt,
-                    active: false,
-                  }
-              }
-              className={className}
-              disabled={isPending || isTTLocked}
-            ></TextDropdown>
-          </TooltipTrigger>
-
-          <TooltipContent>
-            <p className={headerStyle.hoverText}>На этой странице нельзя изменить тип турнира</p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
-    </>
+    <div className={headerStyle.hoverTextContainer}>
+      <Dropdown
+        selectionState={selectedState}
+        trigger={
+          <Tooltip.Provider>
+            <Tooltip.Root disabled={!isTTLocked} delay={300}>
+              <Tooltip.Trigger render={<div></div>}>
+                <DropdownTrigger className="border-none" disabled={isPending || isTTLocked}>
+                  <div>...</div>
+                </DropdownTrigger>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Positioner side="right">
+                  <Tooltip.Popup className="border-border bg-bg-alt flex origin-[var(--transform-origin)] flex-col rounded-md border-2 px-2 py-1 text-sm shadow-[0_0_0.5rem_0.2rem_rgba(0,0,0,0.25)] transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-[0_0_0.5rem_0.2rem_rgba(255,255,255,0.25)]">
+                    <p className="text-text-main">На этой странице нельзя изменить тип турнира</p>
+                  </Tooltip.Popup>
+                </Tooltip.Positioner>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        }
+        onOptionSelect={(option) => {
+          if (!option) return
+          cookies.set(TOURNAMENT_TYPE_KEY_NAME, option.value)
+          dispatcher(setYear(null))
+          dispatcher(setTT(Number(option.value)))
+        }}
+      >
+        {ttddElements.map((e, i) => (
+          <DropdownElement value={e.id} key={i + 1}>
+            {e.children}
+          </DropdownElement>
+        ))}
+      </Dropdown>
+    </div>
   )
 }

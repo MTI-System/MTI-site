@@ -70,7 +70,10 @@
 
 .editButtons svg {
   color: var(--primary-accent);
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  transition:
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease;
 }
 
 .editButtons svg:hover {

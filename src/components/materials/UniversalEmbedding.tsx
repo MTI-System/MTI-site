@@ -12,7 +12,15 @@ import { Button, HoldButton } from "../ui/Buttons"
 import { deleteMaterial } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
 
-export default function UniversalEmbedding({ embedding, problemId, isModerator }: { embedding: EmbeddingInterface, problemId: number, isModerator: boolean }) {
+export default function UniversalEmbedding({
+  embedding,
+  problemId,
+  isModerator,
+}: {
+  embedding: EmbeddingInterface
+  problemId: number
+  isModerator: boolean
+}) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -24,39 +32,42 @@ export default function UniversalEmbedding({ embedding, problemId, isModerator }
 
   return (
     <>
-        <a href={url} target="_blank" style={{ opacity: isPending ? 0.5 : 1 }}>
-          <EmbeddingCard
-            title={embedding.title}
-            subtitle={sub}
-            embeddingImageURL={embedding.content_type.icon_source}
-            extensionColor={embedding.metadata.extension_color}
-            extension={embedding.metadata.extension}
-            isExternal={embedding.metadata.is_external === "true"}
-          >
-            {isModerator && <MdOutlineClose className={styleDelete.deleteIcons} onClick={
-                (e)=>{
-                  e.stopPropagation()
-                  e.preventDefault()
-                    setIsDeleteDialogOpen(true)
-                }
-            }/>}
-
-          </EmbeddingCard>
-
-        </a>
-        <DeletionMaterialConfirmationModal openState={[isDeleteDialogOpen, setIsDeleteDialogOpen]}
-        problem_global_number={1} problem_title={embedding.title} onConfirm={async ()=>{
-            const s = await deleteMaterial(problemId, embedding.id)
-            if (!s) throw new Error("Deletion has failed")
-            startTransition(() => {
-                router.refresh()
-            })
-            }}
-        />
+      <a href={url} target="_blank" style={{ opacity: isPending ? 0.5 : 1 }}>
+        <EmbeddingCard
+          title={embedding.title}
+          subtitle={sub}
+          embeddingImageURL={embedding.content_type.icon_source}
+          extensionColor={embedding.metadata.extension_color}
+          extension={embedding.metadata.extension}
+          isExternal={embedding.metadata.is_external === "true"}
+        >
+          {isModerator && (
+            <MdOutlineClose
+              className={styleDelete.deleteIcons}
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                setIsDeleteDialogOpen(true)
+              }}
+            />
+          )}
+        </EmbeddingCard>
+      </a>
+      <DeletionMaterialConfirmationModal
+        openState={[isDeleteDialogOpen, setIsDeleteDialogOpen]}
+        problem_global_number={1}
+        problem_title={embedding.title}
+        onConfirm={async () => {
+          const s = await deleteMaterial(problemId, embedding.id)
+          if (!s) throw new Error("Deletion has failed")
+          startTransition(() => {
+            router.refresh()
+          })
+        }}
+      />
     </>
   )
 }
-
 
 export function DeletionMaterialConfirmationModal({
   openState,
@@ -81,19 +92,14 @@ export function DeletionMaterialConfirmationModal({
     <Modal openState={openState} preventClose={isLoading}>
       <div className={style.deletionModalInfoContainer}>
         <h1>Удалить материал?</h1>
-        <p>
-          Вы действительно хотите удалить материал {problem_title}?
-        </p>
+        <p>Вы действительно хотите удалить материал {problem_title}?</p>
         <div className={style.warningBlock}>
           <div className={style.warningHeader}>
             <PiWarningBold />
             <h2>Внимание!</h2>
             <PiWarningBold />
           </div>
-          <p>
-            При удалении материала он будет удален НАВСЕГДА. Вы уверены, что вы
-            хотите удалить материал?
-          </p>
+          <p>При удалении материала он будет удален НАВСЕГДА. Вы уверены, что вы хотите удалить материал?</p>
         </div>
         {isError && <p className={style.errormessage}>Произошла неизвестная ошибка, повторите попытку позже</p>}
         <div className={style.buttonsContainer}>

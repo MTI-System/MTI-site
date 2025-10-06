@@ -7,9 +7,11 @@
 .animationContainer svg {
   width: 80%;
   height: 80%;
-  fill: var(--main-color);
+  /*fill: var(--main-color);*/
   stroke: var(--main-color);
-  transition: fill 250ms ease, stroke 250ms ease;
+  transition:
+    250ms ease,
+    stroke 250ms ease;
   overflow: visible;
 }
 

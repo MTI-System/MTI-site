@@ -3,8 +3,6 @@ import {
   ProblemInterface,
   ProblemListInterface,
   ProblemSchema,
-  ProblemSectionInterface,
-  ProblemSectionSchema,
   ProblemSectionWithSciencesInterface,
   ProblemSectionWithSciencesSchema,
 } from "@/types/problemAPI"
@@ -13,20 +11,28 @@ import {
   EmbeddingSchema,
   EmbeddingTypeInterface,
   EmbeddingTypeSchema,
-  LoadFileForm,
+  LoadMaterialForm,
 } from "@/types/embeddings"
 import { connection } from "next/server"
-import { PROBLEM_API, AUTH_API, MATERIAL_API } from "@/constants/APIEndpoints"
+import { PROBLEM_API, AUTH_API, MATERIAL_API, TOURNAMENTS_API, REGISTRATION_API } from "@/constants/APIEndpoints"
 import { User, UserSchema } from "@/types/authApi"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import z from "zod"
+import { TournamentCard, TournamentCardInterface,TournamentResultsTableEntity } from "@/types/TournamentsAPI"
+import { TournamentTypeIntarface, TournamentTypeSchema } from "@/types/TournamentTypeIntarface"
+
+import {
+  TournamentRegistrationFormField,
+  TournamentRegistrationFormInfo,
+  TournamentRegistrationFormInfoInterface
+} from "@/types/TournamentRegistrationApi";
 
 async function fetchWithRetryAndTimeout(
   url: string,
   init?: RequestInit,
   retry: number = 0,
-  timeout: number = 5000
+  timeout: number = 5000,
 ): Promise<Response | null> {
   if (!init) init = {}
   try {
@@ -57,13 +63,25 @@ async function fetchWithRetryAndTimeout(
 async function fetchProblems(tournament: string, year: number): Promise<ProblemListInterface | null> {
   await connection()
   const response = await fetchWithRetryAndTimeout(
-    PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`
+    PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`,
   )
   if (!response) return null
   const respJSON = z.array(ProblemSchema).safeParse(await response.json())
   if (respJSON.success) return respJSON.data
   console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
   return null
+}
+
+async function fetchProblemsForTournament(tournamentId: number): Promise<ProblemListInterface | null> {
+    await connection()
+    const response = await fetchWithRetryAndTimeout(
+        PROBLEM_API + `get_problems_for_tournament/${tournamentId}`,
+    )
+    if (!response) return null
+    const respJSON = z.array(ProblemSchema).safeParse(await response.json())
+    if (respJSON.success) return respJSON.data
+    console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
+    return null
 }
 
 async function fetchEditProblem(data: FormData): Promise<boolean> {
@@ -151,16 +169,27 @@ async function deleteMaterial(problemId: number, materialId: number): Promise<bo
   return response != null
 }
 
+async function fetchTournamentTypes(): Promise<TournamentTypeIntarface[]> {
+  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + "/get_available_tt", {
+    cache: "force-cache",
+  })
+  if (!response) return []
+  const parsed = z.array(TournamentTypeSchema).safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding data: ${parsed.error}`)
+  return []
+}
+
 async function fetchYears(tournamentTypeId: number): Promise<number[]> {
   return (
     (await fetchWithRetryAndTimeout(PROBLEM_API + "years?tournamentTypeId=" + tournamentTypeId.toString()).then(
-      (response) => response?.json()
+      (response) => response?.json(),
     )) ?? [new Date().getFullYear()]
   )
 }
 
 async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesInterface[]> {
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", { cache: "no-store" })
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", {cache: "no-store"})
   if (!response) return []
   const parseRes = z.array(ProblemSectionWithSciencesSchema).safeParse(await response.json())
   if (parseRes.success) return parseRes.data
@@ -171,7 +200,7 @@ async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesIn
 async function fetchModifySectionOnTask(
   problemId: string,
   sectionIds: string[] | string,
-  action: "add_section" | "delete_section"
+  action: "add_section" | "delete_section",
 ): Promise<boolean> {
   if (action !== "add_section" && action !== "delete_section") return false
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
@@ -196,7 +225,7 @@ async function fetchEmbeddingsInfo(embeddingIds: number[]): Promise<EmbeddingInt
   return []
 }
 
-async function fetchAddLinkEmbedding(embedding: Omit<LoadFileForm, "file">): Promise<boolean> {
+async function fetchAddLinkEmbedding(embedding: Omit<LoadMaterialForm, "file">): Promise<boolean> {
   const formData = new FormData()
   formData.set("link", embedding.link ?? "")
   formData.set("materialTitle", embedding.materialTitle)
@@ -212,6 +241,7 @@ async function fetchAddLinkEmbedding(embedding: Omit<LoadFileForm, "file">): Pro
 }
 
 async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface[] | null> {
+
   const response = await fetchWithRetryAndTimeout(MATERIAL_API + "get_available_content_types")
   if (!response) return null
   const parsed = z.array(EmbeddingTypeSchema).safeParse(await response.json())
@@ -220,7 +250,72 @@ async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface
   return []
 }
 
+async function fetchTournamentsCards(tt: number, year: number): Promise<TournamentCardInterface[]>{
+  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + `get_tournament_cards_by_year_and_tt?tt=${tt}&year=${year}`)
+
+  if (!response) return []
+  const parsed = z.array(TournamentCard).safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding types content types: ${parsed.error}`)
+  return []
+}
+
+async function fetchOrganizatorTournamentsCards(tt: number, year: number): Promise<TournamentCardInterface[]> {
+  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+  const formData = new FormData()
+  formData.set("token", token)
+  formData.set("year", year.toString())
+  formData.set("tournamentType", tt.toString())
+  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + "get_organizator_tournaments", {method: "POST", body: formData})
+  if (!response) return []
+  const parsed = z.array(TournamentCard).safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  return []
+}
+
+async function fetchTournamentsCard(id: number): Promise<TournamentCardInterface | null> {
+  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + `get_tournament_card/${id}`)
+  console.log("Fetch tournament")
+  if (!response) return null
+  const parsed = TournamentCard.safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding types content types: ${parsed.error}`)
+  return null
+}
+
+async function fetchTournamentTable(id: number): Promise<TournamentResultsTableEntity | null> {
+  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + `get_tournament_table/${id}`)
+  if (!response) return null
+  const parsed = TournamentResultsTableEntity.safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding types content types: ${parsed.error}`)
+  return null
+}
+
+async function fetchRegistrationForm(id: number, type: string): Promise<TournamentRegistrationFormInfoInterface | null> {
+  const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `get_form_for_tournament/${id}/${type}`)
+  if (!response) return null
+  const parsed = TournamentRegistrationFormInfo.safeParse(await response.json())
+  if (parsed.success) return parsed.data
+  console.error(`Unexpected response while parsing embedding types content types: ${parsed.error}`)
+  return null
+}
+
+async function sendFormAnswer(form: FormData): Promise<boolean> {
+  const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `answer_form`, {method: 'POST', body: form})
+  if (!response?.ok) return true
+  return false
+}
+
+
+
+
 export {
+  fetchOrganizatorTournamentsCards,
+  sendFormAnswer,
+  fetchRegistrationForm,
+  fetchTournamentTable,
+  fetchTournamentsCard,
   fetchProblems,
   fetchProblemById,
   fetchEditProblem,
@@ -230,11 +325,12 @@ export {
   deleteProblem,
   fetchYears,
   fetchAllAvailableSections,
-  // fetchAddSectionToTask,
   deleteMaterial,
   fetchModifySectionOnTask,
-  // fetchDeleteSectionFromTask,
+  fetchTournamentTypes,
   fetchEmbeddingsInfo,
   fetchAddLinkEmbedding,
   fetchAllAvailableEmbeddingTypes,
+  fetchTournamentsCards,
+  fetchProblemsForTournament
 }

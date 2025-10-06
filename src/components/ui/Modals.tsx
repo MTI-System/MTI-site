@@ -29,9 +29,13 @@ export default function Modal({
     onOpenInternal()
   }, [isOpen])
   return (
-    <div className={clsx(style.overlay, { [style.open]: isOpen })} onClick={onCloseInternal} onKeyDown={(e)=>{
-      if(e.key === "Escape") onCloseInternal(e)
-    }}>
+    <div
+      className={clsx(style.overlay, { [style.open]: isOpen })}
+      onClick={onCloseInternal}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onCloseInternal(e)
+      }}
+    >
       <div
         className={style.contentContainer}
         onClick={(e) => {

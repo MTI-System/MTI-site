@@ -1,4 +1,4 @@
-.imgEmbeddingContainer{
+.imgEmbeddingContainer {
   position: relative;
   height: 100%;
   width: 20rem;
@@ -24,8 +24,13 @@
   height: 0.5rem;
   width: 100%;
   background-color: var(--progress-color);
-  transition: color 250ms ease, background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease,
-    opacity 250ms ease, left 250ms ease;
+  transition:
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease,
+    box-shadow 250ms ease,
+    opacity 250ms ease,
+    left 250ms ease;
 }
 
 .iconButtons {
@@ -40,17 +45,17 @@
   font-size: 4rem;
   /* width: 2.5rem; */
 }
-.progressText{
+.progressText {
   position: absolute;
   width: 100%;
   text-align: center;
-  top:60%;
+  top: 60%;
   color: var(--alt-text);
   font-size: 1.5rem;
 }
-.retryIcon:hover{
+.retryIcon:hover {
   color: var(--alt-text);
 }
-.abortIcon:hover{
+.abortIcon:hover {
   color: var(--alt-text);
 }

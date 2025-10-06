@@ -1,21 +1,21 @@
 "use client"
 import cookies from "js-cookie"
 import { TOURNAMENT_TYPE_KEY_NAME } from "@/constants/CookieKeys"
-import { setTT } from "@/redux_stores/SearchParamsSlice"
+import { setTT } from "@/redux_stores/Global/SearchParamsSlice"
 import { useEffect, useRef, useState, useTransition } from "react"
-import { setAuth, setToken } from "@/redux_stores/AuthSlice"
+import { setAuth, setToken } from "@/redux_stores/Global/AuthSlice"
 import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { User } from "@/types/authApi"
-import { setIsPending } from "@/redux_stores/SystemSlice"
+import { setIsPending } from "@/redux_stores/Global/SystemSlice"
 import { ReactNode } from "react"
-import { useAppDispatch, useAppSelector } from "@/redux_stores/tournamentTypeRedixStore"
+import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 
 export default function LayoutComponent({ children }: { children: ReactNode }) {
   const theme = useAppSelector((state) => state.system.theme)
   return (
     <>
-      <body data-theme={theme}>
-        <InitRedux/>
+      <body className="h-[100vh]" data-theme={theme}>
+        <InitRedux />
         {children}
       </body>
     </>
@@ -36,7 +36,7 @@ function InitRedux() {
     }
 
     if (tt) {
-      dispatch(setTT(tt))
+      dispatch(setTT(Number(tt)))
     }
     if (token) {
       dispatch(setToken(token))

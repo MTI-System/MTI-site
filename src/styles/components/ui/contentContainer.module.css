@@ -3,7 +3,7 @@
   border: var(--border-width) var(--border-color) solid;
   border-radius: var(--block-radius);
   overflow: hidden;
-    @media(max-width: 1200px){
+  @media (max-width: 1200px) {
     border-radius: 1rem;
   }
 }

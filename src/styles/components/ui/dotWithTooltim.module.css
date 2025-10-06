@@ -9,18 +9,17 @@
   border-color: var(--color);
 }
 
-body[data-theme="dark"] .dot{
-    background-color: rgba(from var(--dark-color) r g b / 0.25);
-    border-color: var(--dark-color);
+body[data-theme="dark"] .dot {
+  background-color: rgba(from var(--dark-color) r g b / 0.25);
+  border-color: var(--dark-color);
 }
 
-
-.dot:hover{
+.dot:hover {
   background-color: var(--color);
 }
 
-body[data-theme="dark"] .dot:hover{
-    background-color: var(--dark-color);
+body[data-theme="dark"] .dot:hover {
+  background-color: var(--dark-color);
 }
 
 .tooltip {
@@ -32,7 +31,7 @@ body[data-theme="dark"] .dot:hover{
   font-size: 1rem;
 }
 
-body[data-theme="dark"] .tooltip{
+body[data-theme="dark"] .tooltip {
   border: var(--border-width) var(--dark-color) solid;
   color: var(--dark-color);
 }

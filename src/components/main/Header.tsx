@@ -1,36 +1,29 @@
-import headerStyle from "@/styles/components/sections/app/header.module.css"
 import Link from "next/link"
 import TournamentTypeSelector from "@/components/Redux/TournamentTypeSelector"
-import { FaMoon } from "react-icons/fa"
 import ProfilePicture from "@/components/main/Profile"
 import { Button } from "@/components/ui/Buttons"
-import { FiMenu } from "react-icons/fi"
-import { FaBell } from "react-icons/fa"
 import ThemeSwitchingButton from "../Redux/ThemeSwitcher"
-import { FILES_SERVER } from "@/constants/APIEndpoints"
+import { fetchTournamentTypes } from "@/scripts/ApiFetchers"
 
-export default function Header() {
+export default async function Header() {
   return (
     <>
-      <header className={headerStyle.header}>
-        <div className={headerStyle.leftContainer}>
-          <Link href={"/"}>
-            <div className={headerStyle.logo}></div>
+      <header className="bg-bg-alt flex justify-between px-5 py-3 transition">
+        <div className="flex h-fit items-center gap-1 font-bold">
+          <Link href={"/"} className="flex h-fit items-center">
+            <div className="bg-text-main size-[4rem] mask-[url('https://api.mtiyt.ru/files/get/LogoType.svg')] mask-contain mask-center mask-no-repeat"></div>
           </Link>
-          <div>
-            <Link href={"/"}>
-              <h1 style={{ justifySelf: "start", color: "var(--main-text-color)" }}>МТИ</h1>
+          <div className="text-text-main align-center flex flex-col items-center justify-center text-3xl">
+            <Link href={"/"} className="w-full">
+              <h1 className="w-full pl-2 text-start">МТИ</h1>
             </Link>
-            <TournamentTypeSelector className={headerStyle.dropdown} />
+            <TournamentTypeSelector />
           </div>
         </div>
-        <div className={headerStyle.rightContainer}>
-          <ThemeSwitchingButton className={headerStyle.headerRoundButton} />
-          {/* <Button className={headerStyle.headerRoundButton}>
-            <FaBell className={headerStyle.headerIconInButton} />
-          </Button> */}
-          <Button className={headerStyle.headerRoundButton}>
-            <ProfilePicture className={headerStyle.headerIconInButton} />
+        <div className="text-text-main flex flex-row items-center gap-[1vw]">
+          <ThemeSwitchingButton className="rounded-full border-2" />
+          <Button className="aspect-square h-16 rounded-full border-2">
+            <ProfilePicture className="" />
           </Button>
         </div>
       </header>

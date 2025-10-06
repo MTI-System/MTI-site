@@ -1,83 +1,81 @@
-.mainContainer{
-    width:  100%;
-    /*height: 120rem;*/
-    justify-items: center;
-    margin-bottom: 3vh;
-    /* background-color: var(--main-bf); */
-    @media (max-width: 1200px){
-        margin-bottom: 0px;
-    }
+.mainContainer {
+  width: 100%;
+  /*height: 120rem;*/
+  justify-items: center;
+  margin-bottom: 3vh;
+  /* background-color: var(--main-bf); */
+  @media (max-width: 1200px) {
+    margin-bottom: 0px;
+  }
 }
 
-.mainInfoBlock{
-    margin-top: 3vh;
-    background-color: var(--alt-bg);
-    width: 90vw;
-    /*height: 90%;*/
-    border-radius: 5rem;
-    padding-bottom: 5vh;
-    @media (max-width: 1200px){
-        border-radius: 0px;
-        margin-top: 0vh;
-        width: 100%!important;
-        height: 100%!important;
-        /* padding-bottom:  0px; */
-    }
-    
+.mainInfoBlock {
+  margin-top: 3vh;
+  background-color: var(--alt-bg);
+  width: 90vw;
+  /*height: 90%;*/
+  border-radius: 5rem;
+  padding-bottom: 5vh;
+  @media (max-width: 1200px) {
+    border-radius: 0px;
+    margin-top: 0vh;
+    width: 100% !important;
+    height: 100% !important;
+    /* padding-bottom:  0px; */
+  }
 }
 
-.headerStyle{
-    font-size:  3rem;
-    margin-top: 1rem;
-    @media (max-width: 1200px){
-        font-size:  2rem;
-        padding-top: 2rem;
-        margin-top: 0px;
-    }
-    
+.headerStyle {
+  font-size: 3rem;
+  margin-top: 1rem;
+  @media (max-width: 1200px) {
+    font-size: 2rem;
+    padding-top: 2rem;
+    margin-top: 0px;
+  }
 }
 
-.textStyle{
-    width: 100%;
-    padding-left: 6vw;
-    padding-right: 6vw;
-    font-size: 1.7rem;
-     @media (max-width: 1200px){
-        font-size: 1.2rem;
-     }
-    white-space: pre-line;
-    text-indent: 5rem;
-    text-align: justify;
+.textStyle {
+  width: 100%;
+  padding-left: 6vw;
+  padding-right: 6vw;
+  font-size: 1.7rem;
+  @media (max-width: 1200px) {
+    font-size: 1.2rem;
+  }
+  white-space: pre-line;
+  text-indent: 5rem;
+  text-align: justify;
 }
 
-.teamBioContainer{
-    display: flex;
-    @media(max-width: 1200px){
-        flex-direction: column;
-    }
+.teamBioContainer {
+  display: flex;
+  @media (max-width: 1200px) {
+    flex-direction: column;
+  }
 }
 
-.personContainer{
-    padding-top: 1rem;
-    justify-items: center;
-    padding-left: 6vw;
-    padding-right: 6vw;
-    text-align: justify;
-    font-size: 1.5rem;
+.personContainer {
+  padding-top: 1rem;
+  justify-items: center;
+  padding-left: 6vw;
+  padding-right: 6vw;
+  text-align: justify;
+  font-size: 1.5rem;
 }
 
-.imageStyle{
-    /*width: 30vw;*/
-    height: 50vh;
-    margin-top: 1rem;
-    border-radius: 1rem;
+.imageStyle {
+  /*width: 30vw;*/
+  height: 50vh;
+  margin-top: 1rem;
+  border-radius: 1rem;
 }
 
-.personsList{
-    justify-self: center;
-    font-size: 1.7rem;
-    @media (max-width: 1200px) {
-        font-size: 1.3rem;
-        text-align: center;
-    }
+.personsList {
+  justify-self: center;
+  font-size: 1.7rem;
+  @media (max-width: 1200px) {
+    font-size: 1.3rem;
+    text-align: center;
+  }
 }

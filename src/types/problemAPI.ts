@@ -1,7 +1,5 @@
 import { z } from "zod"
 
-
-
 export const ProblemTranslationSchema = z.object({
   id: z.number(),
   problem_name: z.string(),
@@ -19,19 +17,19 @@ export const ProblemSectionSchema = z.object({
   tournament_type: z.number(),
 })
 
-export const ProblemSectionWithSciencesSchema = ProblemSectionSchema.omit({section_science:true}).extend({
+export const ProblemSectionWithSciencesSchema = ProblemSectionSchema.omit({ section_science: true }).extend({
   section_science: z.object({
     id: z.number(),
     title: z.string(),
-    color: z.string()
-  })
+    color: z.string(),
+  }),
 })
 
 export const ScienceShenma = z.object({
   id: z.number(),
   title: z.string(),
   color: z.string(),
-  dark_theme_color: z.string()
+  dark_theme_color: z.string(),
 })
 
 export const ProblemSchema = z.object({

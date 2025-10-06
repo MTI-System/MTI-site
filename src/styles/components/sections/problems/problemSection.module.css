@@ -14,7 +14,11 @@
   padding: 0.5vh 1vw;
   border-radius: 10rem;
   font-weight: bold;
-  transition: opacity 250ms ease, color 250ms ease, background-color 250ms ease, border-color 250ms ease;
+  transition:
+    opacity 250ms ease,
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease;
 }
 
 body[data-theme="dark"] .sectionCard {
@@ -25,13 +29,13 @@ body[data-theme="dark"] .sectionCard {
 }
 
 .sectionLogo {
-  background-color: var(--bg-color);
+  background-color: var(--border-color);
   mask-size: contain;
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.2rem;
+  width: 1.2rem;
 }
 body[data-theme="dark"] .sectionLogo {
-  background-color: var(--bg-color-dark);
+  background-color: var(--border-color-dark);
 }
 
 .sectionCard.deletionPending {
