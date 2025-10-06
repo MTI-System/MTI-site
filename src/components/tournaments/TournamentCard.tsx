@@ -21,7 +21,7 @@ export default function TournamentCard({tournamentCard, isExtended = false, isCr
     tournamentCard: TournamentCardInterface,
     isExtended: boolean,
     isCreate: boolean,
-    onUpdateCreate: TournamentCardCallback | null,
+    onUpdateCreate?: TournamentCardCallback | null,
 }): JSX.Element {
     return (
         <>

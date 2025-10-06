@@ -26,7 +26,7 @@ export default async function TournamentPage(
             <TournamentPageStoreProviderWrapper tournament={tournament}>
                 <Suspense fallback={<Loading/>}>
                     {tournament && <div className="pt-5">
-                        <TournamentCard tournamentCard={tournament} isExtended={true} isModerator={false}/>
+                        <TournamentCard tournamentCard={tournament} isExtended={true} isCreate={false}/>
                     </div>}
                     {!tournament && <NotFound/>}
                     <TournamentsPageTabs tournamentCard={tournament}/>
