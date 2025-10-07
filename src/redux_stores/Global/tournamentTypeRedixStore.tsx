@@ -5,7 +5,6 @@ import { AuthSlice } from "@/redux_stores/Global/AuthSlice"
 import { SystemSlice } from "@/redux_stores/Global/SystemSlice"
 import { ProblemsSlice } from "@/redux_stores/Global/ProblemSlice"
 import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
-import problemsApi from "@/api/problemsApiRTK"
 
 export default function makeStore(
   theme: string,

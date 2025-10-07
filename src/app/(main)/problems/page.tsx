@@ -9,11 +9,11 @@ import Loading from "@/app/loading"
 import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
 import ShareButton from "@/components/problems/ShareButton"
 import TournamentCard from "@/components/tournaments/TournamentCard"
-import problemsApi from "@/api/problemsApiRTK"
-import makeProblemsApiStore from "@/api/stores/problemsApiStore"
 import { cookies } from "next/headers"
 import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider"
 import { Instinct } from "@/components/Instinct"
+import {makeProblemsStoreServer} from "@/api/problems/serverStore";
+import {problemsApiServer} from "@/api/problems/server";
 
 export async function generateMetadata({
   searchParams,
@@ -93,10 +93,16 @@ export default async function Page({
   //   const promise = dispatch(problemsApi.endpoints.getProblems.initiate({ tournament: tt, year: Number(year) }))
   //   const { data, isLoading, isSuccess /*...*/ } = await promise
 
-  const store = makeProblemsApiStore()
-  const promise = store.dispatch(problemsApi.endpoints.getProblems.initiate({ tournament: tt, year: Number(year) }))
-  const { refetch } = promise
-  const { data: problems, isLoading, isSuccess /*...*/ } = await promise
+  const store = makeProblemsStoreServer()
+  console.log("start request")
+  const promise = store.dispatch(
+      problemsApiServer.endpoints.getProblems.initiate(
+          { tournament: tt, year: Number(year) },
+          { subscribe: false, forceRefetch: true }
+      )
+  )
+  const { data: problems, isLoading,  isError, error} = await promise
+  console.log("end request", problems, isError, error)
 
   const availableProblemSections: ProblemSectionInterface[] = []
   problems?.forEach((problem: ProblemInterface) => {

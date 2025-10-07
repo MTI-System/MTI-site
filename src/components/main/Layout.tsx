@@ -32,6 +32,7 @@ function InitRedux() {
     const token = cookies.get("mtiyt_auth_token")
     const getAuth = async () => {
       const user = await fetchPermissions()
+      console.log("UserId", "init", user)
       setAuthState(user)
     }
 
