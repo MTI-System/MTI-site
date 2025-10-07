@@ -120,60 +120,77 @@
 //   return <></>
 // }
 
-
 "use client"
-import {useEffect, useState} from "react";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
-import {setTT} from "@/redux_stores/Global/SearchParamsSlice";
-import {setSectionList, setYear} from "@/redux_stores/Problems/ProblemsFiltersSlice";
-import {useProblemsDispatch, useProblemsSelector} from "@/components/Redux/ProblemsStoreContext";
-import {useAppDispatch, useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
+import { useEffect, useState } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { setTT } from "@/redux_stores/Global/SearchParamsSlice"
+import { setSectionList, setYear } from "@/redux_stores/Problems/ProblemsFiltersSlice"
+import { useProblemsDispatch, useProblemsSelector } from "@/components/Redux/ProblemsStoreContext"
+import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { useInteractiveTransition } from "../Instinct/index.parts"
 
-export default function SearchParamsUpdator(
-    {searchParams}: {searchParams: { year: string; tt: string; sections?: string }
-    }) {
-  const localDispatch = useProblemsDispatch();
-  const dispatch = useAppDispatch();
-  const tt = useAppSelector(state=>state.searchParams.tt)
-  const year =  useProblemsSelector((state) => state.problemsPageFilters.year);
-  const sectionFilter =  useProblemsSelector((state) => state.problemsPageFilters.sectionList);
+export default function SearchParamsUpdator({
+  searchParams,
+  isNoRefresh,
+}: {
+  searchParams: { year: string; tt: string; sections?: string }
+  isNoRefresh: boolean
+}) {
+  const localDispatch = useProblemsDispatch()
+  const dispatch = useAppDispatch()
+  const tt = useAppSelector((state) => state.searchParams.tt)
+  const year = useProblemsSelector((state) => state.problemsPageFilters.year)
+  const sectionFilter = useProblemsSelector((state) => state.problemsPageFilters.sectionList)
   const router = useRouter()
   const pathname = usePathname()
   const [isMounted, setMounted] = useState(false)
+  const [isPending, error, startTransition] = useInteractiveTransition()
+
   useEffect(() => {
-    if (searchParams.tt){
-      dispatch(setTT(Number(searchParams.tt)));
+    if (searchParams.tt) {
+      dispatch(setTT(Number(searchParams.tt)))
+    } else if (!tt) {
+      dispatch(setTT(1))
     }
-    else if(!tt){
-      dispatch(setTT(1));
-    }
-    if(searchParams.year){
+    if (searchParams.year) {
       localDispatch(setYear(Number(searchParams.year)))
-    }
-    else if(!year){
+    } else if (!year) {
       localDispatch(setYear(2026))
     }
-    if(searchParams.sections){
-      console.log("yes sections", searchParams.sections, searchParams.sections.split(",").map((el)=>Number(el)))
-      localDispatch(setSectionList(searchParams.sections.split(",").map((el)=>Number(el))))
-    }
-    else if (!sectionFilter){
+    if (searchParams.sections) {
+      console.log(
+        "yes sections",
+        searchParams.sections,
+        searchParams.sections.split(",").map((el) => Number(el)),
+      )
+      localDispatch(setSectionList(searchParams.sections.split(",").map((el) => Number(el))))
+    } else if (!sectionFilter) {
       console.log("not sections", searchParams.sections)
       localDispatch(setSectionList([]))
     }
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     console.log("UPDATE SEARCH LINE", sectionFilter)
     if (!isMounted) return
     const params = new URLSearchParams()
-    params.set("tt", tt?.toString() ?? "1");
-    params.set("year", (year??2025).toString());
-    if (sectionFilter){
+    params.set("tt", tt?.toString() ?? "1")
+    params.set("year", (year ?? 2025).toString())
+    console.log("compare", params.toString(), new URLSearchParams(searchParams).toString())
+    if (params.toString() == new URLSearchParams(searchParams).toString()) {
+      return
+    }
+    if (sectionFilter) {
       params.set("sections", sectionFilter?.join(","))
     }
-    router.replace(`${pathname}?${params.toString()}`);
-  }, [isMounted, year, tt, sectionFilter]);
+    if (isNoRefresh) {
+      router.replace(`${pathname}?${params.toString()}`)
+      return
+    }
+    startTransition(async () => {
+      window.history.replaceState(null, "New Page Title", `${pathname}?${params.toString()}`)
+    })
+  }, [isMounted, year, tt, sectionFilter])
   return <></>
 }

@@ -19,14 +19,14 @@ import { User, UserSchema } from "@/types/authApi"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import z from "zod"
-import { TournamentCard, TournamentCardInterface,TournamentResultsTableEntity } from "@/types/TournamentsAPI"
+import { TournamentCard, TournamentCardInterface, TournamentResultsTableEntity } from "@/types/TournamentsAPI"
 import { TournamentTypeIntarface, TournamentTypeSchema } from "@/types/TournamentTypeIntarface"
 
 import {
   TournamentRegistrationFormField,
   TournamentRegistrationFormInfo,
-  TournamentRegistrationFormInfoInterface
-} from "@/types/TournamentRegistrationApi";
+  TournamentRegistrationFormInfoInterface,
+} from "@/types/TournamentRegistrationApi"
 
 async function fetchWithRetryAndTimeout(
   url: string,
@@ -60,28 +60,14 @@ async function fetchWithRetryAndTimeout(
   }
 }
 
-async function fetchProblems(tournament: string, year: number): Promise<ProblemListInterface | null> {
+async function fetchProblemsForTournament(tournamentId: number): Promise<ProblemListInterface | null> {
   await connection()
-  const response = await fetchWithRetryAndTimeout(
-    PROBLEM_API + `get_problems_by_tournament_type_and_year?tournamentTypeId=${tournament}&year=${year}`,
-  )
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + `get_problems_for_tournament/${tournamentId}`)
   if (!response) return null
   const respJSON = z.array(ProblemSchema).safeParse(await response.json())
   if (respJSON.success) return respJSON.data
   console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
   return null
-}
-
-async function fetchProblemsForTournament(tournamentId: number): Promise<ProblemListInterface | null> {
-    await connection()
-    const response = await fetchWithRetryAndTimeout(
-        PROBLEM_API + `get_problems_for_tournament/${tournamentId}`,
-    )
-    if (!response) return null
-    const respJSON = z.array(ProblemSchema).safeParse(await response.json())
-    if (respJSON.success) return respJSON.data
-    console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
-    return null
 }
 
 async function fetchEditProblem(data: FormData): Promise<boolean> {
@@ -189,7 +175,7 @@ async function fetchYears(tournamentTypeId: number): Promise<number[]> {
 }
 
 async function fetchAllAvailableSections(): Promise<ProblemSectionWithSciencesInterface[]> {
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", {cache: "no-store"})
+  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "sections/all_possible_sections", { cache: "no-store" })
   if (!response) return []
   const parseRes = z.array(ProblemSectionWithSciencesSchema).safeParse(await response.json())
   if (parseRes.success) return parseRes.data
@@ -241,7 +227,6 @@ async function fetchAddLinkEmbedding(embedding: Omit<LoadMaterialForm, "file">):
 }
 
 async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface[] | null> {
-
   const response = await fetchWithRetryAndTimeout(MATERIAL_API + "get_available_content_types")
   if (!response) return null
   const parsed = z.array(EmbeddingTypeSchema).safeParse(await response.json())
@@ -250,8 +235,10 @@ async function fetchAllAvailableEmbeddingTypes(): Promise<EmbeddingTypeInterface
   return []
 }
 
-async function fetchTournamentsCards(tt: number, year: number): Promise<TournamentCardInterface[]>{
-  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + `get_tournament_cards_by_year_and_tt?tt=${tt}&year=${year}`)
+async function fetchTournamentsCards(tt: number, year: number): Promise<TournamentCardInterface[]> {
+  const response = await fetchWithRetryAndTimeout(
+    TOURNAMENTS_API + `get_tournament_cards_by_year_and_tt?tt=${tt}&year=${year}`,
+  )
 
   if (!response) return []
   const parsed = z.array(TournamentCard).safeParse(await response.json())
@@ -266,7 +253,10 @@ async function fetchOrganizatorTournamentsCards(tt: number, year: number): Promi
   formData.set("token", token)
   formData.set("year", year.toString())
   formData.set("tournamentType", tt.toString())
-  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + "get_organizator_tournaments", {method: "POST", body: formData})
+  const response = await fetchWithRetryAndTimeout(TOURNAMENTS_API + "get_organizator_tournaments", {
+    method: "POST",
+    body: formData,
+  })
   if (!response) return []
   const parsed = z.array(TournamentCard).safeParse(await response.json())
   if (parsed.success) return parsed.data
@@ -292,7 +282,10 @@ async function fetchTournamentTable(id: number): Promise<TournamentResultsTableE
   return null
 }
 
-async function fetchRegistrationForm(id: number, type: string): Promise<TournamentRegistrationFormInfoInterface | null> {
+async function fetchRegistrationForm(
+  id: number,
+  type: string,
+): Promise<TournamentRegistrationFormInfoInterface | null> {
   const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `get_form_for_tournament/${id}/${type}`)
   if (!response) return null
   const parsed = TournamentRegistrationFormInfo.safeParse(await response.json())
@@ -302,13 +295,10 @@ async function fetchRegistrationForm(id: number, type: string): Promise<Tourname
 }
 
 async function sendFormAnswer(form: FormData): Promise<boolean> {
-  const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `answer_form`, {method: 'POST', body: form})
+  const response = await fetchWithRetryAndTimeout(REGISTRATION_API + `answer_form`, { method: "POST", body: form })
   if (!response?.ok) return true
   return false
 }
-
-
-
 
 export {
   fetchOrganizatorTournamentsCards,
@@ -316,7 +306,6 @@ export {
   fetchRegistrationForm,
   fetchTournamentTable,
   fetchTournamentsCard,
-  fetchProblems,
   fetchProblemById,
   fetchEditProblem,
   fetchAddProblem,
@@ -332,5 +321,5 @@ export {
   fetchAddLinkEmbedding,
   fetchAllAvailableEmbeddingTypes,
   fetchTournamentsCards,
-  fetchProblemsForTournament
+  fetchProblemsForTournament,
 }

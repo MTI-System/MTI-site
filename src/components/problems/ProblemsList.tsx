@@ -1,8 +1,7 @@
-"use server"
 import ProblemCard from "@/components/problems/ProblemCard"
 import { ProblemInterface, ProblemListInterface } from "@/types/problemAPI"
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner"
-export default async function ProblemsList({
+export default function ProblemsList({
   problems,
   isEditable,
   sectionsFilter,

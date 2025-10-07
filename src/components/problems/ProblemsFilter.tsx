@@ -10,27 +10,23 @@ import {
 import style from "@/styles/components/sections/problems/problemsFilter.module.css"
 import { ReactNode, useEffect, useState } from "react"
 import Loading from "@/app/loading"
-import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { AddProblem } from "./ProblemForms"
 import { ProblemSectionInterface } from "@/types/problemAPI"
 import ProblemSection from "./ProblemSection"
-import clsx from "clsx"
 import { FaTimes } from "react-icons/fa"
 import ColoredTType from "@/components/ui/ColoredTType"
 import twclsx from "@/utils/twClassMerge"
 import { Menu } from "@base-ui-components/react"
-import {setSectionList, setYear} from "@/redux_stores/Problems/ProblemsFiltersSlice";
-import {useProblemsDispatch, useProblemsSelector} from "@/components/Redux/ProblemsStoreContext";
-import ShareButton from "@/components/problems/ShareButton";
-import {useSearchParams} from "next/navigation";
+import { setSectionList, setYear } from "@/redux_stores/Problems/ProblemsFiltersSlice"
+import { useProblemsDispatch, useProblemsSelector } from "@/components/Redux/ProblemsStoreContext"
+import ShareButton from "@/components/problems/ShareButton"
 
 export default function ProblemFilters({
-  children,
   possibleYears,
   possibleSections,
   isModerator,
 }: {
-  children: ReactNode
   possibleYears: number[]
   possibleSections: ProblemSectionInterface[]
   isModerator: boolean
@@ -38,31 +34,24 @@ export default function ProblemFilters({
   const year = useProblemsSelector((state) => state.problemsPageFilters.year ?? possibleYears[0])
   const tt = useAppSelector((state) => state.searchParams.tt)
   const ttid = Number(tt) ?? 1
-  const availableTournamentTypes = useAppSelector(state=>state.searchParams.availableTournamentTypes) ?? []
-  const isPending = useAppSelector((state) => state.system.isPending)
-  const searchParams = useSearchParams()
+  const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
 
   return (
     <>
-      <div className="flex h-fit pt-2 w-full content-center items-center gap-5">
-          <p className="font-bold text-4xl text-text-main">
-              Задачи
-          </p>
-            <ColoredTType
-              ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
-              ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
-              className="font-bold text-4xl text-text-main"
-          />
+      <div className="flex h-fit w-full content-center items-center gap-5 pt-2">
+        <p className="text-text-main text-4xl font-bold">Задачи</p>
+        <ColoredTType
+          ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
+          ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
+          className="text-text-main text-4xl font-bold"
+        />
         <div className={style.filters}>
-          <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
-          <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
-          <ShareButton/>
+          <YearFilter possibleYears={possibleYears} isPending={false} isModerator={isModerator} />
+          <SectionFilter possibleSections={possibleSections} isPending={false}></SectionFilter>
+          <ShareButton />
         </div>
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
-      {!isPending && children}
-      {isPending && <Loading />}
-
     </>
   )
 }
@@ -99,16 +88,16 @@ function SectionFilter({
           problemDispatcher(setSectionList(selection?.map((s) => s.value) ?? null))
         }}
         trigger={
-          <DropdownTrigger rootClassName="flex-1" disabled={isPending}
-               className={twclsx(
-                   "bg-bg-alt rounded-full h-8 hover:bg-hover",
-                   { "hover:bg-[var(--bg-color)]!": isPending },
-               )}
+          <DropdownTrigger
+            rootClassName="flex-1"
+            disabled={isPending}
+            className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full", {
+              "hover:bg-[var(--bg-color)]!": isPending,
+            })}
           >
             {isPending ? <p className="flex-1">Выбираем...</p> : <p className="flex-1">Выбрать разделы</p>}
           </DropdownTrigger>
         }
-
       >
         {possibleSections.map((section, i) => (
           <DropdownMultiElement value={section.id} key={i + 1}>
@@ -181,11 +170,14 @@ function YearFilter({
 
   return (
     <Dropdown
-      trigger={<DropdownTrigger disabled={isPending}
-          className={twclsx(
-          "bg-bg-alt rounded-full h-8 hover:bg-hover",
-          { "hover:bg-[var(--bg-color)]!": isPending },
-      )}>{year}</DropdownTrigger>}
+      trigger={
+        <DropdownTrigger
+          disabled={isPending}
+          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full", { "hover:bg-[var(--bg-color)]!": isPending })}
+        >
+          {year}
+        </DropdownTrigger>
+      }
       onOptionSelect={(option: DropdownOptionInterface<number> | null) => {
         if (!option) return
         problemDispatcher(setYear(option.value))
