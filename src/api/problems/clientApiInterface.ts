@@ -24,3 +24,4 @@ export const problemsApiClient = createApiClient({
     baseQuery: problemsBaseQuery,
     endpoints: defineProblemsEndpoints,
 })
+export const { useAddProblemMutation } = problemsApiClient

@@ -9,6 +9,7 @@ import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { useRouter } from "next/navigation"
 import { fetchAddProblem } from "@/scripts/ApiFetchers"
+import {useAddProblemMutation} from "@/api/problems/clientApiInterface";
 
 export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; targetYear: number }) {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
@@ -21,6 +22,11 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   const [isLoading, setIsLoading] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState("")
+  const [addProblem, {
+    error: fetchError,
+    isLoading: isAddition,
+  }] = useAddProblemMutation();
+
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -37,30 +43,11 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     setIsLoading(true)
 
     const formData = new FormData(e.currentTarget)
-
-    const isok = await handletaskCreation(e.currentTarget)
-    if (isok) {
-      startTransition(() => {
-        setIsLoading(false)
-        router.refresh()
-      })
-      return
-    } else {
-      if (error == "") {
-        setError("При добавлении задачи произошла ошибка")
-      }
-    }
-    setIsLoading(false)
-  }
-
-  const handletaskCreation = async (form: HTMLFormElement) => {
-    if (!isAuthenticated) return
-    const formData = new FormData(form)
     if (
-      formData.get("globalNumber") === "" ||
-      formData.get("firstTranslationName") === "" ||
-      formData.get("firstTranslationText") === "" ||
-      formData.get("firstTranslationBy") === ""
+        formData.get("globalNumber") === "" ||
+        formData.get("firstTranslationName") === "" ||
+        formData.get("firstTranslationText") === "" ||
+        formData.get("firstTranslationBy") === ""
     ) {
       setError("Все поля должны быть заполнены")
       setIsLoading(false)
@@ -70,9 +57,47 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     formData.set("tournamentType", targetTTID.toString())
     formData.set("authToken", token)
     console.log("request to api, ", PROBLEM_API + "add_problem")
-    const resp = await fetchAddProblem(formData)
-    return resp ? "ok" : null
+    addProblem({formData})
+
+    // const isok = await handletaskCreation(e.currentTarget)
+    // if (isok) {
+    //   startTransition(() => {
+    //     setIsLoading(false)
+    //     router.refresh()
+    //   })
+    //   return
+    // } else {
+    //   if (error == "") {
+    //     setError("При добавлении задачи произошла ошибка")
+    //   }
+    // }
+    // setIsLoading(false)
   }
+  useEffect(() => {
+    if (isAddition === false){
+      router.refresh()
+    }
+  }, [isAddition]);
+
+  // const handletaskCreation = async (form: HTMLFormElement) => {
+  //   if (!isAuthenticated) return
+  //   const formData = new FormData(form)
+  //   if (
+  //     formData.get("globalNumber") === "" ||
+  //     formData.get("firstTranslationName") === "" ||
+  //     formData.get("firstTranslationText") === "" ||
+  //     formData.get("firstTranslationBy") === ""
+  //   ) {
+  //     setError("Все поля должны быть заполнены")
+  //     setIsLoading(false)
+  //     return null
+  //   }
+  //   formData.set("year", targetYear.toString())
+  //   formData.set("tournamentType", targetTTID.toString())
+  //   formData.set("authToken", token)
+  //   console.log("request to api, ", PROBLEM_API + "add_problem")
+  //   addProblem({formData})
+  // }
 
   return (
     <div
@@ -103,33 +128,33 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
         <TitledInput title="Перевод" className={style.problemByInput}>
           <Input className={style.problemByInputField} name="firstTranslationBy" defaultValue={"Официальный перевод"} />
         </TitledInput>
-        {error != "" && <p className={style.errorMessage}>{error}</p>}
+        {fetchError && <p className={style.errorMessage}>{fetchError.toString()}</p>}
         <div className={style.confirmContainer}>
-          <Button type="submit" className={style.editOnOtherPageButton} disabled={isLoading || isPending}>
+          <Button type="submit" className={style.editOnOtherPageButton} disabled={isAddition || isPending}>
             Создать задачу
           </Button>
           <Button
             type="button"
             className={style.editOnOtherPageButton}
-            disabled={isLoading || isPending}
-            onClick={async () => {
-              setError("")
-              if (!formRef.current) return
-              setIsLoading(true)
-              const isok = await handletaskCreation(formRef.current)
-              if (isok) {
-                startTransition(() => {
-                  setIsLoading(false)
-                  router.push("/problems/" + isok + "?is_edit=true")
-                })
-                return
-              } else {
-                if (error == "") {
-                  setError("При добавлении задачи произошла ошибка")
-                }
-              }
-              setIsLoading(false)
-            }}
+            disabled={isAddition || isPending}
+            // onClick={async () => {
+            //   setError("")
+            //   if (!formRef.current) return
+            //   setIsLoading(true)
+            //   const isok = await handletaskCreation(formRef.current)
+            //   if (isok) {
+            //     startTransition(() => {
+            //       setIsLoading(false)
+            //       router.push("/problems/" + isok + "?is_edit=true")
+            //     })
+            //     return
+            //   } else {
+            //     if (error == "") {
+            //       setError("При добавлении задачи произошла ошибка")
+            //     }
+            //   }
+            //   setIsLoading(false)
+            // }}
           >
             Добавить материалы
           </Button>

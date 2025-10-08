@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
-import {problemsApiServer} from "@/api/problems/server";
+import {problemsApiServer} from "@/api/problems/serverApiInterface";
 
 export function makeProblemsStoreServer() {
     return configureStore({

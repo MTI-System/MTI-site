@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
-import {problemsApiClient} from "@/api/problems/client";
+import {problemsApiClient} from "@/api/problems/clientApiInterface";
 
 export function makeProblemsStoreClient() {
     const store = configureStore({

@@ -13,7 +13,8 @@ import { cookies } from "next/headers"
 import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider"
 import { Instinct } from "@/components/Instinct"
 import {makeProblemsStoreServer} from "@/api/problems/serverStore";
-import {problemsApiServer} from "@/api/problems/server";
+import {problemsApiServer} from "@/api/problems/serverApiInterface";
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
 
 export async function generateMetadata({
   searchParams,
@@ -118,84 +119,86 @@ export default async function Page({
 
   return (
     <ProblemsReduxProviderWrapper>
-      <Instinct.Container>
-        <Instinct.Interactivity>
-          <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
+      <ProblemsProviderWrapper>
+        <Instinct.Container>
+          <Instinct.Interactivity>
+            <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
 
-          <ProblemFilters
-            possibleSections={availableProblemSections}
-            possibleYears={possibleYears}
-            isModerator={isEditable}
-          ></ProblemFilters>
-        </Instinct.Interactivity>
-        <div className="relative h-full w-full pt-10">
-          <Instinct.Content
-            LoadingElement={
-              <Instinct.AnimatedDiv
-                className="absolute inset-0 flex items-center justify-center"
-                enterAnimation={{
-                  translateY: ["2rem", 0],
-                  opacity: [0, 1],
-                  duration: 300,
-                  easing: "easeInOutQuad",
-                }}
-                exitAnimation={{
-                  translateY: [0, "2rem"],
-                  opacity: [1, 0],
-                  duration: 300,
-                  easing: "easeInOutQuad",
-                }}
-              >
-                <Loading />
-              </Instinct.AnimatedDiv>
-            }
-          >
-            <Instinct.AnimatedDiv
-              enterAnimation={{
-                translateY: ["2rem", 0],
-                opacity: [0, 1],
-                duration: 300,
-                easing: "easeInOutQuad",
-              }}
-              exitAnimation={{
-                translateY: [0, "2rem"],
-                opacity: [1, 0],
-                duration: 300,
-                easing: "easeInOutQuad",
-              }}
+            <ProblemFilters
+                possibleSections={availableProblemSections}
+                possibleYears={possibleYears}
+                isModerator={isEditable}
+            ></ProblemFilters>
+          </Instinct.Interactivity>
+          <div className="relative h-full w-full pt-10">
+            <Instinct.Content
+                LoadingElement={
+                  <Instinct.AnimatedDiv
+                      className="absolute inset-0 flex items-center justify-center"
+                      enterAnimation={{
+                        translateY: ["2rem", 0],
+                        opacity: [0, 1],
+                        duration: 300,
+                        easing: "easeInOutQuad",
+                      }}
+                      exitAnimation={{
+                        translateY: [0, "2rem"],
+                        opacity: [1, 0],
+                        duration: 300,
+                        easing: "easeInOutQuad",
+                      }}
+                  >
+                    <Loading />
+                  </Instinct.AnimatedDiv>
+                }
             >
-              {tt && (
-                <>
-                  {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
-                  {!isUndefYear && (
-                    <div className="mt-5 flex gap-5">
-                      <div>
-                        <ProblemsList
-                          sectionsFilter={sectionsFilter ?? []}
-                          problems={problems ?? null}
-                          isEditable={isEditable}
-                        />
-                      </div>
-                      {currentTournament !== null && (
-                        <div className="aspect-[8/9] h-[37rem]">
-                          <div className="fixed">
-                            <TournamentCard
-                              tournamentCard={currentTournament}
-                              isExtended={false}
-                              isCreate={false}
-                              onUpdateCreate={null}
-                            />
+              <Instinct.AnimatedDiv
+                  enterAnimation={{
+                    translateY: ["2rem", 0],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: "easeInOutQuad",
+                  }}
+                  exitAnimation={{
+                    translateY: [0, "2rem"],
+                    opacity: [1, 0],
+                    duration: 300,
+                    easing: "easeInOutQuad",
+                  }}
+              >
+                {tt && (
+                    <>
+                      {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
+                      {!isUndefYear && (
+                          <div className="mt-5 flex gap-5">
+                            <div>
+                              <ProblemsList
+                                  sectionsFilter={sectionsFilter ?? []}
+                                  problems={problems ?? null}
+                                  isEditable={isEditable}
+                              />
+                            </div>
+                            {currentTournament !== null && (
+                                <div className="aspect-[8/9] h-[37rem]">
+                                  <div className="fixed">
+                                    <TournamentCard
+                                        tournamentCard={currentTournament}
+                                        isExtended={false}
+                                        isCreate={false}
+                                        onUpdateCreate={null}
+                                    />
+                                  </div>
+                                </div>
+                            )}
                           </div>
-                        </div>
                       )}
-                    </div>
-                  )}
-                </>
-              )}
-            </Instinct.AnimatedDiv>
-          </Instinct.Content>
-        </div>
-      </Instinct.Container>
+                    </>
+                )}
+              </Instinct.AnimatedDiv>
+            </Instinct.Content>
+          </div>
+        </Instinct.Container>
+      </ProblemsProviderWrapper>
     </ProblemsReduxProviderWrapper>
   )
 }

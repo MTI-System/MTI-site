@@ -1,10 +1,10 @@
 "use client"
 
 import {useState} from "react";
-import {useGetAllNotificationsQuery} from "@/api/notificationsApiRTK";
 import Loading from "@/app/loading";
 import NotificationItem from "@/components/notifications/NotificationItem";
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
+import {useGetAllNotificationsQuery} from "@/api/notifications/clientApiInterface";
 
 
 export default function NotificationList() {

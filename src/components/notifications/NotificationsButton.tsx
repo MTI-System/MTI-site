@@ -1,7 +1,7 @@
 import { Popover } from "@base-ui-components/react";
 import { FaBell } from "react-icons/fa";
 import NotificationList from "@/components/notifications/NotificationList";
-import NotificationsProviderWrapper from "@/api/stores/NotificationsProviderWrapper";
+import NotificationsProviderWrapper from "@/api/notifications/ClientWrapper";
 
 export default function NotificationsButton(){
 

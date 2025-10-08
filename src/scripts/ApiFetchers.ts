@@ -60,35 +60,6 @@ async function fetchWithRetryAndTimeout(
   }
 }
 
-async function fetchProblemsForTournament(tournamentId: number): Promise<ProblemListInterface | null> {
-  await connection()
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + `get_problems_for_tournament/${tournamentId}`)
-  if (!response) return null
-  const respJSON = z.array(ProblemSchema).safeParse(await response.json())
-  if (respJSON.success) return respJSON.data
-  console.error(`Unexpected response while parsing problems: ${respJSON.error}`)
-  return null
-}
-
-async function fetchEditProblem(data: FormData): Promise<boolean> {
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "edit_problem", { method: "POST", body: data })
-  return response !== null && response.ok
-}
-
-async function fetchAddProblem(formData: FormData): Promise<Boolean> {
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + "add_problem", { method: "POST", body: formData })
-  return response !== null && response.ok
-}
-
-async function fetchProblemById(problemId: number): Promise<ProblemInterface | null> {
-  await connection()
-  const response = await fetchWithRetryAndTimeout(PROBLEM_API + `get_problem_by_global_id/${problemId}`)
-  if (!response) return null
-  const respJSON = ProblemSchema.safeParse(await response.json())
-  if (respJSON.success) return respJSON.data
-  console.error(`Unexpected response while parsing problem with id ${problemId}: ${respJSON.error}`)
-  return null
-}
 
 async function fetchSendLogin(creds: FormData): Promise<string | null | undefined> {
   const response = await fetchWithRetryAndTimeout(AUTH_API + "login", {
@@ -306,9 +277,6 @@ export {
   fetchRegistrationForm,
   fetchTournamentTable,
   fetchTournamentsCard,
-  fetchProblemById,
-  fetchEditProblem,
-  fetchAddProblem,
   fetchSendLogin,
   fetchPermissions,
   deleteProblem,
@@ -321,5 +289,4 @@ export {
   fetchAddLinkEmbedding,
   fetchAllAvailableEmbeddingTypes,
   fetchTournamentsCards,
-  fetchProblemsForTournament,
 }

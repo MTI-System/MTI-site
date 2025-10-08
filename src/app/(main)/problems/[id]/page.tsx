@@ -4,14 +4,23 @@ import { ProblemInterface } from "@/types/problemAPI"
 import NotFound from "@/components/service/NotFound"
 import { Metadata } from "next"
 import { cache } from "react"
-import {fetchProblemById, fetchTournamentTypes} from "@/scripts/ApiFetchers"
+import {fetchTournamentTypes} from "@/scripts/ApiFetchers"
 import TournamentsPageTabs from "@/components/tournamentPage/TournamentsPageTabs";
 import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider";
+import makeStore from "@/redux_stores/Global/tournamentTypeRedixStore";
+import {makeProblemsStoreServer} from "@/api/problems/serverStore";
+import {problemsApiServer} from "@/api/problems/serverApiInterface";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params
-  const problem = await fetchProblemById(id)
-  if (problem === null) {
+  const store = makeProblemsStoreServer()
+  const promise = store.dispatch(
+      problemsApiServer.endpoints.getProblemsById.initiate(
+          {problemId: id},
+      )
+  )
+  const {data: problem} = await promise
+  if (!problem) {
     return {
       title: "Задача не найдена – МТИ",
       description: "Запрошенная задача не найдена в системе МТИ.",
@@ -29,14 +38,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 async function ProblemPageMain({ params }: PageProps) {
   const { id } = await params
-  const problem = await fetchProblemById(id)
-  if (problem === null) return <NotFound />
+  const store = makeProblemsStoreServer()
+  const promise = store.dispatch(
+      problemsApiServer.endpoints.getProblemsById.initiate(
+          {problemId: id},
+      )
+  )
+  const {data: problem} = await promise
+  if (!problem) return <NotFound />
   return (
     <>
       <ProblemsReduxProviderWrapper>
         <ProblemPage problem={problem} />
       </ProblemsReduxProviderWrapper>
-
     </>
   )
 }

@@ -6,13 +6,13 @@ export default function ProblemsList({
   isEditable,
   sectionsFilter,
 }: {
-  problems: ProblemListInterface | null
+  problems: ProblemListInterface | null | undefined
   isEditable: boolean
   sectionsFilter: number[]
 }) {
   return (
     <div className="flex flex-col gap-2">
-      {problems !== null &&
+      {problems &&
         (sectionsFilter.length === 0
           ? problems
           : problems.filter(
