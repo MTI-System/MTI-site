@@ -94,7 +94,6 @@ export default async function Page({
   //   const { data, isLoading, isSuccess /*...*/ } = await promise
 
   const store = makeProblemsStoreServer()
-  console.log("start request")
   const promise = store.dispatch(
       problemsApiServer.endpoints.getProblems.initiate(
           { tournament: tt, year: Number(year) },
