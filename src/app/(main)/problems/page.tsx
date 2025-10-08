@@ -2,7 +2,7 @@ import ProblemFilters from "@/components/problems/ProblemsFilter"
 import ProblemsList from "@/components/problems/ProblemsList"
 import { Suspense } from "react"
 import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
-import { fetchPermissions, fetchTournamentsCard, fetchTournamentTypes, fetchYears } from "@/scripts/ApiFetchers"
+import { fetchTournamentsCard, fetchTournamentTypes, fetchYears } from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/problems/SearchParamsUpdator"
 import type { Metadata } from "next"
 import Loading from "@/app/loading"
@@ -15,6 +15,8 @@ import { Instinct } from "@/components/Instinct"
 import {makeProblemsStoreServer} from "@/api/problems/serverStore";
 import {problemsApiServer} from "@/api/problems/serverApiInterface";
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
+import {makeAuthStoreServer} from "@/api/auth/serverStore";
+import {authApiServer} from "@/api/auth/serverApiInterface";
 
 export async function generateMetadata({
   searchParams,
@@ -84,7 +86,16 @@ export default async function Page({
   if (!possibleYears.find((y) => Number(y) === Number(year))) {
     isUndefYear = true
   }
-  const userAuth = await fetchPermissions()
+
+  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+  const authStore = makeAuthStoreServer()
+  const authPromise = authStore.dispatch(
+      authApiServer.endpoints.fetchPermissions.initiate({
+        token: token
+      })
+  )
+  const {data: userAuth, error: authError} = await authPromise
+
   let isEditable = false
   if (userAuth && userAuth.rights.length !== 0) {
     isEditable = userAuth.rights.map((right) => right.right_flag == "MODERATE_PROBLEMS_" + tt).some((x) => x)

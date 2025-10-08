@@ -61,43 +61,7 @@ async function fetchWithRetryAndTimeout(
 }
 
 
-async function fetchSendLogin(creds: FormData): Promise<string | null | undefined> {
-  const response = await fetchWithRetryAndTimeout(AUTH_API + "login", {
-    method: "POST",
-    body: creds,
-  })
-  if (!response) return null
-  const token = await response.json()
-  if (!token) return undefined
-  return token
-}
 
-async function fetchPermissions(redirectPath?: string): Promise<User | null> {
-  await connection()
-  const token = (await cookies()).get("mtiyt_auth_token")?.value
-  if (!token) {
-    if (redirectPath) {
-      redirect(`login?redirect=${redirectPath}`)
-    }
-    return null
-  }
-  try {
-    const response = await fetchWithRetryAndTimeout(AUTH_API + "check_auth", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    })
-    if (!response) {
-      if (!redirectPath) return null
-      redirect(`login?redirect=${redirectPath}`)
-    }
-    const data: User = UserSchema.parse(await response.json())
-    return data
-  } catch (e) {
-    return null
-  }
-}
 
 async function deleteProblem(problem: number, tournamentTypeId: number): Promise<boolean> {
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
@@ -277,8 +241,6 @@ export {
   fetchRegistrationForm,
   fetchTournamentTable,
   fetchTournamentsCard,
-  fetchSendLogin,
-  fetchPermissions,
   deleteProblem,
   fetchYears,
   fetchAllAvailableSections,

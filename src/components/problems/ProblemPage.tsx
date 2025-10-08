@@ -1,7 +1,7 @@
 import style from "@/styles/components/sections/problems/[id]/problemPage.module.css"
 import { ProblemInterface } from "@/types/problemAPI"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
-import { fetchEmbeddingsInfo, fetchPermissions } from "@/scripts/ApiFetchers"
+import { fetchEmbeddingsInfo } from "@/scripts/ApiFetchers"
 import { ProblemCardContent } from "./ProblemCard"
 import { ExpandableImage } from "@/components/materials/ImageEmbeddings"
 import { ReactNode } from "react"
@@ -17,9 +17,24 @@ import { RiFileAddLine } from "react-icons/ri"
 import { BiImageAdd } from "react-icons/bi"
 import { AiOutlineVideoCameraAdd } from "react-icons/ai"
 import ProblemTTUpdator from "../Redux/ProblemTTUpdator"
+import {cookies} from "next/headers";
+import {redirect} from "next/navigation";
+import {makeAuthStoreServer} from "@/api/auth/serverStore";
+import {authApiServer} from "@/api/auth/serverApiInterface";
 
 async function ProblemPage({ problem }: { problem: ProblemInterface }) {
-  const userAuth = await fetchPermissions()
+  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+  if(!token) {
+    redirect("/login?redirect=problems")
+  }
+  const authStore = makeAuthStoreServer()
+  const authPromise = authStore.dispatch(
+      authApiServer.endpoints.fetchPermissions.initiate({
+        token: token
+      })
+  )
+  const {data: userAuth, error: authError} = await authPromise
+
   let isModerator = false
   if (userAuth && userAuth.rights.length !== 0) {
     isModerator = userAuth.rights

@@ -9,4 +9,4 @@ export function makeNotificationsStoreServer() {
         middleware: (gDM) => gDM().concat(notificationsApiServer.middleware),
     })
 }
-export type ProblemsApiStoreServer = ReturnType<typeof makeNotificationsStoreServer>
+export type AuthApiStoreServer = ReturnType<typeof makeNotificationsStoreServer>

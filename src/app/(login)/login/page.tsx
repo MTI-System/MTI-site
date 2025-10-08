@@ -1,6 +1,6 @@
 "use client"
 import style from "@/styles/routes/(login)/login.module.css"
-import {useState, FormEvent, useRef, Suspense} from "react"
+import {useState, FormEvent, useRef, Suspense, useEffect} from "react"
 import {AUTH_API} from "@/constants/APIEndpoints"
 import {useRouter, useSearchParams} from "next/navigation"
 import {FaEye, FaEyeSlash} from "react-icons/fa6"
@@ -12,8 +12,9 @@ import {Button} from "@/components/ui/Buttons"
 import LogoWithTT from "@/components/ui/LogoWithTT"
 import {setAuth, setToken} from "@/redux_stores/Global/AuthSlice"
 import {useAppDispatch} from "@/redux_stores/Global/tournamentTypeRedixStore"
-import {fetchSendLogin} from "@/scripts/ApiFetchers"
 import footerStyle from "@/styles/components/sections/app/footer.module.css"
+import AuthProviderWrapper from "@/api/auth/ClientWrapper";
+import {useLoginMutation} from "@/api/auth/clientApiInterface";
 
 enum FormState {
     AwaitLogin,
@@ -27,9 +28,12 @@ enum FormState {
 export default function Page() {
     return (
         <>
-            <Suspense fallback={<Loading/>}>
-                <LoginPage/>
-            </Suspense>
+            <AuthProviderWrapper>
+                <Suspense fallback={<Loading/>}>
+                    <LoginPage/>
+                </Suspense>
+            </AuthProviderWrapper>
+
         </>
     )
 }
@@ -42,6 +46,18 @@ function LoginPage() {
     const searchParams = useSearchParams()
     const redirect = searchParams.get("redirect") ?? "profile"
     const dispatcher = useAppDispatch()
+
+    const [login, {
+        data,        // Ответ от сервера
+        error,       // Объект ошибки
+        isLoading,   // Запрос выполняется
+        isSuccess,   // Запрос успешно завершен
+        isError,     // Запрос завершился ошибкой
+        isUninitialized, // Запрос еще не вызывался
+        reset,       // Сбросить состояние
+        originalArgs, // Аргументы последнего вызова
+        requestId,   // ID запроса
+    }] = useLoginMutation()
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -61,20 +77,33 @@ function LoginPage() {
             return
         }
         setFormState(FormState.Loading)
-        const token = await fetchSendLogin(formData)
-        if (token === null) {
-            setFormState(FormState.UnknownError)
-            return
-        }
-        if (!token) {
-            setFormState(FormState.IncorrectData)
-            return
-        }
-        dispatcher(setToken(token))
-        // dispatcher(setAuth())
-        cookies.set(AUTH_TOKEN_KEY_NAME, token)
-        router.replace("/" + redirect)
+        // const token = await fetchSendLogin(formData)
+        login({formData: formData})
+        // if (token === null) {
+        //     setFormState(FormState.UnknownError)
+        //     return
+        // }
+        // if (!token) {
+        //     setFormState(FormState.IncorrectData)
+        //     return
+        // }
+        // dispatcher(setToken(token))
+        // cookies.set(AUTH_TOKEN_KEY_NAME, token)
+        // router.replace("/" + redirect)
     }
+    useEffect(() => {
+        if (error){
+            setFormState(FormState.IncorrectData)
+        }
+
+    }, [error])
+    useEffect(() => {
+        if (isSuccess && data){
+            dispatcher(setToken(data))
+            cookies.set(AUTH_TOKEN_KEY_NAME, data)
+            router.replace("/" + redirect)
+        }
+    }, [isSuccess]);
 
     function handleEnter() {
         if (!formRef.current) return

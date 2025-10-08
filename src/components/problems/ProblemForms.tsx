@@ -8,7 +8,6 @@ import { Input, TitledInput } from "@/components/ui/Input"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { useRouter } from "next/navigation"
-import { fetchAddProblem } from "@/scripts/ApiFetchers"
 import {useAddProblemMutation} from "@/api/problems/clientApiInterface";
 
 export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; targetYear: number }) {
