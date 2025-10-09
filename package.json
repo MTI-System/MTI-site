@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@base-ui-components/react": "1.0.0-beta.3",
+    "@base-ui-components/react": "1.0.0-beta.4",
     "@floating-ui/react": "^0.27.16",
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource-variable/roboto-mono": "^5.2.8",

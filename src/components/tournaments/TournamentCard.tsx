@@ -1,5 +1,5 @@
 "use client"
-import { TournamentCardInterface } from "@/types/TournamentsAPI"
+import { TournamentCardInterface, TournamentCreationRequest } from "@/types/TournamentsAPI"
 import { CiLocationOn } from "react-icons/ci"
 import { CiClock2 } from "react-icons/ci"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
@@ -9,13 +9,13 @@ import { GoPeople } from "react-icons/go"
 import Link from "next/link"
 import { Input } from "@/components/ui/Input"
 import Loading from "@/app/loading"
-import { DayPicker, DateRange } from "react-day-picker"
+import {  DateRange } from "react-day-picker"
 import "react-day-picker/style.css"
 import { Popover } from "@base-ui-components/react"
+import DatePicker from "../pickers/DatePicker"
+import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
 
-interface TournamentCardCallback {
-  (card: Partial<TournamentCardInterface>): void
-}
+
 
 export default function TournamentCard({
   tournamentCard,
@@ -23,7 +23,7 @@ export default function TournamentCard({
   isCreate,
   onUpdateCreate = null,
 }: {
-  tournamentCard: TournamentCardInterface
+  tournamentCard?: TournamentCardInterface
   isExtended: boolean
   isCreate: boolean
   onUpdateCreate?: TournamentCardCallback | null
@@ -31,7 +31,7 @@ export default function TournamentCard({
   return (
     <>
       {!isExtended ? (
-        <Link href={`/tournaments/${tournamentCard.id}/${isCreate ? "info/about" : "info/about"}`}>
+        <Link href={`/tournaments/${tournamentCard?.id ?? 0}/${isCreate ? "info/about" : "info/about"}`}>
           <CardContent
             tournamentCard={tournamentCard}
             isExtended={isExtended}
@@ -57,14 +57,14 @@ function CardContent({
   isCreate,
   onUpdateCreate,
 }: {
-  tournamentCard: TournamentCardInterface
+  tournamentCard?: TournamentCardInterface
   isExtended: boolean
   isCreate: boolean
   onUpdateCreate: TournamentCardCallback | null
 }) {
   const [isBigImageLoading, setIsBigImageLoading] = useState<boolean>(false)
   const [isSmallImageLoading, setIsSmallImageLoading] = useState<boolean>(false)
-  const [selected, setSelected] = useState<DateRange>()
+  
   const fileInputRef = useRef<HTMLInputElement>(null)
   if (isCreate && !onUpdateCreate) {
     return <>Ошибка!</>
@@ -98,7 +98,7 @@ function CardContent({
         <div className="relative h-[64%]">
           <img
             className="absolute z-0 h-full w-full object-cover"
-            src={FILES_SERVER + tournamentCard.main_image}
+            src={FILES_SERVER + (tournamentCard?.main_image ?? "bigImagePlaceholder.png")}
             loading="lazy"
             alt="Картинка турнира"
           />
@@ -129,7 +129,7 @@ function CardContent({
         <div className="z-1 flex h-0 w-full items-center pl-5">
           <div className="bg-bg-alt border-border relative mb-6 aspect-square size-20 overflow-hidden rounded-full border">
             <img
-              src={FILES_SERVER + tournamentCard.tournament_logo}
+              src={FILES_SERVER + (tournamentCard?.tournament_logo ?? "bigImagePlaceholder.png")}
               loading="lazy"
               className="absolute size-full object-cover"
               alt="лого"
@@ -145,7 +145,7 @@ function CardContent({
           <div className="flex items-center justify-between">
             {!isCreate && (
               <h3 className="overflow-hidden pe-5 text-base font-medium text-ellipsis whitespace-nowrap">
-                {tournamentCard.title}
+                {tournamentCard?.title ?? "Неизвестный турнир"}
               </h3>
             )}
             {isCreate && (
@@ -161,25 +161,25 @@ function CardContent({
             <div
               className={clsx(
                 "me-5 flex h-7 min-w-fit items-center justify-center rounded-full border",
-                { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard.tournament_status === "ended" },
+                { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.tournament_status === "ended" },
                 {
-                  "border-[#32E875] bg-[#32E875]/20 text-[#32E875]": tournamentCard.tournament_status === "processing",
+                  "border-[#32E875] bg-[#32E875]/20 text-[#32E875]": tournamentCard?.tournament_status === "processing",
                 },
-                { "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]": tournamentCard.tournament_status === "futured" },
+                { "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]": tournamentCard?.tournament_status === "futured" },
                 {
                   "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]":
-                    tournamentCard.tournament_status === "registration",
+                    tournamentCard?.tournament_status === "registration",
                 },
               )}
             >
               <p className="px-5">
-                {tournamentCard.tournament_status === "ended"
+                {tournamentCard?.tournament_status === "ended"
                   ? "Завершен"
-                  : tournamentCard.tournament_status === "processing"
+                  : tournamentCard?.tournament_status === "processing"
                     ? "Проводится"
-                    : tournamentCard.tournament_status === "futured"
+                    : tournamentCard?.tournament_status === "futured"
                       ? "Запланирован"
-                      : tournamentCard.tournament_status === "registration"
+                      : tournamentCard?.tournament_status === "registration"
                         ? "Регистрация открыта"
                         : "Неизвестно"}
               </p>
@@ -198,34 +198,22 @@ function CardContent({
           </div>
           <div className="text-text-alt flex items-center gap-2">
             <CiClock2 className="text-xl" />
-            {!isCreate && <p className="text-xs">{tournamentCard.year}</p>}
+            {!isCreate && <p className="text-xs">{tournamentCard?.year ?? 2025}</p>}
             {isCreate && (
               <>
-                <Popover.Root>
-                  <Popover.Trigger className="border-border h-[1.5rem] w-[7rem] rounded-2xl border-[1px] text-[0.8rem]">
-                    Выбрать даты
-                  </Popover.Trigger>
-                  <Popover.Portal>
-                    <Popover.Positioner className="relative z-2" sideOffset={8} align={"end"}>
-                      <Popover.Popup className="origin-[var(--transform-origin)] rounded-lg bg-[canvas] px-6 py-4 text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
-                        <DayPicker
-                          mode="range"
-                          onSelect={setSelected}
-                          selected={selected}
-                          classNames={{
-                            month_grid: "border-separate border-spacing-0",
-                            today: `border-border border rounded-full`, // Add a border to today's date
-                            range_middle: "bg-accent-primary/50",
-                            selected: `bg-accent-primary text-text-on-accent rounded-none! border-none!`, // Highlight the selected day
-                            range_start: "rounded-l-full shadow-[2px_0_4px_rgba(from_var(--color-accent-primary)_r_g_b/0.3)]",
-                            range_end: "rounded-r-full shadow-[-2px_0_4px_rgba(from_var(--color-accent-primary)_r_g_b/0.3)]",
-                          }}
-                        />
-                        <button className="bg-accent-primary/25 hover:bg-accent-primary/50 p-2 border-3 text-accent-primary border-accent-primary rounded-2xl w-full mt-[1rem]">Применить</button>
-                      </Popover.Popup>
-                    </Popover.Positioner>
-                  </Popover.Portal>
-                </Popover.Root>
+                <DatePicker type="range" onPick={(data: DateRange)=>{
+                  const startDate = data.from
+                  const endDate = data.to
+                  const pickedYear = startDate?.getFullYear()
+
+                  const currentSeasonYear = (startDate?.getMonth() ?? 0) > 7  ? (pickedYear??0) + 1 : pickedYear??0
+
+                  onUpdateCreate && onUpdateCreate({
+                    start_timestamp: startDate?.getUTCDate().valueOf(),
+                    end_timestamp: endDate?.getUTCDate().valueOf(),
+                    year: currentSeasonYear
+                  })
+                }}/>
               </>
             )}
           </div>
@@ -234,7 +222,7 @@ function CardContent({
             <p className="text-xs">10 команд</p>
           </div>
 
-          {!isCreate && <p className="text-xs">{tournamentCard.description}</p>}
+          {!isCreate && <p className="text-xs">{tournamentCard?.description ?? "Неисвестный турнир"}</p>}
           {isCreate && (
             <textarea
               onChange={(event) => {

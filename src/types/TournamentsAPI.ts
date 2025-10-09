@@ -37,5 +37,36 @@ export const TournamentResultsTableEntity = z.object({
   table_lines: z.array(TournamentResultsTableLine),
 })
 
+export interface TournamentCreationRequest {
+  token: string
+  title: string
+  description: string
+  main_image: string
+  tournament_logo: string
+  start_timestamp: number
+  end_timestamp: number
+  year: number
+  location: string
+  tournament_type: number
+  problems: number[]
+  fight_containers: TournamentContainerRequest[]
+  materials: TournamentMaterials[]
+}
+
+interface TournamentContainerRequest{
+  title: string
+  date_timestamp: number
+}
+
+interface TournamentMaterials{
+  title: string
+  content: string
+  content_type: number
+  is_external: boolean
+  file_size: string | null
+}
+
+
+
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>

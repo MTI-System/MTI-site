@@ -1,7 +1,7 @@
 "use client"
 import TournamentCard from "@/components/tournaments/TournamentCard"
 import { useCallback, useEffect, useState } from "react"
-import { FightContainerCard, TournamentCardInterface } from "@/types/TournamentsAPI"
+import { FightContainerCard, TournamentCardInterface, TournamentCreationRequest } from "@/types/TournamentsAPI"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { debounce } from "next/dist/server/utils"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
@@ -14,37 +14,47 @@ import MaterialsProviderWrapper from "@/api/materials/ClientWrapper"
 import PickProblemsForTournament from "@/components/organizator/PickProblemsForTournament"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 
+export interface TournamentCardCallback {
+  (card: Partial<TournamentCreationRequest>): void
+}
+
 export default function CreateTournamentPage() {
   const rights = useAppSelector((state) => state.auth.authInfo?.rights)
   const isOrganizator = (rights ?? []).filter((r) => r.right_flag === "CREATE_TOURNAMENTS").length !== 0
   const router = useRouter()
-  const [newTournamentCard, setNewTournamentCard] = useState<TournamentCardInterface>({
-    id: -1,
-    title: "Новый турнир",
-    description: "Описание",
-    main_image: "bigImagePlaceholder.png",
-    tournament_logo: "bigImagePlaceholder.png",
-    year: 2026,
-    tournament_status: "futured",
-    fight_containers_cards: [],
-    materials: [],
-    
+  const [newTournamentCardResponse, setNewTournamentCardResponse] = useState<TournamentCreationRequest>({
+    token: "",
+    title: "",
+    description: "",
+    main_image: "", 
+    tournament_logo: "",
+    start_timestamp: 1,
+    end_timestamp: 1,
+    year: 1,
+    location: "",
+    tournament_type: 1,
+    problems: [],
+    fight_containers: [],
+    materials: []
   })
+
+
   const [isMounted, setIsMounted] = useState(false)
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
   const updateTournamentHandler = useCallback(
-    debounce((updates: Partial<TournamentCardInterface>) => {
+    debounce((updates: Partial<TournamentCreationRequest>) => {
       console.log("Updates", updates)
-      setNewTournamentCard((prev) => ({
+      setNewTournamentCardResponse((prev) => ({
         ...prev,
         ...updates,
       }))
     }, 500),
     [],
   )
+
 
   if (!rights || !isMounted) {
     return <Loading />
@@ -57,7 +67,6 @@ export default function CreateTournamentPage() {
   return (
     <div className="text-text-main flex flex-col gap-2 py-2">
       <TournamentCard
-        tournamentCard={newTournamentCard}
         isExtended={true}
         isCreate={true}
         onUpdateCreate={updateTournamentHandler}
@@ -72,7 +81,7 @@ export default function CreateTournamentPage() {
       </div>
       <div className="bg-bg-alt min-h-30 w-full rounded-3xl px-5 py-2">
         <ProblemsProviderWrapper>
-          <PickProblemsForTournament year={2020}/>
+          <PickProblemsForTournament year={newTournamentCardResponse.year} onUpdateCreate={updateTournamentHandler}/>
         </ProblemsProviderWrapper>
         
       </div>
