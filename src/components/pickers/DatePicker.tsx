@@ -17,7 +17,7 @@ interface RangeDatePicker {
 type DatePickerProps = SingleDatePicker | RangeDatePicker
 
 export default function DatePicker({ onPick, type }: DatePickerProps) {
-  const [selected, setSelected] = useState()
+  const [selected, setSelected] = useState<any>()
   const [isPopoverOpened, setIsPopoverOpened] = useState(false)
 
   const formatDate = (date: Date) => {
@@ -29,7 +29,7 @@ export default function DatePicker({ onPick, type }: DatePickerProps) {
 };
 
 
-  return (
+    return (
     <Popover.Root open={isPopoverOpened} onOpenChange={(e)=>{
         setIsPopoverOpened(e)
         if (!e){

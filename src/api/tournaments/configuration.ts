@@ -1,6 +1,11 @@
 import { EndpointBuilder, fetchBaseQuery } from "@reduxjs/toolkit/query"
 import { TOURNAMENTS_API } from "@/constants/APIEndpoints"
-import { TournamentCard, TournamentCardInterface, TournamentResultsTableEntity } from "@/types/TournamentsAPI"
+import {
+  TournamentCard,
+  TournamentCardInterface,
+  TournamentCreationRequest,
+  TournamentResultsTableEntity
+} from "@/types/TournamentsAPI"
 import { TournamentTypeIntarface, TournamentTypeSchema } from "@/types/TournamentTypeIntarface"
 
 export const tournamentsReducerPath = "tournamentsApi" as const
@@ -29,7 +34,7 @@ export const defineTournamentsEndpoints = (
     },
   }),
   getOrganizatorTournaments: builder.mutation({
-    query: ({ tt, year, token }: { tt: number; year: number; token: string }) => {
+    query: ({tt, year, token}: { tt: number; year: number; token: string }) => {
       const formData = new FormData()
       formData.set("token", token)
       formData.set("year", year.toString())
@@ -40,13 +45,23 @@ export const defineTournamentsEndpoints = (
         body: formData,
       }
     },
-    transformResponse: (response: unknown): TournamentCardInterface[] | null => {
-      const parsed = TournamentCard.array().safeParse(response)
+  }),
+  addTournament: builder.mutation({
+    query: ({ tournamentObject }: { tournamentObject: TournamentCreationRequest }) => {
+      return {
+        url: "create_tournament",
+        method: "PUT",
+        body: tournamentObject,
+      }
+    },
+    transformResponse: (response: unknown): TournamentCardInterface | null => {
+      const parsed = TournamentCard.safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing organizator tournaments: ${parsed.error}`)
       return null
     },
   }),
+
   getTournamentCard: builder.query({
     query: ({ id }: { id: number }) => `get_tournament_card/${id}`,
     transformResponse: (response: unknown): TournamentCardInterface | null => {

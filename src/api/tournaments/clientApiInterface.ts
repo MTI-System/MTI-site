@@ -35,4 +35,5 @@ export const {
   useGetOrganizatorTournamentsMutation,
   useGetTournamentCardQuery,
   useGetTournamentTableQuery,
+  useAddTournamentMutation,
 } = tournamentsApiClient

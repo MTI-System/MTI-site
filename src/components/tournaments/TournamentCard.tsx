@@ -3,7 +3,7 @@ import { TournamentCardInterface, TournamentCreationRequest } from "@/types/Tour
 import { CiLocationOn } from "react-icons/ci"
 import { CiClock2 } from "react-icons/ci"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
-import { JSX, useState, useRef, ChangeEvent } from "react"
+import {JSX, useState, useRef, ChangeEvent, useEffect} from "react"
 import clsx from "clsx"
 import { GoPeople } from "react-icons/go"
 import Link from "next/link"
@@ -14,6 +14,8 @@ import "react-day-picker/style.css"
 import { Popover } from "@base-ui-components/react"
 import DatePicker from "../pickers/DatePicker"
 import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
+import {useLoadFileMutation} from "@/api/files/clientApiInterface";
+import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 
 
 
@@ -62,29 +64,70 @@ function CardContent({
   isCreate: boolean
   onUpdateCreate: TournamentCardCallback | null
 }) {
-  const [isBigImageLoading, setIsBigImageLoading] = useState<boolean>(false)
-  const [isSmallImageLoading, setIsSmallImageLoading] = useState<boolean>(false)
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const token = useAppSelector(state => state.auth.token)
+
+  //lazy инициализацию хука))
+  const mutationState = isCreate ? useLoadFileMutation() : null;
+  const loadFile = mutationState ? mutationState[0] : () => {};
+  const { data: loadedFileName, isLoading, isError, isSuccess, error, reset } = mutationState ? mutationState[1] : {};
+
+  const currentLoadingImage = useRef<string>("")
+  const [loadedImages, setLoadedImages] = useState<{big: string|null, small: string|null}>({
+    big: null,
+    small: null,
+  })
+
+  useEffect(() => {
+    if(isSuccess && !isLoading){
+      const newImages = {
+        big: currentLoadingImage.current === "big" ? (loadedFileName?.filename ?? null) : loadedImages.big,
+        small: currentLoadingImage.current === "small" ? (loadedFileName?.filename ?? null) : loadedImages.small,
+      }
+      console.log("loadedImages load",  currentLoadingImage.current, loadedFileName?.filename, newImages)
+      setLoadedImages(newImages)
+      currentLoadingImage.current = ""
+      if (onUpdateCreate) {
+        onUpdateCreate({
+          main_image: newImages.big ?? "",
+          tournament_logo: newImages.small ?? "",
+        })
+      }
+    }
+
+  }, [isLoading])
+
   if (isCreate && !onUpdateCreate) {
     return <>Ошибка!</>
   }
 
-  const handleDivClick = () => {
+  const handleDivClick = (image_type:string) => {
     if (!fileInputRef.current) return
+    if(!currentLoadingImage.current){
+      currentLoadingImage.current = image_type
+    }
     fileInputRef.current?.click()
   }
 
   const handleFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null
+    reset && reset()
     if (file) {
       if (file.type.startsWith("image/")) {
-        console.log("Выбран файл:", file.name)
-        const imageUrl = URL.createObjectURL(file)
-        setIsBigImageLoading(true)
+        loadFile({
+          file: file,
+          token: token,
+        })
+
+        console.log("Выбран файл:", file.name, file)
       }
     }
   }
+
+  useEffect(() => {
+    console.log("loadedImages", loadedImages)
+  }, [loadedImages]);
 
   return (
     <>
@@ -98,28 +141,28 @@ function CardContent({
         <div className="relative h-[64%]">
           <img
             className="absolute z-0 h-full w-full object-cover"
-            src={FILES_SERVER + (tournamentCard?.main_image ?? "bigImagePlaceholder.png")}
+            src={FILES_SERVER + (loadedImages.big ?? tournamentCard?.main_image ?? "bigImagePlaceholder.png")}
             loading="lazy"
             alt="Картинка турнира"
           />
-          {isCreate && !isBigImageLoading && (
+          {isCreate && !isLoading && (
             <>
               <input
                 type="file"
                 ref={fileInputRef}
-                onChange={handleFileSelect}
+                onChange={(e)=>handleFileSelect(e)}
                 accept="image/*" // Только изображения
                 style={{ display: "none" }}
               />
               <div
-                onClick={() => handleDivClick()}
+                onClick={() => handleDivClick("big")}
                 className="absolute flex size-full cursor-pointer items-center justify-center bg-transparent opacity-0 transition-all hover:bg-black/50 hover:opacity-100"
               >
                 <p className="text-2xl font-bold text-white">Загрузить изображение</p>
               </div>
             </>
           )}
-          {isBigImageLoading && (
+          {isLoading && (
             <div className="absolute z-1 size-full bg-black/50">
               <Loading />
             </div>
@@ -129,13 +172,15 @@ function CardContent({
         <div className="z-1 flex h-0 w-full items-center pl-5">
           <div className="bg-bg-alt border-border relative mb-6 aspect-square size-20 overflow-hidden rounded-full border">
             <img
-              src={FILES_SERVER + (tournamentCard?.tournament_logo ?? "bigImagePlaceholder.png")}
+              src={FILES_SERVER + (loadedImages.small ?? tournamentCard?.tournament_logo ?? "bigImagePlaceholder.png")}
               loading="lazy"
               className="absolute size-full object-cover"
               alt="лого"
             />
             {isCreate && (
-              <div className="absolute flex size-full cursor-pointer items-center justify-center bg-transparent opacity-0 transition-all hover:bg-black/50 hover:opacity-100">
+              <div className="absolute flex size-full cursor-pointer items-center justify-center bg-transparent opacity-0 transition-all hover:bg-black/50 hover:opacity-100"
+                   onClick={() => handleDivClick("small")}
+              >
                 <p className="text-2xl font-bold text-white">+</p>
               </div>
             )}
@@ -155,7 +200,7 @@ function CardContent({
                   onUpdateCreate({ title: event.target.value })
                 }}
                 className="border-border h-full w-[30rem] rounded-2xl border-[1px] p-2 text-[0.8rem]"
-                defaultValue="Название турнира"
+                placeholder={"Название турнира"}
               />
             )}
             <div
@@ -192,7 +237,7 @@ function CardContent({
             {isCreate && (
               <Input
                 className="border-border h-[1.5rem] w-[7rem] rounded-2xl border-[1px] p-2 text-[0.8rem]"
-                defaultValue="Место проведения (потом)"
+                placeholder="Место проведения (потом)"
               />
             )}
           </div>
@@ -209,8 +254,8 @@ function CardContent({
                   const currentSeasonYear = (startDate?.getMonth() ?? 0) > 7  ? (pickedYear??0) + 1 : pickedYear??0
 
                   onUpdateCreate && onUpdateCreate({
-                    start_timestamp: startDate?.getUTCDate().valueOf(),
-                    end_timestamp: endDate?.getUTCDate().valueOf(),
+                    start_timestamp: startDate?.getTime(),
+                    end_timestamp: endDate?.getTime(),
                     year: currentSeasonYear
                   })
                 }}/>
@@ -230,7 +275,7 @@ function CardContent({
                 onUpdateCreate({ description: event.target.value })
               }}
               className="border-border h-20 w-full resize-none rounded-2xl border-[1px] p-2 text-xs"
-              defaultValue="Описание турнира"
+              placeholder="Описание турнира"
             />
           )}
         </div>

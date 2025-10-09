@@ -5,7 +5,7 @@ import { FightContainerCard, TournamentCardInterface, TournamentCreationRequest 
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { debounce } from "next/dist/server/utils"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
-import { useRouter } from "next/navigation"
+import {redirect, useRouter} from "next/navigation"
 import TournamentInformationConstructor from "@/components/organizator/TournamentInformationConstructor"
 import Loading from "@/app/loading"
 import FightsInformations from "@/components/organizator/FightsInformations"
@@ -13,6 +13,8 @@ import Link from "next/link"
 import MaterialsProviderWrapper from "@/api/materials/ClientWrapper"
 import PickProblemsForTournament from "@/components/organizator/PickProblemsForTournament"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
+import FilesProviderWrapper from "@/api/files/ClientWrapper";
+import {useAddTournamentMutation} from "@/api/tournaments/clientApiInterface";
 
 export interface TournamentCardCallback {
   (card: Partial<TournamentCreationRequest>): void
@@ -22,8 +24,9 @@ export default function CreateTournamentPage() {
   const rights = useAppSelector((state) => state.auth.authInfo?.rights)
   const isOrganizator = (rights ?? []).filter((r) => r.right_flag === "CREATE_TOURNAMENTS").length !== 0
   const router = useRouter()
+  const token = useAppSelector(state => state.auth.token)
   const [newTournamentCardResponse, setNewTournamentCardResponse] = useState<TournamentCreationRequest>({
-    token: "",
+    token: token,
     title: "",
     description: "",
     main_image: "", 
@@ -37,7 +40,16 @@ export default function CreateTournamentPage() {
     fight_containers: [],
     materials: []
   })
+  const [createTournament, {data: newTournament, isLoading, isSuccess, error}] = useAddTournamentMutation()
 
+    useEffect(() => {
+        if (!isLoading && isSuccess){
+            redirect(`/tournaments/${newTournament?.id}/info/about`)
+        }
+        else{
+            console.log("End of creating:", error)
+        }
+    }, [isLoading]);
 
   const [isMounted, setIsMounted] = useState(false)
   useEffect(() => {
@@ -66,11 +78,15 @@ export default function CreateTournamentPage() {
 
   return (
     <div className="text-text-main flex flex-col gap-2 py-2">
-      <TournamentCard
-        isExtended={true}
-        isCreate={true}
-        onUpdateCreate={updateTournamentHandler}
-      />
+        {isLoading && <h1>Типо загрузка (потом красиво оформим)</h1>}
+        <FilesProviderWrapper>
+            <TournamentCard
+                isExtended={true}
+                isCreate={true}
+                onUpdateCreate={updateTournamentHandler}
+            />
+        </FilesProviderWrapper>
+
       <div className="bg-bg-alt min-h-30 w-full rounded-3xl px-5 py-2">
         <MaterialsProviderWrapper>
           <TournamentInformationConstructor />
@@ -92,7 +108,14 @@ export default function CreateTournamentPage() {
         >
           Отмена
         </Link>
-        <button className="bg-accent-primary/20 hover:bg-accent-primary/50 border-accent-primary text-accent-primary h-[2.5rem] w-50 cursor-pointer rounded-2xl border">
+        <button className="bg-accent-primary/20 hover:bg-accent-primary/50 border-accent-primary text-accent-primary h-[2.5rem] w-50 cursor-pointer rounded-2xl border"
+            onClick={()=>{
+                console.log("clicked", newTournamentCardResponse)
+                createTournament({
+                    tournamentObject: newTournamentCardResponse
+                })
+            }}
+        >
           Создать
         </button>
       </div>
