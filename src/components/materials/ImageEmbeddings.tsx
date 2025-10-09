@@ -1,15 +1,16 @@
 "use client"
 import style from "@/styles/components/ui/Files/imageEmbeddings.module.css"
 import clsx from "clsx"
-import { ImgHTMLAttributes, startTransition, useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { FaMagnifyingGlass } from "react-icons/fa6"
 import Modal from "../ui/Modals"
 import { MdOutlineClose } from "react-icons/md"
 import { DeletionMaterialConfirmationModal } from "./UniversalEmbedding"
-import { deleteMaterial } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
 import { EmbeddingInterface } from "@/types/embeddings"
 import Image, { ImageProps } from "next/image"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { useDeleteMaterialMutation } from "@/api/problems/clientApiInterface"
 
 function isValidUrl(url: string) {
   try {
@@ -43,6 +44,15 @@ export function ExpandableImage({
   const [isexpanded, setIsExpanded] = expandedState
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const router = useRouter()
+  const token = useAppSelector((state) => state.auth.token)
+  const [deleteMaterialMutation, { isSuccess }] = useDeleteMaterialMutation()
+  useEffect(() => {
+    if (isSuccess) {
+      startTransition(() => {
+        router.refresh()
+      })
+    }
+  }, [isSuccess])
 
   const checkedSrc = isValidUrl(src as string) ? src : "/placeholder.png"
 
@@ -98,11 +108,7 @@ export function ExpandableImage({
         problem_global_number={1}
         problem_title={embedding.title}
         onConfirm={async () => {
-          const s = await deleteMaterial(problemId, embedding.id)
-          if (!s) throw new Error("Deletion has failed")
-          startTransition(() => {
-            router.refresh()
-          })
+          deleteMaterialMutation({ problemId: problemId, materialId: embedding.id, token: token })
         }}
       />
     </div>

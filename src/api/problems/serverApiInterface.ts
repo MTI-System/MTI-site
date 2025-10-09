@@ -4,7 +4,7 @@ import { problemsBaseQuery, problemsReducerPath, defineProblemsEndpoints } from 
 const createApiServer = buildCreateApi(coreModule())
 
 export const problemsApiServer = createApiServer({
-    reducerPath: problemsReducerPath,
-    baseQuery: problemsBaseQuery,
-    endpoints: defineProblemsEndpoints,
+  reducerPath: problemsReducerPath,
+  baseQuery: problemsBaseQuery,
+  endpoints: defineProblemsEndpoints,
 })

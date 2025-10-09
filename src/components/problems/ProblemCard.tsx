@@ -4,7 +4,6 @@ import { MdDeleteOutline } from "react-icons/md"
 import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { deleteProblem, fetchModifySectionOnTask, fetchAllAvailableSections } from "@/scripts/ApiFetchers"
 import { CSSProperties, useEffect, useRef, useState, useTransition } from "react"
 import { PiGlobeBold, PiGlobeLight } from "react-icons/pi"
 import ProblemSection from "@/components/problems/ProblemSection"
@@ -12,13 +11,17 @@ import DeletionConfirmationModal from "./DeletionConfirmationModal"
 import { DropdownMulti, DropdownMultiElement, DropdownOptionInterface, DropdownTrigger } from "@/components/ui/Dropdown"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Buttons"
-import {useAppSelector, RootState, useAppStore, useAppDispatch} from "@/redux_stores/Global/tournamentTypeRedixStore"
-import { setSections, setIsLoaded } from "@/redux_stores/Global/ProblemSlice"
-import { useStore } from "react-redux"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import DotWithTooltip from "@/components/ui/DotWithTooltip"
 import { Menu } from "@base-ui-components/react"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import twclsx from "@/utils/twClassMerge"
+import {
+  useDeleteProblemMutation,
+  useGetAllAvailableSectionsQuery,
+  useModifySectionOnTaskMutation,
+} from "@/api/problems/clientApiInterface"
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 
 export default function ProblemCard({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
@@ -231,8 +234,10 @@ export function ProblemCardContent({
       )}
 
       <div className="px-7">
-        <ScienceList problem={problem} setHovered={setHoveredScience} />
-        <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
+        <ProblemsProviderWrapper>
+          <ScienceList problem={problem} setHovered={setHoveredScience} />
+          <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
+        </ProblemsProviderWrapper>
       </div>
     </>
   )
@@ -248,6 +253,16 @@ function EditButtons({
   const router = useRouter()
   const isDelModalOpenState = useState(false)
   const setIsDelModalOpen = isDelModalOpenState[1]
+  const token = useAppSelector((state) => state.auth.token)
+
+  const [deleteProblemMutation, { isSuccess }] = useDeleteProblemMutation()
+  useEffect(() => {
+    if (isSuccess) {
+      startTransition(() => {
+        router.refresh()
+      })
+    }
+  }, [isSuccess])
 
   return (
     <>
@@ -267,11 +282,7 @@ function EditButtons({
         problem_title={problem.problem_translations[0].problem_name}
         openState={isDelModalOpenState}
         onConfirm={async () => {
-          const s = await deleteProblem(problem.id, problem.tournament_type)
-          if (!s) throw new Error("Deletion has failed")
-          startTransition(() => {
-            router.refresh()
-          })
+          deleteProblemMutation({ problemId: problem.id, tournamentTypeId: problem.tournament_type, token: token })
         }}
       />
     </>
@@ -306,31 +317,18 @@ function SectionsList({
   problem,
   isEditable,
   hoveredScience,
-
 }: {
   problem: ProblemInterface
   isEditable: boolean
   hoveredScience: number | null
 }) {
-  // const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])\
-  const allSections = useAppSelector((state) => state.problems.sections)
+  // const allSections = useAppSelector((state) => state.problems.sections)
   const [addableSections, setAddableSections] = useState<ProblemSectionInterface[]>([])
-  const isSectionLoading = useAppSelector((state) => state.problems.isLoaded)
-  const dispatcher = useAppDispatch()
-  const problems = useAppSelector(state=>state.problems)
+  // const isSectionLoading = useAppSelector((state) => state.problems.isLoaded)
+  // const dispatcher = useAppDispatch()
+  // const problems = useAppSelector((state) => state.problems)
+  const { data: allSections } = useGetAllAvailableSectionsQuery({})
 
-  useEffect(() => {
-    if (allSections === null && !isSectionLoading) {
-      const { isLoaded: freshLoaded } = problems
-      if (!freshLoaded) {
-        dispatcher(setIsLoaded())
-        fetchAllAvailableSections().then((sections) => {
-          dispatcher(setSections(sections))
-          setAddableSections(sections.map((value) => ({ ...value, section_science: value.section_science.id })))
-        })
-      }
-    }
-  }, [allSections, dispatcher])
   useEffect(() => {
     setAddableSections(
       (allSections ?? [])
@@ -385,7 +383,7 @@ function AddNewSection({
   problemId: number
   addableSections: ProblemSectionInterface[]
 }) {
-  const [isError, setIsError] = useState(false)
+  const [isErrorShown, setIsErrorShown] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -397,9 +395,21 @@ function AddNewSection({
   const [color, setColor] = useState(defaultColors)
   const selectionState = useState<DropdownOptionInterface<number>[] | null>(null)
   const [selectedOptions, setSelectedOption] = selectionState
+  const token = useAppSelector((state) => state.auth.token)
+
+  const [addSectionMutation, { isSuccess, isError }] = useModifySectionOnTaskMutation()
+  useEffect(() => {
+    if (isSuccess) {
+      startTransition(() => {
+        router.refresh()
+      })
+    }
+    setIsErrorShown(isError)
+    setIsLoading(false)
+  }, [isSuccess])
 
   useEffect(() => {
-    if (isError) {
+    if (isErrorShown) {
       setColor((curColor) => {
         const newColor = { ...curColor }
         newColor["--border-color"] = "var(--color-accent-warning)"
@@ -408,10 +418,10 @@ function AddNewSection({
         return newColor
       })
       setTimeout(() => {
-        setIsError(false)
+        setIsErrorShown(false)
       }, 2000)
     } else setColor(defaultColors)
-  }, [addableSections, isError])
+  }, [addableSections, isErrorShown])
   return (
     <DropdownMulti
       selectionState={selectionState}
@@ -419,16 +429,16 @@ function AddNewSection({
         <DropdownTrigger
           style={color as CSSProperties}
           className={twclsx(
-            "hover:bg-bg-alt rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] font-bold text-[var(--border-color)] opacity-100!  py-0.5",
-            { "hover:bg-[var(--bg-color)]!": isPending || isError || isLoading },
+            "hover:bg-bg-alt rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] py-0.5 font-bold text-[var(--border-color)] opacity-100!",
+            { "hover:bg-[var(--bg-color)]!": isPending || isErrorShown || isLoading },
           )}
-          disabled={isPending || isError || isLoading}
+          disabled={isPending || isErrorShown || isLoading}
           dontDisplaySelection
         >
           <div className="flex min-w-70 flex-row content-center items-center justify-start gap-2">
             <FaPlus />
-            {isError || isLoading ? (
-              isError ? (
+            {isErrorShown || isLoading ? (
+              isErrorShown ? (
                 <p>Ошибка</p>
               ) : (
                 <p>Добавляем...</p>
@@ -456,19 +466,12 @@ function AddNewSection({
           opacity: 1,
         })
         setIsLoading(true)
-        const res = await fetchModifySectionOnTask(
-          problemId.toString(),
-          selected.map((s) => s.value.toString()),
-          "add_section",
-        )
-        setIsLoading(false)
-        if (res) {
-          startTransition(() => {
-            router.refresh()
-          })
-          return
-        }
-        setIsError(true)
+        addSectionMutation({
+          problemId: problemId.toString(),
+          sectionIds: selected.map((s) => s.value.toString()),
+          action: "add_section",
+          token: token,
+        })
       }}
     >
       {addableSections.map((section, i) => (

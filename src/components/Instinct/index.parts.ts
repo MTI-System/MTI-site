@@ -1,6 +1,0 @@
-export { Root as Root } from "./root/Root"
-export { Container as Container } from "./Container/Container"
-export { Interactivity as Interactivity } from "./Interactivity/Interactivity"
-export { useInteractiveTransition as useInteractiveTransition } from "./Interactivity/InteractivityHooks"
-export { AnimatedDiv as AnimatedDiv } from "./Animated/AnimatedDiv"
-export { Content as Content } from "./AnimatedContent/Content"

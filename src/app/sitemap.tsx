@@ -1,15 +1,11 @@
 import { MetadataRoute } from "next"
-import { GATEWAY_API, PROBLEM_API } from "@/constants/APIEndpoints"
-import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
-import {fetchTournamentTypes} from "@/scripts/ApiFetchers";
+import { PROBLEM_API } from "@/constants/APIEndpoints"
 export const dynamic = "force-dynamic"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapResponse = await fetch(PROBLEM_API + "sitemap_problems_data")
   const sitemapJson: SitemapResponse = await sitemapResponse.json()
   const resultMetadata: MetadataRoute.Sitemap = []
-  const availableTournamentTypes = await fetchTournamentTypes()
-
 
   sitemapJson.problems_ids.forEach((problem) => {
     resultMetadata.push({
@@ -20,16 +16,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   })
 
-  Object.keys(sitemapJson.tt_years).forEach((tt) => {
-    sitemapJson.tt_years[Number(tt)].forEach((year) => {
-      resultMetadata.push({
-        url: `https://mtiyt.ru/problems?tt=${availableTournamentTypes.find((a_tt) => a_tt.id === Number(tt))?.name}&amp;year=${year}`,
-        lastModified: new Date(),
-        changeFrequency: "monthly",
-        priority: 0.9,
-      })
-    })
-  })
+  // Object.keys(sitemapJson.tt_years).forEach((tt) => {
+  //   sitemapJson.tt_years[Number(tt)].forEach((year) => {
+  //     resultMetadata.push({
+  //       url: `https://mtiyt.ru/problems?tt=${availableTournamentTypes.find((a_tt) => a_tt.id === Number(tt))?.name}&amp;year=${year}`,
+  //       lastModified: new Date(),
+  //       changeFrequency: "monthly",
+  //       priority: 0.9,
+  //     })
+  //   })
+  // })
 
   return resultMetadata
 }

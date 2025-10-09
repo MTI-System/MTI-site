@@ -22,10 +22,12 @@ import AddFileField from "@/components/materials/AddFileField"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import clsx from "clsx"
 import { LoadMaterialForm } from "@/types/embeddings"
-import { fetchAddLinkEmbedding, fetchAllAvailableEmbeddingTypes } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
 import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "../ui/Dropdown"
-import {MATERIAL_API} from "@/constants/APIEndpoints";
+import { MATERIAL_API } from "@/constants/APIEndpoints"
+import MaterialsProviderWrapper from "@/api/materials/ClientWrapper"
+import { useGetAvailableContentTypesQuery } from "@/api/materials/clientApiInterface"
+import { useAddLinkEmbeddingMutation } from "@/api/problems/clientApiInterface"
 
 type FileFromModalInterface = Omit<LoadMaterialForm, "link">
 
@@ -109,22 +111,23 @@ export default function PendingEmbeddingsList({
           <h4 className={style.addTitle}>Добавить материал</h4>
         </Button>
       )}
-
-      <AddFileModal
-        problemId={problemId}
-        openState={isOpenState}
-        onFileAdd={(fileForm) => {
-          uploadedRef.current += 1
-          setEmbeddings((prev) => {
-            const newEmbeddingsDict = { ...prev }
-            newEmbeddingsDict[uploadedRef.current] = fileForm
-            return newEmbeddingsDict
-          })
-        }}
-        startTransition={startTransition}
-        isPrimary={isPrimary}
-        lockedContentTypes={lockedContentTypes}
-      />
+      <MaterialsProviderWrapper>
+        <AddFileModal
+          problemId={problemId}
+          openState={isOpenState}
+          onFileAdd={(fileForm) => {
+            uploadedRef.current += 1
+            setEmbeddings((prev) => {
+              const newEmbeddingsDict = { ...prev }
+              newEmbeddingsDict[uploadedRef.current] = fileForm
+              return newEmbeddingsDict
+            })
+          }}
+          startTransition={startTransition}
+          isPrimary={isPrimary}
+          lockedContentTypes={lockedContentTypes}
+        />
+      </MaterialsProviderWrapper>
     </>
   )
 }
@@ -153,14 +156,12 @@ function AddFileModal({
   lockedContentTypes?: string[]
 }) {
   const router = useRouter()
-
-  const [embeddingtypes, setEmbeddingtypes] = useState<EmbeddingTypeInterface[] | null>([])
   const [acceptedEmbeddingTypes, setAcceptedEmbeddingTypes] = useState("*")
   const [isModalOpen, setIsModalOpen] = openState
   const [attachedFile, setSelectedFile] = useState<File | null>(null)
   const [attachedLink, setAttachedLink] = useState<string | null>(null)
   const [errorText, setErrorText] = useState<string>("")
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  // const [isLoading, setIsLoading] = useState<boolean>(false)
   const user = useAppSelector((state) => state.auth.authInfo)
   const token = useAppSelector((state) => state.auth.token)
   const [typeList, setTypeList] = useState<EmbeddingTypeInterface[]>([])
@@ -173,44 +174,32 @@ function AddFileModal({
     problemId: problemId,
     token: token,
   })
-
+  const [addLinkEmbedding, { data, isLoading, isSuccess }] = useAddLinkEmbeddingMutation()
+  const { data: embeddingtypes } = useGetAvailableContentTypesQuery({})
+  useEffect(() => {
+    if (isSuccess) {
+      setIsModalOpen(false)
+      clearForm()
+      startTransition(() => {
+        router.refresh()
+      })
+    }
+  }, [isSuccess])
   useEffect(() => {
     console.log("EmbeddingTypes", embeddingtypes)
     if (embeddingtypes === null) return
-    if (embeddingtypes.length === 0) {
-      console.log("EmbeddingTypesURL", MATERIAL_API + "get_available_content_types")
-      fetchAllAvailableEmbeddingTypes()
-        .then((response) => {
-          console.log("EmbeddingTypesResp", JSON.stringify(response))
-          if (!response) {
-            setEmbeddingtypes(null)
-            return
-          }
-          if (!lockedContentTypes) {
-            setEmbeddingtypes(response)
-            return
-          }
-
-          const validOptions = response.filter(
-            (value) => lockedContentTypes.find((lctValue) => value.type_name === lctValue) !== undefined,
-          )
-          setEmbeddingtypes(validOptions)
-        })
-        .catch(() => {
-          console.error("Error while getting availavle materials")
-          setEmbeddingtypes(null)
-        })
+    if ((embeddingtypes ?? []).length === 0) {
       return
     }
-    setTypeList(embeddingtypes)
+    setTypeList(embeddingtypes ?? [])
   }, [problemId, lockedContentTypes, embeddingtypes])
   useEffect(() => {
     if (embeddingtypes === null) return
     if (!attachedFile) {
-      setTypeList(embeddingtypes)
+      setTypeList(embeddingtypes ?? [])
       return
     }
-    setTypeList(embeddingtypes.filter((et) => et.type_name !== "Link"))
+    setTypeList((embeddingtypes ?? []).filter((et) => et.type_name !== "Link"))
   }, [attachedFile])
 
   const handleLinkAttach = (text: string) => {
@@ -306,7 +295,9 @@ function AddFileModal({
                     }}
                   >
                     {typeList.map((value) => (
-                      <DropdownElement key={value.id} value={value.id}>{value.display_name}</DropdownElement>
+                      <DropdownElement key={value.id} value={value.id}>
+                        {value.display_name}
+                      </DropdownElement>
                     ))}
                   </Dropdown>
                 </div>
@@ -343,20 +334,21 @@ function AddFileModal({
                       setErrorText(UploadingErrors.NotALink)
                       return
                     }
-                    setIsLoading(true)
-                    const res = await fetchAddLinkEmbedding({
-                      link: attachedLink,
-                      ...dataRef.current,
-                    })
-                    setIsLoading(false)
-                    if (res) {
-                      setIsModalOpen(false)
-                      clearForm()
-                      startTransition(() => {
-                        router.refresh()
-                      })
-                      return
-                    }
+                    // setIsLoading(true)
+                    // const res = await fetchAddLinkEmbedding({
+                    //   link: attachedLink,
+                    //   ...dataRef.current,
+                    // })
+                    addLinkEmbedding({ embedding: { link: attachedLink, ...dataRef.current }, token: token })
+                    // setIsLoading(false)
+                    // if (res) {
+                    //   setIsModalOpen(false)
+                    //   clearForm()
+                    //   startTransition(() => {
+                    //     router.refresh()
+                    //   })
+                    //   return
+                    // }
                     setErrorText(UploadingErrors.UnknownError)
                     return
                   }

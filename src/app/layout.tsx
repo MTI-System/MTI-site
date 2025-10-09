@@ -2,15 +2,15 @@ import "@fontsource-variable/roboto-mono"
 import "@fontsource-variable/roboto-flex"
 import "@/styles/main.css"
 import type { Metadata } from "next"
-import { FILES_SERVER } from "@/constants/APIEndpoints"
 import Script from "next/script"
 import { cookies } from "next/headers"
 import StoreProvider from "@/components/Redux/StoreProvider"
 import LayoutComponent from "@/components/main/Layout"
 import ThemeUpdator from "@/components/Redux/ThemeUpdator"
-import { fetchTournamentTypes } from "@/scripts/ApiFetchers"
-import React, { ReactElement } from "react"
-import { Instinct } from "@/components/Instinct"
+import { ReactNode } from "react"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
+import { RiContrastDropLine } from "react-icons/ri"
 
 export function generateMetadata(): Metadata {
   const titleText = "Вход в аккаунт · МТИ"
@@ -23,8 +23,11 @@ export function generateMetadata(): Metadata {
   }
 }
 
-export default async function Template({ children }: { children: React.ReactNode }) {
+export default async function Template({ children }: { children: ReactNode }) {
   const cookiesStore = await cookies()
+  const store = makeTournamentsStoreServer()
+  const promise = store.dispatch(tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}))
+  const { data: tournamentTypes } = await promise
   return (
     <html className="bg-bg-main">
       <head>
@@ -57,12 +60,10 @@ export default async function Template({ children }: { children: React.ReactNode
         tt={cookiesStore.get("mtiyt_tournamentType")?.value ?? "ТЮФ"}
         theme={cookiesStore.get("theme")?.value ?? "light"}
         token={cookiesStore.get("mtiyt_auth_token")?.value ?? ""}
-        availableTournamentTypes={await fetchTournamentTypes()}
+        availableTournamentTypes={tournamentTypes ?? []}
       >
-        <Instinct.Root>
-          <ThemeUpdator />
-          <LayoutComponent>{children}</LayoutComponent>
-        </Instinct.Root>
+        <ThemeUpdator />
+        <LayoutComponent>{children}</LayoutComponent>
       </StoreProvider>
     </html>
   )

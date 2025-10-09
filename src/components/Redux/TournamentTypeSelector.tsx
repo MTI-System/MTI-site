@@ -9,17 +9,14 @@ import ColoredTType from "../ui/ColoredTType"
 import { setTT } from "@/redux_stores/Global/SearchParamsSlice"
 import { TOURNAMENT_TYPE_KEY_NAME } from "@/constants/CookieKeys"
 import { Tooltip } from "@base-ui-components/react"
-import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
-import {setYear} from "@/redux_stores/Problems/ProblemsFiltersSlice";
+import { setYear } from "@/redux_stores/Problems/ProblemsFiltersSlice"
 
-export default function TournamentTypeSelector({
-}: {
-}) {
-  const availableTournamentTypes = useAppSelector(state=> state.searchParams.availableTournamentTypes)??[]
+export default function TournamentTypeSelector({}: {}) {
+  const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
   const ttddElements = availableTournamentTypes.map((value) => ({
     id: value.id,
     children: (
-        <ColoredTType ttColor={value.color} ttName={value.name} className="text-text-main text-[1.8rem] font-bold" />
+      <ColoredTType ttColor={value.color} ttName={value.name} className="text-text-main text-[1.8rem] font-bold" />
     ),
     value: value.name,
   }))
@@ -39,15 +36,14 @@ export default function TournamentTypeSelector({
   )
   useEffect(() => {
     console.log("bbbb", selectedState)
-  }, [selectedState]);
-
+  }, [selectedState])
 
   const lockedPages = ["/problems/"]
 
   useEffect(() => {
     console.log("bbbb tt", tt)
-    selectedState[1](ttddElements.find(e=>e.id === tt)??null)
-  }, [tt]);
+    selectedState[1](ttddElements.find((e) => e.id === tt) ?? null)
+  }, [tt])
 
   useEffect(() => {
     setHasMounted(true)

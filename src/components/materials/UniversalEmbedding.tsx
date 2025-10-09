@@ -9,8 +9,9 @@ import { PiWarningBold } from "react-icons/pi"
 import style from "@/styles/components/sections/problems/deletionConfirmation.module.css"
 import styleDelete from "@/styles/components/ui/Files/imageEmbeddings.module.css"
 import { Button, HoldButton } from "../ui/Buttons"
-import { deleteMaterial } from "@/scripts/ApiFetchers"
 import { useRouter } from "next/navigation"
+import { useDeleteMaterialMutation } from "@/api/problems/clientApiInterface"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 
 export default function UniversalEmbedding({
   embedding,
@@ -29,6 +30,17 @@ export default function UniversalEmbedding({
     embedding.metadata.is_external == "true"
       ? embedding.content.split("/")[2]
       : (Number(embedding.metadata.file_size) / (8 * 1024)).toFixed(2).toString() + " КБ"
+
+  const token = useAppSelector((state) => state.auth.token)
+  const [deleteMaterialMutation, { isSuccess, error }] = useDeleteMaterialMutation()
+  useEffect(() => {
+    console.log("isSuccess", isSuccess)
+    if (isSuccess) {
+      startTransition(() => {
+        router.refresh()
+      })
+    }
+  }, [isSuccess])
 
   return (
     <>
@@ -58,11 +70,7 @@ export default function UniversalEmbedding({
         problem_global_number={1}
         problem_title={embedding.title}
         onConfirm={async () => {
-          const s = await deleteMaterial(problemId, embedding.id)
-          if (!s) throw new Error("Deletion has failed")
-          startTransition(() => {
-            router.refresh()
-          })
+          deleteMaterialMutation({ problemId: problemId, materialId: embedding.id, token: token })
         }}
       />
     </>

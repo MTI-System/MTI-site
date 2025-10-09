@@ -1,23 +1,20 @@
 import ProblemFilters from "@/components/problems/ProblemsFilter"
 import ProblemsList from "@/components/problems/ProblemsList"
-import { Suspense } from "react"
 import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
-import { fetchTournamentsCard, fetchTournamentTypes, fetchYears } from "@/scripts/ApiFetchers"
 import SearchParamsUpdator from "@/components/problems/SearchParamsUpdator"
 import type { Metadata } from "next"
-import Loading from "@/app/loading"
 import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
-import ShareButton from "@/components/problems/ShareButton"
 import TournamentCard from "@/components/tournaments/TournamentCard"
 import { cookies } from "next/headers"
 import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider"
-import { Instinct } from "@/components/Instinct"
-import {makeProblemsStoreServer} from "@/api/problems/serverStore";
-import {problemsApiServer} from "@/api/problems/serverApiInterface";
-import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
-import {makeAuthStoreServer} from "@/api/auth/serverStore";
-import {authApiServer} from "@/api/auth/serverApiInterface";
-
+import { makeProblemsStoreServer } from "@/api/problems/serverStore"
+import { problemsApiServer } from "@/api/problems/serverApiInterface"
+import { makeAuthStoreServer } from "@/api/auth/serverStore"
+import { authApiServer } from "@/api/auth/serverApiInterface"
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { TournamentCardInterface } from "@/types/TournamentsAPI"
+import { Suspense } from "react"
 export async function generateMetadata({
   searchParams,
 }: {
@@ -27,8 +24,11 @@ export async function generateMetadata({
   const tt = Array.isArray(searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME])
     ? searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME][0]
     : searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME]
+  const store = makeTournamentsStoreServer()
+  const promise = store.dispatch(tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}))
+  const { data: tournamentTypes } = await promise
 
-  const ttype = (await fetchTournamentTypes()).find((t) => t.name === tt)
+  const ttype = tournamentTypes?.find((t) => t.id === Number(tt))
 
   const titleText = ttype ? `Задачи · ${ttype.longName} · ${searchP.year} год – МТИ` : "Задачи – МТИ"
 
@@ -43,15 +43,23 @@ export async function generateMetadata({
   }
 }
 
-//
-
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{ year: string; tt: string; sections: string; tournament?: string }>
 }) {
   let sp = await searchParams
-  const currentTournament = sp.tournament ? await fetchTournamentsCard(Number(sp.tournament)) : null
+
+  const getCardFromApi = async (): Promise<TournamentCardInterface | null> => {
+    const store = makeTournamentsStoreServer()
+    const promise = store.dispatch(
+      tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: Number(sp.tournament) }),
+    )
+    const { data, error } = await promise
+    return data ?? null
+  }
+
+  const currentTournament = sp.tournament ? await getCardFromApi() : null
   let isNoRefresh = false
   let tt = sp.tt ?? undefined
   let year = sp.year
@@ -65,54 +73,41 @@ export default async function Page({
     tt = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
   }
   console.log("Updated sp", year, tt, (await cookies()).get("mtiyt_tournamentType")?.value)
-  //     return (
-  //       <>
-  //         <ProblemsReduxProviderWrapper>
-  //           <Suspense fallback={<></>}>
-  //             <SearchParamsUpdator searchParams={sp} />
-  //           </Suspense>
-  //           <Loading />
-  //         </ProblemsReduxProviderWrapper>
-  //       </>
-  //     )
-  //   }
-  const possibleYears = await fetchYears(Number(tt))
+
+  const store = makeProblemsStoreServer()
+  const { data: possibleYears } = await store.dispatch(
+    problemsApiServer.endpoints.getYears.initiate({ tournamentTypeId: Number(tt) }),
+  )
   let isUndefYear = false
   const sectionsFilter: number[] | null =
     sp.sections
       ?.split(",")
       .filter((val) => val !== "")
       .map((sectionId) => Number(sectionId)) ?? null
-  if (!possibleYears.find((y) => Number(y) === Number(year))) {
+  if (!possibleYears?.find((y) => Number(y) === Number(year))) {
     isUndefYear = true
   }
 
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
   const authStore = makeAuthStoreServer()
   const authPromise = authStore.dispatch(
-      authApiServer.endpoints.fetchPermissions.initiate({
-        token: token
-      })
+    authApiServer.endpoints.fetchPermissions.initiate({
+      token: token,
+    }),
   )
-  const {data: userAuth, error: authError} = await authPromise
+  const { data: userAuth, error: authError } = await authPromise
 
   let isEditable = false
   if (userAuth && userAuth.rights.length !== 0) {
     isEditable = userAuth.rights.map((right) => right.right_flag == "MODERATE_PROBLEMS_" + tt).some((x) => x)
   }
-  // const problems: ProblemListInterface | null = tt ? await fetchProblems(tt, Number(year)) : null
 
-  //   const promise = dispatch(problemsApi.endpoints.getProblems.initiate({ tournament: tt, year: Number(year) }))
-  //   const { data, isLoading, isSuccess /*...*/ } = await promise
-
-  const store = makeProblemsStoreServer()
-  const promise = store.dispatch(
-      problemsApiServer.endpoints.getProblems.initiate(
-          { tournament: tt, year: Number(year) },
-          { subscribe: false, forceRefetch: true }
+  const promise = !sp.tournament
+    ? store.dispatch(problemsApiServer.endpoints.getProblems.initiate({ tournament: tt, year: Number(year) }))
+    : store.dispatch(
+        problemsApiServer.endpoints.getProblemsForTournament.initiate({ tournamentId: Number(sp.tournament) }),
       )
-  )
-  const { data: problems, isLoading,  isError, error} = await promise
+  const { data: problems, isLoading, isError, error } = await promise
   console.log("end request", problems, isError, error)
 
   const availableProblemSections: ProblemSectionInterface[] = []
@@ -127,89 +122,45 @@ export default async function Page({
     (section_1, section_2) =>
       section_1.section_science - section_2.section_science || section_1.title.localeCompare(section_2.title),
   )
-
   return (
-    <ProblemsReduxProviderWrapper>
-      <ProblemsProviderWrapper>
-        <Instinct.Container>
-          <Instinct.Interactivity>
-            <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
-
-            <ProblemFilters
-                possibleSections={availableProblemSections}
-                possibleYears={possibleYears}
-                isModerator={isEditable}
-            ></ProblemFilters>
-          </Instinct.Interactivity>
+    <>
+      <ProblemsReduxProviderWrapper>
+        <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
+        <ProblemFilters
+          possibleSections={availableProblemSections}
+          possibleYears={possibleYears ?? [2026]}
+          isModerator={isEditable}
+        >
           <div className="relative h-full w-full pt-10">
-            <Instinct.Content
-                LoadingElement={
-                  <Instinct.AnimatedDiv
-                      className="absolute inset-0 flex items-center justify-center"
-                      enterAnimation={{
-                        translateY: ["2rem", 0],
-                        opacity: [0, 1],
-                        duration: 300,
-                        easing: "easeInOutQuad",
-                      }}
-                      exitAnimation={{
-                        translateY: [0, "2rem"],
-                        opacity: [1, 0],
-                        duration: 300,
-                        easing: "easeInOutQuad",
-                      }}
-                  >
-                    <Loading />
-                  </Instinct.AnimatedDiv>
-                }
-            >
-              <Instinct.AnimatedDiv
-                  enterAnimation={{
-                    translateY: ["2rem", 0],
-                    opacity: [0, 1],
-                    duration: 300,
-                    easing: "easeInOutQuad",
-                  }}
-                  exitAnimation={{
-                    translateY: [0, "2rem"],
-                    opacity: [1, 0],
-                    duration: 300,
-                    easing: "easeInOutQuad",
-                  }}
-              >
-                {tt && (
-                    <>
-                      {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
-                      {!isUndefYear && (
-                          <div className="mt-5 flex gap-5">
-                            <div>
-                              <ProblemsList
-                                  sectionsFilter={sectionsFilter ?? []}
-                                  problems={problems ?? null}
-                                  isEditable={isEditable}
-                              />
-                            </div>
-                            {currentTournament !== null && (
-                                <div className="aspect-[8/9] h-[37rem]">
-                                  <div className="fixed">
-                                    <TournamentCard
-                                        tournamentCard={currentTournament}
-                                        isExtended={false}
-                                        isCreate={false}
-                                        onUpdateCreate={null}
-                                    />
-                                  </div>
-                                </div>
-                            )}
-                          </div>
-                      )}
-                    </>
-                )}
-              </Instinct.AnimatedDiv>
-            </Instinct.Content>
+            <Suspense fallback={<div>Loading...</div>}>
+              {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
+              {!isUndefYear && (
+                <div className="mt-5 flex gap-5">
+                  <div className="w-full">
+                    <ProblemsList
+                      sectionsFilter={sectionsFilter ?? []}
+                      problems={problems ?? null}
+                      isEditable={isEditable}
+                    />
+                  </div>
+                  {currentTournament !== null && (
+                    <div className="aspect-[8/9] h-[37rem]">
+                      <div className="fixed">
+                        <TournamentCard
+                          tournamentCard={currentTournament}
+                          isExtended={false}
+                          isCreate={false}
+                          onUpdateCreate={null}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </Suspense>
           </div>
-        </Instinct.Container>
-      </ProblemsProviderWrapper>
-    </ProblemsReduxProviderWrapper>
+        </ProblemFilters>
+      </ProblemsReduxProviderWrapper>
+    </>
   )
 }

@@ -1,4 +1,4 @@
-import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit"
+import { configureStore, PayloadAction } from "@reduxjs/toolkit"
 import { useDispatch, useSelector, useStore } from "react-redux"
 import { SPSlice } from "@/redux_stores/Global/SearchParamsSlice"
 import { AuthSlice } from "@/redux_stores/Global/AuthSlice"

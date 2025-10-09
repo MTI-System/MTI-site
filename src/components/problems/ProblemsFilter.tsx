@@ -18,21 +18,26 @@ import { FaTimes } from "react-icons/fa"
 import ColoredTType from "@/components/ui/ColoredTType"
 import twclsx from "@/utils/twClassMerge"
 import { Menu } from "@base-ui-components/react"
-import { setSectionList, setYear } from "@/redux_stores/Problems/ProblemsFiltersSlice"
+import { setSectionList, setTournamentFilter, setYear } from "@/redux_stores/Problems/ProblemsFiltersSlice"
 import { useProblemsDispatch, useProblemsSelector } from "@/components/Redux/ProblemsStoreContext"
 import ShareButton from "@/components/problems/ShareButton"
+import { useGetTournamentCardsQuery } from "@/api/tournaments/clientApiInterface"
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 
 export default function ProblemFilters({
+  children,
   possibleYears,
   possibleSections,
   isModerator,
 }: {
+  children: ReactNode
   possibleYears: number[]
   possibleSections: ProblemSectionInterface[]
   isModerator: boolean
 }) {
   const year = useProblemsSelector((state) => state.problemsPageFilters.year ?? possibleYears[0])
   const tt = useAppSelector((state) => state.searchParams.tt)
+  const isPending = useAppSelector((state) => state.system.isPending)
   const ttid = Number(tt) ?? 1
   const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
 
@@ -46,12 +51,16 @@ export default function ProblemFilters({
           className="text-text-main text-4xl font-bold"
         />
         <div className={style.filters}>
-          <YearFilter possibleYears={possibleYears} isPending={false} isModerator={isModerator} />
-          <SectionFilter possibleSections={possibleSections} isPending={false}></SectionFilter>
+          <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
+          <TournamentsProviderWrapper>
+            <TournamentFilter isPending={isPending} />
+          </TournamentsProviderWrapper>
+          <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
           <ShareButton />
         </div>
       </div>
       <AddProblem targetTTID={ttid} targetYear={year} />
+      {!isPending && children}
     </>
   )
 }
@@ -67,24 +76,40 @@ function SectionFilter({
   const tt = useAppSelector((state) => state.searchParams.tt)
   const sectionList = useProblemsSelector((state) => state.problemsPageFilters.sectionList)
   const problemDispatcher = useProblemsDispatch()
-
-  const [selectedOptions, setSelectedOption] = useState<number[]>([])
+  const selectedOptionState = useState<DropdownOptionInterface<number>[] | null>(null)
+  const [selectedOptions, setSelectedOption] = selectedOptionState
 
   useEffect(() => {
     console.log("Update section list", sectionList)
-    setSelectedOption(sectionList ?? [])
+    setSelectedOption(
+      sectionList?.map((s) => ({
+        value: s,
+        children: (
+          <ProblemSection
+            key={s}
+            section={possibleSections.find((section) => section.id === s)!}
+            className="col-start-2"
+          />
+        ),
+      })) ?? [],
+    )
   }, [sectionList])
 
   useEffect(() => {
+    console.log("selectedupdate", selectedOptions)
+  }, [selectedOptions])
+
+  useEffect(() => {
     setSelectedOption([])
-    // problemDispatcher(setSectionList(null))
   }, [year, tt])
 
   return (
     <div className="flex w-full min-w-0 content-center items-center">
       <DropdownMulti
+        selectionState={selectedOptionState}
         onOpenChange={(open, e, selection: DropdownOptionInterface<number>[] | null) => {
           if (open) return
+          if (selectedOptions?.length === 0) return
           problemDispatcher(setSectionList(selection?.map((s) => s.value) ?? null))
         }}
         trigger={
@@ -114,11 +139,11 @@ function SectionFilter({
       </DropdownMulti>
       <FaTimes
         className={twclsx("w-20 text-[1.5rem]", {
-          "text-[var(--alt-text)]": isPending || selectedOptions.length === 0,
-          "hover:text-[var(--alt-text)]": !isPending && selectedOptions.length !== 0,
+          "text-[var(--alt-text)]": isPending || selectedOptions?.length === 0,
+          "hover:text-[var(--alt-text)]": !isPending && selectedOptions?.length !== 0,
         })}
         onClick={() => {
-          if (isPending || selectedOptions.length === 0) return
+          if (isPending || selectedOptions?.length === 0) return
           setSelectedOption([])
           problemDispatcher(setSectionList(null))
         }}
@@ -187,5 +212,59 @@ function YearFilter({
         <DropdownElement key={i + 1} {...opts} />
       ))}
     </Dropdown>
+  )
+}
+
+function TournamentFilter({ isPending }: { isPending: boolean }) {
+  const tt = useAppSelector((state) => state.searchParams.tt)
+  const year = useProblemsSelector((state) => state.problemsPageFilters.year)
+  const { data, isLoading, isError } = useGetTournamentCardsQuery({ tt: tt ?? 1, year: year ?? 0 })
+  const problemDispatcher = useProblemsDispatch()
+  const optionList: DropdownOptionInterface<number>[] = [
+    {
+      children: <p>Все турниры</p>,
+      value: 0,
+      inactive: false,
+    },
+    ...(data?.map((val) => {
+      return {
+        children: <p>{val.title}</p>,
+        value: val.id,
+        inactive: false,
+      }
+    }) ?? []),
+  ]
+  const selectedOptionState = useState<DropdownOptionInterface<number> | null>(null)
+  const [selectedOptions, setSelectedOption] = selectedOptionState
+
+  useEffect(() => {
+    setSelectedOption(null)
+  }, [tt, year])
+  return (
+    <>
+      {
+        <Dropdown
+          selectionState={selectedOptionState}
+          trigger={
+            <DropdownTrigger
+              disabled={isLoading || isError || isPending}
+              className={twclsx("bg-bg-alt hover:bg-hover h-8 w-[20rem] justify-between rounded-full", {
+                "hover:bg-[var(--bg-color)]!": isLoading || isError,
+              })}
+            >
+              Все турниры
+            </DropdownTrigger>
+          }
+          onOptionSelect={(option: DropdownOptionInterface<number> | null) => {
+            if (!option) return
+            problemDispatcher(setTournamentFilter(option.value))
+          }}
+        >
+          {optionList.map((opts, i) => (
+            <DropdownElement key={i + 1} {...opts} />
+          ))}
+        </Dropdown>
+      }
+    </>
   )
 }

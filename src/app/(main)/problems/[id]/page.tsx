@@ -1,25 +1,22 @@
-import { PROBLEM_API } from "@/constants/APIEndpoints"
 import ProblemPage from "@/components/problems/ProblemPage"
-import { ProblemInterface } from "@/types/problemAPI"
 import NotFound from "@/components/service/NotFound"
 import { Metadata } from "next"
-import { cache } from "react"
-import {fetchTournamentTypes} from "@/scripts/ApiFetchers"
-import TournamentsPageTabs from "@/components/tournamentPage/TournamentsPageTabs";
-import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider";
-import makeStore from "@/redux_stores/Global/tournamentTypeRedixStore";
-import {makeProblemsStoreServer} from "@/api/problems/serverStore";
-import {problemsApiServer} from "@/api/problems/serverApiInterface";
+import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider"
+import { makeProblemsStoreServer } from "@/api/problems/serverStore"
+import { problemsApiServer } from "@/api/problems/serverApiInterface"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const store = makeProblemsStoreServer()
-  const promise = store.dispatch(
-      problemsApiServer.endpoints.getProblemsById.initiate(
-          {problemId: id},
-      )
+  const storeTournaments = makeTournamentsStoreServer()
+  const promiseTournaments = storeTournaments.dispatch(
+    tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}),
   )
-  const {data: problem} = await promise
+  const { data: tournamentTypes } = await promiseTournaments
+  const promise = store.dispatch(problemsApiServer.endpoints.getProblemsById.initiate({ problemId: Number(id) }))
+  const { data: problem } = await promise
   if (!problem) {
     return {
       title: "Задача не найдена – МТИ",
@@ -27,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const ttype = (await fetchTournamentTypes()).find((t) => t.id === problem.tournament_type)
+  const ttype = tournamentTypes?.find((t) => t.id === problem.tournament_type)
 
   return {
     title: `Задача № ${problem.global_number} · ${problem.problem_translations[0].problem_name} · ${ttype?.longName ?? ""} · ${problem.year} год – МТИ`,
@@ -36,15 +33,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-async function ProblemPageMain({ params }: PageProps) {
+async function ProblemPageMain({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const store = makeProblemsStoreServer()
-  const promise = store.dispatch(
-      problemsApiServer.endpoints.getProblemsById.initiate(
-          {problemId: id},
-      )
-  )
-  const {data: problem} = await promise
+  const promise = store.dispatch(problemsApiServer.endpoints.getProblemsById.initiate({ problemId: Number(id) }))
+  const { data: problem } = await promise
   if (!problem) return <NotFound />
   return (
     <>
