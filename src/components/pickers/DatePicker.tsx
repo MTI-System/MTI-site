@@ -52,6 +52,7 @@ export default function DatePicker({ onPick, type }: DatePickerProps) {
               selected={selected}
               required={true}
               animate
+              fixedWeeks={true}
               classNames={{
                 month_grid: "border-separate border-spacing-0",
                 today: `border-border border rounded-full`,
