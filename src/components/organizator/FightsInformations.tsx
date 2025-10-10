@@ -1,36 +1,16 @@
-import { Input } from "@/components/ui/Input"
-import { useCallback, useEffect, useState } from "react"
-import { Popover } from "@base-ui-components/react"
+import { useCallback, useContext, useEffect, useState } from "react"
+import { Input, Popover } from "@base-ui-components/react"
+import AppendableInfoContainer, { AppendableInfoContext } from "../ui/AppendableInfoContainer"
+import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
+import DatePicker, { formatDate } from "../pickers/DatePicker"
 
 type ContainerInterface = {
-  id: number
-  name: string
+  title: string
+  date_timestamp: number
 }
 
-export default function FightsInformations() {
-  const [fightContainers, setFightsContainers] = useState<ContainerInterface[]>([])
-  useEffect(() => {
-    console.log("FightsInformations loaded", fightContainers)
-  }, [fightContainers])
-
-  const changeContainer = useCallback(
-    (id: number, value: string) => {
-      const newContainers: ContainerInterface[] = []
-      fightContainers.forEach((c, index) => {
-        if (id === c.id) {
-          newContainers.push({
-            id: c.id,
-            name: value,
-          })
-        } else {
-          newContainers.push(c)
-        }
-      })
-      setFightsContainers(newContainers)
-    },
-    [fightContainers],
-  )
-
+export default function FightsInformations({ update }: { update: TournamentCardCallback }) {
+  const [fightContainers, setFightContainers] = useState<ContainerInterface[]>([])
   return (
     <>
       <div className="flex h-fit justify-between">
@@ -60,47 +40,82 @@ export default function FightsInformations() {
           </Popover.Portal>
         </Popover.Root>
       </div>
-
-      <div className="flex flex-col gap-2 py-2">
-        {fightContainers.map((container, index) => (
-          <>
-            <div className="flex flex-col justify-between" key={`fights-${container.id}`}>
-              <div className="flex justify-between">
-                <Input
-                  className="border-border h-[3rem] w-[30rem] rounded-full border-[1px] p-2 text-[0.8rem]"
-                  defaultValue={container.name}
-                  onChange={(e) => {
-                    changeContainer(container.id, e.target.value)
-                  }}
-                />
-
-                <button
-                  className="mt-2 h-[2.5rem] w-[6rem] rounded-2xl border border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E] hover:bg-[#ED0F4E]/50"
-                  onClick={() => setFightsContainers([...fightContainers].filter((f, idx) => f.id !== container.id))}
-                >
-                  Удалить
-                </button>
-              </div>
-            </div>
-          </>
-        ))}
-      </div>
-      <button
-        className="bg-accent-primary/20 hover:bg-accent-primary/50 border-accent-primary text-accent-primary mt-2 h-[2.5rem] w-full rounded-2xl border"
-        onClick={() => {
-          setFightsContainers([
-            ...fightContainers,
-            {
-              id: (fightContainers[fightContainers.length - 1]?.id ?? 0) + 1,
-              name: "Название боя (отборочный или финал)",
-            },
-          ])
+      {fightContainers.map((container, index) => (
+        <AppendableInfoContainer
+          key={container.title+container.date_timestamp}
+          prevInfoInitial={container}
+          onInfoChange={(info) => {
+            setFightContainers((prev) => {
+              const newInfo = prev.map((_, i) =>
+                i === index ? { title: info.title, date_timestamp: info.date_timestamp } : _,
+              )
+              update({ fight_containers: newInfo as ContainerInterface[] })
+              return newInfo
+            })
+          }}
+          onRemove={() => {
+            setFightContainers((prev) => {
+              const newInfo = prev.filter((_, i) => i !== index)
+              update({ fight_containers: newInfo as ContainerInterface[] })
+              return newInfo
+            })
+          }}
+          className="flex flex-row justify-between"
+          btnDivClassName="flex flex-row justify-between"
+          btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+        >
+          <InputRow />
+        </AppendableInfoContainer>
+      ))}
+      <AppendableInfoContainer
+        key={fightContainers.length+"new"}
+        onInfoChange={(info) => {
+          setFightContainers((prev) => {
+            const new_value = [...prev, { title: info.title, date_timestamp: info.date_timestamp }]
+            update({ fight_containers: new_value as ContainerInterface[] })
+            return new_value
+          })
         }}
+        className="flex flex-row justify-between"
+        btnDivClassName="flex flex-row justify-between"
+        btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
       >
-        Добавить раздел
-      </button>
+        <InputRow />
+      </AppendableInfoContainer>
     </>
   )
 }
 
-// function 
+function InputRow() {
+  const { info, setAppendableInfo, isEditable } = useContext(AppendableInfoContext)
+  const [initialValue, setInitialValue] = useState(info.title)
+  useEffect(() => {
+    !isEditable && setInitialValue(info.title)
+  }, [isEditable])
+  return (
+    <div className="flex flex-row justify-between">
+      {isEditable ? (
+        <Input
+          className="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+          defaultValue={initialValue}
+          placeholder="Название боя"
+          onChange={(e) => {
+            setAppendableInfo({ ...info, title: e.target.value })
+          }}
+        />
+      ) : (
+        <p>{info.title}</p>
+      )}
+      {isEditable?(<DatePicker
+        type="single"
+        onPick={(date) => {
+          setAppendableInfo({ ...info, date_timestamp: date.getTime() })
+        }}
+      />) :(
+        <div className="flex items-center gap-2">
+            <span className="text-[0.8rem]">{formatDate(info.date_timestamp)}</span>
+        </div>
+      )}
+    </div>
+  )
+}

@@ -1,8 +1,7 @@
 import { Popover } from "@base-ui-components/react/popover"
-import { useState } from "react"
+import { CSSProperties, useState } from "react"
 import { DateRange, DayPicker } from "react-day-picker"
 import { FaEdit } from "react-icons/fa"
-
 
 interface SingleDatePicker {
   type: "single"
@@ -16,31 +15,35 @@ interface RangeDatePicker {
 
 type DatePickerProps = SingleDatePicker | RangeDatePicker
 
+export const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date)
+}
+
 export default function DatePicker({ onPick, type }: DatePickerProps) {
   const [selected, setSelected] = useState<any>()
   const [isPopoverOpened, setIsPopoverOpened] = useState(false)
 
-  const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat('ru-RU', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  }).format(date);
-};
-
-
-    return (
-    <Popover.Root open={isPopoverOpened} onOpenChange={(e)=>{
+  return (
+    <Popover.Root
+      open={isPopoverOpened}
+      onOpenChange={(e) => {
         setIsPopoverOpened(e)
-        if (!e){
-            if (!selected) return
-            onPick(selected)
+        if (!e) {
+          if (!selected) return
+          onPick(selected)
         }
-    }}>
+      }}
+    >
       <Popover.Trigger className="">
-        <div className="flex items-center gap-2 hover:text-accent-primary transition-colors cursor-pointer">
-            <span className="text-[0.8rem]">{formatDate(selected?.from)}-{formatDate(selected?.to)}</span>
-            <FaEdit />
+        <div className="hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors">
+          <span className="text-[0.8rem]">
+            {type === "range" ? `${formatDate(selected?.from)}-${formatDate(selected?.to)}` : formatDate(selected)}
+          </span>
+          <FaEdit />
         </div>
       </Popover.Trigger>
       <Popover.Portal>
@@ -53,14 +56,19 @@ export default function DatePicker({ onPick, type }: DatePickerProps) {
               required={true}
               animate
               fixedWeeks={true}
-              classNames={{
-                month_grid: "border-separate border-spacing-0",
-                today: `border-border border rounded-full`,
-                range_middle: "bg-accent-primary/50",
-                selected: `bg-accent-primary text-text-on-accent rounded-none! border-none!`,
-                range_start: "rounded-l-full! shadow-[2px_0_4px_rgba(from_var(--color-accent-primary)_r_g_b/0.3)]",
-                range_end: "rounded-r-full! shadow-[-2px_0_4px_rgba(from_var(--color-accent-primary)_r_g_b/0.3)]",
-              }}
+              // classNames={{
+              //   month_grid: "border-separate border-spacing-0",
+              //   today: `border-border border rounded-full`,
+              //   range_middle: "bg-accent-primary/50",
+              //   selected: `bg-accent-primary text-text-on-accent rounded-none! border-none!`,
+              //   range_start: "rounded-l-full! shadow-[2px_0_4px_rgba(from_var(--color-accent-primary)_r_g_b/0.3)]",
+              //   range_end: "rounded-r-full! shadow-[-2px_0_4px_rgba(from_var(--color-accent-primary)_r_g_b/0.3)]",
+                
+              // }}
+              style={{
+                "--rdp-accent-color": "var(--color-accent-primary)",
+                "--rdp-accent-background-color": "rgba(from var(--color-accent-primary) r g b / 0.3)",
+              } as CSSProperties}
             />
             <button
               onClick={() => {

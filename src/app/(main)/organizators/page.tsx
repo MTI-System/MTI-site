@@ -17,17 +17,7 @@ export default async function OrganizationsMainPage({
   searchParams: Promise<{ year: string; tt: string; page: string }>
 }) {
   const sp = await searchParams
-  if (!sp.year || !sp.tt || !sp.page) {
-    return (
-      <TournamentsStoreProviderWrapper>
-        <TournamentsSearchParams searchParams={sp} />
-        <TournamentsFilters />
-        <div className="h-[50rem] w-full">
-          <Loading />
-        </div>
-      </TournamentsStoreProviderWrapper>
-    )
-  }
+
 
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
   const store = makeAuthStoreServer()
@@ -39,7 +29,7 @@ export default async function OrganizationsMainPage({
   const { data: userAuth, error } = await promise
 
   const tournamentsStore = makeTournamentsStoreServer()
-  const tournametnsPromise = store.dispatch(
+  const tournametnsPromise = tournamentsStore.dispatch(
     tournamentsApiServer.endpoints.getOrganizatorTournaments.initiate({
       tt: Number(sp.tt),
       year: Number(sp.year),
@@ -48,6 +38,18 @@ export default async function OrganizationsMainPage({
   )
   const { data: tournamentsCards } = await tournametnsPromise
 
+
+  if (!sp.year || !sp.tt || !sp.page) {
+    return (
+      <TournamentsStoreProviderWrapper>
+        <TournamentsSearchParams searchParams={sp} />
+        <TournamentsFilters />
+        <div className="h-[50rem] w-full">
+          <Loading />
+        </div>
+      </TournamentsStoreProviderWrapper>
+    )
+  }
   if (!userAuth) {
     redirect("/login")
   }

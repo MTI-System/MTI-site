@@ -15,6 +15,7 @@ export const TournamentCard = z.object({
   tournament_status: z.string(),
   fight_containers_cards: z.array(FightContainerCard),
   materials: z.array(z.number()),
+  location: z.string()
 })
 
 
@@ -47,6 +48,8 @@ export interface TournamentCreationRequest {
   end_timestamp: number
   year: number
   location: string
+  location_lat: number
+  location_lon: number
   tournament_type: number
   problems: number[]
   fight_containers: TournamentContainerRequest[]

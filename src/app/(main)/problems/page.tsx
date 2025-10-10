@@ -144,15 +144,13 @@ export default async function Page({
                     />
                   </div>
                   {currentTournament !== null && (
-                    <div className="aspect-[8/9] h-[37rem]">
-                      <div className="fixed">
+                    <div className="sticky top-2 aspect-[8/9] h-[37rem]">
                         <TournamentCard
                           tournamentCard={currentTournament}
                           isExtended={false}
                           isCreate={false}
                           onUpdateCreate={null}
                         />
-                      </div>
                     </div>
                   )}
                 </div>

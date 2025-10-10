@@ -16,6 +16,7 @@ import DatePicker from "../pickers/DatePicker"
 import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
 import {useLoadFileMutation} from "@/api/files/clientApiInterface";
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
+import LocationSelector from "../pickers/LocationPicker/LocationSelector"
 
 
 
@@ -233,12 +234,9 @@ function CardContent({
 
           <div className="text-text-alt flex items-center gap-2">
             <CiLocationOn className="text-xl" />
-            {!isCreate && <p className="text-xs">Где?</p>}
+            {!isCreate && <p className="text-xs">{tournamentCard?.location ?? "Местоположение неизвестно"}</p>}
             {isCreate && (
-              <Input
-                className="border-border h-[1.5rem] w-[7rem] rounded-2xl border-[1px] p-2 text-[0.8rem]"
-                placeholder="Место проведения (потом)"
-              />
+              <LocationSelector onPick={onUpdateCreate} />
             )}
           </div>
           <div className="text-text-alt flex items-center gap-2">

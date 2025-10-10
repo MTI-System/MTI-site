@@ -35,13 +35,14 @@ export default function CreateTournamentPage() {
     end_timestamp: 1,
     year: 1,
     location: "",
+    location_lat: 0,
+    location_lon: 0,
     tournament_type: 1,
     problems: [],
     fight_containers: [],
     materials: []
   })
   const [createTournament, {data: newTournament, isLoading, isSuccess, error}] = useAddTournamentMutation()
-
     useEffect(() => {
         if (!isLoading && isSuccess){
             redirect(`/tournaments/${newTournament?.id}/info/about`)
@@ -93,7 +94,7 @@ export default function CreateTournamentPage() {
         </MaterialsProviderWrapper>
       </div>
       <div className="bg-bg-alt min-h-30 w-full rounded-3xl px-5 py-2">
-        <FightsInformations />
+        <FightsInformations update={updateTournamentHandler} />
       </div>
       <div className="bg-bg-alt min-h-30 w-full rounded-3xl px-5 py-2">
         <ProblemsProviderWrapper>
