@@ -72,7 +72,6 @@ export default async function Page({
     isNoRefresh = true
     tt = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
   }
-  console.log("Updated sp", year, tt, (await cookies()).get("mtiyt_tournamentType")?.value)
 
   const store = makeProblemsStoreServer()
   const { data: possibleYears } = await store.dispatch(
@@ -123,42 +122,40 @@ export default async function Page({
       section_1.section_science - section_2.section_science || section_1.title.localeCompare(section_2.title),
   )
   return (
-    <>
-      <ProblemsReduxProviderWrapper>
-        <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
-        <ProblemFilters
-          possibleSections={availableProblemSections}
-          possibleYears={possibleYears ?? [2026]}
-          isModerator={isEditable}
-        >
-          <div className="relative h-full w-full pt-10">
-            <Suspense fallback={<div>Loading...</div>}>
-              {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
-              {!isUndefYear && (
-                <div className="mt-5 flex gap-5">
-                  <div className="w-full">
-                    <ProblemsList
-                      sectionsFilter={sectionsFilter ?? []}
-                      problems={problems ?? null}
-                      isEditable={isEditable}
+    <ProblemsReduxProviderWrapper>
+      <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
+      <ProblemFilters
+        possibleSections={availableProblemSections}
+        possibleYears={possibleYears ?? [2026]}
+        isModerator={isEditable}
+      >
+        <div className="relative h-full w-full pt-10">
+          <Suspense fallback={<div>Loading...</div>}>
+            {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
+            {!isUndefYear && (
+              <div className="mt-5 flex gap-5">
+                <div className="w-full">
+                  <ProblemsList
+                    sectionsFilter={sectionsFilter ?? []}
+                    problems={problems ?? null}
+                    isEditable={isEditable}
+                  />
+                </div>
+                {currentTournament !== null && (
+                  <div className="sticky top-2 aspect-[8/9] h-[37rem]">
+                    <TournamentCard
+                      tournamentCard={currentTournament}
+                      isExtended={false}
+                      isCreate={false}
+                      onUpdateCreate={null}
                     />
                   </div>
-                  {currentTournament !== null && (
-                    <div className="sticky top-2 aspect-[8/9] h-[37rem]">
-                        <TournamentCard
-                          tournamentCard={currentTournament}
-                          isExtended={false}
-                          isCreate={false}
-                          onUpdateCreate={null}
-                        />
-                    </div>
-                  )}
-                </div>
-              )}
-            </Suspense>
-          </div>
-        </ProblemFilters>
-      </ProblemsReduxProviderWrapper>
-    </>
+                )}
+              </div>
+            )}
+          </Suspense>
+        </div>
+      </ProblemFilters>
+    </ProblemsReduxProviderWrapper>
   )
 }

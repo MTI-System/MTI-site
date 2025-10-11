@@ -5,20 +5,27 @@ import { FaCheck, FaCross, FaMinus, FaPlus } from "react-icons/fa6"
 import { HoldButton } from "./Buttons"
 import { FaEdit } from "react-icons/fa"
 
+export interface EditError {
+  key: string
+  message: string
+}
+
 export const AppendableInfoContext = createContext<{
   info: { [key: string]: any }
+  error: EditError[]
   setAppendableInfo: (appendableInfo: { [key: string]: any }) => void
   isEditable: boolean
 }>({
   info: {},
+  error: [],
   setAppendableInfo: () => {},
   isEditable: false,
 })
 
 interface AppendableInfoContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
-  onInfoChange?: (info: { [key: string]: any }) => void
-  onRemove?: () => void
+  onInfoChange?: (info: { [key: string]: any }) => EditError[]
+  onRemove?: () => Omit<EditError, "key"> | undefined
   prevInfoInitial?: { [key: string]: any }
   btnDivClassName?: string
   btnClassName?: string
@@ -35,10 +42,16 @@ export default function AppendableInfoContainer({
 }: AppendableInfoContainerProps) {
   const [prevInfo, setPrevInfo] = useState<{ [key: string]: any } | undefined>(prevInfoInitial)
   const [appendableInfo, setAppendableInfo] = useState<{ [key: string]: any }>(prevInfoInitial || {})
+  const [error, setError] = useState<EditError[]>([])
   const [isEditable, setIsEditable] = useState(prevInfoInitial ? false : true)
   const handleEditDone = () => {
+    const res = onInfoChange?.(appendableInfo)
+    if (res && res.length > 0) {
+      setError(res)
+      return
+    }
+
     setIsEditable(false)
-    onInfoChange?.(appendableInfo)
     setPrevInfo(appendableInfo)
   }
   return (
@@ -46,7 +59,12 @@ export default function AppendableInfoContainer({
       <AppendableInfoContext
         value={{
           info: appendableInfo,
+          error,
           setAppendableInfo: (info) => {
+            setError(prev=>{
+              const newError = prev.filter((err) => !(err.key in info))
+              return newError
+            })
             setAppendableInfo((prev) => ({ ...prev, ...info }))
           },
           isEditable: isEditable,
@@ -67,7 +85,13 @@ export default function AppendableInfoContainer({
             </button>
             <HoldButton
               className={btnClassName}
-              onConfirm={onRemove}
+              onConfirm={() => {
+                if (onRemove) {
+                  const res = onRemove()
+                  if (!res) return
+                  setError([{ key: "remove", ...res }])
+                }
+              }}
             >
               <FaMinus />
             </HoldButton>

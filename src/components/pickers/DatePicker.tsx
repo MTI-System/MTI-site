@@ -1,7 +1,11 @@
 import { Popover } from "@base-ui-components/react/popover"
-import { CSSProperties, useState } from "react"
+import { CSSProperties, useEffect, useState } from "react"
 import { DateRange, DayPicker } from "react-day-picker"
 import { FaEdit } from "react-icons/fa"
+
+interface DatePickerBaseProps {
+  defaultDate?: Date | DateRange
+}
 
 interface SingleDatePicker {
   type: "single"
@@ -13,7 +17,7 @@ interface RangeDatePicker {
   onPick: (data: DateRange) => void
 }
 
-type DatePickerProps = SingleDatePicker | RangeDatePicker
+type DatePickerProps = DatePickerBaseProps & (SingleDatePicker | RangeDatePicker)
 
 export const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("ru-RU", {
@@ -23,9 +27,14 @@ export const formatDate = (date: Date) => {
   }).format(date)
 }
 
-export default function DatePicker({ onPick, type }: DatePickerProps) {
-  const [selected, setSelected] = useState<any>()
+export default function DatePicker({ onPick, type, defaultDate }: DatePickerProps) {
+  console.log(defaultDate)
+  const [selected, setSelected] = useState<any>(defaultDate)
   const [isPopoverOpened, setIsPopoverOpened] = useState(false)
+
+  useEffect(() => {
+      console.log(selected)
+  }, [selected])
 
   return (
     <Popover.Root
@@ -41,7 +50,7 @@ export default function DatePicker({ onPick, type }: DatePickerProps) {
       <Popover.Trigger className="">
         <div className="hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors">
           <span className="text-[0.8rem]">
-            {type === "range" ? `${formatDate(selected?.from)}-${formatDate(selected?.to)}` : formatDate(selected)}
+            {defaultDate ? (type === "range" ? `${formatDate(selected?.from)}-${formatDate(selected?.to)}` : formatDate(selected)): <p>Выберите дату</p>}
           </span>
           <FaEdit />
         </div>

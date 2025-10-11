@@ -1,8 +1,9 @@
 import { useCallback, useContext, useEffect, useState } from "react"
-import { Input, Popover } from "@base-ui-components/react"
+import { Input, Popover, Tooltip } from "@base-ui-components/react"
 import AppendableInfoContainer, { AppendableInfoContext } from "../ui/AppendableInfoContainer"
 import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
 import DatePicker, { formatDate } from "../pickers/DatePicker"
+import twclsx from "@/utils/twClassMerge"
 
 type ContainerInterface = {
   title: string
@@ -42,9 +43,13 @@ export default function FightsInformations({ update }: { update: TournamentCardC
       </div>
       {fightContainers.map((container, index) => (
         <AppendableInfoContainer
-          key={container.title+container.date_timestamp}
+          key={container.title + container.date_timestamp}
           prevInfoInitial={container}
           onInfoChange={(info) => {
+            const errs = []
+            if (!info.title) errs.push({ key: "title", message: "Название боя не введено" })
+            if (!info.date_timestamp) errs.push({ key: "date_timestamp", message: "Дата боя не выбрана" })
+            if (errs.length > 0) return errs
             setFightContainers((prev) => {
               const newInfo = prev.map((_, i) =>
                 i === index ? { title: info.title, date_timestamp: info.date_timestamp } : _,
@@ -52,6 +57,7 @@ export default function FightsInformations({ update }: { update: TournamentCardC
               update({ fight_containers: newInfo as ContainerInterface[] })
               return newInfo
             })
+            return []
           }}
           onRemove={() => {
             setFightContainers((prev) => {
@@ -59,6 +65,7 @@ export default function FightsInformations({ update }: { update: TournamentCardC
               update({ fight_containers: newInfo as ContainerInterface[] })
               return newInfo
             })
+            return undefined
           }}
           className="flex flex-row justify-between"
           btnDivClassName="flex flex-row justify-between"
@@ -67,14 +74,20 @@ export default function FightsInformations({ update }: { update: TournamentCardC
           <InputRow />
         </AppendableInfoContainer>
       ))}
+      {fightContainers.length > 0 && <div className="my-2 w-full border-2 border-b border-gray-300"></div>}
       <AppendableInfoContainer
-        key={fightContainers.length+"new"}
+        key={fightContainers.length + "new"}
         onInfoChange={(info) => {
+          const errs = []
+          if (!info.title) errs.push({ key: "title", message: "Название боя не введено" })
+          if (!info.date_timestamp) errs.push({ key: "date_timestamp", message: "Дата боя не выбрана" })
+          if (errs.length > 0) return errs
           setFightContainers((prev) => {
             const new_value = [...prev, { title: info.title, date_timestamp: info.date_timestamp }]
             update({ fight_containers: new_value as ContainerInterface[] })
             return new_value
           })
+          return []
         }}
         className="flex flex-row justify-between"
         btnDivClassName="flex flex-row justify-between"
@@ -87,35 +100,66 @@ export default function FightsInformations({ update }: { update: TournamentCardC
 }
 
 function InputRow() {
-  const { info, setAppendableInfo, isEditable } = useContext(AppendableInfoContext)
+  const { info, setAppendableInfo, isEditable, error } = useContext(AppendableInfoContext)
   const [initialValue, setInitialValue] = useState(info.title)
   useEffect(() => {
     !isEditable && setInitialValue(info.title)
   }, [isEditable])
+  const titleErrors = error.filter((err) => err.key === "title")
+  const dateErrors = error.filter((err) => err.key === "date_timestamp")
+  console.log(titleErrors, dateErrors)
   return (
     <div className="flex flex-row justify-between">
-      {isEditable ? (
-        <Input
-          className="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
-          defaultValue={initialValue}
-          placeholder="Название боя"
-          onChange={(e) => {
-            setAppendableInfo({ ...info, title: e.target.value })
-          }}
-        />
-      ) : (
-        <p>{info.title}</p>
-      )}
-      {isEditable?(<DatePicker
-        type="single"
-        onPick={(date) => {
-          setAppendableInfo({ ...info, date_timestamp: date.getTime() })
-        }}
-      />) :(
-        <div className="flex items-center gap-2">
-            <span className="text-[0.8rem]">{formatDate(info.date_timestamp)}</span>
-        </div>
-      )}
+      <Tooltip.Provider delay={150}>
+        {isEditable ? (
+          <Tooltip.Root disabled={titleErrors.length === 0}>
+            <Tooltip.Trigger>
+              <Input
+                className={twclsx("border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border", titleErrors.length > 0 && "border-red-500")}
+                defaultValue={initialValue ? initialValue : ""}
+                placeholder="Название боя"
+                onChange={(e) => {
+                  setAppendableInfo({ ...info, title: e.target.value })
+                }}
+              />
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Positioner sideOffset={10}>
+                <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                  <p className="text-red-500">{titleErrors.length > 0 ? titleErrors[0].message : ""}</p>
+                </Tooltip.Popup>
+              </Tooltip.Positioner>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        ) : (
+          <p>{info.title}</p>
+        )}
+        {isEditable ? (
+          <Tooltip.Root disabled={dateErrors.length === 0}>
+            <Tooltip.Trigger render={<div className={twclsx(dateErrors.length > 0 && "text-red-500")}></div>}>
+              <DatePicker
+                type="single"
+                onPick={(date) => {
+                  console.log(date)
+                  setAppendableInfo({ ...info, date_timestamp: date.getTime() })
+                }}
+                defaultDate={info.date_timestamp}
+              />
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Positioner sideOffset={10}>
+                <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                  <p className="text-red-500">{dateErrors.length > 0 ? dateErrors[0].message : ""}</p>
+                </Tooltip.Popup>
+              </Tooltip.Positioner>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        ) : (
+          <span className="text-[0.8rem]">
+            {info.date_timestamp ? formatDate(info.date_timestamp) : <p>Дата не выбрана</p>}
+          </span>
+        )}
+      </Tooltip.Provider>
     </div>
   )
 }

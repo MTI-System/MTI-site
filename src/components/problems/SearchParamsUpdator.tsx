@@ -69,10 +69,6 @@ export default function SearchParamsUpdator({
     if (tournament && year === Number(searchParams.year)) {
       params.set("tournament", tournament.toString())
     }
-    if (sectionFilter && year === Number(searchParams.year)) {
-      params.set("sections", sectionFilter?.join(","))
-    }
-    console.log("compare", params.toString(), new URLSearchParams(searchParams).toString())
     if (params.toString() == new URLSearchParams(searchParams).toString()) {
       return
     }
