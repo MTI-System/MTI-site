@@ -40,7 +40,7 @@ export default function ProblemFilters({
   const isPending = useAppSelector((state) => state.system.isPending)
   const ttid = Number(tt) ?? 1
   const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
-
+  const problemDispatcher = useProblemsDispatch()
   return (
     <>
       <div className="flex h-fit w-full content-center items-center gap-5 pt-2">
@@ -51,7 +51,15 @@ export default function ProblemFilters({
           className="text-text-main text-4xl font-bold"
         />
         <div className={style.filters}>
-          <YearFilter possibleYears={possibleYears} isPending={isPending} isModerator={isModerator} />
+          <YearFilter
+              possibleYears={possibleYears}
+              isPending={isPending}
+              isModerator={isModerator}
+              onSwitchYear={(year: number) => {
+                problemDispatcher(setYear(year))
+              }}
+              defaultValue={year}
+          />
           <TournamentsProviderWrapper>
             <TournamentFilter isPending={isPending} />
           </TournamentsProviderWrapper>
@@ -152,18 +160,21 @@ function SectionFilter({
   )
 }
 
-function YearFilter({
+export function YearFilter({
   possibleYears,
   isPending,
   isModerator,
+  onSwitchYear,
+  defaultValue
 }: {
   possibleYears: number[]
   isPending: boolean
   isModerator: boolean
+  onSwitchYear: (year: number) => void
+  defaultValue: number
 }) {
-  const year = useProblemsSelector((state) => state.problemsPageFilters.year) ?? possibleYears[0]
-  const problemDispatcher = useProblemsDispatch()
-
+  // const year = useProblemsSelector((state) => state.problemsPageFilters.year) ?? possibleYears[0]
+  // const problemDispatcher = useProblemsDispatch()
   const optionList: { children: string; value: number; active: boolean }[] = []
   possibleYears.forEach((year, index, array) => {
     if (index === 0) {
@@ -200,12 +211,14 @@ function YearFilter({
           disabled={isPending}
           className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full", { "hover:bg-[var(--bg-color)]!": isPending })}
         >
-          {year}
+          {/*{year}*/}
+          {defaultValue}
         </DropdownTrigger>
       }
       onOptionSelect={(option: DropdownOptionInterface<number> | null) => {
         if (!option) return
-        problemDispatcher(setYear(option.value))
+        onSwitchYear(option.value)
+        // problemDispatcher(setYear(option.value))
       }}
     >
       {optionList.map((opts, i) => (

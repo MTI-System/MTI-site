@@ -13,11 +13,12 @@ import clsx from "clsx";
 import {FILES_SERVER} from "@/constants/APIEndpoints";
 import Link from "next/link";
 import {Right, User} from "@/types/authApi";
+import NoTournaments from "@/components/service/NoTournaments";
 
 export default function TournamentCardsSpinner({tournamentsCards, isModerating, rights}: {
     tournamentsCards: TournamentCardInterface[],
     isModerating: boolean,
-    rights? :Right[] | null
+    rights?: Right[] | null
 }) {
     const currentPage = useTournamentsSelector(state => state.tournamentsPageFilters.page)
     const dispatch = useTournamentsDispatch();
@@ -30,7 +31,7 @@ export default function TournamentCardsSpinner({tournamentsCards, isModerating, 
     const totalPages = Math.ceil((tournamentsCards.length + (isOrganizator ? 1 : 0)) / itemsPerPage);
     if (!currentPage) return <Loading/>
     const currentItems = tournamentsCards.slice(
-        (currentPage - 1) * itemsPerPage - ((isOrganizator && currentPage!== 1)  ? 1 : 0) ,
+        (currentPage - 1) * itemsPerPage - ((isOrganizator && currentPage !== 1) ? 1 : 0),
         (currentPage) * itemsPerPage - ((isOrganizator) ? 1 : 0)
     )
 
@@ -44,7 +45,11 @@ export default function TournamentCardsSpinner({tournamentsCards, isModerating, 
 
     if (tournamentsCards.length === 0) {
         return <>
-            <h1>Нет турниров по выбранным фильтрам</h1>
+            <div className="h-full">
+                <div className="flex h-full items-center justify-center pt-5">
+                    <NoTournaments/>
+                </div>
+            </div>
         </>
     }
 
@@ -75,16 +80,16 @@ export default function TournamentCardsSpinner({tournamentsCards, isModerating, 
                                 href="/organizators/create"
                             >
                                 <div className="size-full bg-blue-700"
-                                style={{
-                                    WebkitMaskImage: `url('${FILES_SERVER + "add_2_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"}')`,
-                                    maskImage: `url('${FILES_SERVER + "add_2_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"}')`,
-                                    WebkitMaskSize: `${5}rem ${5}rem`,
-                                    maskSize: `${5}rem ${5}rem`,
-                                    WebkitMaskRepeat: 'no-repeat', // повторяем только по X
-                                    maskRepeat: 'no-repeat',
-                                    WebkitMaskPosition: 'center',       // одна строка по центру по Y
-                                    maskPosition: 'center',
-                                }}>
+                                     style={{
+                                         WebkitMaskImage: `url('${FILES_SERVER + "add_2_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"}')`,
+                                         maskImage: `url('${FILES_SERVER + "add_2_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"}')`,
+                                         WebkitMaskSize: `${5}rem ${5}rem`,
+                                         maskSize: `${5}rem ${5}rem`,
+                                         WebkitMaskRepeat: 'no-repeat', // повторяем только по X
+                                         maskRepeat: 'no-repeat',
+                                         WebkitMaskPosition: 'center',       // одна строка по центру по Y
+                                         maskPosition: 'center',
+                                     }}>
 
                                 </div>
                             </Link>

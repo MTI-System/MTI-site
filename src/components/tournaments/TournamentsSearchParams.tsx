@@ -4,16 +4,19 @@ import {useTournamentsSelector, useTournamentsDispatch} from "@/components/Redux
 import {useAppDispatch, useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {setTT} from "@/redux_stores/Global/SearchParamsSlice";
-import {setPage, setYear} from "@/redux_stores/Tournaments/TournamentsPageFiltersSlice";
+import {setPage, setState, setYear} from "@/redux_stores/Tournaments/TournamentsPageFiltersSlice";
+import {TournamentState} from "@/types/TournamentStateType";
+import {useGetAvailableYearsQuery} from "@/api/tournaments/clientApiInterface";
 
 export default function TournamentsSearchParams(
-  {searchParams}: {searchParams: { year: string; tt: string; page: string }
+  {searchParams}: {searchParams: { year: string; tt: string; page: string, state: TournamentState }
 }) {
   const localDispatch = useTournamentsDispatch();
   const dispatch = useAppDispatch();
   const tt = useAppSelector(state=>state.searchParams.tt)
   const year =  useTournamentsSelector((state) => state.tournamentsPageFilters.year);
   const page =  useTournamentsSelector((state) => state.tournamentsPageFilters.page);
+  const state = useTournamentsSelector(state=>state.tournamentsPageFilters.state);
   const router = useRouter()
   const pathname = usePathname()
   const [isMounted, setMounted] = useState(false)
@@ -29,7 +32,7 @@ export default function TournamentsSearchParams(
       localDispatch(setYear(Number(searchParams.year)))
     }
     else if(!year){
-      localDispatch(setYear(2025))
+      localDispatch(setYear(2026));
     }
     if(searchParams.page){
       console.log("UPDATE PARAMS",  searchParams.page);
@@ -37,6 +40,9 @@ export default function TournamentsSearchParams(
     }
     else if(!page){
       localDispatch(setPage(1))
+    }
+    if(searchParams.state){
+      localDispatch(setState(searchParams.state))
     }
     setMounted(true);
   }, []);
@@ -48,7 +54,8 @@ export default function TournamentsSearchParams(
     params.set("tt", tt?.toString() ?? "1");
     params.set("year", (year??2025).toString());
     params.set("page", (page??1).toString());
+    params.set("state", state);
     router.replace(`${pathname}?${params.toString()}`);
-  }, [isMounted, page, year, tt]);
+  }, [isMounted, page, year, tt, state]);
   return <></>
 }

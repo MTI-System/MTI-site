@@ -7,6 +7,7 @@ import {
   TournamentResultsTableEntity
 } from "@/types/TournamentsAPI"
 import { TournamentTypeIntarface, TournamentTypeSchema } from "@/types/TournamentTypeIntarface"
+import {TournamentState} from "@/types/TournamentStateType";
 
 export const tournamentsReducerPath = "tournamentsApi" as const
 
@@ -15,6 +16,20 @@ export const tournamentsBaseQuery = fetchBaseQuery({ baseUrl: TOURNAMENTS_API })
 export const defineTournamentsEndpoints = (
   builder: EndpointBuilder<typeof tournamentsBaseQuery, never, typeof tournamentsReducerPath>,
 ) => ({
+  getAvailableStates: builder.query({
+    query: ({year, tt}: {tt: number, year: number}) => `statuses?tournamentTypeId=${tt}&year=${year}`,
+    transformResponse: (response: unknown): TournamentState[] => {
+      if (Array.isArray(response)) return response
+      return []
+    },
+  }),
+  getAvailableYears: builder.query({
+    query: ({tt}: {tt: number}) => `years?tournamentTypeId=${tt}`,
+    transformResponse: (response: unknown): number[] => {
+      if (Array.isArray(response)) return response
+      return [new Date().getFullYear()]
+    },
+  }),
   getAvailableTournamentTypes: builder.query({
     query: () => "get_available_tt",
     transformResponse: (response: unknown): TournamentTypeIntarface[] | null => {
@@ -44,6 +59,12 @@ export const defineTournamentsEndpoints = (
         method: "POST",
         body: formData,
       }
+    },
+    transformResponse: (response: unknown): TournamentCardInterface[] | null => {
+      const parsed = TournamentCard.array().safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing tournament cards: ${parsed.error}`)
+      return null
     },
   }),
   addTournament: builder.mutation({

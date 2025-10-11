@@ -12,7 +12,7 @@ import Loading from "@/app/loading"
 import {  DateRange } from "react-day-picker"
 import "react-day-picker/style.css"
 import { Popover } from "@base-ui-components/react"
-import DatePicker from "../pickers/DatePicker"
+import DatePicker, {formatDate} from "../pickers/DatePicker"
 import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
 import {useLoadFileMutation} from "@/api/files/clientApiInterface";
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
@@ -241,7 +241,7 @@ function CardContent({
           </div>
           <div className="text-text-alt flex items-center gap-2">
             <CiClock2 className="text-xl" />
-            {!isCreate && <p className="text-xs">{tournamentCard?.year ?? 2025}</p>}
+            {!isCreate && <p className="text-xs">{formatDate(new Date(tournamentCard?.start_date_timestamp??0))} - {formatDate(new Date(tournamentCard?.end_date_timestamp??0))}</p>}
             {isCreate && (
               <>
                 <DatePicker type="range" onPick={(data: DateRange)=>{

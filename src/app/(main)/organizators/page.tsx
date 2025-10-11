@@ -2,66 +2,78 @@ import TournamentCardsSpinner from "@/components/tournaments/TournamentCardsSpin
 import TournamentsStoreProviderWrapper from "@/components/Redux/TournamentsReduxProvider"
 import TournamentsSearchParams from "@/components/tournaments/TournamentsSearchParams"
 import TournamentsFilters from "@/components/tournaments/TournamentsFilters"
-import { Suspense } from "react"
+import {Suspense} from "react"
 import Loading from "@/app/loading"
-import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
-import { authApiServer } from "@/api/auth/serverApiInterface"
-import { makeAuthStoreServer } from "@/api/auth/serverStore"
-import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
-import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import {redirect} from "next/navigation"
+import {cookies} from "next/headers"
+import {authApiServer} from "@/api/auth/serverApiInterface"
+import {makeAuthStoreServer} from "@/api/auth/serverStore"
+import {tournamentsApiServer} from "@/api/tournaments/serverApiInterface"
+import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore"
+import {TournamentState} from "@/types/TournamentStateType";
 
 export default async function OrganizationsMainPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ year: string; tt: string; page: string }>
+                                                        searchParams,
+                                                    }: {
+    searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentState }>
 }) {
-  const sp = await searchParams
+    const sp = await searchParams
 
 
-  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
-  const store = makeAuthStoreServer()
-  const promise = store.dispatch(
-    authApiServer.endpoints.fetchPermissions.initiate({
-      token: token,
-    }),
-  )
-  const { data: userAuth, error } = await promise
-
-  const tournamentsStore = makeTournamentsStoreServer()
-  const tournametnsPromise = tournamentsStore.dispatch(
-    tournamentsApiServer.endpoints.getOrganizatorTournaments.initiate({
-      tt: Number(sp.tt),
-      year: Number(sp.year),
-      token: token,
-    }),
-  )
-  const { data: tournamentsCards } = await tournametnsPromise
-
-
-  if (!sp.year || !sp.tt || !sp.page) {
-    return (
-      <TournamentsStoreProviderWrapper>
-        <TournamentsSearchParams searchParams={sp} />
-        <TournamentsFilters />
-        <div className="h-[50rem] w-full">
-          <Loading />
-        </div>
-      </TournamentsStoreProviderWrapper>
+    const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+    const store = makeAuthStoreServer()
+    const promise = store.dispatch(
+        authApiServer.endpoints.fetchPermissions.initiate({
+            token: token,
+        }),
     )
-  }
-  if (!userAuth) {
-    redirect("/login")
-  }
-  return (
-    <>
-      <TournamentsStoreProviderWrapper>
-        <TournamentsSearchParams searchParams={sp} />
-        <TournamentsFilters />
-        {tournamentsCards && (
-          <TournamentCardsSpinner tournamentsCards={tournamentsCards} isModerating={true} rights={userAuth.rights} />
-        )}
-      </TournamentsStoreProviderWrapper>
-    </>
-  )
+    const {data: userAuth, error} = await promise
+
+
+    const {data: possibleYears} = await store.dispatch(
+        tournamentsApiServer.endpoints.getAvailableYears.initiate({tt: Number(sp.tt)}),
+    )
+    const {data: possibleStates} = await store.dispatch(
+        tournamentsApiServer.endpoints.getAvailableStates.initiate({tt: Number(sp.tt), year: Number(sp.year)}),
+    )
+
+
+    const tournamentsStore = makeTournamentsStoreServer()
+    const tournametnsPromise = tournamentsStore.dispatch(
+        tournamentsApiServer.endpoints.getOrganizatorTournaments.initiate({
+            tt: Number(sp.tt),
+            year: Number(sp.year),
+            token: token,
+        }),
+    )
+    const {data: tournamentsCards} = await tournametnsPromise
+
+
+    if (!sp.year || !sp.tt || !sp.page) {
+        return (
+            <TournamentsStoreProviderWrapper>
+                <TournamentsSearchParams searchParams={sp}/>
+                <div className="h-[50rem] w-full">
+                    <Loading/>
+                </div>
+            </TournamentsStoreProviderWrapper>
+        )
+    }
+    if (!userAuth) {
+        redirect("/login")
+    }
+    return (
+        <>
+            <TournamentsStoreProviderWrapper>
+                <TournamentsSearchParams searchParams={sp}/>
+                <TournamentsFilters availableYears={possibleYears ?? []} availableStates={possibleStates ?? []}/>
+                {tournamentsCards && (
+                    <>
+                        <TournamentCardsSpinner tournamentsCards={tournamentsCards} isModerating={true}
+                                                rights={userAuth.rights}/>
+                    </>
+                )}
+            </TournamentsStoreProviderWrapper>
+        </>
+    )
 }
