@@ -16,12 +16,23 @@ import FilesProviderWrapper from "@/api/files/ClientWrapper"
 import { useAddTournamentMutation } from "@/api/tournaments/clientApiInterface"
 import { Toast } from "@base-ui-components/react/toast"
 import { FaTimes } from "react-icons/fa"
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 
 export interface TournamentCardCallback {
   (card: Partial<TournamentCreationRequest>): void
 }
 
 export default function CreateTournamentPage() {
+  return (
+    <Toast.Provider limit={10}>
+      <CreateTournamentForm />
+    </Toast.Provider>
+  )
+}
+
+function CreateTournamentForm() {
+  const toastManager = Toast.useToastManager()
+
   const [errors, setErrors] = useState<{ key: string; message: string }[]>([])
   const rights = useAppSelector((state) => state.auth.authInfo?.rights)
   const isOrganizator = (rights ?? []).filter((r) => r.right_flag === "CREATE_TOURNAMENTS").length !== 0
@@ -48,8 +59,13 @@ export default function CreateTournamentPage() {
   useEffect(() => {
     if (!isLoading && isSuccess) {
       redirect(`/tournaments/${newTournament?.id}/info/about`)
-    } else {
+    } else if (error) {
       console.log("End of creating:", error)
+      toastManager.add({
+        title: `Ошибка при создании турнира`,
+        description: `Произошла неизвестная ошибка. Повторите попытку позже или обратитесь в поддержку.\n
+        response code: ${(error as FetchBaseQueryError).status}`,
+      })
     }
   }, [isLoading])
 
@@ -109,18 +125,16 @@ export default function CreateTournamentPage() {
           Отмена
         </Link>
 
-        <Toast.Provider limit={10}>
-          <SubmitButton
-            newTournamentCardResponse={newTournamentCardResponse}
-            createTournament={createTournament}
-            setErrors={setErrors}
-          />
-          <Toast.Portal>
-            <Toast.Viewport className="fixed top-auto right-[1rem] bottom-[1rem] z-10 mx-auto flex w-[250px] sm:right-[2rem] sm:bottom-[2rem] sm:w-[300px]">
-              <ToastList />
-            </Toast.Viewport>
-          </Toast.Portal>
-        </Toast.Provider>
+        <SubmitButton
+          newTournamentCardResponse={newTournamentCardResponse}
+          createTournament={createTournament}
+          setErrors={setErrors}
+        />
+        <Toast.Portal>
+          <Toast.Viewport className="fixed top-auto right-[1rem] bottom-[1rem] z-10 mx-auto flex w-[250px] sm:right-[2rem] sm:bottom-[2rem] sm:w-[300px]">
+            <ToastList />
+          </Toast.Viewport>
+        </Toast.Portal>
       </div>
     </div>
   )
@@ -149,9 +163,8 @@ function SubmitButton({
           // INSERT_YOUR_CODE
           // Remove issues with duplicate descriptions
           const uniqueIssues = parsed.error.issues.filter(
-            (issue, index, self) =>
-              self.findIndex((i) => i.message === issue.message) === index
-          );
+            (issue, index, self) => self.findIndex((i) => i.message === issue.message) === index,
+          )
           setErrors(uniqueIssues.map((issue) => ({ key: issue.path[0].toString(), message: issue.message })))
           uniqueIssues.forEach((issue) => {
             toastManager.add({
@@ -188,7 +201,7 @@ function ToastList() {
           }
         }}
       >
-        <Toast.Title className="text-[0.975rem] leading-5 font-medium py-2" />
+        <Toast.Title className="py-2 text-[0.975rem] leading-5 font-medium" />
         <Toast.Description className="text-[0.925rem] leading-5 text-gray-700" />
         <Toast.Close
           className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded border-none bg-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700"
