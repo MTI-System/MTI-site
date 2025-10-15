@@ -6,38 +6,67 @@ import { useGetProblemsQuery } from "@/api/problems/clientApiInterface"
 import Loading from "@/app/loading"
 import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
 import { useEffect, useState } from "react"
+import twclsx from "@/utils/twClassMerge"
 
 export default function PickProblemsForTournament({
   year,
   onUpdateCreate,
+  errors = [],
 }: {
   year: number
   onUpdateCreate: TournamentCardCallback
+  errors?: { key: string; message: string }[]
 }) {
   const tt = useAppSelector((state) => state.searchParams.tt)
+  const [errorsInternal, setErrorsInternal] = useState(errors)
+  useEffect(() => {
+    setErrorsInternal(errors)
+  }, [errors])
 
   const { data, error, isLoading } = useGetProblemsQuery({ year: year, tournament: (tt ?? 1).toString() })
   const [selectedList, setSelectedList] = useState<string[]>([])
-  useEffect(()=>{
-   onUpdateCreate({
-    problems: selectedList.map(it=>Number(it))
-   })
+  useEffect(() => {
+    onUpdateCreate({
+      problems: selectedList.map((it) => Number(it)),
+    })
   }, [selectedList])
 
-  useEffect(()=>{
+  useEffect(() => {
     setSelectedList([])
   }, [data])
   return (
     <>
-      <h2 className="text-xl font-medium">Выбирите задачи для турнира</h2>
+      <Tooltip.Root disabled={errorsInternal.length === 0 || !errorsInternal.some((error) => error.key === "problems")}>
+        <Tooltip.Trigger>
+          <h2
+            className={twclsx(
+              "text-xl font-medium transition-colors",
+              errorsInternal.some((error) => error.key === "problems") && "text-red-500",
+            )}
+          >
+            Выбирите задачи для турнира
+          </h2>
+        </Tooltip.Trigger>
+        <Tooltip.Portal>
+          <Tooltip.Positioner sideOffset={10} className="z-10">
+            <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+              <p className="text-red-500">{errorsInternal.find((error) => error.key === "problems")?.message ?? ""}</p>
+            </Tooltip.Popup>
+          </Tooltip.Positioner>
+        </Tooltip.Portal>
+      </Tooltip.Root>
+
       <div className="mt-2">
         {isLoading && <Loading />}
         {!isLoading && (
           <CheckboxGroup
             aria-labelledby="apples-caption"
             value={selectedList}
-            onValueChange={setSelectedList}
-            allValues={data?.map(d=>d.id.toString())??[]}
+            onValueChange={(value) => {
+              setErrorsInternal(errorsInternal.filter((error) => error.key !== "problems"))
+              setSelectedList(value)
+            }}
+            allValues={data?.map((d) => d.id.toString()) ?? []}
             //   defaultValue={searchParams.map((sp) => sp.key)}
             className="text-text-main flex flex-col items-start gap-1"
           >

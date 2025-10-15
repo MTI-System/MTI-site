@@ -3,33 +3,32 @@ import { TournamentCardInterface, TournamentCreationRequest } from "@/types/Tour
 import { CiLocationOn } from "react-icons/ci"
 import { CiClock2 } from "react-icons/ci"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
-import {JSX, useState, useRef, ChangeEvent, useEffect} from "react"
-import clsx from "clsx"
+import { JSX, useState, useRef, ChangeEvent, useEffect } from "react"
 import { GoPeople } from "react-icons/go"
 import Link from "next/link"
-import { Input } from "@/components/ui/Input"
+import { Input, Tooltip } from "@base-ui-components/react"
 import Loading from "@/app/loading"
-import {  DateRange } from "react-day-picker"
+import { DateRange } from "react-day-picker"
 import "react-day-picker/style.css"
-import { Popover } from "@base-ui-components/react"
-import DatePicker, {formatDate} from "../pickers/DatePicker"
+import DatePicker, { formatDate } from "../pickers/DatePicker"
 import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
-import {useLoadFileMutation} from "@/api/files/clientApiInterface";
-import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
+import { useLoadFileMutation } from "@/api/files/clientApiInterface"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import LocationSelector from "../pickers/LocationPicker/LocationSelector"
-
-
+import twclsx from "@/utils/twClassMerge"
 
 export default function TournamentCard({
   tournamentCard,
   isExtended = false,
   isCreate,
   onUpdateCreate = null,
+  errors = [],
 }: {
   tournamentCard?: TournamentCardInterface
   isExtended: boolean
   isCreate: boolean
   onUpdateCreate?: TournamentCardCallback | null
+  errors?: { key: string; message: string }[]
 }): JSX.Element {
   return (
     <>
@@ -40,6 +39,7 @@ export default function TournamentCard({
             isExtended={isExtended}
             isCreate={isCreate}
             onUpdateCreate={onUpdateCreate}
+            errors={errors}
           />
         </Link>
       ) : (
@@ -48,6 +48,7 @@ export default function TournamentCard({
           isExtended={isExtended}
           isCreate={isCreate}
           onUpdateCreate={onUpdateCreate}
+          errors={errors}
         />
       )}
     </>
@@ -59,34 +60,39 @@ function CardContent({
   isExtended,
   isCreate,
   onUpdateCreate,
+  errors = [],
 }: {
   tournamentCard?: TournamentCardInterface
   isExtended: boolean
   isCreate: boolean
   onUpdateCreate: TournamentCardCallback | null
+  errors?: { key: string; message: string }[]
 }) {
-
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const token = useAppSelector(state => state.auth.token)
+  const token = useAppSelector((state) => state.auth.token)
+  const [errorsInternal, setErrorsInternal] = useState(errors)
+  useEffect(() => {
+    setErrorsInternal(errors)
+  }, [errors])
 
   //lazy инициализацию хука))
-  const mutationState = isCreate ? useLoadFileMutation() : null;
-  const loadFile = mutationState ? mutationState[0] : () => {};
-  const { data: loadedFileName, isLoading, isError, isSuccess, error, reset } = mutationState ? mutationState[1] : {};
+  const mutationState = isCreate ? useLoadFileMutation() : null
+  const loadFile = mutationState ? mutationState[0] : () => {}
+  const { data: loadedFileName, isLoading, isError, isSuccess, error, reset } = mutationState ? mutationState[1] : {}
 
   const currentLoadingImage = useRef<string>("")
-  const [loadedImages, setLoadedImages] = useState<{big: string|null, small: string|null}>({
+  const [loadedImages, setLoadedImages] = useState<{ big: string | null; small: string | null }>({
     big: null,
     small: null,
   })
 
   useEffect(() => {
-    if(isSuccess && !isLoading){
+    if (isSuccess && !isLoading) {
       const newImages = {
         big: currentLoadingImage.current === "big" ? (loadedFileName?.filename ?? null) : loadedImages.big,
         small: currentLoadingImage.current === "small" ? (loadedFileName?.filename ?? null) : loadedImages.small,
       }
-      console.log("loadedImages load",  currentLoadingImage.current, loadedFileName?.filename, newImages)
+      console.log("loadedImages load", currentLoadingImage.current, loadedFileName?.filename, newImages)
       setLoadedImages(newImages)
       currentLoadingImage.current = ""
       if (onUpdateCreate) {
@@ -96,16 +102,15 @@ function CardContent({
         })
       }
     }
-
   }, [isLoading])
 
   if (isCreate && !onUpdateCreate) {
     return <>Ошибка!</>
   }
 
-  const handleDivClick = (image_type:string) => {
+  const handleDivClick = (image_type: string) => {
     if (!fileInputRef.current) return
-    if(!currentLoadingImage.current){
+    if (!currentLoadingImage.current) {
       currentLoadingImage.current = image_type
     }
     fileInputRef.current?.click()
@@ -128,12 +133,12 @@ function CardContent({
 
   useEffect(() => {
     console.log("loadedImages", loadedImages)
-  }, [loadedImages]);
+  }, [loadedImages])
 
   return (
     <>
       <div
-        className={clsx(
+        className={twclsx(
           "bg-bg-alt border-bg-main flex flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500",
           { "hover:border-accent-primary aspect-[8/9] h-[37rem]": !isExtended },
           { "h-[33rem] w-full": isExtended },
@@ -151,7 +156,7 @@ function CardContent({
               <input
                 type="file"
                 ref={fileInputRef}
-                onChange={(e)=>handleFileSelect(e)}
+                onChange={(e) => handleFileSelect(e)}
                 accept="image/*" // Только изображения
                 style={{ display: "none" }}
               />
@@ -179,8 +184,9 @@ function CardContent({
               alt="лого"
             />
             {isCreate && (
-              <div className="absolute flex size-full cursor-pointer items-center justify-center bg-transparent opacity-0 transition-all hover:bg-black/50 hover:opacity-100"
-                   onClick={() => handleDivClick("small")}
+              <div
+                className="absolute flex size-full cursor-pointer items-center justify-center bg-transparent opacity-0 transition-all hover:bg-black/50 hover:opacity-100"
+                onClick={() => handleDivClick("small")}
               >
                 <p className="text-2xl font-bold text-white">+</p>
               </div>
@@ -188,94 +194,185 @@ function CardContent({
           </div>
         </div>
         <div className="text-text-main flex h-fit w-full flex-col gap-2 px-2 pt-10 pb-5">
-          <div className="flex items-center justify-between">
-            {!isCreate && (
-              <h3 className="overflow-hidden pe-5 text-base font-medium text-ellipsis whitespace-nowrap">
-                {tournamentCard?.title ?? "Неизвестный турнир"}
-              </h3>
-            )}
-            {isCreate && (
-              <Input
-                onChange={(event) => {
-                  if (!onUpdateCreate) return
-                  onUpdateCreate({ title: event.target.value })
-                }}
-                className="border-border h-full w-[30rem] rounded-2xl border-[1px] p-2 text-[0.8rem]"
-                placeholder={"Название турнира"}
-              />
-            )}
-            <div
-              className={clsx(
-                "me-5 flex h-7 min-w-fit items-center justify-center rounded-full border",
-                { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.tournament_status === "ended" },
-                {
-                  "border-[#32E875] bg-[#32E875]/20 text-[#32E875]": tournamentCard?.tournament_status === "processing",
-                },
-                { "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]": tournamentCard?.tournament_status === "futured" },
-                {
-                  "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]":
-                    tournamentCard?.tournament_status === "registration",
-                },
+          <Tooltip.Provider delay={150}>
+            <div className="flex items-center justify-between">
+              {!isCreate && (
+                <h3 className="overflow-hidden pe-5 text-base font-medium text-ellipsis whitespace-nowrap">
+                  {tournamentCard?.title ?? "Неизвестный турнир"}
+                </h3>
               )}
-            >
-              <p className="px-5">
-                {tournamentCard?.tournament_status === "ended"
-                  ? "Завершен"
-                  : tournamentCard?.tournament_status === "processing"
-                    ? "Проводится"
-                    : tournamentCard?.tournament_status === "futured"
-                      ? "Запланирован"
-                      : tournamentCard?.tournament_status === "registration"
-                        ? "Регистрация открыта"
-                        : "Неизвестно"}
-              </p>
+              {isCreate && (
+                <Tooltip.Root disabled={errorsInternal.length === 0 || !errorsInternal.some((error) => error.key === "title")}>
+                  <Tooltip.Trigger>
+                    <Input
+                      onChange={(event) => {
+                        setErrorsInternal(errorsInternal.filter((error) => error.key !== "title"))
+                        if (!onUpdateCreate) return
+                        onUpdateCreate({ title: event.target.value })
+                      }}
+                      className={twclsx(
+                        "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border transition-colors",
+                        errorsInternal.some((error) => error.key === "title") && "border-red-500",
+                      )}
+                      placeholder={"Название турнира"}
+                    />
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Positioner sideOffset={10} className="z-10">
+                      <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                        <p className="text-red-500">{errorsInternal.find((error) => error.key === "title")?.message ?? ""}</p>
+                      </Tooltip.Popup>
+                    </Tooltip.Positioner>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              )}
+              <div
+                className={twclsx(
+                  "me-5 flex h-7 min-w-fit items-center justify-center rounded-full border transition-colors",
+                  { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.tournament_status === "ended" },
+                  {
+                    "border-[#32E875] bg-[#32E875]/20 text-[#32E875]":
+                      tournamentCard?.tournament_status === "processing",
+                  },
+                  {
+                    "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]": tournamentCard?.tournament_status === "futured",
+                  },
+                  {
+                    "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]":
+                      tournamentCard?.tournament_status === "registration",
+                  },
+                )}
+              >
+                <p className="px-5">
+                  {tournamentCard?.tournament_status === "ended"
+                    ? "Завершен"
+                    : tournamentCard?.tournament_status === "processing"
+                      ? "Проводится"
+                      : tournamentCard?.tournament_status === "futured"
+                        ? "Запланирован"
+                        : tournamentCard?.tournament_status === "registration"
+                          ? "Регистрация открыта"
+                          : "Неизвестно"}
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="text-text-alt flex items-center gap-2">
-            <CiLocationOn className="text-xl" />
-            {!isCreate && <p className="text-xs">{tournamentCard?.location ?? "Местоположение неизвестно"}</p>}
+            <div className="text-text-alt flex items-center gap-2">
+              <CiLocationOn className="text-xl" />
+              {!isCreate && <p className="text-xs">{tournamentCard?.location ?? "Местоположение неизвестно"}</p>}
+              {isCreate && (
+                <Tooltip.Root disabled={errorsInternal.length === 0 || !errorsInternal.some((error) => error.key === "location")}>
+                  <Tooltip.Trigger
+                    render={
+                      <div className={twclsx(errorsInternal.some((error) => error.key === "location") && "text-red-500")}></div>
+                    }
+                  >
+                    <LocationSelector onPick={(data) => {
+                      setErrorsInternal(errorsInternal.filter((error) => error.key !== "location"))
+                      if (!onUpdateCreate) return
+                      onUpdateCreate(data)
+                    }} />
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Positioner sideOffset={10} className="z-10">
+                      <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                        <p className="text-red-500">
+                          {errorsInternal.find((error) => error.key === "location")?.message ?? ""}
+                        </p>
+                      </Tooltip.Popup>
+                    </Tooltip.Positioner>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              )}
+            </div>
+            <div className="text-text-alt flex items-center gap-2">
+              <CiClock2 className="text-xl" />
+              {!isCreate && (
+                <p className="text-xs">
+                  {formatDate(new Date(tournamentCard?.start_date_timestamp ?? 0))} -{" "}
+                  {formatDate(new Date(tournamentCard?.end_date_timestamp ?? 0))}
+                </p>
+              )}
+              {isCreate && (
+                <Tooltip.Root disabled={errorsInternal.length === 0 || !errorsInternal.some((error) => error.key === "start_timestamp")}>
+                  <Tooltip.Trigger
+                    render={
+                      <div
+                        className={twclsx(errorsInternal.some((error) => error.key === "start_timestamp") && "text-red-500")}
+                      ></div>
+                    }
+                  >
+                    <DatePicker
+                      type="range"
+                      onPick={(data: DateRange) => {
+                        setErrorsInternal(errorsInternal.filter((error) => error.key !== "start_timestamp"))
+                        const startDate = data.from
+                        const endDate = data.to
+                        const pickedYear = startDate?.getFullYear()
+
+                        const currentSeasonYear =
+                          (startDate?.getMonth() ?? 0) > 7 ? (pickedYear ?? 0) + 1 : (pickedYear ?? 0)
+
+                        onUpdateCreate &&
+                          onUpdateCreate({
+                            start_timestamp: startDate?.getTime(),
+                            end_timestamp: endDate?.getTime(),
+                            year: currentSeasonYear,
+                          })
+                      }}
+                    />
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Positioner sideOffset={10} className="z-10">
+                      <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                        <p className="text-red-500">
+                          {errorsInternal.find((error) => error.key === "start_timestamp")?.message ?? ""}
+                        </p>
+                      </Tooltip.Popup>
+                    </Tooltip.Positioner>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              )}
+            </div>
+            <div className="text-text-alt flex items-center gap-2">
+              <GoPeople className="text-xl" />
+              <p className="text-xs">10 команд</p>
+            </div>
+
+            {!isCreate && <p className="text-xs">{tournamentCard?.description ?? "Неисвестный турнир"}</p>}
             {isCreate && (
-              <LocationSelector onPick={onUpdateCreate} />
+              <Tooltip.Root disabled={errorsInternal.length === 0 || !errorsInternal.some((error) => error.key === "description")}>
+                <Tooltip.Trigger
+                  render={
+                    <div
+                    ></div>
+                  }
+                >
+                  <textarea
+                    onChange={(event) => {
+                      setErrorsInternal(errorsInternal.filter((error) => error.key !== "description"))
+                      if (!onUpdateCreate) return
+                      onUpdateCreate({ description: event.target.value })
+                    }}
+                    className={twclsx(
+                      "border-border border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-20 w-full resize-none rounded-2xl border-[1px] p-2 text-xs transition-colors",
+                      errorsInternal.some((error) => error.key === "description") && "border-red-500",
+                    )}
+                    placeholder="Описание турнира"
+                  />
+                </Tooltip.Trigger>
+                <Tooltip.Portal>
+                  <Tooltip.Positioner sideOffset={10} className="z-10">
+                    <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                      <p className="text-red-500">
+                        {errorsInternal.find((error) => error.key === "description")?.message ?? ""}
+                      </p>
+                    </Tooltip.Popup>
+                  </Tooltip.Positioner>
+                </Tooltip.Portal>
+              </Tooltip.Root>
             )}
-          </div>
-          <div className="text-text-alt flex items-center gap-2">
-            <CiClock2 className="text-xl" />
-            {!isCreate && <p className="text-xs">{formatDate(new Date(tournamentCard?.start_date_timestamp??0))} - {formatDate(new Date(tournamentCard?.end_date_timestamp??0))}</p>}
-            {isCreate && (
-              <>
-                <DatePicker type="range" onPick={(data: DateRange)=>{
-                  const startDate = data.from
-                  const endDate = data.to
-                  const pickedYear = startDate?.getFullYear()
-
-                  const currentSeasonYear = (startDate?.getMonth() ?? 0) > 7  ? (pickedYear??0) + 1 : pickedYear??0
-
-                  onUpdateCreate && onUpdateCreate({
-                    start_timestamp: startDate?.getTime(),
-                    end_timestamp: endDate?.getTime(),
-                    year: currentSeasonYear
-                  })
-                }}/>
-              </>
-            )}
-          </div>
-          <div className="text-text-alt flex items-center gap-2">
-            <GoPeople className="text-xl" />
-            <p className="text-xs">10 команд</p>
-          </div>
-
-          {!isCreate && <p className="text-xs">{tournamentCard?.description ?? "Неисвестный турнир"}</p>}
-          {isCreate && (
-            <textarea
-              onChange={(event) => {
-                if (!onUpdateCreate) return
-                onUpdateCreate({ description: event.target.value })
-              }}
-              className="border-border h-20 w-full resize-none rounded-2xl border-[1px] p-2 text-xs"
-              placeholder="Описание турнира"
-            />
-          )}
+          </Tooltip.Provider>
         </div>
       </div>
     </>

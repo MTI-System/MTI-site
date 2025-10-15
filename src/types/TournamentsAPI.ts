@@ -40,36 +40,65 @@ export const TournamentResultsTableEntity = z.object({
   table_lines: z.array(TournamentResultsTableLine),
 })
 
-export interface TournamentCreationRequest {
-  token: string
-  title: string
-  description: string
-  main_image: string
-  tournament_logo: string
-  start_timestamp: number
-  end_timestamp: number
-  year: number
-  location: string
-  location_lat: number
-  location_lon: number
-  tournament_type: number
-  problems: number[]
-  fight_containers: TournamentContainerRequest[]
-  materials: TournamentMaterials[]
-}
+export const TournamentCreationRequestSchema = z.object({
+  token: z.string().min(1),
+  title: z.string().min(1, "Название турнира не может быть пустым"),
+  description: z.string().min(1, "Описание турнира не может быть пустым"),
+  main_image: z.string().optional(),
+  tournament_logo: z.string().optional(),
+  start_timestamp: z.number().min(1, "Необходимо выбрать даты проведения турнира"),
+  end_timestamp: z.number().min(1, "Необходимо выбрать даты проведения турнира"),
+  year: z.number().min(1, "Необходимо выбрать даты проведения турнира"),
+  location: z.string().min(1, "Место проведения турнира не может быть пустым"),
+  location_lat: z.number().optional(),
+  location_lon: z.number().optional(),
+  tournament_type: z.number(),
+  problems: z.array(z.number()).min(1, "Необходимо выбрать хотя бы одну задачу"),
+  fight_containers: z.array(z.object({
+    title: z.string().min(1, "Название контейнера не может быть пустым"),
+    date_timestamp: z.number(),
+  })),
+  materials: z.array(z.object({
+    title: z.string().min(1, "Название материала не может быть пустым"),
+    content: z.string().min(1, "Содержание материала не может быть пустым"),
+    content_type: z.number(),
+    is_external: z.boolean(),
+    file_size: z.string().optional(),
+  })),
+})
 
-interface TournamentContainerRequest{
-  title: string
-  date_timestamp: number
-}
+export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequestSchema>
 
-interface TournamentMaterials{
-  title: string
-  content: string
-  content_type: number
-  is_external: boolean
-  file_size: string | null
-}
+// export interface TournamentCreationRequest {
+//   token: string
+//   title: string
+//   description: string
+//   main_image: string
+//   tournament_logo: string
+//   start_timestamp: number
+//   end_timestamp: number
+//   year: number
+//   location: string
+//   location_lat: number
+//   location_lon: number
+//   tournament_type: number
+//   problems: number[]
+//   fight_containers: TournamentContainerRequest[]
+//   materials: TournamentMaterials[]
+// }
+
+// interface TournamentContainerRequest{
+//   title: string
+//   date_timestamp: number
+// }
+
+// interface TournamentMaterials{
+//   title: string
+//   content: string
+//   content_type: number
+//   is_external: boolean
+//   file_size: string | null
+// }
 
 
 
