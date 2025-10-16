@@ -1,15 +1,16 @@
 "use client"
 import { createContext, useContext } from "react"
 
-interface AutocompleteRootContextType {
+interface AutocompleteRootContextType<T> {
   selectedItem: any
-  scrollCallback: () => void
+  scrollCallback: () => Promise<void>
   isLoading: boolean
-  loadedResultsCount: number
-  overallResultsCount: number
+  error?: string
+  preview: T | null
+  handlePreview: (item: T) => void
 }
 
-export const AutocompleteRootContext = createContext<AutocompleteRootContextType | null>(null)
+export const AutocompleteRootContext = createContext<AutocompleteRootContextType<any> | null>(null)
 
 export function useAutocompleteRoot() {
   const ctx = useContext(AutocompleteRootContext)

@@ -14,6 +14,7 @@ import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 import { makeProblemsStoreServer } from "@/api/problems/serverStore"
 import { problemsApiServer } from "@/api/problems/serverApiInterface"
 import { cookies } from "next/headers"
+import TournamentListPage from "@/components/tournaments/TournamentListPage"
 
 export async function generateMetadata({
   searchParams,
@@ -102,55 +103,35 @@ export default async function TournamentsPage({
   searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentState }>
 }) {
   const sp = await searchParams
-
-  let isNoRefresh = false
-  let tt = sp.tt ?? undefined
-  let year = sp.year
-  const page = sp.page ?? "1"
-  let state = sp.state
-
+    let isNoRefresh = false
+  if (!sp.page) {
+    isNoRefresh = true
+    sp.page = "1"
+  }
   if (!sp.state) {
     isNoRefresh = true
-    state = "all"
+    sp.state = "all"
   }
   if (!sp.year) {
     isNoRefresh = true
-    year = "2026"
+    sp.year = "2026"
   }
-  if (!tt) {
+  if (!sp.tt) {
     isNoRefresh = true
-    tt = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
+    sp.tt = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
   }
-
-
   const store = makeTournamentsStoreServer()
-  const promise = store.dispatch(
-    tournamentsApiServer.endpoints.getTournamentCards.initiate({ tt: Number(tt), year: Number(year) }),
+    const promise = store.dispatch(
+    tournamentsApiServer.endpoints.getTournamentCards.initiate({ tt: Number(sp.tt), year: Number(sp.year) }),
   )
   const { data: tournamentsCards } = await promise
-
-  const { data: possibleYears } = await store.dispatch(
-    tournamentsApiServer.endpoints.getAvailableYears.initiate({ tt: Number(tt) }),
-  )
-  const { data: possibleStates } = await store.dispatch(
-    tournamentsApiServer.endpoints.getAvailableStates.initiate({ tt: Number(tt), year: Number(year) }),
-  )
-
-  const filteredTournaments =
-    state === "all" ? tournamentsCards : tournamentsCards?.filter((t) => t.tournament_status === state)
-  console.log("filteredTournaments", filteredTournaments)
+  console.log("cards", tournamentsCards)
   return (
-    <TournamentsStoreProvider>
-      <TournamentsSearchParams searchParams={sp} isNoRefresh={isNoRefresh} />
-      <div className="h-[70vh] shrink-0">
-        <TournamentsFilters availableStates={possibleStates ?? []} availableYears={possibleYears ?? []}>
-          {filteredTournaments && (
-            <Suspense fallback={<Loading />}>
-              <TournamentCardsSpinner tournamentsCards={filteredTournaments} isModerating={false} />
-            </Suspense>
-          )}
-        </TournamentsFilters>
-      </div>
-    </TournamentsStoreProvider>
+    <TournamentListPage 
+      isOrganizator={false}
+      tournamentsCards={tournamentsCards} 
+      sp={sp}
+      isNoRefresh={isNoRefresh}
+    />
   )
 }

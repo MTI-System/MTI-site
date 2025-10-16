@@ -25,9 +25,6 @@ export function generateMetadata(): Metadata {
 
 export default async function Template({ children }: { children: ReactNode }) {
   const cookiesStore = await cookies()
-  const store = makeTournamentsStoreServer()
-  const promise = store.dispatch(tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}))
-  const { data: tournamentTypes } = await promise
   return (
     <html className="bg-bg-main">
       <head>
@@ -60,7 +57,6 @@ export default async function Template({ children }: { children: ReactNode }) {
         tt={cookiesStore.get("mtiyt_tournamentType")?.value ?? "ТЮФ"}
         theme={cookiesStore.get("theme")?.value ?? "light"}
         token={cookiesStore.get("mtiyt_auth_token")?.value ?? ""}
-        availableTournamentTypes={tournamentTypes ?? []}
       >
         <ThemeUpdator />
         <LayoutComponent>{children}</LayoutComponent>

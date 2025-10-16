@@ -33,15 +33,9 @@ function InitRedux() {
   const [fetchPermissions, {data: auth, error, isLoading, isSuccess}] = useFetchPermissionsMutation()
 
   useEffect(() => {
-    const tt = cookies.get(TOURNAMENT_TYPE_KEY_NAME)
+    const tt = cookies.get(TOURNAMENT_TYPE_KEY_NAME) ?? "1"
     const token = cookies.get("mtiyt_auth_token") ?? ""
     fetchPermissions({token: token})
-    // const getAuth = async () => {
-    //   const user = await fetchPermissions()
-    //   console.log("UserId", "init", user)
-    //   setAuthState(user)
-    // }
-    //
     if (tt) {
       dispatch(setTT(Number(tt)))
     }

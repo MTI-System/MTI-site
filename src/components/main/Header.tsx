@@ -4,8 +4,16 @@ import ProfilePicture from "@/components/main/Profile"
 import { Button } from "@/components/ui/Buttons"
 import ThemeSwitchingButton from "../Redux/ThemeSwitcher"
 import NotificationsButton from "@/components/notifications/NotificationsButton"
+import { cookies } from "next/headers"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 
 export default async function Header() {
+  const initTT = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
+  const store = makeTournamentsStoreServer()
+  const promise = store.dispatch(tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}))
+  const { data: tournamentTypes } = await promise
+
   return (
     <>
       <header className="bg-bg-alt flex justify-between px-5 py-3 transition">
@@ -17,7 +25,10 @@ export default async function Header() {
             <Link href={"/"} className="w-full">
               <h1 className="w-full pl-2 text-start">МТИ</h1>
             </Link>
-            <TournamentTypeSelector />
+            <TournamentTypeSelector 
+                initTournamentType={Number(initTT)}
+                availableTournamentTypes={tournamentTypes??[]}
+                />
           </div>
         </div>
         <div className="text-text-main flex flex-row items-center gap-[1vw]">

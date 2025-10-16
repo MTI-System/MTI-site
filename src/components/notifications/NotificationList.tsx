@@ -10,18 +10,20 @@ import {useGetAllNotificationsQuery} from "@/api/notifications/clientApiInterfac
 export default function NotificationList() {
     const [isExpanded, setExpanded] = useState(false);
     const userId = useAppSelector(state => state.auth.authInfo?.user_id);
-    const { data, isLoading, isError } = useGetAllNotificationsQuery(
+    const { data, isLoading, isError, isFetching } = useGetAllNotificationsQuery(
         { userId:  userId??0, param: isExpanded ? "all" : "new" },
+        
     );
+
     return (
         <>
             <div>
                 <div className="w-[20rem] h-[20rem] mt-2 overflow-y-auto" style={{
                     scrollbarWidth: "none",
                 }}>
-                    {isLoading && <Loading />}
+                    {isFetching && <Loading />}
                     {isError && <span>Ошибка!!</span>}
-                    {(!isLoading && !isError) && (
+                    {(!isFetching && !isError) && (
                         <div className="flex flex-col gap-2">
                             {data?.map((notification) => (
                                 <NotificationItem key={notification.id} notification={notification} />

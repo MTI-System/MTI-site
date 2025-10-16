@@ -8,6 +8,9 @@ import ResultsTable from "@/components/tournamentPage/ResutsTable"
 import TournamentPageStoreProviderWrapper from "@/components/Redux/TournamentPageStoreProvider"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
+import { cookies } from "next/headers"
+import { makeAuthStoreServer } from "@/api/auth/serverStore"
+import { authApiServer } from "@/api/auth/serverApiInterface"
 
 export default async function TournamentPage({
   params,
@@ -28,17 +31,30 @@ export default async function TournamentPage({
     return <>Error</>
   }
 
+  let isAdmin = false
+  const token = (await cookies()).get("mtiyt_auth_token")?.value
+  if (token){
+    const authStore = makeAuthStoreServer()
+    const authPromise = authStore.dispatch(authApiServer.endpoints.fetchPermissions.initiate({ token: token }))
+    const { data: permissions, error } = await authPromise
+    console.log("perm", permissions, permissions?.rights.find(r=>r.right_flag === `MODERATE_TOURNAMENT_${id}`), `MODERATE_TOURNAMENT_${id}`)
+    if (permissions?.rights.find(r=>r.right_flag === `MODERATE_TOURNAMENT_${id}`) !== undefined){
+      isAdmin = true
+    }
+  }
+
+
   return (
     <>
       <TournamentPageStoreProviderWrapper tournament={tournament}>
         <Suspense fallback={<Loading />}>
           {tournament && (
             <div className="pt-5">
-              <TournamentCard tournamentCard={tournament} isExtended={true} isCreate={false} />
+              <TournamentCard tournamentCard={tournament} isExtended={true} isCreate={false} isAdmin={isAdmin} />
             </div>
           )}
           {!tournament && <NotFound />}
-          <TournamentsPageTabs tournamentCard={tournament} />
+          <TournamentsPageTabs tournamentCard={tournament} isAdmin={isAdmin} />
           <div className="bg-bg-alt mb-5 min-h-[50rem] w-full rounded-2xl px-2 py-5">{children}</div>
         </Suspense>
       </TournamentPageStoreProviderWrapper>

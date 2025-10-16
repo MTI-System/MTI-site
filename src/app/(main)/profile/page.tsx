@@ -29,7 +29,10 @@ export default async function ProfilePage() {
         token: token
       })
   )
-  const {data: userAuth, error: authError} = await authPromise
+  const {data: userAuth, error}= await authPromise
+  if (error != null) {
+    redirect("/login?redirect=profile")
+  }
 
   return (
     <>

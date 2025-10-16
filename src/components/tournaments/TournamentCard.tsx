@@ -16,6 +16,7 @@ import { useLoadFileMutation } from "@/api/files/clientApiInterface"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import LocationSelector from "../pickers/LocationPicker/LocationSelector"
 import twclsx from "@/utils/twClassMerge"
+import { IoMdSettings } from "react-icons/io"
 
 export default function TournamentCard({
   tournamentCard,
@@ -23,12 +24,14 @@ export default function TournamentCard({
   isCreate,
   onUpdateCreate = null,
   errors = [],
+  isAdmin = false
 }: {
   tournamentCard?: TournamentCardInterface
   isExtended: boolean
   isCreate: boolean
   onUpdateCreate?: TournamentCardCallback | null
   errors?: { key: string; message: string }[]
+  isAdmin?: boolean
 }): JSX.Element {
   return (
     <>
@@ -40,15 +43,18 @@ export default function TournamentCard({
             isCreate={isCreate}
             onUpdateCreate={onUpdateCreate}
             errors={errors}
+            isAdmin={isAdmin}
           />
         </Link>
       ) : (
         <CardContent
+        
           tournamentCard={tournamentCard}
           isExtended={isExtended}
           isCreate={isCreate}
           onUpdateCreate={onUpdateCreate}
           errors={errors}
+          isAdmin={isAdmin}
         />
       )}
     </>
@@ -61,12 +67,14 @@ function CardContent({
   isCreate,
   onUpdateCreate,
   errors = [],
+  isAdmin
 }: {
   tournamentCard?: TournamentCardInterface
   isExtended: boolean
   isCreate: boolean
   onUpdateCreate: TournamentCardCallback | null
-  errors?: { key: string; message: string }[]
+  errors?: { key: string; message: string }[],
+  isAdmin: boolean
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const token = useAppSelector((state) => state.auth.token)
@@ -74,7 +82,7 @@ function CardContent({
   useEffect(() => {
     setErrorsInternal(errors)
   }, [errors])
-
+  
   //lazy инициализацию хука))
   const mutationState = isCreate ? useLoadFileMutation() : null
   const loadFile = mutationState ? mutationState[0] : () => {}
@@ -157,7 +165,7 @@ function CardContent({
                 type="file"
                 ref={fileInputRef}
                 onChange={(e) => handleFileSelect(e)}
-                accept="image/*" // Только изображения
+                accept="image/*" 
                 style={{ display: "none" }}
               />
               <div
@@ -173,10 +181,16 @@ function CardContent({
               <Loading />
             </div>
           )}
+          
+          {isAdmin && (
+            <Link href={`/tournaments/${tournamentCard?.id ?? 0}/settings`}>
+              <IoMdSettings className="absolute z-1 bg-white size-10 right-0 m-2 rounded-xl p-1 hover:opacity-75 cursor-pointer"/>
+            </Link>
+          )}
         </div>
 
         <div className="z-1 flex h-0 w-full items-center pl-5">
-          <div className="bg-bg-alt border-border relative mb-6 aspect-square size-20 overflow-hidden rounded-full border">
+          <div className="relative bg-bg-alt border-border relative mb-6 aspect-square size-20 overflow-hidden rounded-full border">
             <img
               src={FILES_SERVER + (loadedImages.small ?? tournamentCard?.tournament_logo ?? "bigImagePlaceholder.png")}
               loading="lazy"
@@ -191,6 +205,7 @@ function CardContent({
                 <p className="text-2xl font-bold text-white">+</p>
               </div>
             )}
+
           </div>
         </div>
         <div className="text-text-main flex h-fit w-full flex-col gap-2 px-2 pt-10 pb-5">

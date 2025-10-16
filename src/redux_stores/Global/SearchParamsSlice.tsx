@@ -20,7 +20,10 @@ export const SPSlice = createSlice({
     setTT(state, action: PayloadAction<number>) {
       state.tt = Number(action.payload)
     },
+    setAvailableTournamentTypes(state, action: PayloadAction<TournamentTypeIntarface[]>){
+      state.availableTournamentTypes=action.payload
+    }
   },
 })
 
-export const { setTT } = SPSlice.actions
+export const { setTT, setAvailableTournamentTypes } = SPSlice.actions

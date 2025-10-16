@@ -18,34 +18,29 @@ export default function TournamentCardsSpinner({
   tournamentsCards,
   isModerating,
   rights,
+  currentPage
 }: {
   tournamentsCards: TournamentCardInterface[]
   isModerating: boolean
-  rights?: Right[] | null
+  rights?: Right[] | null,
+  currentPage: number
 }) {
-  let currentPage = useTournamentsSelector((state) => state.tournamentsPageFilters.page)
   const dispatch = useTournamentsDispatch()
-
   const isOrganizator = (rights ?? []).filter((r) => r.right_flag === "CREATE_TOURNAMENTS").length !== 0 && isModerating
 
   const [isAnimating, setIsAnimating] = useState(false)
   const itemsPerPage = 3
   const totalPages = Math.ceil((tournamentsCards.length + (isOrganizator ? 1 : 0)) / itemsPerPage)
-  if (!currentPage) currentPage = 1
   const currentItems = tournamentsCards.slice(
     (currentPage - 1) * itemsPerPage - (isOrganizator && currentPage !== 1 ? 1 : 0),
     currentPage * itemsPerPage - (isOrganizator ? 1 : 0),
   )
 
   const goToPage = async (pageIndex: number) => {
-    setIsAnimating(true)
-    await new Promise((resolve) => setTimeout(resolve, 300))
     dispatch(setPage(pageIndex + 1))
-    await new Promise((resolve) => setTimeout(resolve, 50))
-    setIsAnimating(false)
   }
 
-  if (tournamentsCards.length === 0) {
+  if (tournamentsCards.length === 0 && !isOrganizator) {
     return (
       <>
         <div className="h-full">

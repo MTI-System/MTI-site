@@ -60,8 +60,8 @@ export default function TournamentsSearchParams({
     const params = new URLSearchParams()
     params.set("tt", tt?.toString() ?? "1")
     params.set("year", (year ?? 2025).toString())
-    params.set("page", (page ?? 1).toString())
     params.set("state", state)
+    params.set("page", (page ?? 1).toString())
     if (params.toString() == new URLSearchParams(searchParams).toString()) {
       return
     }
