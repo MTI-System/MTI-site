@@ -44,10 +44,10 @@ export default function TournamentTypeSelector({
 
   console.log("asdfqwe", initTournamentType, Number(initTournamentType))
 
-  useEffect( ()=>{
-    dispatcher(setAvailableTournamentTypes(availableTournamentTypes))
-  }, []
-  )
+  // useEffect( ()=>{
+  //   dispatcher(setAvailableTournamentTypes(availableTournamentTypes))
+  // }, []
+  // )
   useEffect(() => {
     console.log("bbbb", selectedState)
   }, [selectedState])

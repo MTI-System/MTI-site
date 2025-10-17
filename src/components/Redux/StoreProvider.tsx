@@ -10,17 +10,19 @@ export default function StoreProvider({
   theme,
   tt,
   token,
+  tournamentTypes
 }: {
   children: React.ReactNode
   theme: string
   tt: string
-  token: string
+  token: string,
+  tournamentTypes: TournamentTypeIntarface[] | null | undefined
 }) {
   const storeRef = useRef<AppStore | null>(null)
   const year = useSearchParams().get("year")
   console.log("Make redux provider")
   if (!storeRef.current) {
-    storeRef.current = makeStore(theme, Number(tt), token, year)
+    storeRef.current = makeStore(theme, Number(tt), token, year, tournamentTypes)
   }
   return <Provider store={storeRef.current}>{children}</Provider>
 }

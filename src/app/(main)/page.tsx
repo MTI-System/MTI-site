@@ -1,14 +1,9 @@
-import mainStyle from "@/styles//routes/(main)/mainPage.module.css"
 import ClickableCard from "@/components/ui/ClickableCard"
 import { Button } from "@/components/ui/Buttons"
-import clsx from "clsx"
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { MaskLineForMenuCard } from "@/components/main/MaskLineForCard"
-import GeoProviderWrapper from "@/api/geocoder/ClientWrapper"
-import LocationPicker from "@/components/pickers/LocationPicker/LocationPicker"
-import LocationSelector from "@/components/pickers/LocationPicker/LocationSelector"
 
 export const metadata: Metadata = {
   title: {

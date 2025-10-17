@@ -23,16 +23,19 @@ import { useProblemsDispatch, useProblemsSelector } from "@/components/Redux/Pro
 import ShareButton from "@/components/problems/ShareButton"
 import { useGetTournamentCardsQuery } from "@/api/tournaments/clientApiInterface"
 import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
+import { TournamentCardInterface } from "@/types/TournamentsAPI"
 
 export default function ProblemFilters({
   children,
   possibleYears,
   possibleSections,
   isModerator,
+  possibleTournaments,
 }: {
   children: ReactNode
   possibleYears: number[]
   possibleSections: ProblemSectionInterface[]
+  possibleTournaments: TournamentCardInterface[] | null | undefined
   isModerator: boolean
 }) {
   const year = useProblemsSelector((state) => state.problemsPageFilters.year ?? possibleYears[0])
@@ -46,22 +49,22 @@ export default function ProblemFilters({
       <div className="flex h-fit w-full content-center items-center gap-5 pt-2">
         <p className="text-text-main text-4xl font-bold">Задачи</p>
         <ColoredTType
-          ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
+          ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮЕ"}
           ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
           className="text-text-main text-4xl font-bold"
         />
         <div className={style.filters}>
           <YearFilter
-              possibleYears={possibleYears}
-              isPending={isPending}
-              isModerator={isModerator}
-              onSwitchYear={(year: number) => {
-                problemDispatcher(setYear(year))
-              }}
-              defaultValue={year}
+            possibleYears={possibleYears}
+            isPending={isPending}
+            isModerator={isModerator}
+            onSwitchYear={(year: number) => {
+              problemDispatcher(setYear(year))
+            }}
+            defaultValue={year}
           />
           <TournamentsProviderWrapper>
-            <TournamentFilter isPending={isPending} />
+            <TournamentFilter isPending={isPending} data={possibleTournaments} />
           </TournamentsProviderWrapper>
           <SectionFilter possibleSections={possibleSections} isPending={isPending}></SectionFilter>
           <ShareButton />
@@ -165,7 +168,7 @@ export function YearFilter({
   isPending,
   isModerator,
   onSwitchYear,
-  defaultValue
+  defaultValue,
 }: {
   possibleYears: number[]
   isPending: boolean
@@ -228,10 +231,11 @@ export function YearFilter({
   )
 }
 
-function TournamentFilter({ isPending }: { isPending: boolean }) {
+function TournamentFilter({ isPending, data }: { isPending: boolean, data: TournamentCardInterface[] | null | undefined }) {
   const tt = useAppSelector((state) => state.searchParams.tt)
   const year = useProblemsSelector((state) => state.problemsPageFilters.year)
-  const { data, isLoading, isError } = useGetTournamentCardsQuery({ tt: tt ?? 1, year: year ?? 0 })
+  const selectedTournament = useProblemsSelector((state) => state.problemsPageFilters.tournament)
+  // const { data, isLoading, isError } = useGetTournamentCardsQuery({ tt: tt ?? 1, year: year ?? 0 })
   const problemDispatcher = useProblemsDispatch()
   const optionList: DropdownOptionInterface<number>[] = [
     {
@@ -253,6 +257,9 @@ function TournamentFilter({ isPending }: { isPending: boolean }) {
   useEffect(() => {
     setSelectedOption(null)
   }, [tt, year])
+  useEffect(() => {
+    setSelectedOption(optionList.find((o) => o.value === selectedTournament) ?? null)
+  }, [data])
   return (
     <>
       {
@@ -260,9 +267,9 @@ function TournamentFilter({ isPending }: { isPending: boolean }) {
           selectionState={selectedOptionState}
           trigger={
             <DropdownTrigger
-              disabled={isLoading || isError || isPending}
+              disabled={isPending}
               className={twclsx("bg-bg-alt hover:bg-hover h-8 w-[20rem] justify-between rounded-full", {
-                "hover:bg-[var(--bg-color)]!": isLoading || isError,
+                "hover:bg-[var(--bg-color)]!": isPending,
               })}
             >
               Все турниры

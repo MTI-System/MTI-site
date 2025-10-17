@@ -5,7 +5,7 @@ import {TournamentTypeIntarface} from "@/types/TournamentTypeIntarface";
 // import cookies from "next/headers"
 interface SPState {
   tt: number | null
-  availableTournamentTypes: TournamentTypeIntarface[] | null
+  availableTournamentTypes: TournamentTypeIntarface[] | null | undefined
 }
 
 const initialState: SPState = {

@@ -11,7 +11,7 @@ export default function makeStore(
   tt: number,
   token: string,
   year: string | null,
-  // availableTournamentTypes: TournamentTypeIntarface[],
+  availableTournamentTypes: TournamentTypeIntarface[] | null | undefined,
 ) {
   return configureStore({
     devTools: { name: "Global store" },
@@ -29,7 +29,8 @@ export default function makeStore(
       },
       searchParams: {
         tt: tt,
-        availableTournamentTypes: null,
+        year: year,
+        availableTournamentTypes: availableTournamentTypes,
       },
       auth: {
         token: token,

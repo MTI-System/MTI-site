@@ -107,6 +107,10 @@ export default async function Page({
         problemsApiServer.endpoints.getProblemsForTournament.initiate({ tournamentId: Number(sp.tournament) }),
       )
   const { data: problems, isLoading, isError, error } = await promise
+  const tournamentsStore = makeTournamentsStoreServer()
+  const { data: possibleTournaments } = await tournamentsStore.dispatch(
+    tournamentsApiServer.endpoints.getTournamentCards.initiate({ tt: Number(tt), year: Number(year) }),
+  )
   console.log("end request", problems, isError, error)
 
   const availableProblemSections: ProblemSectionInterface[] = []
@@ -128,6 +132,7 @@ export default async function Page({
         possibleSections={availableProblemSections}
         possibleYears={possibleYears ?? [2026]}
         isModerator={isEditable}
+        possibleTournaments={possibleTournaments}
       >
         <div className="relative h-full w-full pt-10">
           <Suspense fallback={<div>Loading...</div>}>

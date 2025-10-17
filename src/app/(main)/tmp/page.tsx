@@ -1,6 +1,6 @@
 "use client"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
-import { Autocomplete } from "@/components/pickers/Autocomplete"
+import { Autocomplete } from "@/components/pickers/AutocompleteWithPreview"
 import PersonPicker from "@/components/pickers/PersonPicker"
 import { useEffect, useState } from "react"
 import { FaTimes } from "react-icons/fa"

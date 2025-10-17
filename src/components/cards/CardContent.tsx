@@ -1,8 +1,13 @@
 "use client"
 
+import Loading from "@/app/loading";
 import { FILES_SERVER } from "@/constants/APIEndpoints";
 import twclsx from "@/utils/twClassMerge";
-import { ReactNode, useRef, useState } from "react";
+import Link from "next/link";
+import { ChangeEvent, ReactNode, useRef, useState } from "react";
+import { IoMdSettings } from "react-icons/io";
+import { AvailableRoutings } from "./CardRoot";
+import { Input, Tooltip } from "@base-ui-components/react";
 
 export default function CardContent<T>(
     {   
@@ -12,7 +17,8 @@ export default function CardContent<T>(
         errors = [],
         children,
         isAdmin = false,
-        isCreate
+        isCreate,
+        mainPath
     }:{
         children: ReactNode,
         isCreate: boolean
@@ -20,7 +26,8 @@ export default function CardContent<T>(
         errors?: { key: string; message: string }[]
         isAdmin?: boolean,
         isExtended: boolean,
-        card: CardInterface
+        card: CardInterface,
+        mainPath: AvailableRoutings
     }
 ) {
     const [loadedImages, setLoadedImages] = useState<{ big: string | null; small: string | null }>({
@@ -30,56 +37,82 @@ export default function CardContent<T>(
     const currentLoadingImage = useRef<string>("")
     const fileInputRef = useRef<HTMLInputElement>(null)
     const isLoading = false
+    const [errorsInternal, setErrorsInternal] = useState(errors)
+
+    const handleFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files ? event.target.files[0] : null
+    // reset && reset()
+    // if (file) {
+    //   if (file.type.startsWith("image/")) {
+    //     loadFile({
+    //       file: file,
+    //       token: token,
+    //     })
+
+    //     console.log("Выбран файл:", file.name, file)
+    //   }
+    // }
+    }
+
+    const handleDivClick = (image_type: string) => {
+        if (!fileInputRef.current) return
+        if (!currentLoadingImage.current) {
+        currentLoadingImage.current = image_type
+        }
+        fileInputRef.current?.click()
+    }
+
     return (
         <>
-                {/* <div
+                <div
                     className={twclsx(
                     "bg-bg-alt border-bg-main flex flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500",
                     { "hover:border-accent-primary aspect-[8/9] h-[37rem]": !isExtended },
                     { "h-[33rem] w-full": isExtended },
                     )}
                 >
+
                     <div className="relative h-[64%]">
-                    <img
-                        className="absolute z-0 h-full w-full object-cover"
-                        src={FILES_SERVER + (loadedImages.big ?? card?.main_image ?? "bigImagePlaceholder.png")}
-                        loading="lazy"
-                        alt="Картинка турнира"
-                    />
-                    {isCreate && !isLoading && (
-                        <>
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={(e) => handleFileSelect(e)}
-                            accept="image/*" 
-                            style={{ display: "none" }}
+                        <img
+                            className="absolute z-0 h-full w-full object-cover"
+                            src={FILES_SERVER + (loadedImages.big ?? card?.main_image ?? "bigImagePlaceholder.png")}
+                            loading="lazy"
+                            alt="Картинка турнира"
                         />
-                        <div
-                            onClick={() => handleDivClick("big")}
-                            className="absolute flex size-full cursor-pointer items-center justify-center bg-transparent opacity-0 transition-all hover:bg-black/50 hover:opacity-100"
-                        >
-                            <p className="text-2xl font-bold text-white">Загрузить изображение</p>
-                        </div>
-                        </>
-                    )}
-                    {isLoading && (
-                        <div className="absolute z-1 size-full bg-black/50">
-                        <Loading />
-                        </div>
-                    )}
-                    
-                    {isAdmin && (
-                        <Link href={`/tournaments/${tournamentCard?.id ?? 0}/settings`}>
-                        <IoMdSettings className="absolute z-1 bg-white size-10 right-0 m-2 rounded-xl p-1 hover:opacity-75 cursor-pointer"/>
-                        </Link>
-                    )}
+                        {isCreate && !isLoading && (
+                            <>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={(e) => handleFileSelect(e)}
+                                    accept="image/*" 
+                                    style={{ display: "none" }}
+                                />
+                                <div
+                                    onClick={() => handleDivClick("big")}
+                                    className="absolute flex size-full cursor-pointer items-center justify-center bg-transparent opacity-0 transition-all hover:bg-black/50 hover:opacity-100"
+                                >
+                                    <p className="text-2xl font-bold text-white">Загрузить изображение</p>
+                                </div>
+                            </>
+                        )}
+                        {isLoading && (
+                            <div className="absolute z-1 size-full bg-black/50">
+                                <Loading />
+                            </div>
+                        )}
+                        
+                        {isAdmin && (
+                            <Link href={`/tournaments/${card?.id ?? 0}/settings`}>
+                                <IoMdSettings className="absolute z-1 bg-white size-10 right-0 m-2 rounded-xl p-1 hover:opacity-75 cursor-pointer"/>
+                            </Link>
+                        )}
                     </div>
 
                     <div className="z-1 flex h-0 w-full items-center pl-5">
-                    <div className="relative bg-bg-alt border-border relative mb-6 aspect-square size-20 overflow-hidden rounded-full border">
+                    <div className="relative bg-bg-alt border-border mb-6 aspect-square size-20 overflow-hidden rounded-full border">
                         <img
-                        src={FILES_SERVER + (loadedImages.small ?? tournamentCard?.tournament_logo ?? "bigImagePlaceholder.png")}
+                        src={FILES_SERVER + (loadedImages.small ?? card?.logo_image ?? "bigImagePlaceholder.png")}
                         loading="lazy"
                         className="absolute size-full object-cover"
                         alt="лого"
@@ -100,7 +133,7 @@ export default function CardContent<T>(
                         <div className="flex items-center justify-between">
                         {!isCreate && (
                             <h3 className="overflow-hidden pe-5 text-base font-medium text-ellipsis whitespace-nowrap">
-                            {tournamentCard?.title ?? "Неизвестный турнир"}
+                            {card?.title ?? "Неизвестный турнир"}
                             </h3>
                         )}
                         {isCreate && (
@@ -110,7 +143,7 @@ export default function CardContent<T>(
                                 onChange={(event) => {
                                     setErrorsInternal(errorsInternal.filter((error) => error.key !== "title"))
                                     if (!onUpdateCreate) return
-                                    onUpdateCreate({ title: event.target.value })
+                                    // onUpdateCreate({ title: event.target.value })
                                 }}
                                 className={twclsx(
                                     "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border transition-colors",
@@ -128,7 +161,7 @@ export default function CardContent<T>(
                             </Tooltip.Portal>
                             </Tooltip.Root>
                         )}
-                        <div
+                        {/* <div
                             className={twclsx(
                             "me-5 flex h-7 min-w-fit items-center justify-center rounded-full border transition-colors",
                             { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.tournament_status === "ended" },
@@ -156,10 +189,10 @@ export default function CardContent<T>(
                                     ? "Регистрация открыта"
                                     : "Неизвестно"}
                             </p>
-                        </div>
+                        </div> */}
                         </div>
 
-                        <div className="text-text-alt flex items-center gap-2">
+                        {/* <div className="text-text-alt flex items-center gap-2">
                         <CiLocationOn className="text-xl" />
                         {!isCreate && <p className="text-xs">{tournamentCard?.location ?? "Местоположение неизвестно"}</p>}
                         {isCreate && (
@@ -273,10 +306,11 @@ export default function CardContent<T>(
                             </Tooltip.Positioner>
                             </Tooltip.Portal>
                         </Tooltip.Root>
-                        )}
+                        )} */}
                     </Tooltip.Provider>
-                    </div>
-                </div> */}
+                    </div> 
+                    {children}
+                </div>
         </>
     )
 }

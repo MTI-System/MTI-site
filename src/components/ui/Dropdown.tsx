@@ -149,7 +149,11 @@ export function DropdownTrigger({
     !ddCtx?.selectedOption || dontDisplaySelection ? (
       children
     ) : Array.isArray(ddCtx.selectedOption) ? (
-      <p className="flex-1">Выбрано {ddCtx.selectedOption.length} элементов</p>
+      ddCtx.selectedOption.length > 0 ? (
+        <p className="flex-1">Выбрано {ddCtx.selectedOption.length} элементов</p>
+      ) : (
+        children
+      )
     ) : (
       ddCtx.selectedOption.children
     )

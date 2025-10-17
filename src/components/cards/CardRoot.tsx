@@ -3,6 +3,13 @@ import { ReactNode } from "react"
 import CardContent from "./CardContent";
 import Link from "next/link";
 
+export type AvailableRoutings = "tournaments" | "users"
+
+type anyKey = { [key: string]: any }
+export interface ExtendedCardInterface extends anyKey, CardInterface {
+
+}
+
 export default function CardRoot<T>(
     {   
         card,
@@ -11,7 +18,8 @@ export default function CardRoot<T>(
         errors = [],
         children,
         isAdmin = false,
-        isCreate
+        isCreate,
+        mainPath, // Путь до корня роутинга того, для чего нужнв карточкка (tournaments, users ..)
     }: {
         children: ReactNode,
         isCreate: boolean
@@ -19,7 +27,8 @@ export default function CardRoot<T>(
         errors?: { key: string; message: string }[]
         isAdmin?: boolean,
         isExtended: boolean,
-        card: CardInterface
+        card: ExtendedCardInterface
+        mainPath: AvailableRoutings
     }
 ){
     return (
@@ -34,6 +43,7 @@ export default function CardRoot<T>(
                     onUpdateCreate={onUpdateCreate}
                     errors={errors}
                     isAdmin={isAdmin}
+                    mainPath={mainPath}
                 >
                     {children}
                 </CardContent>
@@ -45,7 +55,9 @@ export default function CardRoot<T>(
             isCreate={isCreate}
             onUpdateCreate={onUpdateCreate}
             errors={errors}
-            isAdmin={isAdmin}>
+            isAdmin={isAdmin}
+            mainPath={mainPath}
+            >
                 {children}
             </CardContent>
         )}

@@ -34,8 +34,8 @@ export function Root<T>({
 }: RootProps<T>) {
   const [preview, setPreview] = useState<T | null>(null)
   const [isLoadingInternal, setIsLoadingInternal] = useState(false)
-  const handlePreview = (item: T) => {
-    setPreview(item)
+  const handlePreview = (item: T | undefined) => {
+    setPreview(item ?? null)
   }
   const debouncedSetQuery = useCallback(
     debounce((value: string) => {
@@ -68,6 +68,12 @@ export function Root<T>({
           debouncedSetQuery(value)
           rest.onValueChange?.(value, e)
         }}
+        onItemHighlighted={
+          (itemValue, e) => {
+            handlePreview(itemValue)
+            rest.onItemHighlighted?.(itemValue, e)
+          }
+        }
         {...rest}
       >
         <label className={classNames?.label}>

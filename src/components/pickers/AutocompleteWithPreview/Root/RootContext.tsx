@@ -6,7 +6,7 @@ interface AutocompleteRootContextType<T> {
   scrollCallback: () => Promise<void>
   isLoading: boolean
   error?: string
-  preview: T | null
+  preview: T | undefined
   handlePreview: (item: T) => void
 }
 
