@@ -14,6 +14,6 @@ export const AutocompleteRootContext = createContext<AutocompleteRootContextType
 
 export function useAutocompleteRoot() {
   const ctx = useContext(AutocompleteRootContext)
-  if (!ctx) throw new Error("useAutocompleteRoot must be used within an AutocompleteRootProvider")
+  if (!ctx) throw new Error("useAutocompleteRoot must be used within an AutocompleteRo")
   return ctx
 }

@@ -5,6 +5,20 @@ export const FightContainerCard = z.object({
   title: z.string(),
 })
 
+export const TournamentLocation = z.object({
+  id: z.number(),
+  location_text: z.string(),
+  location_lat: z.number(),
+  location_lon: z.number()
+})
+
+export const Badge = z.object({
+  badge_color: z.string(),
+  badge_title: z.string(),
+  badge_flag: z.string()
+})
+
+
 export const TournamentCard = z.object({
   id: z.number(),
   title: z.string(),
@@ -12,13 +26,14 @@ export const TournamentCard = z.object({
   main_image: z.string(),
   tournament_logo: z.string(),
   year: z.number(),
-  tournament_status: z.string(),
+  badge: Badge,
   fight_containers_cards: z.array(FightContainerCard),
   materials: z.array(z.number()),
-  location: z.string(),
+  location: TournamentLocation,
   start_date_timestamp: z.number(),
   end_date_timestamp: z.number()
 })
+
 
 
 
@@ -104,3 +119,4 @@ export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequest
 
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>
+export type BadgeInterface = z.infer<typeof Badge>

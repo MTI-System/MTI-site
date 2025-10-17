@@ -246,28 +246,28 @@ function CardContent({
               <div
                 className={twclsx(
                   "me-5 flex h-7 min-w-fit items-center justify-center rounded-full border transition-colors",
-                  { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.tournament_status === "ended" },
+                  { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.badge.badge_flag === "ENDED" },
                   {
                     "border-[#32E875] bg-[#32E875]/20 text-[#32E875]":
-                      tournamentCard?.tournament_status === "processing",
+                      tournamentCard?.badge.badge_flag === "PROCESSING",
                   },
                   {
-                    "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]": tournamentCard?.tournament_status === "futured",
+                    "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]": tournamentCard?.badge.badge_flag === "FUTURED",
                   },
                   {
                     "border-[#3849FF] bg-[#3849FF]/20 text-[#3849FF]":
-                      tournamentCard?.tournament_status === "registration",
+                      tournamentCard?.badge.badge_flag === "REGISTRATION",
                   },
                 )}
               >
                 <p className="px-5">
-                  {tournamentCard?.tournament_status === "ended"
+                  {tournamentCard?.badge.badge_flag === "ENDED"
                     ? "Завершен"
-                    : tournamentCard?.tournament_status === "processing"
+                    : tournamentCard?.badge.badge_flag === "PROCESSING"
                       ? "Проводится"
-                      : tournamentCard?.tournament_status === "futured"
+                      : tournamentCard?.badge.badge_flag === "FUTURED"
                         ? "Запланирован"
-                        : tournamentCard?.tournament_status === "registration"
+                        : tournamentCard?.badge.badge_flag === "REGISTRATION"
                           ? "Регистрация открыта"
                           : "Неизвестно"}
                 </p>
@@ -276,7 +276,7 @@ function CardContent({
 
             <div className="text-text-alt flex items-center gap-2">
               <CiLocationOn className="text-xl" />
-              {!isCreate && <p className="text-xs">{tournamentCard?.location ?? "Местоположение неизвестно"}</p>}
+              {!isCreate && <p className="text-xs">{tournamentCard?.location.location_text ?? "Местоположение неизвестно"}</p>}
               {isCreate && (
                 <Tooltip.Root
                   disabled={errorsInternal.length === 0 || !errorsInternal.some((error) => error.key === "location")}

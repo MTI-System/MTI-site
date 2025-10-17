@@ -1,10 +1,6 @@
 "use client"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
-import { Autocomplete } from "@/components/pickers/AutocompleteWithPreview"
 import PersonPicker from "@/components/pickers/PersonPicker"
-import { useEffect, useState } from "react"
-import { FaTimes } from "react-icons/fa"
-
 // export default function TmpPage() {
 //   const [query, setQuery] = useState("")
 //   const [items, setItems] = useState<number[]>([1, 2, 3, 4])
@@ -81,11 +77,16 @@ import { FaTimes } from "react-icons/fa"
 // }
 
 export default function TmpPage() {
+
   return (
-    <div>
+    <form action={(formData) => {
+      const data = formData.get("user_id")
+      console.log(data)
+    }}>
       <UsersProviderWrapper>
-        <PersonPicker label="Пользователь" placeholder="Выберите пользователя" />
+        <PersonPicker label="Пользователь" placeholder="Выберите пользователя" name="user_id"/>
       </UsersProviderWrapper>
-    </div>
+      <button type="submit">Отправить</button>
+    </form>
   )
 }

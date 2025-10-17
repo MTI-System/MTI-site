@@ -1,24 +1,14 @@
-import CardRoot from "@/components/cards/CardRoot";
+import CardHeader from "@/components/cards/components/headers/CardHeader"
+import CardBigImage from "@/components/cards/components/headers/imagesContainers/CardBigImage"
+import CardSmallImage from "@/components/cards/components/headers/imagesContainers/CardSmallImage"
 
-export default async function SecondTmp(){
-    return (
-        <>
-            <CardRoot 
-                card={
-                    {
-                        id: 1,
-                        main_image: "5391124322845847095_120.jpg",
-                        logo_image: "5391124322845847064_120.jpg",
-                        title: "Название турнира"
-                    }
-                } 
-                isExtended={false}
-                isCreate={false}
-                mainPath="tournaments"
-            >
-                <p>tmp</p>
-            </CardRoot>
-            
-        </>
-    )
+export default async function SecondTmp() {
+  return (
+    <>
+      <CardHeader cardType="small">
+        <CardBigImage isEditing={false} />
+        <CardSmallImage isEditing={false} />
+      </CardHeader>
+    </>
+  )
 }

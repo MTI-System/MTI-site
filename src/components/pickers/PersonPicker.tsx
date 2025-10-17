@@ -1,15 +1,26 @@
 "use client"
-
 import { useFindUsersQuery } from "@/api/users/clientApiInterface"
 import { AutocompleteWithPreview } from "./AutocompleteWithPreview"
-import {  useState } from "react"
+import { useRef, useState } from "react"
 import { User } from "@/types/UsersApi"
 
-export default function PersonPicker({ label, placeholder }: { label: string; placeholder: string }) {
+export default function PersonPicker({
+  label,
+  placeholder,
+  name,
+}: {
+  label: string
+  placeholder: string
+  name: string
+}) {
   const [query, setQuery] = useState("")
   const { data, isFetching, isError } = useFindUsersQuery({ query: query })
+  const hiddenInputRef = useRef<HTMLInputElement>(null)
+
   return (
     <AutocompleteWithPreview.Root
+      name={name}
+      inputRef={hiddenInputRef}
       items={data}
       isLoading={isFetching}
       setQuery={setQuery}
@@ -56,7 +67,7 @@ export default function PersonPicker({ label, placeholder }: { label: string; pl
                 )}
               </AutocompleteWithPreview.List>
             </div>
-            <div className="w-1/2 flex-1 flex items-center justify-center border-l-2 border-gray-200">
+            <div className="flex w-1/2 flex-1 items-center justify-center border-l-2 border-gray-200">
               <p className="w-full p-2 text-center">
                 <AutocompleteWithPreview.Preview>
                   {(preview: User | null) => {
