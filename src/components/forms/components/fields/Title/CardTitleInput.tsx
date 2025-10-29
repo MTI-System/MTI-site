@@ -1,7 +1,7 @@
-export default function CardTitleInput() {
+export function CardTitleInput() {
   return (
     <>
       <input></input>
     </>
-  );
+  )
 }

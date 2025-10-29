@@ -1,7 +1,11 @@
+"use client"
 import { createContext, useContext } from "react"
 
+
 interface CardsRootContextType<T> {
-  
+  registeredItemsFunctions?: (() => boolean)[],
+  isEdit: boolean;
+  isExpanded: boolean;
 }
 
 export const CardsRootContext = createContext<CardsRootContextType<any> | null>(null)

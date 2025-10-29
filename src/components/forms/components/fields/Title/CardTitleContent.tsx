@@ -1,4 +1,4 @@
-export default function CardTitleContent({ 
+export function CardTitleContent({ 
   title,
 }: { 
   title: string,

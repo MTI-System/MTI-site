@@ -1,4 +1,4 @@
-import CardTitleContent from "./CardTitleContent";
+import {CardTitleContent} from "./CardTitleContent";
 import CardTitleInput from "./CardTitleInput";
 
 export default function CardTitle({ 
