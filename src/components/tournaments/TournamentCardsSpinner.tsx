@@ -18,11 +18,11 @@ export default function TournamentCardsSpinner({
   tournamentsCards,
   isModerating,
   rights,
-  currentPage
+  currentPage,
 }: {
   tournamentsCards: TournamentCardInterface[]
   isModerating: boolean
-  rights?: Right[] | null,
+  rights?: Right[] | null
   currentPage: number
 }) {
   const dispatch = useTournamentsDispatch()
@@ -57,7 +57,7 @@ export default function TournamentCardsSpinner({
       <div className="flex items-center justify-center pt-5">
         <div className="flex w-[5%] items-center justify-center">
           <button
-            className="bg-bg-alt border-border size-10 rounded-full border"
+            className="bg-bg-alt border-border hidden size-10 rounded-full border md:block"
             onClick={async () => {
               if (currentPage - 1 <= 0) {
                 await goToPage(totalPages - 1)
@@ -70,7 +70,7 @@ export default function TournamentCardsSpinner({
           </button>
         </div>
         <div
-          className={`flex w-[90%] justify-center gap-2 transition-opacity duration-300 ${
+          className={`flex w-[90%] flex-wrap justify-center gap-2 gap-y-4 transition-opacity duration-300 ${
             isAnimating ? "opacity-0" : "opacity-100"
           }`}
         >

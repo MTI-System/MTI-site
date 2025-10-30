@@ -1,27 +1,27 @@
-import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface";
-import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore";
-import { TournamentState } from "@/types/TournamentStateType";
-import { cookies } from "next/headers";
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { TournamentState } from "@/types/TournamentStateType"
+import { cookies } from "next/headers"
 import TournamentsStoreProvider from "@/components/Redux/TournamentsReduxProvider"
-import TournamentsSearchParams from "./TournamentsSearchParams";
-import { Suspense } from "react";
-import TournamentCardsSpinner from "./TournamentCardsSpinner";
-import TournamentsFilters from "./TournamentsFilters";
-import Loading from "@/app/loading";
-import { TournamentCardInterface } from "@/types/TournamentsAPI";
-import { Right } from "@/types/authApi";
+import TournamentsSearchParams from "./TournamentsSearchParams"
+import { Suspense } from "react"
+import TournamentCardsSpinner from "./TournamentCardsSpinner"
+import TournamentsFilters from "./TournamentsFilters"
+import Loading from "@/app/loading"
+import { TournamentCardInterface } from "@/types/TournamentsAPI"
+import { Right } from "@/types/authApi"
 
 export default async function TournamentListPage({
   sp,
   tournamentsCards,
   isOrganizator,
   rights,
-  isNoRefresh
+  isNoRefresh,
 }: {
-  sp: { year: string; tt: string; page: string; state: TournamentState },
-  tournamentsCards: TournamentCardInterface[] | null | undefined,
-  isOrganizator: boolean,
-  rights?: Right[] | undefined,
+  sp: { year: string; tt: string; page: string; state: TournamentState }
+  tournamentsCards: TournamentCardInterface[] | null | undefined
+  isOrganizator: boolean
+  rights?: Right[] | undefined
   isNoRefresh: boolean
 }) {
   let tt = sp.tt ?? undefined
@@ -29,9 +29,7 @@ export default async function TournamentListPage({
   let page = sp.page
   let state = sp.state
 
-
   const store = makeTournamentsStoreServer()
-
 
   const { data: possibleYears } = await store.dispatch(
     tournamentsApiServer.endpoints.getAvailableYears.initiate({ tt: Number(tt) }),
@@ -46,7 +44,7 @@ export default async function TournamentListPage({
   return (
     <TournamentsStoreProvider>
       <TournamentsSearchParams searchParams={sp} isNoRefresh={isNoRefresh} />
-      <div className="h-[70vh] shrink-0">
+      <div className="min-h-[70vh] shrink-0">
         <TournamentsFilters availableStates={possibleStates ?? []} availableYears={possibleYears ?? []}>
           {filteredTournaments && (
             <Suspense fallback={<Loading />}>

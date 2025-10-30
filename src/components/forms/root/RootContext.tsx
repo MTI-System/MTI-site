@@ -1,13 +1,12 @@
 "use client"
-import { createContext, useContext } from "react"
+import { createContext, RefObject, useContext, useRef } from "react"
 
 
 interface CardsRootContextType<T> {
-  registeredItemsFunctions?: (() => boolean)[],
+  registeredItemsFunctions?:  RefObject<(() => boolean)[]>,
   isEdit: boolean;
   isExpanded: boolean;
 }
-
 export const CardsRootContext = createContext<CardsRootContextType<any> | null>(null)
 
 export function useCardsRoot() {
