@@ -1,5 +1,5 @@
 "use client"
-import { CardsRootContext } from "./RootContext";
+import { CardsRootProvider } from "./RootContext";
 
 export function CardRoot(
   {
@@ -14,12 +14,9 @@ export function CardRoot(
 ){
     return (
         <>
-          <CardsRootContext value={{
-            isEdit,
-            isExpanded
-          }}>
+          <CardsRootProvider isEdit={isEdit} isExpanded={isExpanded}>
             {children}
-          </CardsRootContext>
+          </CardsRootProvider>
         </>
     )
 }

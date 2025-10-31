@@ -10,7 +10,6 @@ import ThemeUpdator from "@/components/Redux/ThemeUpdator"
 import { ReactNode } from "react"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
-import { RiContrastDropLine } from "react-icons/ri"
 
 export function generateMetadata(): Metadata {
   const titleText = "Вход в аккаунт · МТИ"

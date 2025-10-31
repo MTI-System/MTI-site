@@ -1,7 +1,7 @@
 import { useCardsRoot } from "./RootContext";
 
 
-export default function ConfirmButton(
+export function ConfirmButton(
   {
     onClick,
     className = ''
@@ -10,11 +10,15 @@ export default function ConfirmButton(
     className?: string;
   }
 ) {
-  const { registeredItemsFunctions } = useCardsRoot()
+  const { items } = useCardsRoot()
+  console.log("registered", items)
   return (
     <button type="submit" className={className} onClick={()=>{
-      console.log('Confirm button clicked');
-      registeredItemsFunctions?.current?.forEach(func => func());
+      console.log(`Confirm button clicked ${items?.length}`, items);
+      items?.forEach(func => {
+          console.log("Execute func", func.id);
+          func.func()
+      });
       onClick();
     }}>
       Confirm
