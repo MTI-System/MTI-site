@@ -2,25 +2,35 @@
 
 import { useCardsRoot } from "@/components/forms/root/RootContext"
 import { useEffect, useRef, useState } from "react"
+import { ErrorTooltip } from "../ui/ErrorTooltip"
+import twclsx from "@/utils/twClassMerge"
 
-export function InputField({ onVerification }: { onVerification: (value: string) => boolean }) {
+interface InputFieldProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>{
+  onVerification: (value: string) => InputVerificationStatus
+}
+
+export function InputField({
+  onVerification ,
+  ...rest
+}: InputFieldProps) {
   const { register } = useCardsRoot()
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const [isError, setIsError] = useState(false)
+  const [verificationResult, setVerificationResult] = useState<InputVerificationStatus|undefined>(undefined)
 
   useEffect(() => {
     register(() => {
       const result = onVerification(inputRef.current?.value || "")
-      setIsError(!result)
+      setVerificationResult(result)
       return result
     })
   }, [])
 
   return (
     <>
-      {isError && <p>Error message</p>}
-      <input type="text" ref={inputRef} placeholder="Enter rrr" />
+      <ErrorTooltip errorMessage={verificationResult?.errorMessage ?? "Неизвестная ошибка"} isActive={!(verificationResult?.isSuccess ?? true)}>
+        <input className={twclsx({"border border-red-700": !(verificationResult?.isSuccess ?? true)})} ref={inputRef} {...rest} />
+      </ErrorTooltip>
     </>
   )
 }

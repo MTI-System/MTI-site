@@ -6,20 +6,41 @@ export default function SecondTmp() {
     <>
       <Forms.Root isEdit={true} isExpanded={false}>
         <Forms.EdiatableItems>
-          <Forms.InputField onVerification={(value: string) => {
+          <Forms.InputField placeholder={"Введите rrr"} onVerification={(value: string) => {
             if (value !== "rrr"){
-              return false;
+              return {
+                  isSuccess: false,
+                  errorMessage: "Нужно написать rrr !!!!!"
+              };
             }
-            console.log("Verification one");
-            return true
+            return {
+                isSuccess: true,
+
+            }
           }}/>
-          <Forms.InputField onVerification={()=>{
-            console.log("Verification two");
-            return true
+          <Forms.InputField placeholder={"Введите rrr"} onVerification={(value: string)=>{
+            if (value !== "rrr"){
+              return {
+                  isSuccess: false,
+                  errorMessage: "прям очень надо написать rrr !!!!!"
+              };
+            }
+            return {
+                isSuccess: true,
+
+            }
           }}/>
-          <Forms.InputField onVerification={()=>{
-            console.log("Verification three");
-            return true
+          <Forms.InputField placeholder={"Введите rrr"} onVerification={(value: string)=>{
+            if (value !== "rrr"){
+              return {
+                  isSuccess: false,
+                  errorMessage: "только rrr и больше ничего !!!!!"
+              };
+            }
+            return {
+                isSuccess: true,
+
+            }
           }}/>
         </Forms.EdiatableItems>
         <Forms.DefaultItems>

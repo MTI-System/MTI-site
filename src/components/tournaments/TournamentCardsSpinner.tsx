@@ -25,20 +25,8 @@ export default function TournamentCardsSpinner({
   rights?: Right[] | null
   currentPage: number
 }) {
-  const dispatch = useTournamentsDispatch()
   const isOrganizator = (rights ?? []).filter((r) => r.right_flag === "CREATE_TOURNAMENTS").length !== 0 && isModerating
-
-  const [isAnimating, setIsAnimating] = useState(false)
-  const itemsPerPage = 6
-  const totalPages = Math.ceil((tournamentsCards.length + (isOrganizator ? 1 : 0)) / itemsPerPage)
-  const currentItems = tournamentsCards.slice(
-    (currentPage - 1) * itemsPerPage - (isOrganizator && currentPage !== 1 ? 1 : 0),
-    currentPage * itemsPerPage - (isOrganizator ? 1 : 0),
-  )
-
-  const goToPage = async (pageIndex: number) => {
-    dispatch(setPage(pageIndex + 1))
-  }
+  const currentItems = tournamentsCards
 
   if (tournamentsCards.length === 0 && !isOrganizator) {
     return (
@@ -55,24 +43,8 @@ export default function TournamentCardsSpinner({
   return (
     <div className="relative">
       <div className="flex items-center justify-center pt-5">
-        <div className="flex w-[5%] items-center justify-center">
-          <button
-            className="bg-bg-alt border-border hidden size-10 rounded-full border md:block"
-            onClick={async () => {
-              if (currentPage - 1 <= 0) {
-                await goToPage(totalPages - 1)
-              } else {
-                await goToPage(currentPage - 2)
-              }
-            }}
-          >
-            <MdChevronLeft className="text-text-main size-full" />
-          </button>
-        </div>
         <div
-          className={`flex w-[90%] flex-wrap justify-center gap-2 gap-y-4 transition-opacity duration-300 ${
-            isAnimating ? "opacity-0" : "opacity-100"
-          }`}
+          className={`grid w-[90%] grid-cols-[repeat(auto-fill,minmax(30rem,1fr))] gap-2 gap-y-4 transition-opacity duration-300`}
         >
           {currentPage === 1 && isOrganizator && (
             <>
@@ -108,37 +80,7 @@ export default function TournamentCardsSpinner({
             />
           ))}
         </div>
-        <div className="flex w-[5%] items-center justify-center">
-          <button
-            className="bg-bg-alt border-border size-10 rounded-full border"
-            onClick={async () => {
-              if (currentPage >= totalPages) {
-                await goToPage(0)
-              } else {
-                await goToPage(currentPage)
-              }
-            }}
-          >
-            <MdChevronRight className="text-text-main size-full" />
-          </button>
-        </div>
       </div>
-
-      {totalPages > 1 && (
-        <div className="mt-4 flex justify-center gap-7">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToPage(index)}
-              className={`bg-bg-alt size-10 rounded-full border transition-all ${
-                index === currentPage - 1 ? "border-accent-primary" : "border-border"
-              }`}
-            >
-              <p className="font-medium">{index + 1}</p>
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   )
 }

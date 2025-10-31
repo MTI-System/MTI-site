@@ -147,7 +147,7 @@ function CardContent({
       <div
         className={twclsx(
           "bg-bg-alt border-bg-main flex flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500",
-          { "hover:border-accent-primary aspect-[8/9] h-[37rem]": !isExtended },
+          { "hover:border-accent-primary h-[37rem]": !isExtended },
           { "h-[33rem] w-full": isExtended },
         )}
       >

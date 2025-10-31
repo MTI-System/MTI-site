@@ -2,13 +2,13 @@
 import { createContext, ReactNode, useCallback, useContext, useRef, useState } from "react"
 
 type FunctionItem = {
-  func: () => boolean
+  func: () => InputVerificationStatus
   id: number
 }
 
 type CardsRootContextType = {
   items: FunctionItem[]
-  register: (fn: () => boolean) => number
+  register: (fn: () => InputVerificationStatus) => number
   unregister: (id: number) => void
   isEdit: boolean
   isExpanded: boolean
@@ -28,7 +28,7 @@ export function CardsRootProvider({
   const [items, setItems] = useState<FunctionItem[]>([])
   const nextId = useRef(1)
 
-  const register = useCallback((fn: () => boolean) => {
+  const register = useCallback((fn: () => InputVerificationStatus) => {
     const id = nextId.current++
     setItems((prev) => [...prev, { id, func: fn }])
     return id

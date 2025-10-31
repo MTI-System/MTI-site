@@ -2,8 +2,21 @@ import { Popover } from "@base-ui-components/react"
 import { FaBell } from "react-icons/fa"
 import NotificationList from "@/components/notifications/NotificationList"
 import NotificationsProviderWrapper from "@/api/notifications/ClientWrapper"
+import { cookies } from "next/headers"
+import { authApiServer } from "@/api/auth/serverApiInterface"
+import { makeAuthStoreServer } from "@/api/auth/serverStore"
 
-export default function NotificationsButton() {
+export default async function NotificationsButton() {
+  const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
+  const authStore = makeAuthStoreServer()
+  const authPromise = authStore.dispatch(
+    authApiServer.endpoints.fetchPermissions.initiate({
+      token: token,
+    }),
+  )
+  const { data: userAuth, error: authError } = await authPromise
+  if (!userAuth) return <></>
+  // TODO: Make rerender on roter.replace when user logs out
   return (
     <Popover.Root>
       <Popover.Trigger className="aspect-square h-16 rounded-full border-2">
