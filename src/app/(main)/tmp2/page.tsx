@@ -6,7 +6,10 @@ export default function SecondTmp() {
     <>
       <Forms.Root isEdit={true} isExpanded={false}>
         <Forms.EdiatableItems>
-          <Forms.InputField onVerification={()=>{
+          <Forms.InputField onVerification={(value: string) => {
+            if (value !== "rrr"){
+              return false;
+            }
             console.log("Verification one");
             return true
           }}/>

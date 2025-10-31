@@ -1,12 +1,10 @@
 "use client"
-import {createContext, ReactNode, RefObject, useCallback, useContext, useMemo, useRef, useState} from "react"
+import { createContext, ReactNode, useCallback, useContext, useRef, useState } from "react"
 
-
-type FunctionItem= {
-  func: () => boolean,
+type FunctionItem = {
+  func: () => boolean
   id: number
 }
-
 
 type CardsRootContextType = {
   items: FunctionItem[]
@@ -18,21 +16,11 @@ type CardsRootContextType = {
 
 const CardsRootContext = createContext<CardsRootContextType | null>(null)
 
-export function * getId(){
-  let counter = 0
-  while (true) {
-    yield counter
-    counter++
-  }
-  return -1
-}
-
-
-
 export function CardsRootProvider({
-                                    isEdit = false,
-                                    isExpanded = false,
-                                    children, }: {
+  isEdit = false,
+  isExpanded = false,
+  children,
+}: {
   isEdit?: boolean
   isExpanded?: boolean
   children: ReactNode
@@ -42,28 +30,20 @@ export function CardsRootProvider({
 
   const register = useCallback((fn: () => boolean) => {
     const id = nextId.current++
-    setItems(prev => [...prev, { id, func: fn }])
+    setItems((prev) => [...prev, { id, func: fn }])
     return id
   }, [])
 
   const unregister = useCallback((id: number) => {
-    setItems(prev => prev.filter(it => it.id !== id))
+    setItems((prev) => prev.filter((it) => it.id !== id))
   }, [])
 
-  const value = useMemo(
-    () => ({ items, register, unregister, isEdit, isExpanded }),
-    [items, register, unregister, isEdit, isExpanded]
-  )
-
-  return <CardsRootContext.Provider value={value}>{children}</CardsRootContext.Provider>
+  return <CardsRootContext value={{ items, register, unregister, isEdit, isExpanded }}>{children}</CardsRootContext>
 }
-
-
 
 export function useCardsRoot() {
   const ctx = useContext(CardsRootContext)
 
-
   if (!ctx) throw new Error("useCardseRoot must be used within an CardRoot")
-  return {...ctx}
+  return { ...ctx }
 }

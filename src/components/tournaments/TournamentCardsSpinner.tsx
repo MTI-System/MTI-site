@@ -29,7 +29,7 @@ export default function TournamentCardsSpinner({
   const isOrganizator = (rights ?? []).filter((r) => r.right_flag === "CREATE_TOURNAMENTS").length !== 0 && isModerating
 
   const [isAnimating, setIsAnimating] = useState(false)
-  const itemsPerPage = 3
+  const itemsPerPage = 6
   const totalPages = Math.ceil((tournamentsCards.length + (isOrganizator ? 1 : 0)) / itemsPerPage)
   const currentItems = tournamentsCards.slice(
     (currentPage - 1) * itemsPerPage - (isOrganizator && currentPage !== 1 ? 1 : 0),
