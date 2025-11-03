@@ -39,7 +39,7 @@ export default async function TournamentListPage({
   )
 
   const filteredTournaments =
-    state === "all" ? tournamentsCards : tournamentsCards?.filter((t) => t.tournament_status === state)
+    state === "all" ? tournamentsCards : tournamentsCards?.filter((t) => t.badge.badge_flag === state)
   console.log("filteredTournaments", filteredTournaments)
   return (
     <TournamentsStoreProvider>

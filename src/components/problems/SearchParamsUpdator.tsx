@@ -63,12 +63,16 @@ export default function SearchParamsUpdator({
     const params = new URLSearchParams()
     params.set("tt", tt?.toString() ?? "1")
     params.set("year", (year ?? 2025).toString())
-    if (sectionFilter && year === Number(searchParams.year)) {
-      params.set("sections", sectionFilter?.join(",") ?? "")
-    }
-    if (tournament && year === Number(searchParams.year)) {
-      params.set("tournament", tournament.toString())
-    }
+    if (sectionFilter) params.set("sections", sectionFilter?.join(",") ?? "")
+
+    if (tournament) params.set("tournament", tournament.toString())
+    // why this code was here in the first placew idk 
+    // if (sectionFilter && year === Number(searchParams.year)) {
+    //   params.set("sections", sectionFilter?.join(",") ?? "")
+    // }
+    // if (tournament && year === Number(searchParams.year)) {
+    //   params.set("tournament", tournament.toString())
+    // }
     if (params.toString() == new URLSearchParams(searchParams).toString()) {
       return
     }

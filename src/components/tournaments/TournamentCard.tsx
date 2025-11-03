@@ -147,7 +147,7 @@ function CardContent({
       <div
         className={twclsx(
           "bg-bg-alt border-bg-main flex flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500",
-          { "hover:border-accent-primary h-[37rem]": !isExtended },
+          { "hover:border-accent-primary h-[20rem] md:h-[37rem]": !isExtended },
           { "h-[33rem] w-full": isExtended },
         )}
       >
@@ -245,7 +245,7 @@ function CardContent({
               )}
               <div
                 className={twclsx(
-                  "me-5 flex h-7 min-w-fit items-center justify-center rounded-full border transition-colors",
+                  "me-5 flex md:h-7 w-4 h-4 md:min-w-fit items-center justify-center shrink-0 rounded-full border-3 md:border transition-colors ",
                   { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.badge.badge_flag === "ENDED" },
                   {
                     "border-[#32E875] bg-[#32E875]/20 text-[#32E875]":
@@ -260,7 +260,7 @@ function CardContent({
                   },
                 )}
               >
-                <p className="px-5">
+                <p className="px-5 hidden md:block">
                   {tournamentCard?.badge.badge_flag === "ENDED"
                     ? "Завершен"
                     : tournamentCard?.badge.badge_flag === "PROCESSING"

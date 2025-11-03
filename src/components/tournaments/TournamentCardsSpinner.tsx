@@ -39,18 +39,18 @@ export default function TournamentCardsSpinner({
       </>
     )
   }
-
+  // TODO: Fix tournament addition styles for mobile
   return (
     <div className="relative">
       <div className="flex items-center justify-center pt-5">
         <div
-          className={`grid w-[90%] grid-cols-[repeat(auto-fill,minmax(30rem,1fr))] gap-2 gap-y-4 transition-opacity duration-300`}
+          className={`grid w-[90%] grid-cols-[repeat(auto-fill,minmax(80vw,1fr))] md:grid-cols-[repeat(auto-fill,minmax(30rem,1fr))] gap-2 gap-y-4 transition-opacity duration-300`}
         >
           {currentPage === 1 && isOrganizator && (
             <>
               <Link
                 className={clsx(
-                  "bg-bg-alt border-bg-main hover:border-accent-primary flex aspect-[8/9] h-[37rem] flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500",
+                  "bg-bg-alt border-bg-main hover:border-accent-primary flex aspect-[8/9] :h-[37rem] flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500",
                 )}
                 href="/organizators/create"
               >

@@ -1,7 +1,6 @@
 import ClickableCard from "@/components/ui/ClickableCard"
 import { Button } from "@/components/ui/Buttons"
 import type { Metadata } from "next"
-import { cookies } from "next/headers"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { MaskLineForMenuCard } from "@/components/main/MaskLineForCard"
 
@@ -18,7 +17,6 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
-  const cookie = await cookies()
   return (
     <div className="h-full">
       

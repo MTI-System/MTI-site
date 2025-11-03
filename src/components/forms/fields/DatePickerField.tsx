@@ -7,20 +7,6 @@ import DatePicker, {DatePickerProps, formatDate} from "@/components/pickers/Date
 import {MdDateRange} from "react-icons/md";
 import {DateRange} from "react-day-picker";
 
-
-// function GetFormattedDateForVerification(
-//   value: Date | DateRange | undefined
-// ): string {
-//   if (!value) {
-//     return ""
-//   }
-//   if (value instanceof Date) {
-//     return value.toISOString()
-//   } else {
-//     return `${value.from?.toString()} - ${value.to?.toString()}`
-//   }
-// }
-
 interface DatePickerFieldProps {
   className?: string,
   type: "single" | "range",
@@ -34,7 +20,7 @@ export function DatePickerField({
                                   type,
                                   name,
                                   secondValueName,
-
+                                  className,
                                   ...rest
                                 }: DatePickerFieldProps) {
   const {register} = useCardsRoot()
@@ -70,8 +56,8 @@ export function DatePickerField({
       {type == "range" && <input name={secondValueName} ref={secondSelectedDateRef} type={"date"} className="size-[0px] absolute"/>}
       <ErrorTooltip errorMessage={verificationResult?.errorMessage ?? "Неизвестная ошибка"}
                     isActive={!(verificationResult?.isSuccess ?? true)}>
-        {/*<input className={twclsx({"border border-red-700": !(verificationResult?.isSuccess ?? true)})} ref={inputRef} {...rest} />*/}
         <DatePicker
+          className={className}
           type={type}
           onPick={(e: Date | DateRange) => {
             setPickedDate(e)

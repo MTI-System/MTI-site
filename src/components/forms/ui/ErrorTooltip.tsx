@@ -17,10 +17,9 @@ export function ErrorTooltip({
     <>
       <Tooltip.Provider>
         <Tooltip.Root disabled={!isActive} delay={0}>
+            {children}
             <div className="flex gap-2">
-              {children}
               <Tooltip.Trigger aria-label="Bold">
-                {/*<BoldIcon className={styles.Icon} />*/}
                 {isActive && <div className="size-5 bg-red-500/40 border border-red-500 rounded-full">
                   <FaExclamation/>
                 </div>}

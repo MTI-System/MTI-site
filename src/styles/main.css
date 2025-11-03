@@ -21,6 +21,7 @@
   --color-text-accent-primary: #3849ff;
   --color-accent-warning: #fc4747ff;
   --color-accent-warning-alt: #fff0f0;
+  --color-bg-main-accent: #ffffff;
 }
 
 body.dark,
@@ -33,6 +34,7 @@ body[data-theme="dark"] {
   --color-card-alt: #1e1e1e;
   --color-accent-primary-alt: #121549;
   --color-card-cta-bar: #0a0a0a66;
+  --color-bg-main-accent: #1c1c1c;
   color-scheme: dark;
 }
 

@@ -4,7 +4,8 @@ import { DateRange, DayPicker } from "react-day-picker"
 import { FaEdit } from "react-icons/fa"
 
 interface DatePickerBaseProps {
-  defaultDate?: Date | DateRange
+  defaultDate?: Date | DateRange,
+  className?: string
 }
 
 interface SingleDatePicker {
@@ -27,7 +28,7 @@ export const formatDate = (date: Date) => {
   }).format(date)
 }
 
-export default function DatePicker({ onPick, type, defaultDate }: DatePickerProps) {
+export default function DatePicker({ onPick, type, defaultDate, className }: DatePickerProps) {
   console.log(defaultDate)
   const [selected, setSelected] = useState<any>(defaultDate)
   const [isPopoverOpened, setIsPopoverOpened] = useState(false)
@@ -48,7 +49,7 @@ export default function DatePicker({ onPick, type, defaultDate }: DatePickerProp
       }}
     >
       <Popover.Trigger className="">
-        <div className="hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors">
+        <div className={className ?? "hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors"}>
           <span className="text-[0.8rem]">
             {defaultDate ? (type === "range" ? `${formatDate(selected?.from)}-${formatDate(selected?.to)}` : formatDate(selected)): <p>Выберите дату</p>}
           </span>
@@ -56,7 +57,7 @@ export default function DatePicker({ onPick, type, defaultDate }: DatePickerProp
         </div>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner className="relative z-2" sideOffset={8} align={"end"}>
+        <Popover.Positioner className="relative z-2" sideOffset={8} align={"start"}>
           <Popover.Popup className="origin-[var(--transform-origin)] rounded-lg bg-[canvas] px-6 py-4 text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
             <DayPicker
               mode={type}

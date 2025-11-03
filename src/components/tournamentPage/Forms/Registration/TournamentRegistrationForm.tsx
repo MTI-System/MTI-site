@@ -1,72 +1,44 @@
 "use client"
 import {TournamentRegistrationFormInfoInterface} from "@/types/TournamentRegistrationApi";
 import {Forms} from "@/components/forms";
+import LineRegistrationField from "./Parts/LineRegistrationField";
+import DateRegistrationField from "./Parts/DateRegistrationField";
 
 export default function TournamentRegistrationForm({
                                                      formInfo,
                                                      className,
-                                                      isEdit,
+                                                     isEdit,
                                                    }: {
   formInfo: TournamentRegistrationFormInfoInterface | null
   className: string,
   isEdit: boolean
 }) {
-
-
   return (
     <>
-      <Forms.Root isEdit={isEdit} isExpanded={false}>
-        <Forms.Trigger onConfirm={(e) => {
+      <h1>Регистрация на турнир</h1>
+      <Forms.Root isEdit={true} isExpanded={false}>
+        <Forms.Trigger className="mt-4 flex flex-col gap-2" onConfirm={(e) => {
           console.log("form result", e.entries().toArray());
         }}>
-          <Forms.EdiatableItems>
             {formInfo?.fields.map((field)=>{
               switch (field.type){
+                case "number":
                 case "text":
-                  return <Forms.InputField name={field.key} placeholder={field.title} onVerification={(value: string) => {
-                    if (value !== "rrr") {
-                      return {
-                        isSuccess: false,
-                        errorMessage: "Нужно написать rrr !!!!!"
-                      };
-                    }
-                    return {
-                      isSuccess: true,
-
-                    }
-                  }}/>
+                  return <LineRegistrationField key={field.id} field={field}/>
+                case "date":
+                  return <DateRegistrationField key={field.id} field={field}/>
                 default:
-                  return <p>Unknown field</p>
+                  return <p>Unknown</p>
               }
-            })}
-
-            {/*<Forms.DatePickerField name={"date1"} type={"single"} onVerification={(value) => {*/}
-            {/*  if(value === "01.11.2025") {*/}
-            {/*    return {*/}
-            {/*      isSuccess: true,*/}
-            {/*    }*/}
-            {/*  }*/}
-            {/*  return {*/}
-            {/*    isSuccess: false,*/}
-            {/*    errorMessage: "Выберите дату 01.11.2025"*/}
-            {/*  }*/}
-            {/*}}/>*/}
-
-
-
-
-            <Forms.ConfirmButton onClick={() => {
-              return {
-                isSuccess: false,
-              }
-            }}/>
-          </Forms.EdiatableItems>
-          <Forms.DefaultItems>
-            asd
-          </Forms.DefaultItems>
-
+            }
+            )
+          }
+          <Forms.ConfirmButton className="bg-accent-primary/30 h-10 rounded-xl px-10 border-accent-primary border hover:bg-accent-primary/50 text-accent-primary font-bold">
+            Отправить форму
+          </Forms.ConfirmButton>
         </Forms.Trigger>
       </Forms.Root>
     </>
   )
+
 }

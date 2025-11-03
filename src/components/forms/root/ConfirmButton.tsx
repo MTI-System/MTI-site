@@ -1,15 +1,17 @@
 "use client"
 import { useCardsRoot } from "./RootContext";
-import {useRef} from "react";
+import {ReactNode, useRef} from "react";
 
 
 export function ConfirmButton(
   {
     onClick,
-    className = ''
+    className = '',
+    children
   }: {
-    onClick: () => void;
+    onClick?: () => void;
     className?: string;
+    children: ReactNode
   }
 ) {
   const { items } = useCardsRoot()
@@ -26,14 +28,14 @@ export function ConfirmButton(
           });
           console.log(isOk)
           if (isOk) {
-            onClick();
+            onClick?.();
             if(!submitRef.current){
               return;
             }
             submitRef.current.click();
           }
         }}>
-        Confirm
+        {children}
       </button>
     </>
 

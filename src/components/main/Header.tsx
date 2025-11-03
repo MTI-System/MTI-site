@@ -7,12 +7,24 @@ import NotificationsButton from "@/components/notifications/NotificationsButton"
 import { cookies } from "next/headers"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
+import { authApiServer } from "@/api/auth/serverApiInterface"
+import { makeAuthStoreServer } from "@/api/auth/serverStore"
 
 export default async function Header() {
   const initTT = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
   const store = makeTournamentsStoreServer()
   const promise = store.dispatch(tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}))
   const { data: tournamentTypes } = await promise
+  
+  const cookie = await cookies()
+  const authStore = makeAuthStoreServer()
+  const authPromise = authStore.dispatch(
+    authApiServer.endpoints.fetchPermissions.initiate({
+      token: cookie.get("mtiyt_auth_token")?.value ?? "",
+    }),
+  )
+  const { data: userAuth } = await authPromise
+  // TODO: Fix page non refreshing on logout
 
   return (
     <>
@@ -32,7 +44,7 @@ export default async function Header() {
           </div>
         </div>
         <div className="text-text-main flex flex-row items-center gap-[1vw]">
-          <NotificationsButton />
+          {userAuth && <NotificationsButton />}
           <ThemeSwitchingButton className="rounded-full border-2" />
           <Button className="aspect-square h-16 rounded-full border-2">
             <ProfilePicture className="" />
