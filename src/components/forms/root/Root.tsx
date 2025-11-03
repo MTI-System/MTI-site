@@ -1,5 +1,6 @@
 "use client"
 import { CardsRootProvider } from "./RootContext";
+import React from "react";
 
 export function CardRoot(
   {

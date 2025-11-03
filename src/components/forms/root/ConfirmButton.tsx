@@ -1,4 +1,6 @@
+"use client"
 import { useCardsRoot } from "./RootContext";
+import {useRef} from "react";
 
 
 export function ConfirmButton(
@@ -11,17 +13,29 @@ export function ConfirmButton(
   }
 ) {
   const { items } = useCardsRoot()
-  console.log("registered", items)
+  const submitRef = useRef<HTMLInputElement>(null);
+
   return (
-    <button type="submit" className={className} onClick={()=>{
-      console.log(`Confirm button clicked ${items?.length}`, items);
-      items?.forEach(func => {
-          console.log("Execute func", func.id);
-          func.func()
-      });
-      onClick();
-    }}>
-      Confirm
-    </button>
+    <>
+      <input ref={submitRef} type="submit" className={"absolute size-0"}/>
+      <button type="button" className={className} onClick={
+        ()=>{
+          let isOk = true;
+          items?.forEach(func => {
+            isOk = func.func().isSuccess && isOk
+          });
+          console.log(isOk)
+          if (isOk) {
+            onClick();
+            if(!submitRef.current){
+              return;
+            }
+            submitRef.current.click();
+          }
+        }}>
+        Confirm
+      </button>
+    </>
+
   );
 }

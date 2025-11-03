@@ -17,7 +17,7 @@ interface RangeDatePicker {
   onPick: (data: DateRange) => void
 }
 
-type DatePickerProps = DatePickerBaseProps & (SingleDatePicker | RangeDatePicker)
+export type DatePickerProps = DatePickerBaseProps & (SingleDatePicker | RangeDatePicker)
 
 export const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("ru-RU", {
@@ -65,15 +65,6 @@ export default function DatePicker({ onPick, type, defaultDate }: DatePickerProp
               required={true}
               animate
               fixedWeeks={true}
-              // classNames={{
-              //   month_grid: "border-separate border-spacing-0",
-              //   today: `border-border border rounded-full`,
-              //   range_middle: "bg-accent-primary/50",
-              //   selected: `bg-accent-primary text-text-on-accent rounded-none! border-none!`,
-              //   range_start: "rounded-l-full! shadow-[2px_0_4px_rgba(from_var(--color-accent-primary)_r_g_b/0.3)]",
-              //   range_end: "rounded-r-full! shadow-[-2px_0_4px_rgba(from_var(--color-accent-primary)_r_g_b/0.3)]",
-                
-              // }}
               style={{
                 "--rdp-accent-color": "var(--color-accent-primary)",
                 "--rdp-accent-background-color": "rgba(from var(--color-accent-primary) r g b / 0.3)",

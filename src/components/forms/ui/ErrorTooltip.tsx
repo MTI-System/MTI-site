@@ -1,5 +1,6 @@
 import { Tooltip } from "@base-ui-components/react"
-import { ReactNode } from "react"
+import React, { ReactNode } from "react"
+import {FaExclamation} from "react-icons/fa";
 
 
 export function ErrorTooltip({
@@ -16,10 +17,16 @@ export function ErrorTooltip({
     <>
       <Tooltip.Provider>
         <Tooltip.Root disabled={!isActive} delay={0}>
-            <Tooltip.Trigger aria-label="Bold">
-              {/*<BoldIcon className={styles.Icon} />*/}
+            <div className="flex gap-2">
               {children}
-            </Tooltip.Trigger>
+              <Tooltip.Trigger aria-label="Bold">
+                {/*<BoldIcon className={styles.Icon} />*/}
+                {isActive && <div className="size-5 bg-red-500/40 border border-red-500 rounded-full">
+                  <FaExclamation/>
+                </div>}
+              </Tooltip.Trigger>
+            </div>
+
             <Tooltip.Portal>
               <Tooltip.Positioner sideOffset={10}>
                 <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-red-200 outline outline-1 outline-red-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-red-300">

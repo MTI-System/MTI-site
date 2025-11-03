@@ -1,7 +1,9 @@
+
 import RegistrationForm from "@/components/tournamentPage/Forms/RegistrationForm"
 import RegistrationProviderWrapper from "@/api/registration/ClientWrapper"
 import { makeRegistrationStoreServer } from "@/api/registration/serverStore"
 import { registrationApiServer } from "@/api/registration/serverApiInterface"
+import TournamentRegistrationForm from "@/components/tournamentPage/Forms/Registration/TournamentRegistrationForm";
 
 export default async function RegisterTournamentsPage({ params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id
@@ -19,9 +21,10 @@ export default async function RegisterTournamentsPage({ params }: { params: Prom
     <>
       {isError && <h2>Error</h2>}
       {formInfo && (
-        <RegistrationProviderWrapper>
-          <RegistrationForm className="flex w-full flex-col items-center gap-2" formInfo={formInfo} />
-        </RegistrationProviderWrapper>
+        // <RegistrationProviderWrapper>
+        //   <RegistrationForm className="flex w-full flex-col items-center gap-2" formInfo={formInfo} />
+        // </RegistrationProviderWrapper>
+        <TournamentRegistrationForm formInfo={formInfo} className={""} isEdit={true}/>
       )}
     </>
   )
