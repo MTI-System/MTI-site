@@ -23,37 +23,33 @@ export function DatePickerField({
                                   className,
                                   ...rest
                                 }: DatePickerFieldProps) {
-  const {register} = useCardsRoot()
+  const {register, setFormField} = useCardsRoot()
   const [verificationResult, setVerificationResult] = useState<InputVerificationStatus | undefined>(undefined)
   const [pickedDate, setPickedDate] = useState<Date | DateRange | undefined>(undefined)
-  const firstSelectedDateRef = useRef<HTMLInputElement>(null)
-  const secondSelectedDateRef = useRef<HTMLInputElement>(null)
 
-  const stringResultRef = useRef<string>("")
-
-  useEffect(() => {
+  const verifyCallback = useCallback(()=>{
+    let stringDate = ""
     if (pickedDate instanceof Date) {
-      stringResultRef.current = formatDate(pickedDate)
+      stringDate = formatDate(pickedDate)
     }
     else{
-      stringResultRef.current = formatDate(pickedDate?.from ?? new Date()) + " " + formatDate(pickedDate?.to ?? new Date())
+      stringDate = formatDate(pickedDate?.from ?? new Date()) + " " + formatDate(pickedDate?.to ?? new Date())
     }
-  }, [pickedDate]);
+    const result = onVerification(stringDate)
+    setVerificationResult(result)
+      if (result.isSuccess){
+        setFormField(name, stringDate)
+      }
+    return result
+  }, [pickedDate])
+
 
   useEffect(() => {
-    register(() => {
-      const result = onVerification(stringResultRef.current)
-      setVerificationResult(result)
-      return result
-    })
+    register(verifyCallback)
   }, [])
 
   return (
     <>
-      {/*Пикер для первой даты*/}
-      <input name={name} ref={firstSelectedDateRef} type={"date"} className="size-[0px] absolute"/>
-      {/*Пикер для второй даты*/}
-      {type == "range" && <input name={secondValueName} ref={secondSelectedDateRef} type={"date"} className="size-[0px] absolute"/>}
       <ErrorTooltip errorMessage={verificationResult?.errorMessage ?? "Неизвестная ошибка"}
                     isActive={!(verificationResult?.isSuccess ?? true)}>
         <DatePicker
@@ -61,18 +57,6 @@ export function DatePickerField({
           type={type}
           onPick={(e: Date | DateRange) => {
             setPickedDate(e)
-            if (!firstSelectedDateRef.current) {
-              return
-            }
-            if (e instanceof Date) {
-              firstSelectedDateRef.current.valueAsDate = e
-            } else if ("from" in e) {
-              if (!secondSelectedDateRef.current) {
-                return
-              }
-              firstSelectedDateRef.current.valueAsDate = e.from ?? null
-              secondSelectedDateRef.current.valueAsDate = e.to ?? null
-            }
           }}
           defaultDate={new Date(0)}
         />

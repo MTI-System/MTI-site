@@ -15,7 +15,7 @@ export function InputField({
   name,
   ...rest
 }: InputFieldProps) {
-  const { register } = useCardsRoot()
+  const { register, setFormField } = useCardsRoot()
 
   const inputRef = useRef<HTMLInputElement>(null)
   const [verificationResult, setVerificationResult] = useState<InputVerificationStatus|undefined>(undefined)
@@ -24,6 +24,9 @@ export function InputField({
     register(() => {
       const result = onVerification(inputRef.current?.value || "")
       setVerificationResult(result)
+      if (result.isSuccess){
+        setFormField(name, inputRef.current?.value || "")
+      }
       return result
     })
   }, [])

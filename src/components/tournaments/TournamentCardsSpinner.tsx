@@ -39,28 +39,27 @@ export default function TournamentCardsSpinner({
       </>
     )
   }
-  // TODO: Fix tournament addition styles for mobile
   return (
     <div className="relative">
       <div className="flex items-center justify-center pt-5">
         <div
-          className={`grid w-[90%] grid-cols-[repeat(auto-fill,minmax(80vw,1fr))] md:grid-cols-[repeat(auto-fill,minmax(30rem,1fr))] gap-2 gap-y-4 transition-opacity duration-300`}
+          className={`grid w-[90%] grid-cols-1 gap-2 gap-y-4 transition-opacity duration-300 lg:grid-cols-[repeat(auto-fill,minmax(25rem,1fr))]`}
         >
           {currentPage === 1 && isOrganizator && (
             <>
               <Link
                 className={clsx(
-                  "bg-bg-alt border-bg-main hover:border-accent-primary flex aspect-[8/9] :h-[37rem] flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500",
+                  "bg-bg-alt border-bg-main hover:border-accent-primary flex h-20 w-full flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500 md:h-30 lg:h-148",
                 )}
                 href="/organizators/create"
               >
                 <div
-                  className="size-full bg-blue-700"
+                  className="size-full bg-blue-700 text-[0.65rem] md:text-[0.8rem] lg:text-[1rem]"
                   style={{
                     WebkitMaskImage: `url('${FILES_SERVER + "add_2_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"}')`,
                     maskImage: `url('${FILES_SERVER + "add_2_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"}')`,
-                    WebkitMaskSize: `${5}rem ${5}rem`,
-                    maskSize: `${5}rem ${5}rem`,
+                    WebkitMaskSize: `${5}em ${5}em`,
+                    maskSize: `${5}em ${5}em`,
                     WebkitMaskRepeat: "no-repeat", // повторяем только по X
                     maskRepeat: "no-repeat",
                     WebkitMaskPosition: "center", // одна строка по центру по Y

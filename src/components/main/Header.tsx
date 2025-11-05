@@ -15,23 +15,13 @@ export default async function Header() {
   const store = makeTournamentsStoreServer()
   const promise = store.dispatch(tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}))
   const { data: tournamentTypes } = await promise
-  
-  const cookie = await cookies()
-  const authStore = makeAuthStoreServer()
-  const authPromise = authStore.dispatch(
-    authApiServer.endpoints.fetchPermissions.initiate({
-      token: cookie.get("mtiyt_auth_token")?.value ?? "",
-    }),
-  )
-  const { data: userAuth } = await authPromise
-  // TODO: Fix page non refreshing on logout
 
   return (
     <>
       <header className="bg-bg-alt flex justify-between px-5 py-3 transition">
         <div className="flex h-fit items-center gap-1 font-bold">
           <Link href={"/"} className="flex h-fit items-center">
-            <div className="bg-text-main size-[4rem] mask-[url('https://api.mtiyt.ru/files/get/LogoType.svg')] mask-contain mask-center mask-no-repeat"></div>
+            <div className="bg-text-main size-16 mask-[url('https://api.mtiyt.ru/files/get/LogoType.svg')] mask-contain mask-center mask-no-repeat"></div>
           </Link>
           <div className="text-text-main align-center flex flex-col items-center justify-center text-3xl">
             <Link href={"/"} className="w-full">

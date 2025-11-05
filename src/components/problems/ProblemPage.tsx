@@ -25,11 +25,9 @@ import { makeProblemsStoreServer } from "@/api/problems/serverStore"
 import { makeMaterialsStoreServer } from "@/api/materials/serverStore"
 import { materialsApiServer } from "@/api/materials/serverApiInterface"
 
+
 async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const token = (await cookies()).get("mtiyt_auth_token")?.value ?? ""
-  if (!token) {
-    redirect("/login?redirect=problems")
-  }
   const authStore = makeAuthStoreServer()
   const authPromise = authStore.dispatch(
     authApiServer.endpoints.fetchPermissions.initiate({

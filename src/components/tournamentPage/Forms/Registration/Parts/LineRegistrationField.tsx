@@ -25,12 +25,6 @@ export default function LineRegistrationField(
               name={fieldObject.key}
               placeholder={fieldObject.title}
               onVerification={(value: string) => {
-                if (value !== "rrr") {
-                  return {
-                    isSuccess: false,
-                    errorMessage: "Нужно написать rrr !!!!!"
-                  };
-                }
                 return {
                   isSuccess: true,
                 }

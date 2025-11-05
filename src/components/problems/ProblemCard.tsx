@@ -3,7 +3,7 @@ import { FaEdit, FaPlus } from "react-icons/fa"
 import { MdDeleteOutline } from "react-icons/md"
 import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
 import Link from "next/link"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CSSProperties, useEffect, useRef, useState, useTransition } from "react"
 import { PiGlobeBold, PiGlobeLight } from "react-icons/pi"
 import ProblemSection from "@/components/problems/ProblemSection"
@@ -48,6 +48,10 @@ export function ProblemCardContent({
   const [selectedTrnslation, setTrnslation] = useState(0)
   const searchParams = useSearchParams()
   const is_edit_page = searchParams.get("is_edit") === "true"
+  const token = useAppSelector((state) => state.auth.token)
+  if (!token && is_edit_page) {
+    redirect("/login?redirect=problems/" + problem.id.toString() + "?is_edit=true")
+  }
 
   const editedProblemNumberRef = useRef<number>(problem.global_number)
   const editedProblemNameRef = useRef<string>(problem.problem_translations[selectedTrnslation].problem_name)
@@ -60,7 +64,6 @@ export function ProblemCardContent({
 
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const router = useRouter()
-  const token = useAppSelector((state) => state.auth.token)
   const pathname = usePathname()
   if (!startTransition) startTransition = useTransition()[1]
   const handletaskEdit = async () => {

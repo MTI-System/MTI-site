@@ -14,9 +14,6 @@ export default async function NotificationsButton() {
       token: token,
     }),
   )
-  const { data: userAuth, error: authError } = await authPromise
-  // if (!userAuth) return <></>
-  // TODO: Make rerender on roter.replace when user logs out
   return (
     <Popover.Root>
       <Popover.Trigger className="aspect-square h-16 rounded-full border-2">

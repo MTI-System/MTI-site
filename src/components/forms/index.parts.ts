@@ -4,6 +4,7 @@ import { EditableFormsItems as EdiatableItems } from "./states/EditableFormsCont
 import { DefaultCardItems as DefaultItems } from "./states/DefaulFormsItems"
 import { InputField  } from "./fields/InputField"
 import { DatePickerField  } from "./fields/DatePickerField"
+import { DropdownField  } from "./fields/DropdownField"
 import { FormTrigger as Trigger  } from "./root/FormTrigger"
 
-export const Forms = { Root, EdiatableItems, DefaultItems, InputField, ConfirmButton,DatePickerField, Trigger }
+export const Forms = { Root, EdiatableItems, DefaultItems, InputField, ConfirmButton,DatePickerField, Trigger,  DropdownField}

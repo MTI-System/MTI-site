@@ -31,6 +31,8 @@ export default function TournamentRegistrationForm({
                   }}/>
                 case "date":
                   return <DateRegistrationField key={field.id} field={field}/>
+                case "dropdown":
+                  return <Forms.DropdownField/>
                 default:
                   return <p>Unknown</p>
               }

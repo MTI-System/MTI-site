@@ -14,12 +14,6 @@ export default function DateRegistrationField(
                 name={field.key} 
                 type={"single"}
                 onVerification={(value: string) => {
-                    if (value !== "rrr") {
-                    return {
-                        isSuccess: false,
-                        errorMessage: "Нужно написать rrr !!!!!"
-                    };
-                    }
                     return {
                     isSuccess: true,
                     }

@@ -15,6 +15,8 @@ import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { TournamentCardInterface } from "@/types/TournamentsAPI"
 import { Suspense } from "react"
+
+
 export async function generateMetadata({
   searchParams,
 }: {
@@ -149,7 +151,7 @@ export default async function Page({
                 {currentTournament !== null && (
                   <>
                     <div className="block lg:hidden w-full h-0 border-b-2 border-border my-5"></div>
-                    <div className="static aspect-auto lg:sticky md:top-2 md:aspect-[8/9] md:h-[37rem]">
+                    <div className="static aspect-auto lg:sticky md:top-2 md:aspect-8/9 md:h-148">
                       <TournamentCard
                         tournamentCard={currentTournament}
                         isExtended={false}
