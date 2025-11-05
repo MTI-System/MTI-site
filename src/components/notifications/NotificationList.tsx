@@ -15,6 +15,8 @@ export default function NotificationList() {
         
     );
 
+    if (!userId) return <div className="text-text-main text-center font-medium py-5 px-2 w-2xs"><p>Войдите в аккаунт или зарегестрируйтесь, чтобы получать уведомления</p></div>
+
     return (
         <>
             <div>

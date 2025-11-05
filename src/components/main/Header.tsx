@@ -44,7 +44,7 @@ export default async function Header() {
           </div>
         </div>
         <div className="text-text-main flex flex-row items-center gap-[1vw]">
-          {userAuth && <NotificationsButton />}
+          <NotificationsButton />
           <ThemeSwitchingButton className="rounded-full border-2" />
           <Button className="aspect-square h-16 rounded-full border-2">
             <ProfilePicture className="" />
