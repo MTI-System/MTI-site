@@ -17,14 +17,17 @@ export function ErrorTooltip({
     <>
       <Tooltip.Provider>
         <Tooltip.Root disabled={!isActive} delay={0}>
+          <div className="relative flex items-center size-full">
             {children}
-            <div className="flex gap-2">
+            <div className="flex gap-2 absolute right-10 w-fit">
               <Tooltip.Trigger aria-label="Bold">
                 {isActive && <div className="size-5 bg-red-500/40 border border-red-500 rounded-full">
-                  <FaExclamation/>
+                    <FaExclamation/>
                 </div>}
               </Tooltip.Trigger>
             </div>
+          </div>
+
 
             <Tooltip.Portal>
               <Tooltip.Positioner sideOffset={10}>

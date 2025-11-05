@@ -24,7 +24,11 @@ export default function TournamentRegistrationForm({
               switch (field.type){
                 case "number":
                 case "text":
-                  return <LineRegistrationField key={field.id} field={field}/>
+                  return <LineRegistrationField key={field.id}  field={{ //field={field}
+                    id: 0,
+                    formField: field,
+                    content: "Ответ"
+                  }}/>
                 case "date":
                   return <DateRegistrationField key={field.id} field={field}/>
                 default:
