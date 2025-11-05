@@ -5,10 +5,10 @@ export function ConstructorLayout() {
   const items = [1, 2, 3, 4];
   return (
     <>
-      <div className="relative bg-black w-full h-[100vh]">
+      <div className="relative bg-bg-alt w-full h-[100vh] pt-2" >
         <ul>
           {items.map((id, index) =>
-            <ConstructorItem key={id} id={id} index={index}/>
+            <ConstructorItem key={id} id={id} index={index} title={"Название поля"}/>
           )}
         </ul>
       </div>

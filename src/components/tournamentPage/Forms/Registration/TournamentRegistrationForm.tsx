@@ -3,6 +3,7 @@ import {TournamentRegistrationFormInfoInterface} from "@/types/TournamentRegistr
 import {Forms} from "@/components/forms";
 import LineRegistrationField from "./Parts/LineRegistrationField";
 import DateRegistrationField from "./Parts/DateRegistrationField";
+import DropdownRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/DropdownRegistrationField";
 
 export default function TournamentRegistrationForm({
                                                      formInfo,
@@ -32,7 +33,7 @@ export default function TournamentRegistrationForm({
                 case "date":
                   return <DateRegistrationField key={field.id} field={field}/>
                 case "dropdown":
-                  return <Forms.DropdownField/>
+                  return <DropdownRegistrationField key={field.id} field={field}/>
                 default:
                   return <p>Unknown</p>
               }
