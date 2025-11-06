@@ -22,14 +22,32 @@
     }
 }
 
+.mainBioContainer {
+    height: 100%;
+    padding-top: 1.7rem;
+    margin-left: 7vw;
+}
+
+.parthnerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @media (max-width: 1200px) {
+        justify-content: center;
+        gap:2rem;
+    }
+}
+
+
+
 .mainBioFooter {
     display: flex;
     width: 100%;
-    height: 100%;
+    /*height: 100%;*/
     justify-content: start;
     align-items: center;
     gap: 2vw;
-    margin-left: 7vw;
+
     @media (max-width: 1200px) {
         padding-top: 1rem;
         flex-direction: column;
