@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-beta.4",
+    "@dnd-kit/helpers": "^0.1.21",
     "@dnd-kit/react": "^0.1.21",
     "@floating-ui/react": "^0.27.16",
     "@fontsource-variable/roboto-flex": "^5.2.8",

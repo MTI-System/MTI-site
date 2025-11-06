@@ -7,4 +7,4 @@ import { DatePickerField  } from "./fields/DatePickerField"
 import { DropdownField  } from "./fields/DropdownField"
 import { FormTrigger as Trigger  } from "./root/FormTrigger"
 
-export const Forms = { Root, EdiatableItems, DefaultItems, InputField, ConfirmButton,DatePickerField, Trigger,  DropdownField}
+export const Forms = { Root, EdiatableItems, DefaultItems, InputField, ConfirmButton, DatePickerField, Trigger,  DropdownField}
