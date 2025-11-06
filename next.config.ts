@@ -2,7 +2,7 @@ import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["api.mtiyt.ru"],
+    remotePatterns: [new URL("https://api.mtiyt.ru/**")],
   },
   logging: {
     fetches: {

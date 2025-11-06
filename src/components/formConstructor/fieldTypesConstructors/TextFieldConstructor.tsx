@@ -19,7 +19,6 @@ export default function TextFieldConstructor({id}: {id: number}) {
           debouncedUpdateProperties({fieldType: "text", placeholder: e.currentTarget.value}, id)
         }} className="border border-border rounded-lg ps-2" placeholder={"Подсказка"} id={"placeholderInput"}/>
       </div>
-
     </>
   )
 }

@@ -32,6 +32,7 @@ export default function DropdownFieldConstructor({id}: { id: number }) {
           } className="border border-border rounded-lg ps-2" placeholder={"Введите название"} id={"placeholderInput"}/>
       </div>)
       }
+      {/* TODO: Use appendable info container here instead of self written logic*/}
       <button onClick={
         ()=>{
           setOptions(prev=>[...prev, {label: "Новый вариант", value: (prev[prev.length - 1]?.value??"option" )+ "1"}])

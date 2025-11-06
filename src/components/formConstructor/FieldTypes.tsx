@@ -10,9 +10,9 @@ export default function FieldTypes(
   const types: {label: string, value: availableFields}[] = [
     {label: 'Текст', value: "text"},
     {label: 'Число', value: 'number'},
-    // {label: 'Файл', value: 'file'},
-    // {label: 'Геолокация', value: 'geolocation'},
-    // {label: 'Дата', value: 'date'},
+    {label: 'Файл', value: 'file'},
+    {label: 'Геолокация', value: 'geolocation'},
+    {label: 'Дата', value: 'date'},
     {label: 'Выбор из списка', value: 'dropdown'},
   ];
 
