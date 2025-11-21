@@ -27,7 +27,7 @@ export default async function Template({ children }: { children: React.ReactNode
     <html>
       <head>
         <link rel="icon" href="https://mtiyt.ru/favicon.ico" type="image/x-icon"/>
-        <script defer src="http://95.163.231.121:4003/script.js" data-website-id="8e028138-b03c-4ba1-a1a1-1b00fff2e564"></script>
+        <script defer src="https://metrika.mtiyt.ru/script.js" data-website-id="8e028138-b03c-4ba1-a1a1-1b00fff2e564"></script>
         <Script
           id="yandex-metrika"
           strategy="afterInteractive"
