@@ -13,7 +13,8 @@ import NumberFieldConstructor from "@/components/formConstructor/fieldTypesConst
 import DropdownFieldConstructor from "@/components/formConstructor/fieldTypesConstructors/DropdownFieldConstructor"
 import { debounce } from "next/dist/server/utils"
 import { CiSettings } from "react-icons/ci"
-import DateFieldConstructor from "../fieldTypesConstructors/DatePickerFormConstructor"
+import FileFieldFormConstructor from "@/components/formConstructor/fieldTypesConstructors/FileFieldFormConstructor"
+import DateFieldConstructor from "@/components/formConstructor/fieldTypesConstructors/DatepickerFormConstructor"
 
 export function ConstructorItem({ id, index, field }: { index: number; id: number; field: Field }) {
   const handleRef = useRef<HTMLInputElement | null>(null)
@@ -64,9 +65,9 @@ export function ConstructorItem({ id, index, field }: { index: number; id: numbe
               ) : field.properties.fieldType === "date" ? (
                 <DateFieldConstructor id={id}></DateFieldConstructor>
               ) : field.properties.fieldType === "file" ? (
-                <>File</>
+                <FileFieldFormConstructor id={id} />
               ) : field.properties.fieldType === "geolocation" ? (
-                <>Geo</>
+                <p className="text-text-alt text-[22px] font-bold">Геолокация</p>
               ) : (
                 <p className="text-text-alt text-[22px] font-bold">Неизвестный тип поля</p>
               )}

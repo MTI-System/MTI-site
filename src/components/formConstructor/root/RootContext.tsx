@@ -1,5 +1,6 @@
 "use client"
 import { createContext, ReactNode, useContext, useState } from "react"
+import { DateRange } from "react-day-picker"
 
 export type availableFields = "dropdown" | "text" | "number" | "date" | "file" | "geolocation"
 
@@ -27,13 +28,12 @@ export type NumberInputProperties = {
 export type DateInputProperties = {
   fieldType: "date"
   selectMode?: "single" | "range"
-  minDate?: Date
-  maxDate?: Date
+  selectableDateRanges?: DateRange[]
 }
 
 export type FileInputProperties = {
   fieldType: "file"
-  accepts?: string
+  accept?: string
 }
 
 export type GeolocationInputProperties = {

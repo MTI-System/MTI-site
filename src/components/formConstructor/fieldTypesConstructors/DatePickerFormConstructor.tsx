@@ -1,12 +1,15 @@
-import { DropdownOption, DateInputProperties, useConstructorRoot } from "@/components/formConstructor/root/RootContext"
+import { DateInputProperties, useConstructorRoot } from "@/components/formConstructor/root/RootContext"
+import DatePicker, { formatDate } from "@/components/pickers/DatePicker"
+import AppendableInfoContainer, { AppendableInfoContext } from "@/components/ui/AppendableInfoContainer"
 import { Select } from "@base-ui-components/react/select"
-import { debounce } from "next/dist/server/utils"
-import { useEffect, useState } from "react"
+import { useContext, useState } from "react"
+import { DateRange } from "react-day-picker"
 import { FaCheck } from "react-icons/fa6"
 import { RiExpandUpDownFill } from "react-icons/ri"
 
 export default function DateFieldConstructor({ id }: { id: number }) {
   const { setProperties, getFieldById } = useConstructorRoot()
+  const [selectableDateRanges, setSelectableDateRanges] = useState<DateRange[]>([])
   const currentProperties = getFieldById(id)?.properties as DateInputProperties
   const types: { label: string; value: "single" | "range" }[] = [
     { label: "даты", value: "single" },
@@ -55,7 +58,76 @@ export default function DateFieldConstructor({ id }: { id: number }) {
           </Select.Portal>
         </Select.Root>
       </div>
-      {/* TODO: Add min and max date inputs and write checking logic */}
+      <p>Выберите диапазон дат</p>
+      {selectableDateRanges.map((value, index) => (
+        <AppendableInfoContainer
+          key={index}
+          prevInfoInitial={{ date: value }}
+          onInfoChange={(info) => {
+            if (!info.date || !info.date.from || !info.date.to) return [{ key: "date", message: "Выберите диапазон" }]
+            setSelectableDateRanges((previ) => {
+              const newi = [...previ]
+              newi[index] = info.date
+              return newi
+            })
+            return []
+          }}
+          onRemove={() => {
+            setSelectableDateRanges((prev) => {
+              const newInfo = prev.filter((_, i) => i !== index)
+              return newInfo
+            })
+            return undefined
+          }}
+          className="flex flex-row justify-between"
+          btnDivClassName="flex flex-row justify-between"
+          btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+        >
+          <DateRangePicker />
+        </AppendableInfoContainer>
+      ))}
+      {selectableDateRanges.length > 0 && <div className="my-2 w-full border-2 border-b border-gray-300"></div>}
+      <AppendableInfoContainer
+        key={selectableDateRanges.length + "new"}
+        onInfoChange={(info) => {
+          if (!info.date || !info.date.from || !info.date.to) return [{ key: "date", message: "Выберите диапазон" }]
+          setSelectableDateRanges((previ) => {
+            return [...previ, info.date]
+          })
+          return []
+        }}
+        className="flex flex-row justify-between"
+        btnDivClassName="flex flex-row justify-between"
+        btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+      >
+        <DateRangePicker />
+      </AppendableInfoContainer>
+    </div>
+  )
+}
+
+function DateRangePicker() {
+  const { info, setAppendableInfo, isEditable, error } = useContext(AppendableInfoContext)
+
+  return (
+    <div className="flex flex-row justify-between">
+      {isEditable ? (
+        <div className="text-text-alt flex items-center gap-2">
+          <DatePicker
+            type="single"
+            className="border-border bg-bg-main-accent flex h-10 w-full items-center justify-between rounded-md border px-2"
+            onPick={(date) => {
+              // setAppendableInfo({ date })
+              console.log("A")
+            }}
+            defaultDate={new Date(0)}
+          />
+        </div>
+      ) : (
+        <p>
+          {formatDate(info.date.from)} - {formatDate(info.date.to)}
+        </p>
+      )}
     </div>
   )
 }
