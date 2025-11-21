@@ -1,9 +1,6 @@
 "use client"
-import style from "@/styles/routes/(login)/login.module.css"
 import { useState, FormEvent, useRef, Suspense, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { FaEye, FaEyeSlash } from "react-icons/fa6"
-import { IconInput, TitledInput } from "@/components/ui/Input"
 import Loading from "@/app/loading"
 import cookies from "js-cookie"
 import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
@@ -12,15 +9,10 @@ import { setToken } from "@/redux_stores/Global/AuthSlice"
 import { useAppDispatch } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import AuthProviderWrapper from "@/api/auth/ClientWrapper"
 import { useLoginMutation } from "@/api/auth/clientApiInterface"
-
-enum FormState {
-  AwaitLogin,
-  Loading,
-  EmptyUsername,
-  EmptyPassword,
-  IncorrectData,
-  UnknownError,
-}
+import LogoWithTT from "@/components/ui/LogoWithTT"
+import { Field, Form } from "@base-ui-components/react"
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react"
+import LoginLayout from "@/components/login/mainLayout"
 
 export default function Page() {
   return (
@@ -35,7 +27,8 @@ export default function Page() {
 }
 
 function LoginPage() {
-  const [formState, setFormState] = useState<FormState>(FormState.AwaitLogin)
+  // const [formState, setFormState] = useState<FormState>(FormState.AwaitLogin)
+  const [formErrors, setFormErrors] = useState({})
   const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
 
@@ -65,34 +58,23 @@ function LoginPage() {
 
   async function handleLogin(form: HTMLFormElement) {
     const formData = new FormData(form)
+    const newFormErrors: { username?: string; password?: string } = {}
     const email = formData.get("username")
-    if (email === "") {
-      setFormState(FormState.EmptyUsername)
-      return
-    }
+    if (email === "") newFormErrors.username = "Логин не может быть пустым"
     const password = formData.get("password")
-    if (password === "") {
-      setFormState(FormState.EmptyPassword)
+    if (password === "") newFormErrors.password = "Пароль не можетр быть пустым"
+    if (newFormErrors.username || newFormErrors.password) {
+      setFormErrors(newFormErrors)
       return
     }
-    setFormState(FormState.Loading)
-    // const token = await fetchSendLogin(formData)
     login({ formData: formData })
-    // if (token === null) {
-    //     setFormState(FormState.UnknownError)
-    //     return
-    // }
-    // if (!token) {
-    //     setFormState(FormState.IncorrectData)
-    //     return
-    // }
-    // dispatcher(setToken(token))
-    // cookies.set(AUTH_TOKEN_KEY_NAME, token)
-    // router.replace("/" + redirect)
   }
   useEffect(() => {
-    if (error) {
-      setFormState(FormState.IncorrectData)
+    if (!error) return
+    if ((error as FetchBaseQueryError).status === 401) {
+      setFormErrors({ username: "Неверный логин", password: "Или пароль" })
+    } else {
+      setFormErrors({ username: "Произошла неизвестная ошибка", password: "Попробуйте позже" })
     }
   }, [error])
   useEffect(() => {
@@ -103,93 +85,43 @@ function LoginPage() {
     }
   }, [isSuccess])
 
-  function handleEnter() {
-    if (!formRef.current) return
-    handleLogin(formRef.current)
-  }
-
   return (
-    <div className="flex h-[100vh] w-[100vw] items-center justify-center">
-      <div className="flex items-center justify-center">
-        <div className="bg-bg-alt flex w-[40rem] flex-col items-center justify-center gap-1 rounded-4xl px-[4rem] py-14">
-          <div className="flex flex-col gap-0">
-            <h2 className="text-[4rem] leading-1 font-bold">МТИ</h2>
-            <h2 className="text-[4rem] font-bold">ТЮФ</h2>
-          </div>
-
-          <div className="border-border flex flex-col gap-1 rounded-2xl border py-5">
-            <h2 className="text-text-main text-center text-4xl font-bold">ВОЙТИ В АККАУНТ</h2>
-            <p className="text-text-alt text-center text-lg font-medium">
-              Войдите в аккаунт, чтобы получить доступ к функциям организаторов
-            </p>
-          </div>
-          <form className={style.formStyle} onSubmit={handleSubmit} ref={formRef}>
-            <TitledInput
-              title={
-                formState === FormState.EmptyUsername
-                  ? "Username can't be empty"
-                  : formState === FormState.IncorrectData
-                    ? "Incorrect username"
-                    : "Username"
-              }
-              isError={formState === FormState.EmptyUsername || formState === FormState.IncorrectData}
-            >
-              <IconInput
-                icon={<></>}
-                onEnter={handleEnter}
-                type="username"
-                name="username"
-                placeholder="email@example.xyz"
-                disabled={formState === FormState.Loading}
-              ></IconInput>
-            </TitledInput>
-
-            <TitledInput
-              title={
-                formState === FormState.EmptyPassword
-                  ? "Password field can't be empty"
-                  : formState === FormState.IncorrectData
-                    ? "Or password"
-                    : "Password"
-              }
-              isError={formState === FormState.EmptyPassword || formState === FormState.IncorrectData}
-            >
-              <PasswordField onEnter={handleEnter} disabled={formState === FormState.Loading} />
-            </TitledInput>
-            <Button type="submit" className={style.loginButton} disabled={formState === FormState.Loading}>
-              {formState === FormState.Loading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
-            </Button>
-          </form>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function PasswordField({ onEnter, disabled }: { onEnter: (el: HTMLInputElement) => void; disabled: boolean }) {
-  const [isHidden, setIsHidden] = useState(true)
-  return (
-    <IconInput
-      icon={
-        isHidden ? (
-          <FaEyeSlash
-            onClick={(e) => {
-              setIsHidden(false)
-            }}
+    <LoginLayout
+      title="ВОЙТИ В АККАУНТ"
+      description="Войдите в аккаунт, чтобы получить доступ к функциям организаторов"
+    >
+      <Form
+        className="flex w-full flex-col items-center gap-5"
+        onSubmit={handleSubmit}
+        ref={formRef}
+        errors={formErrors}
+      >
+        <Field.Root name="username" className="flex w-full flex-col items-start gap-1">
+          <Field.Label className="text-lg font-medium text-gray-900">Логин</Field.Label>
+          <Field.Error className="text-md text-red-800" match="customError" />
+          <Field.Control
+            type="username"
+            placeholder="ВашеНик"
+            className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
           />
-        ) : (
-          <FaEye
-            onClick={(e) => {
-              setIsHidden(true)
-            }}
+        </Field.Root>
+        <Field.Root name="password" className="flex w-full flex-col items-start gap-1">
+          <Field.Label className="text-lg font-medium text-gray-900">Пароль</Field.Label>
+          <Field.Error className="text-md text-red-800" match="customError" />
+          <Field.Control
+            type="password"
+            placeholder="ИмяВашегоКота"
+            className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
           />
-        )
-      }
-      onEnter={onEnter}
-      type={isHidden ? "password" : "text"}
-      name="password"
-      placeholder="NameOfTheCat"
-      disabled={disabled}
-    ></IconInput>
+        </Field.Root>
+        <Button
+          className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
+          disabled={isLoading}
+          type="submit"
+        >
+          {isLoading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
+        </Button>
+      </Form>
+    </LoginLayout>
   )
 }

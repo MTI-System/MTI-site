@@ -8,11 +8,11 @@ export default function Footer() {
       <footer className="bg-bg-alt">
         <div className="text-text-main flex flex-row items-center justify-between sm:px-32">
           <div className="flex gap-4">
-            {/*<LogoWithTT logoSize={"var(--main-header-text)"} margin={"-2vh"}>*/}
-            {/*  <h2 className="" style={{ fontSize: "var(--main-header-text)" }}>*/}
-            {/*    МТИ*/}
-            {/*  </h2>*/}
-            {/*</LogoWithTT>*/}
+            {/*<LogoWithTT logoSize={"var(--main-header-text)"} margin={"-2vh"}>
+              <h2 className="" style={{ fontSize: "var(--main-header-text)" }}>
+                МТИ
+              </h2>
+            </LogoWithTT>*/}
             <p className={footerStyle.commonBioText}>
               © 2025 Менеджер Турнирной Информации МТИ
               <br />

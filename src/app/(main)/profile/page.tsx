@@ -1,4 +1,3 @@
-import { User } from "@/types/authApi"
 import ProfileMainPage from "@/components/profile/ProfileMainPage"
 import { Metadata } from "next"
 import {cookies} from "next/headers";

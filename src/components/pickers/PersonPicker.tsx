@@ -1,21 +1,27 @@
 "use client"
 import { useFindUsersQuery } from "@/api/users/clientApiInterface"
 import { AutocompleteWithPreview } from "./AutocompleteWithPreview"
-import { useRef, useState } from "react"
+import { RefObject, useEffect, useRef, useState } from "react"
 import { User } from "@/types/UsersApi"
 
 export default function PersonPicker({
   label,
   placeholder,
   name,
+  selectedValue
 }: {
   label: string
   placeholder: string
   name: string
+  selectedValue: RefObject<User|null>
 }) {
   const [query, setQuery] = useState("")
   const { data, isFetching, isError } = useFindUsersQuery({ query: query })
   const hiddenInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(()=>{
+    console.log("Update query: ", hiddenInputRef.current)
+  }, [query])
 
   return (
     <AutocompleteWithPreview.Root
@@ -24,6 +30,7 @@ export default function PersonPicker({
       items={data}
       isLoading={isFetching}
       setQuery={setQuery}
+      // submitOnItemClick={true}
       label={label}
       error={isError ? "Не найдено" : undefined}
       placeholder={placeholder}
@@ -31,6 +38,13 @@ export default function PersonPicker({
         label: "flex flex-col gap-1 text-sm leading-5 font-medium text-gray-900",
         input:
           "bg-[canvas] h-10 w-[16rem] md:w-[20rem] font-normal rounded-md border border-gray-200 pl-3.5 text-base text-gray-900 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800",
+      }}
+      onClose={(item)=>{
+        if (item != null){
+          console.log("closed", item)
+          selectedValue.current = item
+        }
+
       }}
     >
       <AutocompleteWithPreview.Portal>

@@ -31,6 +31,7 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
     },
     transformResponse: (response: unknown): User | null => {
       const user = UserSchema.safeParse(response)
+      console.log("response: ", response, user)
       if (!user.success) {
         return null
       }

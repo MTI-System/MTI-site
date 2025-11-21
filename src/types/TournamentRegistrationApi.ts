@@ -1,11 +1,26 @@
 import { z } from "zod"
 
+
+
+export const TournamentRegistrationFormFieldMetadata = z.object({
+  dropdown_options: z.optional(
+    z.string().transform((str) => {
+      try {
+        return JSON.parse(str);
+      } catch {
+        return {};
+      }
+    })
+  )
+})
+
 export const TournamentRegistrationFormField = z.object(
   {
     id: z.number(),
     type: z.string(),
     title: z.string(),
     key: z.string(),
+    metadata: TournamentRegistrationFormFieldMetadata
   }
 )
 

@@ -9,7 +9,7 @@ import Link from "next/link"
 import { Input, Tooltip } from "@base-ui-components/react"
 import Loading from "@/app/loading"
 import { DateRange } from "react-day-picker"
-import "react-day-picker/style.css"
+
 import DatePicker, { formatDate } from "../pickers/DatePicker"
 import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
 import { useLoadFileMutation } from "@/api/files/clientApiInterface"
@@ -35,7 +35,7 @@ export default function TournamentCard({
 }): JSX.Element {
   return (
     <>
-      {!isExtended ? (
+      {/*{!isExtended ? (
         <Link href={`/tournaments/${tournamentCard?.id ?? 0}/${isCreate ? "info/about" : "info/about"}`}>
           <CardContent
             tournamentCard={tournamentCard}
@@ -55,7 +55,7 @@ export default function TournamentCard({
           errors={errors}
           isAdmin={isAdmin}
         />
-      )}
+      )}*/}
     </>
   )
 }

@@ -17,6 +17,7 @@ interface RootProps<T> extends Omit<Autocomplete.Root.Props<T>, "items" | "defau
     input: string
   }
   debounceTime?: number
+  onClose: (item: T) => void
 }
 
 export function Root<T>({
@@ -29,6 +30,7 @@ export function Root<T>({
   label,
   placeholder,
   classNames,
+  onClose,
   debounceTime = 500,
   ...rest
 }: RootProps<T>) {
@@ -68,12 +70,17 @@ export function Root<T>({
           debouncedSetQuery(value)
           rest.onValueChange?.(value, e)
         }}
+
         onItemHighlighted={
           (itemValue, e) => {
             handlePreview(itemValue)
             rest.onItemHighlighted?.(itemValue, e)
           }
         }
+        onOpenChange={(open, e)=>{
+          if (!open) onClose(preview)
+          rest.onOpenChange && rest.onOpenChange(open, e)
+        }}
         {...rest}
       >
         <label className={classNames?.label}>

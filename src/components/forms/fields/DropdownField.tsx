@@ -1,3 +1,4 @@
+'use client'
 import {Select} from "@base-ui-components/react";
 import {useCardsRoot} from "../root/RootContext"
 import {useEffect, useRef, useState} from "react";
@@ -9,24 +10,18 @@ import {RiExpandUpDownFill} from "react-icons/ri";
 interface DropdownFieldProps {
   className?: string,
   type: "single" | "multi",
-  name: string
+  name: string,
+  fields: { label: string, value: string}[],
   onVerification: (value: string) => InputVerificationStatus
 }
 
 export function DropdownField({
-                                className, type, name, onVerification
+                                className, type, name, onVerification, fields
                               }: DropdownFieldProps) {
   const {register, setFormField} = useCardsRoot()
   const valueRef = useRef<string | null | (string | null)[]>(null)
   const [verificationResult, setVerificationResult] = useState<InputVerificationStatus | undefined>(undefined)
 
-  const fonts = [
-    {label: 'Select font', value: null},
-    {label: 'Sans-serif', value: 'sans'},
-    {label: 'Serif', value: 'serif'},
-    {label: 'Monospace', value: 'mono'},
-    {label: 'Cursive', value: 'cursive'},
-  ];
 
 
   useEffect(() => {
@@ -43,7 +38,7 @@ export function DropdownField({
 
   return (
     <>
-      <Select.Root multiple={type==="multi"} items={fonts} onValueChange={(value) => {
+      <Select.Root multiple={type==="multi"} items={fields} onValueChange={(value) => {
         valueRef.current = value
       }}>
         <Select.Trigger
@@ -60,7 +55,7 @@ export function DropdownField({
               <Select.ScrollUpArrow
                 className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute data-[side=none]:before:top-[-100%] before:left-0 before:h-full before:w-full before:content-['']"/>
               <Select.List className="relative py-1 scroll-py-6 overflow-y-auto max-h-[var(--available-height)]">
-                {fonts.map(({label, value}) => (
+                {fields.map(({label, value}) => (
                   <Select.Item
                     key={label}
                     value={value}
@@ -82,4 +77,3 @@ export function DropdownField({
     </>
   )
 }
-

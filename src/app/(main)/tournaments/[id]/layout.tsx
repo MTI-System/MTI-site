@@ -53,9 +53,9 @@ export default async function TournamentPage({
               <TournamentCard tournamentCard={tournament} isExtended={true} isCreate={false} isAdmin={isAdmin} />
             </div>
           )}
-          {!tournament && <NotFound />}
+          {/*{!tournament && <NotFound />}
           <TournamentsPageTabs tournamentCard={tournament} isAdmin={isAdmin} />
-          <div className="bg-bg-alt mb-5 min-h-[50rem] w-full rounded-2xl px-2 py-5">{children}</div>
+          <div className="bg-bg-alt mb-5 min-h-[50rem] w-full rounded-2xl px-2 py-5">{children}</div>*/}
         </Suspense>
       </TournamentPageStoreProviderWrapper>
     </>

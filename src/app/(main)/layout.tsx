@@ -12,7 +12,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         <AuthReduxUpdator />
       </AuthProviderWrapper>
 
-      <main className="bg-bg-main min-h-[90%] px-2 sm:px-[2rem] lg:px-10">
+      <main className="bg-bg-main min-h-[90%] px-2 sm:px-8 lg:px-10">
         {children}
       </main>
       <Footer />
