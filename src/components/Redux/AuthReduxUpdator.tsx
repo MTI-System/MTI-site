@@ -2,19 +2,24 @@
 
 import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { useEffect } from "react"
-import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { setAuth } from "@/redux_stores/Global/AuthSlice"
+import {useFetchPermissionsMutation} from "@/api/auth/clientApiInterface";
 
 export default function AuthReduxUpdator() {
   const dispatch = useAppDispatch()
   const token = useAppSelector((state) => state.auth.token)
+  const [fetchPermissions, {data, error, isLoading, isSuccess}] = useFetchPermissionsMutation()
+
   useEffect(() => {
-    const getUser = async () => {
-      const user = await fetchPermissions()
-      dispatch(setAuth(user))
+    if (isSuccess){
+      dispatch(setAuth(data))
     }
-    getUser()
-  }, [token])
+  }, [isSuccess]);
+
+  useEffect(() => {
+    fetchPermissions({token: token})
+  }, [token]);
+
 
   return <></>
 }

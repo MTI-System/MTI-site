@@ -5,7 +5,7 @@ import {TournamentTypeIntarface} from "@/types/TournamentTypeIntarface";
 // import cookies from "next/headers"
 interface SPState {
   tt: number | null
-  availableTournamentTypes: TournamentTypeIntarface[] | null
+  availableTournamentTypes: TournamentTypeIntarface[] | null | undefined
 }
 
 const initialState: SPState = {
@@ -20,7 +20,10 @@ export const SPSlice = createSlice({
     setTT(state, action: PayloadAction<number>) {
       state.tt = Number(action.payload)
     },
+    setAvailableTournamentTypes(state, action: PayloadAction<TournamentTypeIntarface[]>){
+      state.availableTournamentTypes=action.payload
+    }
   },
 })
 
-export const { setTT } = SPSlice.actions
+export const { setTT, setAvailableTournamentTypes } = SPSlice.actions

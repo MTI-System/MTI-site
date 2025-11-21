@@ -1,16 +1,31 @@
-import {fetchRegistrationForm} from "@/scripts/ApiFetchers";
-import RegistrationForm from "@/components/tournamentPage/Forms/RegistrationForm";
 
-export default async function RegisterTournamentsPage(
-  {params}: { params: Promise<{ id: string }> }
-) {
+import RegistrationForm from "@/components/tournamentPage/Forms/RegistrationForm"
+import RegistrationProviderWrapper from "@/api/registration/ClientWrapper"
+import { makeRegistrationStoreServer } from "@/api/registration/serverStore"
+import { registrationApiServer } from "@/api/registration/serverApiInterface"
+import TournamentRegistrationForm from "@/components/tournamentPage/Forms/Registration/TournamentRegistrationForm";
+
+export default async function RegisterTournamentsPage({ params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id
-  const formInfo = await fetchRegistrationForm(Number(id), "registration");
+
+  const store = makeRegistrationStoreServer()
+  const promise = store.dispatch(
+    registrationApiServer.endpoints.getRegistrationForm.initiate({
+      id: Number(id),
+      type: "registration",
+    }),
+  )
+  const { data: formInfo, error, isError } = await promise
+
   return (
     <>
-        <RegistrationForm className="flex flex-col gap-2 items-center w-full" formInfo={formInfo}/>
-
-
+      {isError && <h2>Error</h2>}
+      {formInfo && (
+        // <RegistrationProviderWrapper>
+        //   <RegistrationForm className="flex w-full flex-col items-center gap-2" formInfo={formInfo} />
+        // </RegistrationProviderWrapper>
+        <TournamentRegistrationForm formInfo={formInfo} className={""} isEdit={true}/>
+      )}
     </>
   )
 }

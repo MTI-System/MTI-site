@@ -1,19 +1,18 @@
-"use server"
 import ProblemCard from "@/components/problems/ProblemCard"
 import { ProblemInterface, ProblemListInterface } from "@/types/problemAPI"
 import FetchingErrorBanner from "@/components/ui/FetchingErrorBanner"
-export default async function ProblemsList({
+export default function ProblemsList({
   problems,
   isEditable,
   sectionsFilter,
 }: {
-  problems: ProblemListInterface | null
+  problems: ProblemListInterface | null | undefined
   isEditable: boolean
   sectionsFilter: number[]
 }) {
   return (
     <div className="flex flex-col gap-2">
-      {problems !== null &&
+      {problems &&
         (sectionsFilter.length === 0
           ? problems
           : problems.filter(

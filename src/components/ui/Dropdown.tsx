@@ -66,9 +66,9 @@ export function Dropdown<T>({ selectionState, onOptionSelect, ...rest }: Dropdow
       }}
     >
       <DropdownRoot
-        onOpenChange={(open, e, reason) => {
+        onOpenChange={(open, e) => {
           setIsOpen(open)
-          rest.onOpenChange && rest.onOpenChange(open, e, reason)
+          rest.onOpenChange && rest.onOpenChange(open, e)
         }}
         modal={false}
         {...rest}
@@ -80,8 +80,7 @@ export function Dropdown<T>({ selectionState, onOptionSelect, ...rest }: Dropdow
 interface DropdownMultiParams<T> extends Omit<DropdownRootProps, "onOpenChange"> {
   onOpenChange?: (
     open: boolean,
-    e: Event | undefined,
-    reason: Menu.Root.OpenChangeReason | undefined,
+    e: Menu.Root.ChangeEventDetails,
     selection: DropdownOptionInterface<T>[] | null,
   ) => void
   selectionState?: [DropdownOptionInterface<T>[] | null, Dispatch<SetStateAction<DropdownOptionInterface<T>[] | null>>]
@@ -118,9 +117,9 @@ export function DropdownMulti<T>({
       }}
     >
       <DropdownRoot
-        onOpenChange={(open, e, reason) => {
+        onOpenChange={(open, e) => {
           setIsOpen(open)
-          onOpenChange && onOpenChange(open, e, reason, selection)
+          onOpenChange && onOpenChange(open, e, selection)
         }}
         modal={false}
         {...rest}
@@ -150,7 +149,11 @@ export function DropdownTrigger({
     !ddCtx?.selectedOption || dontDisplaySelection ? (
       children
     ) : Array.isArray(ddCtx.selectedOption) ? (
-      <p className="flex-1">Выбрано {ddCtx.selectedOption.length} элементов</p>
+      ddCtx.selectedOption.length > 0 ? (
+        <p className="flex-1">Выбрано {ddCtx.selectedOption.length} элементов</p>
+      ) : (
+        children
+      )
     ) : (
       ddCtx.selectedOption.children
     )

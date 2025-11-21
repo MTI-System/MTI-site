@@ -7,11 +7,12 @@ import { EmbeddingInterface } from "@/types/embeddings"
 import { MdOutlineClose } from "react-icons/md"
 import styleDelete from "@/styles/components/ui/Files/imageEmbeddings.module.css"
 import { DeletionMaterialConfirmationModal } from "./UniversalEmbedding"
-import { deleteMaterial } from "@/scripts/ApiFetchers"
 import { useEffect, useRef, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/Buttons"
 import Link from "next/link"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { useDeleteMaterialMutation } from "@/api/problems/clientApiInterface"
 
 interface UniversalPlayerProps {
   embedding: EmbeddingInterface
@@ -29,7 +30,16 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
   const timeoutRef = useRef<NodeJS.Timeout>(null)
   const router = useRouter()
   const videoRef = useRef<HTMLVideoElement | null>(null)
-
+  const token = useAppSelector((state) => state.auth.token)
+  const [deleteMaterialMutation, { isSuccess, error }] = useDeleteMaterialMutation()
+  useEffect(() => {
+    console.log("isSuccess", isSuccess)
+    if (isSuccess) {
+      startTransition(() => {
+        router.refresh()
+      })
+    }
+  }, [isSuccess])
   useEffect(() => {
     const el = videoRef.current
     if (!el) return
@@ -164,11 +174,7 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
         problem_global_number={1}
         problem_title={embedding.title}
         onConfirm={async () => {
-          const s = await deleteMaterial(problemId, embedding.id)
-          if (!s) throw new Error("Deletion has failed")
-          startTransition(() => {
-            router.refresh()
-          })
+          deleteMaterialMutation({ problemId: problemId, materialId: embedding.id, token: token })
         }}
       />
     </>

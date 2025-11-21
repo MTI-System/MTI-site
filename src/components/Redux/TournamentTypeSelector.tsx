@@ -6,23 +6,28 @@ import cookies from "js-cookie"
 import { usePathname } from "next/navigation"
 import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "../ui/Dropdown"
 import ColoredTType from "../ui/ColoredTType"
-import { setTT } from "@/redux_stores/Global/SearchParamsSlice"
+import { setAvailableTournamentTypes, setTT } from "@/redux_stores/Global/SearchParamsSlice"
 import { TOURNAMENT_TYPE_KEY_NAME } from "@/constants/CookieKeys"
 import { Tooltip } from "@base-ui-components/react"
+import { setYear } from "@/redux_stores/Problems/ProblemsFiltersSlice"
 import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
-import {setYear} from "@/redux_stores/Problems/ProblemsFiltersSlice";
 
 export default function TournamentTypeSelector({
+  initTournamentType,
+  availableTournamentTypes
 }: {
+  initTournamentType: number,
+  availableTournamentTypes: TournamentTypeIntarface[]
 }) {
-  const availableTournamentTypes = useAppSelector(state=> state.searchParams.availableTournamentTypes)??[]
+  // const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
   const ttddElements = availableTournamentTypes.map((value) => ({
     id: value.id,
     children: (
-        <ColoredTType ttColor={value.color} ttName={value.name} className="text-text-main text-[1.8rem] font-bold" />
+      <ColoredTType ttColor={value.color} ttName={value.name} className="text-text-main text-[1.8rem] font-bold" />
     ),
     value: value.name,
   }))
+  
 
   const tt = useAppSelector((state) => state.searchParams.tt)
   const isPending = useAppSelector((state) => state.system.isPending)
@@ -33,21 +38,25 @@ export default function TournamentTypeSelector({
 
   const selectedState = useState<DropdownOptionInterface<string> | null>(
     ttddElements.find((e) => {
-      console.log("Select condition", e.id, Number(tt), e.id === Number(tt))
-      return e.id === Number(tt)
+      return e.id === initTournamentType
     }) ?? null,
   )
+
+  console.log("asdfqwe", initTournamentType, Number(initTournamentType))
+
+  // useEffect( ()=>{
+  //   dispatcher(setAvailableTournamentTypes(availableTournamentTypes))
+  // }, []
+  // )
   useEffect(() => {
     console.log("bbbb", selectedState)
-  }, [selectedState]);
-
+  }, [selectedState])
 
   const lockedPages = ["/problems/"]
 
   useEffect(() => {
-    console.log("bbbb tt", tt)
-    selectedState[1](ttddElements.find(e=>e.id === tt)??null)
-  }, [tt]);
+    selectedState[1](ttddElements.find((e) => e.id === tt) ?? null)
+  }, [tt])
 
   useEffect(() => {
     setHasMounted(true)
@@ -71,7 +80,7 @@ export default function TournamentTypeSelector({
             <Tooltip.Root disabled={!isTTLocked} delay={300}>
               <Tooltip.Trigger render={<div></div>}>
                 <DropdownTrigger className="border-none" disabled={isPending || isTTLocked}>
-                  <div>...</div>
+                  {selectedState[0]?.value}
                 </DropdownTrigger>
               </Tooltip.Trigger>
               <Tooltip.Portal>

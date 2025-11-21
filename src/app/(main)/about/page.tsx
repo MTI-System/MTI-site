@@ -54,6 +54,7 @@ export default function AboutPage() {
         <div>
           <h1 className={style.headerStyle}>В разработке также участвуют</h1>
           <ol className={style.personsList}>
+            <li>Анастасия Литвинова - Шеф маркетингового офиса</li>
             <li>Артем Голомолзин - SMM</li>
             <li>Федор Василенко - UI/UX дизайнер</li>
             <li>Соня Морозова - Дизайнер</li>

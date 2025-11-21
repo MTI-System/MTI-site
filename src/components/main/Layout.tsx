@@ -4,18 +4,22 @@ import { TOURNAMENT_TYPE_KEY_NAME } from "@/constants/CookieKeys"
 import { setTT } from "@/redux_stores/Global/SearchParamsSlice"
 import { useEffect, useRef, useState, useTransition } from "react"
 import { setAuth, setToken } from "@/redux_stores/Global/AuthSlice"
-import { fetchPermissions } from "@/scripts/ApiFetchers"
 import { User } from "@/types/authApi"
 import { setIsPending } from "@/redux_stores/Global/SystemSlice"
 import { ReactNode } from "react"
 import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import {useFetchPermissionsMutation} from "@/api/auth/clientApiInterface";
+import AuthProviderWrapper from "@/api/auth/ClientWrapper";
 
 export default function LayoutComponent({ children }: { children: ReactNode }) {
   const theme = useAppSelector((state) => state.system.theme)
   return (
     <>
       <body className="h-[100vh]" data-theme={theme}>
-        <InitRedux />
+        <AuthProviderWrapper>
+          <InitRedux />
+        </AuthProviderWrapper>
+
         {children}
       </body>
     </>
@@ -24,25 +28,24 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
 
 function InitRedux() {
   const dispatch = useAppDispatch()
-  const [auth, setAuthState] = useState<User | null>(null)
   const [isPending, startTransition] = useTransition()
   const mounted = useRef(false)
-  useEffect(() => {
-    const tt = cookies.get(TOURNAMENT_TYPE_KEY_NAME)
-    const token = cookies.get("mtiyt_auth_token")
-    const getAuth = async () => {
-      const user = await fetchPermissions()
-      setAuthState(user)
-    }
+  const [fetchPermissions, {data: auth, error, isLoading, isSuccess}] = useFetchPermissionsMutation()
 
+  useEffect(() => {
+    const tt = cookies.get(TOURNAMENT_TYPE_KEY_NAME) ?? "1"
+    const token = cookies.get("mtiyt_auth_token") ?? ""
+    fetchPermissions({token: token})
     if (tt) {
       dispatch(setTT(Number(tt)))
     }
     if (token) {
       dispatch(setToken(token))
     }
-    getAuth()
+    // getAuth()
   }, [dispatch])
+
+
 
   useEffect(() => {
     if (!mounted.current) {

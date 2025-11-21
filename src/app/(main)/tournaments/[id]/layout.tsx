@@ -1,42 +1,63 @@
-import {fetchTournamentsCard} from "@/scripts/ApiFetchers";
-import TournamentCard from "@/components/tournaments/TournamentCard";
-import NotFound from "@/components/service/NotFound";
-import {redirect} from "next/navigation";
-import TournamentsPageTabs from "@/components/tournamentPage/TournamentsPageTabs";
-import {ReactNode, Suspense} from "react";
-import Loading from "@/app/loading";
-import ResultsTable from "@/components/tournamentPage/ResutsTable";
-import TournamentPageStoreProviderWrapper from "@/components/Redux/TournamentPageStoreProvider";
+import TournamentCard from "@/components/tournaments/TournamentCard"
+import NotFound from "@/components/service/NotFound"
+import { redirect } from "next/navigation"
+import TournamentsPageTabs from "@/components/tournamentPage/TournamentsPageTabs"
+import { ReactNode, Suspense } from "react"
+import Loading from "@/app/loading"
+import ResultsTable from "@/components/tournamentPage/ResutsTable"
+import TournamentPageStoreProviderWrapper from "@/components/Redux/TournamentPageStoreProvider"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
+import { cookies } from "next/headers"
+import { makeAuthStoreServer } from "@/api/auth/serverStore"
+import { authApiServer } from "@/api/auth/serverApiInterface"
 
-export default async function TournamentPage(
-    {params, children}: { params: Promise<{ id: number }>, children: ReactNode }
-) {
-    const id = (await params).id
-    // const tournamentPageTab = reqParams[1]
+export default async function TournamentPage({
+  params,
+  children,
+}: {
+  params: Promise<{ id: string }>
+  children: ReactNode
+}) {
+  const id = (await params).id
+  // const tournamentPageTab = reqParams[1]
 
+  const tournamentId = Number(id)
+  const store = makeTournamentsStoreServer()
+  const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: tournamentId }))
+  const { data: tournament, error } = await promise
 
-    const tournamentId = Number(id)
-    const tournament = await fetchTournamentsCard(tournamentId)
-    if (!tournament) {
-        return <>Error</>
+  if (!tournament) {
+    return <>Error</>
+  }
+
+  let isAdmin = false
+  const token = (await cookies()).get("mtiyt_auth_token")?.value
+  if (token){
+    const authStore = makeAuthStoreServer()
+    const authPromise = authStore.dispatch(authApiServer.endpoints.fetchPermissions.initiate({ token: token }))
+    const { data: permissions, error } = await authPromise
+    console.log("perm", permissions, permissions?.rights.find(r=>r.right_flag === `MODERATE_TOURNAMENT_${id}`), `MODERATE_TOURNAMENT_${id}`)
+    if (permissions?.rights.find(r=>r.right_flag === `MODERATE_TOURNAMENT_${id}`) !== undefined){
+      isAdmin = true
     }
+  }
 
-    return (
-        <>
-            <TournamentPageStoreProviderWrapper tournament={tournament}>
-                <Suspense fallback={<Loading/>}>
-                    {tournament && <div className="pt-5">
-                        <TournamentCard tournamentCard={tournament} isExtended={true} isCreate={false}/>
-                    </div>}
-                    {!tournament && <NotFound/>}
-                    <TournamentsPageTabs tournamentCard={tournament}/>
-                    <div className="bg-bg-alt w-full min-h-[50rem] rounded-2xl mb-5 px-2 py-5">
-                        {children}
-                    </div>
 
-                </Suspense>
-            </TournamentPageStoreProviderWrapper>
-
-        </>
-    )
+  return (
+    <>
+      <TournamentPageStoreProviderWrapper tournament={tournament}>
+        <Suspense fallback={<Loading />}>
+          {tournament && (
+            <div className="pt-5">
+              <TournamentCard tournamentCard={tournament} isExtended={true} isCreate={false} isAdmin={isAdmin} />
+            </div>
+          )}
+          {!tournament && <NotFound />}
+          <TournamentsPageTabs tournamentCard={tournament} isAdmin={isAdmin} />
+          <div className="bg-bg-alt mb-5 min-h-[50rem] w-full rounded-2xl px-2 py-5">{children}</div>
+        </Suspense>
+      </TournamentPageStoreProviderWrapper>
+    </>
+  )
 }

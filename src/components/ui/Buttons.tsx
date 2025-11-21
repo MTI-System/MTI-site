@@ -52,7 +52,7 @@ export function HoldButton({
         onComplete: (a) => {
           if (a.backwards || !onConfirm) return
           onConfirm()
-          navigator.vibrate(30)
+          navigator.vibrate?.(30)
         },
       })
       self.add("caPlay", () => {

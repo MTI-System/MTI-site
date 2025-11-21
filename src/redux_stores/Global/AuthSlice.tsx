@@ -1,6 +1,5 @@
 import { User } from "@/types/authApi"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { fetchPermissions } from "@/scripts/ApiFetchers"
 
 interface AuthState {
   isAuthenticated: boolean
