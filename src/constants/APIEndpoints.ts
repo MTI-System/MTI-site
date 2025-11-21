@@ -1,4 +1,4 @@
-export const GATEWAY_API = "http://10.0.0.2:30387/" //process.env.IS_ON_DEV === "true" ? "http://10.0.0.2:8095/" : "https://api.mtiyt.ru/"
+export const GATEWAY_API = "http://11.0.0.1:5002/" //process.env.IS_ON_DEV === "true" ? "http://10.0.0.2:8095/" : "https://api.mtiyt.ru/"
 export const AUTH_API = GATEWAY_API + "auth/"
 export const PROBLEM_API = GATEWAY_API + "problems/"
 export const FILES_SERVER = GATEWAY_API + "files/get/"
