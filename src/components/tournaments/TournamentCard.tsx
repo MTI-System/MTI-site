@@ -226,7 +226,7 @@ function CardContent({
                         onUpdateCreate({ title: event.target.value })
                       }}
                       className={twclsx(
-                        "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border transition-colors",
+                        "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-10 w-24 rounded-2xl border transition-colors",
                         errorsInternal.some((error) => error.key === "title") && "border-red-500",
                       )}
                       placeholder={"Название турнира"}
@@ -234,7 +234,7 @@ function CardContent({
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Positioner sideOffset={10} className="z-10">
-                      <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                      <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                         <p className="text-red-500">
                           {errorsInternal.find((error) => error.key === "title")?.message ?? ""}
                         </p>
@@ -300,7 +300,7 @@ function CardContent({
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Positioner sideOffset={10} className="z-10">
-                      <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                      <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                         <p className="text-red-500">
                           {errorsInternal.find((error) => error.key === "location")?.message ?? ""}
                         </p>
@@ -355,7 +355,7 @@ function CardContent({
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Positioner sideOffset={10} className="z-10">
-                      <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                      <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                         <p className="text-red-500">
                           {errorsInternal.find((error) => error.key === "start_timestamp")?.message ?? ""}
                         </p>
@@ -383,7 +383,7 @@ function CardContent({
                       onUpdateCreate({ description: event.target.value })
                     }}
                     className={twclsx(
-                      "border-border border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-20 w-full resize-none rounded-2xl border-[1px] p-2 text-xs transition-colors",
+                      "border-border border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-20 w-full resize-none rounded-2xl border p-2 text-xs transition-colors",
                       errorsInternal.some((error) => error.key === "description") && "border-red-500",
                     )}
                     placeholder="Описание турнира"
@@ -391,7 +391,7 @@ function CardContent({
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
                   <Tooltip.Positioner sideOffset={10} className="z-10">
-                    <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                    <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                       <p className="text-red-500">
                         {errorsInternal.find((error) => error.key === "description")?.message ?? ""}
                       </p>
