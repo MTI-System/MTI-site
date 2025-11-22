@@ -32,7 +32,11 @@ export default async function Template({ children }: { children: ReactNode }) {
     <html className="bg-bg-main">
       <head>
         <link rel="icon" href="https://mtiyt.ru/favicon.ico" type="image/x-icon" />
-        <script defer src="http://11.0.0.1:5003/script.js" data-website-id="44d5795e-5f99-4949-a4ae-11db03ed5e5d"></script>
+        <script
+          defer
+          src="http://11.0.0.1:5003/script.js"
+          data-website-id="44d5795e-5f99-4949-a4ae-11db03ed5e5d"
+        ></script>
         <Script
           id="yandex-metrika"
           strategy="afterInteractive"

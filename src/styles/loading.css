@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   display: flex;
-  color: var(--color-text-main)
+  color: var(--color-text-main);
 }
 
 .loader {

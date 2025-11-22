@@ -103,7 +103,7 @@ export default async function TournamentsPage({
   searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentState }>
 }) {
   const sp = await searchParams
-    let isNoRefresh = false
+  let isNoRefresh = false
   if (!sp.page) {
     isNoRefresh = true
     sp.page = "1"
@@ -121,17 +121,12 @@ export default async function TournamentsPage({
     sp.tt = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
   }
   const store = makeTournamentsStoreServer()
-    const promise = store.dispatch(
+  const promise = store.dispatch(
     tournamentsApiServer.endpoints.getTournamentCards.initiate({ tt: Number(sp.tt), year: Number(sp.year) }),
   )
   const { data: tournamentsCards } = await promise
   console.log("cards", tournamentsCards)
   return (
-    <TournamentListPage 
-      isOrganizator={false}
-      tournamentsCards={tournamentsCards} 
-      sp={sp}
-      isNoRefresh={isNoRefresh}
-    />
+    <TournamentListPage isOrganizator={false} tournamentsCards={tournamentsCards} sp={sp} isNoRefresh={isNoRefresh} />
   )
 }

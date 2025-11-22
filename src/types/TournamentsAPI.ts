@@ -9,15 +9,14 @@ export const TournamentLocation = z.object({
   id: z.number(),
   location_text: z.string(),
   location_lat: z.number(),
-  location_lon: z.number()
+  location_lon: z.number(),
 })
 
 export const Badge = z.object({
   badge_color: z.string(),
   badge_title: z.string(),
-  badge_flag: z.string()
+  badge_flag: z.string(),
 })
-
 
 export const TournamentCard = z.object({
   id: z.number(),
@@ -31,11 +30,8 @@ export const TournamentCard = z.object({
   materials: z.array(z.number()),
   location: TournamentLocation,
   start_date_timestamp: z.number(),
-  end_date_timestamp: z.number()
+  end_date_timestamp: z.number(),
 })
-
-
-
 
 export const TournamentScoreEntity = z.object({
   fight_container_id: z.number(),
@@ -69,17 +65,21 @@ export const TournamentCreationRequestSchema = z.object({
   location_lon: z.number().optional(),
   tournament_type: z.number(),
   problems: z.array(z.number()).min(1, "Необходимо выбрать хотя бы одну задачу"),
-  fight_containers: z.array(z.object({
-    title: z.string().min(1, "Название контейнера не может быть пустым"),
-    date_timestamp: z.number(),
-  })),
-  materials: z.array(z.object({
-    title: z.string().min(1, "Название материала не может быть пустым"),
-    content: z.string().min(1, "Содержание материала не может быть пустым"),
-    content_type: z.number(),
-    is_external: z.boolean(),
-    file_size: z.string().optional(),
-  })),
+  fight_containers: z.array(
+    z.object({
+      title: z.string().min(1, "Название контейнера не может быть пустым"),
+      date_timestamp: z.number(),
+    }),
+  ),
+  materials: z.array(
+    z.object({
+      title: z.string().min(1, "Название материала не может быть пустым"),
+      content: z.string().min(1, "Содержание материала не может быть пустым"),
+      content_type: z.number(),
+      is_external: z.boolean(),
+      file_size: z.string().optional(),
+    }),
+  ),
 })
 
 export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequestSchema>
@@ -114,8 +114,6 @@ export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequest
 //   is_external: boolean
 //   file_size: string | null
 // }
-
-
 
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>

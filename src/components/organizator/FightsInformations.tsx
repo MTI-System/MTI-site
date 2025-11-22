@@ -115,7 +115,10 @@ function InputRow() {
           <Tooltip.Root disabled={titleErrors.length === 0}>
             <Tooltip.Trigger>
               <Input
-                className={twclsx("border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border", titleErrors.length > 0 && "border-red-500")}
+                className={twclsx(
+                  "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border",
+                  titleErrors.length > 0 && "border-red-500",
+                )}
                 defaultValue={initialValue ? initialValue : ""}
                 placeholder="Название боя"
                 onChange={(e) => {

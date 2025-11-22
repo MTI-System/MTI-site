@@ -1,7 +1,7 @@
-import {z} from "zod";
+import { z } from "zod"
 
 export const FileLoadSchema = z.object({
-    filename: z.string(),
+  filename: z.string(),
 })
 
 export type FileLoadInterface = z.infer<typeof FileLoadSchema>

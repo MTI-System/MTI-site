@@ -26,7 +26,6 @@ export const problemsApiClient = createApiClient({
 })
 
 export const {
-
   useGetProblemsQuery,
   useAddProblemMutation,
   useDeleteProblemMutation,

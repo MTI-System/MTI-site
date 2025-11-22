@@ -14,9 +14,9 @@ import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
 
 export default function TournamentTypeSelector({
   initTournamentType,
-  availableTournamentTypes
+  availableTournamentTypes,
 }: {
-  initTournamentType: number,
+  initTournamentType: number
   availableTournamentTypes: TournamentTypeIntarface[]
 }) {
   // const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
@@ -27,7 +27,6 @@ export default function TournamentTypeSelector({
     ),
     value: value.name,
   }))
-  
 
   const tt = useAppSelector((state) => state.searchParams.tt)
   const isPending = useAppSelector((state) => state.system.isPending)

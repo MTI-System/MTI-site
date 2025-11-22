@@ -1,55 +1,50 @@
 import { Tooltip } from "@base-ui-components/react"
 import React, { ReactNode } from "react"
-import {FaExclamation} from "react-icons/fa";
-
+import { FaExclamation } from "react-icons/fa"
 
 export function ErrorTooltip({
   children,
   isActive,
-  errorMessage
+  errorMessage,
 }: {
-  children: ReactNode,
-  isActive: boolean,
+  children: ReactNode
+  isActive: boolean
   errorMessage?: string
-}){
-
+}) {
   return (
     <>
       <Tooltip.Provider>
         <Tooltip.Root disabled={!isActive} delay={0}>
-          <div className="relative flex items-center size-full">
+          <div className="relative flex size-full items-center">
             {children}
-            <div className="flex gap-2 absolute right-10 w-fit">
+            <div className="absolute right-10 flex w-fit gap-2">
               <Tooltip.Trigger aria-label="Bold">
-                {isActive && <div className="size-5 bg-red-500/40 border border-red-500 rounded-full">
-                    <FaExclamation/>
-                </div>}
+                {isActive && (
+                  <div className="size-5 rounded-full border border-red-500 bg-red-500/40">
+                    <FaExclamation />
+                  </div>
+                )}
               </Tooltip.Trigger>
             </div>
           </div>
 
-
-            <Tooltip.Portal>
-              <Tooltip.Positioner sideOffset={10}>
-                <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-red-200 outline outline-1 outline-red-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-red-300">
-                  <Tooltip.Arrow className="data-[side=bottom]:top-[-8px] data-[side=left]:right-[-13px] data-[side=left]:rotate-90 data-[side=right]:left-[-13px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-8px] data-[side=top]:rotate-180">
-                    <ArrowSvg />
-                  </Tooltip.Arrow>
-                  <div>
-                    {errorMessage}
-                  </div>
-                </Tooltip.Popup>
-              </Tooltip.Positioner>
-            </Tooltip.Portal>
-          </Tooltip.Root>
-
+          <Tooltip.Portal>
+            <Tooltip.Positioner sideOffset={10}>
+              <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-red-200 outline outline-1 outline-red-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-red-300">
+                <Tooltip.Arrow className="data-[side=bottom]:top-[-8px] data-[side=left]:right-[-13px] data-[side=left]:rotate-90 data-[side=right]:left-[-13px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-8px] data-[side=top]:rotate-180">
+                  <ArrowSvg />
+                </Tooltip.Arrow>
+                <div>{errorMessage}</div>
+              </Tooltip.Popup>
+            </Tooltip.Positioner>
+          </Tooltip.Portal>
+        </Tooltip.Root>
       </Tooltip.Provider>
     </>
   )
 }
 
-
-function ArrowSvg(props: React.ComponentProps<'svg'>) {
+function ArrowSvg(props: React.ComponentProps<"svg">) {
   return (
     <svg width="20" height="10" viewBox="0 0 20 10" fill="none" {...props}>
       <path

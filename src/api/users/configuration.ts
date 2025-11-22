@@ -6,7 +6,9 @@ export const usersReducerPath = "usersApi" as const
 
 export const usersBaseQuery = fetchBaseQuery({ baseUrl: USERS_API })
 
-export const defineUsersEndpoints = (builder: EndpointBuilder<typeof usersBaseQuery, never, typeof usersReducerPath>) => ({
+export const defineUsersEndpoints = (
+  builder: EndpointBuilder<typeof usersBaseQuery, never, typeof usersReducerPath>,
+) => ({
   getUserById: builder.query({
     query: ({ id }: { id: number }) => `user/${id}`,
     transformResponse: (response: unknown): User | null => {

@@ -96,7 +96,7 @@ function Step1({ onStepComplete }: { onStepComplete: () => void }) {
         <Field.Control
           type="text"
           placeholder="email@example.xyz"
-          className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
         />
       </Field.Root>
       <Field.Root name="username" className="flex w-full flex-col items-start gap-1">
@@ -105,7 +105,7 @@ function Step1({ onStepComplete }: { onStepComplete: () => void }) {
         <Field.Control
           type="text"
           placeholder="ВашНик"
-          className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
         />
       </Field.Root>
       <Field.Root name="password" className="flex w-full flex-col items-start gap-1">
@@ -114,7 +114,7 @@ function Step1({ onStepComplete }: { onStepComplete: () => void }) {
         <Field.Control
           type="password"
           placeholder="admin"
-          className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
         />
       </Field.Root>
       <Field.Root name="passwordConfirm" className="flex w-full flex-col items-start gap-1">
@@ -123,7 +123,7 @@ function Step1({ onStepComplete }: { onStepComplete: () => void }) {
         <Field.Control
           type="password"
           placeholder="admin"
-          className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
         />
       </Field.Root>
       <Button
@@ -178,7 +178,7 @@ function Step2({ onStepComplete }: { onStepComplete: (isUnderaged: boolean) => v
           <Field.Control
             type="text"
             placeholder="Антон"
-            className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
           />
         </Field.Root>
         <Field.Root name="secondname" className="flex w-full flex-col items-start gap-1">
@@ -187,7 +187,7 @@ function Step2({ onStepComplete }: { onStepComplete: (isUnderaged: boolean) => v
           <Field.Control
             type="text"
             placeholder="Фоломин"
-            className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
           />
         </Field.Root>
       </div>
@@ -197,7 +197,7 @@ function Step2({ onStepComplete }: { onStepComplete: (isUnderaged: boolean) => v
         <Field.Control
           type="text"
           placeholder="Отчество (при наличии)"
-          className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
         />
       </Field.Root>
       <Field.Root name="date" className="flex w-full flex-col items-start gap-1">
@@ -211,10 +211,9 @@ function Step2({ onStepComplete }: { onStepComplete: (isUnderaged: boolean) => v
               setBirthDate(date)
             }}
           />*/}
-
       </Field.Root>
       {/*TODO: Style date picxker and error display*/}
-      <label className="flex w-full items-start justify-between gap-2 text-md text-gray-900 border border-border rounded-xl p-4 select-none">
+      <label className="text-md border-border flex w-full items-start justify-between gap-2 rounded-xl border p-4 text-gray-900 select-none">
         <p>
           Я соглашаюсь с{" "}
           <a className="text-accent-primary underline" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">

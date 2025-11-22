@@ -70,14 +70,11 @@ export function Root<T>({
           debouncedSetQuery(value)
           rest.onValueChange?.(value, e)
         }}
-
-        onItemHighlighted={
-          (itemValue, e) => {
-            handlePreview(itemValue)
-            rest.onItemHighlighted?.(itemValue, e)
-          }
-        }
-        onOpenChange={(open, e)=>{
+        onItemHighlighted={(itemValue, e) => {
+          handlePreview(itemValue)
+          rest.onItemHighlighted?.(itemValue, e)
+        }}
+        onOpenChange={(open, e) => {
           if (!open) onClose(preview)
           rest.onOpenChange && rest.onOpenChange(open, e)
         }}

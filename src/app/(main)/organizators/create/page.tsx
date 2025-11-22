@@ -43,7 +43,7 @@ function CreateTournamentForm() {
     title: "",
     description: "",
     main_image: "bigImagePlaceholder.png",
-    tournament_logo: 'bigImagePlaceholder.png',
+    tournament_logo: "bigImagePlaceholder.png",
     start_timestamp: 0,
     end_timestamp: 0,
     year: 0,

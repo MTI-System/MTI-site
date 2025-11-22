@@ -33,16 +33,20 @@ export default async function TournamentPage({
 
   let isAdmin = false
   const token = (await cookies()).get("mtiyt_auth_token")?.value
-  if (token){
+  if (token) {
     const authStore = makeAuthStoreServer()
     const authPromise = authStore.dispatch(authApiServer.endpoints.fetchPermissions.initiate({ token: token }))
     const { data: permissions, error } = await authPromise
-    console.log("perm", permissions, permissions?.rights.find(r=>r.right_flag === `MODERATE_TOURNAMENT_${id}`), `MODERATE_TOURNAMENT_${id}`)
-    if (permissions?.rights.find(r=>r.right_flag === `MODERATE_TOURNAMENT_${id}`) !== undefined){
+    console.log(
+      "perm",
+      permissions,
+      permissions?.rights.find((r) => r.right_flag === `MODERATE_TOURNAMENT_${id}`),
+      `MODERATE_TOURNAMENT_${id}`,
+    )
+    if (permissions?.rights.find((r) => r.right_flag === `MODERATE_TOURNAMENT_${id}`) !== undefined) {
       isAdmin = true
     }
   }
-
 
   return (
     <>

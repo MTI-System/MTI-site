@@ -4,10 +4,10 @@ import {
   TournamentCard,
   TournamentCardInterface,
   TournamentCreationRequest,
-  TournamentResultsTableEntity
+  TournamentResultsTableEntity,
 } from "@/types/TournamentsAPI"
 import { TournamentTypeIntarface, TournamentTypeSchema } from "@/types/TournamentTypeIntarface"
-import {TournamentState} from "@/types/TournamentStateType";
+import { TournamentState } from "@/types/TournamentStateType"
 
 export const tournamentsReducerPath = "tournamentsApi" as const
 
@@ -17,14 +17,14 @@ export const defineTournamentsEndpoints = (
   builder: EndpointBuilder<typeof tournamentsBaseQuery, never, typeof tournamentsReducerPath>,
 ) => ({
   getAvailableStates: builder.query({
-    query: ({year, tt}: {tt: number, year: number}) => `statuses?tournamentTypeId=${tt}&year=${year}`,
+    query: ({ year, tt }: { tt: number; year: number }) => `statuses?tournamentTypeId=${tt}&year=${year}`,
     transformResponse: (response: unknown): TournamentState[] => {
       if (Array.isArray(response)) return response
       return []
     },
   }),
   getAvailableYears: builder.query({
-    query: ({tt}: {tt: number}) => `years?tournamentTypeId=${tt}`,
+    query: ({ tt }: { tt: number }) => `years?tournamentTypeId=${tt}`,
     transformResponse: (response: unknown): number[] => {
       if (Array.isArray(response)) return response
       return [new Date().getFullYear()]
@@ -49,7 +49,7 @@ export const defineTournamentsEndpoints = (
     },
   }),
   getOrganizatorTournaments: builder.mutation({
-    query: ({tt, year, token}: { tt: number; year: number; token: string }) => {
+    query: ({ tt, year, token }: { tt: number; year: number; token: string }) => {
       const formData = new FormData()
       formData.set("token", token)
       formData.set("year", year.toString())

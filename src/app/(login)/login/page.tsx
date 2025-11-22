@@ -102,7 +102,7 @@ function LoginPage() {
           <Field.Control
             type="username"
             placeholder="ВашеНик"
-            className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
           />
         </Field.Root>
         <Field.Root name="password" className="flex w-full flex-col items-start gap-1">
@@ -111,7 +111,7 @@ function LoginPage() {
           <Field.Control
             type="password"
             placeholder="ИмяВашегоКота"
-            className="h-15 w-full rounded-xl border border-border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
           />
         </Field.Root>
         <Button

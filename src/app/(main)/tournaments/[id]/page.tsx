@@ -1,13 +1,11 @@
 "use client"
-import {usePathname, useRouter} from "next/navigation";
-import {useEffect} from "react";
+import { usePathname, useRouter } from "next/navigation"
+import { useEffect } from "react"
 
-export default function EmptyTPage(
-  {params}: { params: Promise<{id: number}> }
-){
+export default function EmptyTPage({ params }: { params: Promise<{ id: number }> }) {
   const router = useRouter()
-  const pathname= usePathname()
-  useEffect(()=>{
+  const pathname = usePathname()
+  useEffect(() => {
     router.push(`${pathname}/info`)
   }, [])
   return (

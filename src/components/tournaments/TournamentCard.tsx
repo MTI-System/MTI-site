@@ -245,7 +245,7 @@ function CardContent({
               )}
               <div
                 className={twclsx(
-                  "me-5 flex md:h-7 w-4 h-4 md:min-w-fit items-center justify-center shrink-0 rounded-full border-3 md:border transition-colors ",
+                  "me-5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-3 transition-colors md:h-7 md:min-w-fit md:border",
                   { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.badge.badge_flag === "ENDED" },
                   {
                     "border-[#32E875] bg-[#32E875]/20 text-[#32E875]":
@@ -260,7 +260,7 @@ function CardContent({
                   },
                 )}
               >
-                <p className="px-5 hidden md:block">
+                <p className="hidden px-5 md:block">
                   {tournamentCard?.badge.badge_flag === "ENDED"
                     ? "Завершен"
                     : tournamentCard?.badge.badge_flag === "PROCESSING"
@@ -276,7 +276,9 @@ function CardContent({
 
             <div className="text-text-alt flex items-center gap-2">
               <CiLocationOn className="text-xl" />
-              {!isCreate && <p className="text-xs">{tournamentCard?.location.location_text ?? "Местоположение неизвестно"}</p>}
+              {!isCreate && (
+                <p className="text-xs">{tournamentCard?.location.location_text ?? "Местоположение неизвестно"}</p>
+              )}
               {isCreate && (
                 <Tooltip.Root
                   disabled={errorsInternal.length === 0 || !errorsInternal.some((error) => error.key === "location")}

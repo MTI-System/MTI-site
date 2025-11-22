@@ -4,7 +4,7 @@ import { DateRange, DayPicker } from "react-day-picker"
 import { FaEdit } from "react-icons/fa"
 
 interface DatePickerBaseProps {
-  defaultDate?: Date | DateRange,
+  defaultDate?: Date | DateRange
   className?: string
 }
 
@@ -34,7 +34,7 @@ export default function DatePicker({ onPick, type, defaultDate, className }: Dat
   const [isPopoverOpened, setIsPopoverOpened] = useState(false)
 
   useEffect(() => {
-      console.log(selected)
+    console.log(selected)
   }, [selected])
 
   return (
@@ -49,9 +49,19 @@ export default function DatePicker({ onPick, type, defaultDate, className }: Dat
       }}
     >
       <Popover.Trigger className="">
-        <div className={className ?? "hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors"}>
+        <div
+          className={className ?? "hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors"}
+        >
           <span className="text-[0.8rem]">
-            {defaultDate ? (type === "range" ? `${formatDate(selected?.from)}-${formatDate(selected?.to)}` : formatDate(selected)): <p>Выберите дату</p>}
+            {defaultDate ? (
+              type === "range" ? (
+                `${formatDate(selected?.from)}-${formatDate(selected?.to)}`
+              ) : (
+                formatDate(selected)
+              )
+            ) : (
+              <p>Выберите дату</p>
+            )}
           </span>
           <FaEdit />
         </div>
@@ -66,10 +76,12 @@ export default function DatePicker({ onPick, type, defaultDate, className }: Dat
               required={true}
               animate
               fixedWeeks={true}
-              style={{
-                "--rdp-accent-color": "var(--color-accent-primary)",
-                "--rdp-accent-background-color": "rgba(from var(--color-accent-primary) r g b / 0.3)",
-              } as CSSProperties}
+              style={
+                {
+                  "--rdp-accent-color": "var(--color-accent-primary)",
+                  "--rdp-accent-background-color": "rgba(from var(--color-accent-primary) r g b / 0.3)",
+                } as CSSProperties
+              }
             />
             <button
               onClick={() => {

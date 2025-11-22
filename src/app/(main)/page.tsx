@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 export default async function Home() {
   return (
     <div className="h-full">
-
       <div className="flex h-[50vh] min-h-[70rem] flex-col gap-5 py-10 sm:grid sm:min-h-[55rem] sm:grid-cols-3 sm:grid-rows-4 sm:gap-2">
         <ClickableCard
           className={`bg-bg-alt border-border relative flex h-[10rem] overflow-hidden border-[1px] transition-opacity hover:opacity-80 sm:row-[1/3] sm:h-auto`}
@@ -39,7 +38,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="absolute  inset-0 z-0 hidden opacity-30 sm:block ">
+          <div className="absolute inset-0 z-0 hidden opacity-30 sm:block">
             <MaskLineForMenuCard
               className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
               maskIcon={`${FILES_SERVER}problemMask.svg`}
@@ -53,18 +52,17 @@ export default async function Home() {
               maskIcon={`${FILES_SERVER}problemMask.svg`}
             />
             <MaskLineForMenuCard
-                className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
-                maskIcon={`${FILES_SERVER}problemMask.svg`}
+              className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
+              maskIcon={`${FILES_SERVER}problemMask.svg`}
             />
             <MaskLineForMenuCard
-                className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
-                maskIcon={`${FILES_SERVER}problemMask.svg`}
+              className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
+              maskIcon={`${FILES_SERVER}problemMask.svg`}
             />
             <MaskLineForMenuCard
-                className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
-                maskIcon={`${FILES_SERVER}problemMask.svg`}
+              className="ms-[1.5rem] h-[33%] bg-[#ED0F4E]"
+              maskIcon={`${FILES_SERVER}problemMask.svg`}
             />
-
           </div>
         </ClickableCard>
         <ClickableCard

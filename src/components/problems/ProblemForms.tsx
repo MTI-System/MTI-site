@@ -8,7 +8,7 @@ import { Input, TitledInput } from "@/components/ui/Input"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { useRouter } from "next/navigation"
-import {useAddProblemMutation} from "@/api/problems/clientApiInterface";
+import { useAddProblemMutation } from "@/api/problems/clientApiInterface"
 
 export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; targetYear: number }) {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
@@ -21,11 +21,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
   const [isLoading, setIsLoading] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState("")
-  const [addProblem, {
-    error: fetchError,
-    isLoading: isAddition,
-  }] = useAddProblemMutation();
-
+  const [addProblem, { error: fetchError, isLoading: isAddition }] = useAddProblemMutation()
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -43,10 +39,10 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
 
     const formData = new FormData(e.currentTarget)
     if (
-        formData.get("globalNumber") === "" ||
-        formData.get("firstTranslationName") === "" ||
-        formData.get("firstTranslationText") === "" ||
-        formData.get("firstTranslationBy") === ""
+      formData.get("globalNumber") === "" ||
+      formData.get("firstTranslationName") === "" ||
+      formData.get("firstTranslationText") === "" ||
+      formData.get("firstTranslationBy") === ""
     ) {
       setError("Все поля должны быть заполнены")
       setIsLoading(false)
@@ -56,7 +52,7 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     formData.set("tournamentType", targetTTID.toString())
     formData.set("authToken", token)
     console.log("request to api, ", PROBLEM_API + "add_problem")
-    addProblem({formData})
+    addProblem({ formData })
 
     // const isok = await handletaskCreation(e.currentTarget)
     // if (isok) {
@@ -73,10 +69,10 @@ export function AddProblem({ targetTTID, targetYear }: { targetTTID: number; tar
     // setIsLoading(false)
   }
   useEffect(() => {
-    if (isAddition === false){
+    if (isAddition === false) {
       router.refresh()
     }
-  }, [isAddition]);
+  }, [isAddition])
 
   // const handletaskCreation = async (form: HTMLFormElement) => {
   //   if (!isAuthenticated) return

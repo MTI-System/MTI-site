@@ -52,7 +52,7 @@ import PersonPicker from "@/components/pickers/PersonPicker"
 
 //               </Autocomplete.Status.Root>
 //             <Autocomplete.Popup className="max-h-[min(var(--available-height),23rem)] w-[var(--anchor-width)] max-w-[var(--available-width)] scroll-pt-2 scroll-pb-2 overflow-y-auto overscroll-contain rounded-md bg-[canvas] text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
-              
+
 //               <Autocomplete.Empty className="px-4 py-2 text-[0.925rem] leading-4 text-gray-600 empty:m-0 empty:p-0">
 //                 No tags found.
 //               </Autocomplete.Empty>
@@ -77,14 +77,15 @@ import PersonPicker from "@/components/pickers/PersonPicker"
 // }
 
 export default function TmpPage() {
-
   return (
-    <form action={(formData) => {
-      const data = formData.get("user_id")
-      console.log(data)
-    }}>
+    <form
+      action={(formData) => {
+        const data = formData.get("user_id")
+        console.log(data)
+      }}
+    >
       <UsersProviderWrapper>
-        <PersonPicker label="Пользователь" placeholder="Выберите пользователя" name="user_id"/>
+        <PersonPicker label="Пользователь" placeholder="Выберите пользователя" name="user_id" />
       </UsersProviderWrapper>
       <button type="submit">Отправить</button>
     </form>

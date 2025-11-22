@@ -58,7 +58,6 @@ export default async function OrganizationsMainPage({
     tournamentsApiServer.endpoints.getAvailableStates.initiate({ tt: Number(sp.tt), year: Number(sp.year) }),
   )
 
-  
   const tournametnsPromise = tournamentsStore.dispatch(
     tournamentsApiServer.endpoints.getOrganizatorTournaments.initiate({
       tt: Number(sp.tt),
@@ -68,18 +67,15 @@ export default async function OrganizationsMainPage({
   )
   const { data: tournamentsCards } = await tournametnsPromise
 
-
   return (
     <>
-
-        <TournamentListPage 
-            rights={userAuth.rights} 
-            tournamentsCards={tournamentsCards} 
-            isOrganizator={true} 
-            sp={sp} 
-            isNoRefresh={isNoRefresh}
-            />
-
+      <TournamentListPage
+        rights={userAuth.rights}
+        tournamentsCards={tournamentsCards}
+        isOrganizator={true}
+        sp={sp}
+        isNoRefresh={isNoRefresh}
+      />
     </>
   )
 }

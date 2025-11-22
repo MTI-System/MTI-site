@@ -8,8 +8,8 @@ import { User } from "@/types/authApi"
 import { setIsPending } from "@/redux_stores/Global/SystemSlice"
 import { ReactNode } from "react"
 import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
-import {useFetchPermissionsMutation} from "@/api/auth/clientApiInterface";
-import AuthProviderWrapper from "@/api/auth/ClientWrapper";
+import { useFetchPermissionsMutation } from "@/api/auth/clientApiInterface"
+import AuthProviderWrapper from "@/api/auth/ClientWrapper"
 
 export default function LayoutComponent({ children }: { children: ReactNode }) {
   const theme = useAppSelector((state) => state.system.theme)
@@ -30,12 +30,12 @@ function InitRedux() {
   const dispatch = useAppDispatch()
   const [isPending, startTransition] = useTransition()
   const mounted = useRef(false)
-  const [fetchPermissions, {data: auth, error, isLoading, isSuccess}] = useFetchPermissionsMutation()
+  const [fetchPermissions, { data: auth, error, isLoading, isSuccess }] = useFetchPermissionsMutation()
 
   useEffect(() => {
     const tt = cookies.get(TOURNAMENT_TYPE_KEY_NAME) ?? "1"
     const token = cookies.get("mtiyt_auth_token") ?? ""
-    fetchPermissions({token: token})
+    fetchPermissions({ token: token })
     if (tt) {
       dispatch(setTT(Number(tt)))
     }
@@ -44,8 +44,6 @@ function InitRedux() {
     }
     // getAuth()
   }, [dispatch])
-
-
 
   useEffect(() => {
     if (!mounted.current) {

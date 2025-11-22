@@ -1,15 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
-import { usersApiClient } from "./clientApiInterface";
+import { usersApiClient } from "./clientApiInterface"
 
 export function makeUsersStoreClient() {
-    const store = configureStore({
-        reducer: {
-            [usersApiClient.reducerPath]: usersApiClient.reducer,
-        },
-        middleware: (gDM) => gDM().concat(usersApiClient.middleware),
-    })
-    setupListeners(store.dispatch)
-    return store
+  const store = configureStore({
+    reducer: {
+      [usersApiClient.reducerPath]: usersApiClient.reducer,
+    },
+    middleware: (gDM) => gDM().concat(usersApiClient.middleware),
+  })
+  setupListeners(store.dispatch)
+  return store
 }
 export type UsersApiStoreClient = ReturnType<typeof makeUsersStoreClient>

@@ -10,8 +10,8 @@ type CardsRootContextType = {
   items: FunctionItem[]
   register: (fn: () => InputVerificationStatus) => number
   unregister: (id: number) => void
-  setFormField: (key: string, value: string) => void,
-  getFormData: ()=>FormData,
+  setFormField: (key: string, value: string) => void
+  getFormData: () => FormData
   isEdit: boolean
   isExpanded: boolean
   formDataMap: RefObject<Map<string, string>>
@@ -42,23 +42,25 @@ export function CardsRootProvider({
     setItems((prev) => prev.filter((it) => it.id !== id))
   }, [])
 
-  const setFormField = useCallback((
-    key: string, value: string
-  )=>{
+  const setFormField = useCallback((key: string, value: string) => {
     formDataMap.current.set(key, value)
   }, [])
-  
 
-  const getFormData = useCallback((
-  )=>{
+  const getFormData = useCallback(() => {
     const formData = new FormData()
-    formDataMap.current.entries().forEach(element => {
+    formDataMap.current.entries().forEach((element) => {
       formData.set(element[0], element[1])
-    });
+    })
     return formData
   }, [])
 
-  return <CardsRootContext value={{ items, register, unregister, isEdit, isExpanded, formDataMap, setFormField, getFormData}}>{children}</CardsRootContext>
+  return (
+    <CardsRootContext
+      value={{ items, register, unregister, isEdit, isExpanded, formDataMap, setFormField, getFormData }}
+    >
+      {children}
+    </CardsRootContext>
+  )
 }
 
 export function useCardsRoot() {

@@ -1,13 +1,12 @@
-import {configureStore} from "@reduxjs/toolkit";
-import {useDispatch, useSelector, useStore} from "react-redux";
-import {TournamentsPageFiltersSlice} from "@/redux_stores/Tournaments/TournamentsPageFiltersSlice";
-
+import { configureStore } from "@reduxjs/toolkit"
+import { useDispatch, useSelector, useStore } from "react-redux"
+import { TournamentsPageFiltersSlice } from "@/redux_stores/Tournaments/TournamentsPageFiltersSlice"
 
 export default function makeTournamentsStore() {
   return configureStore({
-    devTools: {name: "Tournament store"},
+    devTools: { name: "Tournament store" },
     reducer: {
-      tournamentsPageFilters: TournamentsPageFiltersSlice.reducer
+      tournamentsPageFilters: TournamentsPageFiltersSlice.reducer,
     },
   })
 }

@@ -7,7 +7,7 @@ export default function LogoWithTT({
   logoSize,
   margin,
   children,
-  className
+  className,
 }: {
   logoSize: string
   margin: string
@@ -15,9 +15,9 @@ export default function LogoWithTT({
   className?: string
 }) {
   const tt = useAppSelector((state) => state.searchParams.tt)
-  const availableTournamentTypes = useAppSelector(state=>state.searchParams.availableTournamentTypes) ?? []
+  const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
 
-  const ttObject = availableTournamentTypes.find(t => t.id === tt)
+  const ttObject = availableTournamentTypes.find((t) => t.id === tt)
 
   return (
     <div className={className}>

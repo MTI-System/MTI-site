@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import cookies from "js-cookie"
 import { TOURNAMENT_TYPE_KEY_NAME, TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
-import {TournamentTypeIntarface} from "@/types/TournamentTypeIntarface";
+import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
 // import cookies from "next/headers"
 interface SPState {
   tt: number | null
@@ -10,7 +10,7 @@ interface SPState {
 
 const initialState: SPState = {
   tt: null,
-  availableTournamentTypes: null
+  availableTournamentTypes: null,
 }
 
 export const SPSlice = createSlice({
@@ -20,9 +20,9 @@ export const SPSlice = createSlice({
     setTT(state, action: PayloadAction<number>) {
       state.tt = Number(action.payload)
     },
-    setAvailableTournamentTypes(state, action: PayloadAction<TournamentTypeIntarface[]>){
-      state.availableTournamentTypes=action.payload
-    }
+    setAvailableTournamentTypes(state, action: PayloadAction<TournamentTypeIntarface[]>) {
+      state.availableTournamentTypes = action.payload
+    },
   },
 })
 

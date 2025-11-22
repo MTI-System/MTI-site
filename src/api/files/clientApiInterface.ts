@@ -6,7 +6,7 @@ import { buildCreateApi, coreModule } from "@reduxjs/toolkit/query"
 import { reactHooksModule } from "@reduxjs/toolkit/query/react"
 
 import { authBaseQuery, authReducerPath, defineAuthEndpoints } from "@/api/auth/configuration"
-import {defineFilesEndpoints, filesBaseQuery, filesReducerPath} from "@/api/files/configuration";
+import { defineFilesEndpoints, filesBaseQuery, filesReducerPath } from "@/api/files/configuration"
 
 export const FilesApiContext = React.createContext(null as any)
 

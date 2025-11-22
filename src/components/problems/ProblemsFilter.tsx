@@ -231,7 +231,13 @@ export function YearFilter({
   )
 }
 
-function TournamentFilter({ isPending, data }: { isPending: boolean, data: TournamentCardInterface[] | null | undefined }) {
+function TournamentFilter({
+  isPending,
+  data,
+}: {
+  isPending: boolean
+  data: TournamentCardInterface[] | null | undefined
+}) {
   const tt = useAppSelector((state) => state.searchParams.tt)
   const year = useProblemsSelector((state) => state.problemsPageFilters.year)
   const selectedTournament = useProblemsSelector((state) => state.problemsPageFilters.tournament)

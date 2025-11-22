@@ -61,7 +61,7 @@ export default function AppendableInfoContainer({
           info: appendableInfo,
           error,
           setAppendableInfo: (info) => {
-            setError(prev=>{
+            setError((prev) => {
               const newError = prev.filter((err) => !(err.key in info))
               return newError
             })

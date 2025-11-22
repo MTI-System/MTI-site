@@ -66,7 +66,7 @@ export default function SearchParamsUpdator({
     if (sectionFilter) params.set("sections", sectionFilter?.join(",") ?? "")
 
     if (tournament) params.set("tournament", tournament.toString())
-    // why this code was here in the first placew idk 
+    // why this code was here in the first placew idk
     // if (sectionFilter && year === Number(searchParams.year)) {
     //   params.set("sections", sectionFilter?.join(",") ?? "")
     // }

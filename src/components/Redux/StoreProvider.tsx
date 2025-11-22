@@ -1,21 +1,21 @@
 "use client"
-import React, {useMemo, useRef} from "react"
+import React, { useMemo, useRef } from "react"
 import { Provider } from "react-redux"
 import makeStore, { AppStore } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { useSearchParams } from "next/navigation"
-import {TournamentTypeIntarface} from "@/types/TournamentTypeIntarface";
+import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
 
 export default function StoreProvider({
   children,
   theme,
   tt,
   token,
-  tournamentTypes
+  tournamentTypes,
 }: {
   children: React.ReactNode
   theme: string
   tt: string
-  token: string,
+  token: string
   tournamentTypes: TournamentTypeIntarface[] | null | undefined
 }) {
   const storeRef = useRef<AppStore | null>(null)

@@ -8,18 +8,18 @@ export default function PersonPicker({
   label,
   placeholder,
   name,
-  selectedValue
+  selectedValue,
 }: {
   label: string
   placeholder: string
   name: string
-  selectedValue: RefObject<User|null>
+  selectedValue: RefObject<User | null>
 }) {
   const [query, setQuery] = useState("")
   const { data, isFetching, isError } = useFindUsersQuery({ query: query })
   const hiddenInputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("Update query: ", hiddenInputRef.current)
   }, [query])
 
@@ -39,12 +39,11 @@ export default function PersonPicker({
         input:
           "bg-[canvas] h-10 w-[16rem] md:w-[20rem] font-normal rounded-md border border-gray-200 pl-3.5 text-base text-gray-900 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800",
       }}
-      onClose={(item)=>{
-        if (item != null){
+      onClose={(item) => {
+        if (item != null) {
           console.log("closed", item)
           selectedValue.current = item
         }
-
       }}
     >
       <AutocompleteWithPreview.Portal>

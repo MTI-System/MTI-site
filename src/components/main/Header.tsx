@@ -27,10 +27,10 @@ export default async function Header() {
             <Link href={"/"} className="w-full">
               <h1 className="w-full pl-2 text-start">МТИ</h1>
             </Link>
-            <TournamentTypeSelector 
-                initTournamentType={Number(initTT)}
-                availableTournamentTypes={tournamentTypes??[]}
-                />
+            <TournamentTypeSelector
+              initTournamentType={Number(initTT)}
+              availableTournamentTypes={tournamentTypes ?? []}
+            />
           </div>
         </div>
         <div className="text-text-main flex flex-row items-center gap-[1vw]">

@@ -51,12 +51,12 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/results/team`,
       title: "Командный зачет",
-      isLocked: tournamentCard.badge.badge_flag  === "futured" || tournamentCard.badge.badge_flag  === "registration",
+      isLocked: tournamentCard.badge.badge_flag === "futured" || tournamentCard.badge.badge_flag === "registration",
     },
     {
       href: `/tournaments/${tournamentCard.id}/results/personal`,
       title: "Личный зачет",
-      isLocked: tournamentCard.badge.badge_flag  === "futured" || tournamentCard.badge.badge_flag === "registration",
+      isLocked: tournamentCard.badge.badge_flag === "futured" || tournamentCard.badge.badge_flag === "registration",
     },
   ]
 
@@ -64,12 +64,12 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/fights/all`,
       title: `Все бои`,
-      isLocked: tournamentCard.badge.badge_flag  === "futured" ||  tournamentCard.badge.badge_flag  === "registration",
+      isLocked: tournamentCard.badge.badge_flag === "futured" || tournamentCard.badge.badge_flag === "registration",
     },
     ...tournamentCard.fight_containers_cards.map((container) => ({
       href: `/tournaments/${tournamentCard.id}/fights/${container.id}`,
       title: container.title,
-      isLocked:  tournamentCard.badge.badge_flag  === "futured" ||  tournamentCard.badge.badge_flag  === "registration",
+      isLocked: tournamentCard.badge.badge_flag === "futured" || tournamentCard.badge.badge_flag === "registration",
     })),
   ]
 
@@ -109,7 +109,6 @@ export default function TournamentsPageTabs({
     },
   ]
 
-  
   const staffLinks: LinkInterface[] = [
     {
       href: `/tournaments/${tournamentCard.id}/staff/management`,
@@ -138,7 +137,7 @@ export default function TournamentsPageTabs({
         <NavigationItem hasDescription={false} items={resultsLinks} itemTitle="Результаты" />
         <NavigationItem hasDescription={false} items={fightsLinks} itemTitle="Бои" />
         <NavigationItem hasDescription={true} items={statsLinks} itemTitle="Статистика" />
-        { tournamentCard.badge.badge_flag  === "registration" && !isAdmin && (
+        {tournamentCard.badge.badge_flag === "registration" && !isAdmin && (
           <NavigationMenu.Item>
             <Link className={registrationTriggerClassName} href={`/tournaments/${tournamentCard.id}/registration`}>
               Регистрация на турнир
