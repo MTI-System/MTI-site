@@ -1,11 +1,14 @@
 import { Popover } from "@base-ui-components/react/popover"
 import { CSSProperties, useEffect, useState } from "react"
-import { DateRange, DayPicker } from "react-day-picker"
+import { DateRange, DayPicker, DayPickerProps } from "react-day-picker"
 import { FaEdit } from "react-icons/fa"
 
 interface DatePickerBaseProps {
   defaultDate?: Date | DateRange
   className?: string
+  captionLayout?: "dropdown" | "label" | "dropdown-months" | "dropdown-years" | undefined
+  startMonth?: Date
+  endMonth?: Date
 }
 
 interface SingleDatePicker {
@@ -28,7 +31,7 @@ export const formatDate = (date: Date) => {
   }).format(date)
 }
 
-export default function DatePicker({ onPick, type, defaultDate, className }: DatePickerProps) {
+export default function DatePicker({ onPick, type, defaultDate, className, startMonth, endMonth, captionLayout="label"}: DatePickerProps) {
   console.log(defaultDate)
   const [selected, setSelected] = useState<any>(defaultDate)
   const [isPopoverOpened, setIsPopoverOpened] = useState(false)
@@ -53,7 +56,7 @@ export default function DatePicker({ onPick, type, defaultDate, className }: Dat
           className={className ?? "hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors"}
         >
           <span className="text-[0.8rem]">
-            {defaultDate ? (
+            {selected ? (
               type === "range" ? (
                 `${formatDate(selected?.from)}-${formatDate(selected?.to)}`
               ) : (
@@ -76,6 +79,9 @@ export default function DatePicker({ onPick, type, defaultDate, className }: Dat
               required={true}
               animate
               fixedWeeks={true}
+              captionLayout={captionLayout}
+              startMonth={startMonth}
+              endMonth={endMonth}
               style={
                 {
                   "--rdp-accent-color": "var(--color-accent-primary)",

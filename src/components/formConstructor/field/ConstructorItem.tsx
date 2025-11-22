@@ -1,3 +1,4 @@
+"use client"
 import { useSortable } from "@dnd-kit/react/sortable"
 import { useEffect, useRef, useState } from "react"
 import { PiDotsNineBold } from "react-icons/pi"

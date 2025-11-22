@@ -35,7 +35,7 @@ export default function TournamentCard({
 }): JSX.Element {
   return (
     <>
-      {/*{!isExtended ? (
+      {!isExtended ? (
         <Link href={`/tournaments/${tournamentCard?.id ?? 0}/${isCreate ? "info/about" : "info/about"}`}>
           <CardContent
             tournamentCard={tournamentCard}
@@ -55,7 +55,7 @@ export default function TournamentCard({
           errors={errors}
           isAdmin={isAdmin}
         />
-      )}*/}
+      )}
     </>
   )
 }

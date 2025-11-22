@@ -27,7 +27,7 @@ export default function ProblemCard({ problem, isEditable }: { problem: ProblemI
   const [isPendingDeletion, startTransition] = useTransition()
   return (
     <div
-      className={twclsx("bg-bg-alt border-border rounded-2xl border-[1px] py-4", {
+      className={twclsx("bg-bg-alt border-border rounded-2xl border py-4", {
         "opacity-25": isPendingDeletion,
       })}
     >
@@ -86,7 +86,7 @@ export function ProblemCardContent({
 
   return (
     <>
-      <div className="border-b-border flex flex-col gap-2 border-b-[1px] px-7 pb-3">
+      <div className="border-b-border flex flex-col gap-2 border-b px-7 pb-3">
         <div className="flex items-center justify-between">
           {is_edit_page && (
             <div className="">
@@ -152,7 +152,7 @@ export function ProblemCardContent({
             <PiGlobeLight />
             <div className="">
               <input
-                className="border-border h-full w-full rounded-2xl border-[1px] p-2 text-[0.8rem]"
+                className="border-border h-full w-full rounded-2xl border p-2 text-[0.8rem]"
                 defaultValue={problem.problem_translations[selectedTrnslation].problem_by}
                 name="newProblemFirstTranslationBy"
                 type="text"
@@ -184,7 +184,7 @@ export function ProblemCardContent({
         {is_edit_page && (
           <div>
             <textarea
-              className="border-border h-20 w-full resize-none rounded-2xl border-[1px] p-2"
+              className="border-border h-20 w-full resize-none rounded-2xl border p-2"
               name="firstTranslationText"
               defaultValue={problem.problem_translations[selectedTrnslation].problem_text}
               onChange={(event) => {
@@ -432,8 +432,8 @@ function AddNewSection({
         <DropdownTrigger
           style={color as CSSProperties}
           className={twclsx(
-            "hover:bg-bg-alt rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-color)] py-0.5 font-bold text-[var(--border-color)] opacity-100!",
-            { "hover:bg-[var(--bg-color)]!": isPending || isErrorShown || isLoading },
+            "hover:bg-bg-alt rounded-full border-2 border-(--border-color) bg-(--bg-color) py-0.5 font-bold text-(--border-color) opacity-100!",
+            { "hover:bg-(--bg-color)!": isPending || isErrorShown || isLoading },
           )}
           disabled={isPending || isErrorShown || isLoading}
           dontDisplaySelection
