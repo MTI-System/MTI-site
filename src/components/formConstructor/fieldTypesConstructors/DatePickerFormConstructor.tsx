@@ -25,6 +25,7 @@ export default function DateFieldConstructor({ id }: { id: number }) {
           items={types}
           defaultValue={"single"}
           onValueChange={(value) => {
+            if (value === null) return
             setProperties({ ...currentProperties, selectMode: value }, id)
           }}
         >

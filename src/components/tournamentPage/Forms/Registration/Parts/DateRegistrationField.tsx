@@ -1,18 +1,31 @@
 import { Forms } from "@/components/forms"
-import { TournamentRegistrationFormFieldInterface } from "@/types/TournamentRegistrationApi"
+import { formatDate } from "@/components/pickers/DatePicker"
+import {
+  TournamentRegistrationAnswerFieldInterface,
+  TournamentRegistrationFormFieldInterface,
+} from "@/types/TournamentRegistrationApi"
 
-export default function DateRegistrationField({ field }: { field: TournamentRegistrationFormFieldInterface }) {
+export default function DateRegistrationField({
+  field,
+}: {
+  field: TournamentRegistrationFormFieldInterface | TournamentRegistrationAnswerFieldInterface
+}) {
+  const fieldObject = "formField" in field ? field.formField : field
+  const fieldContent =
+    "formField" in field ? field.content.split(" ").map((v) => `${formatDate(new Date(Number(v)))}`) : undefined
+
   return (
     <>
       <Forms.EdiatableItems>
         <>
-          <label className="flex flex-col gap-1 text-sm leading-5 font-medium text-gray-900">{field.title}</label>
+          <label className="flex flex-col gap-1 text-sm leading-5 font-medium text-gray-900">{fieldObject.title}</label>
           {
             <Forms.DatePickerField
               className="border-border bg-bg-main-accent flex h-10 w-full items-center justify-between rounded-md border px-2"
-              name={field.key}
-              type={"single"}
+              name={fieldObject.key}
+              type={fieldObject.metadata.selectMode ?? "single"}
               onVerification={(value: string) => {
+                // TODO: implement verification forfieldObject.metadata.selectableDateRanges
                 return {
                   isSuccess: true,
                 }
@@ -22,7 +35,15 @@ export default function DateRegistrationField({ field }: { field: TournamentRegi
         </>
       </Forms.EdiatableItems>
       <Forms.DefaultItems>
-        <p>Объект заполненный</p>
+        {fieldContent && (
+          <>
+            <div className="border-border bg-bg-main-accent h-15 w-full rounded-md border px-2">
+              <p className="text-text-alt h-4 px-2 pt-1 text-[13px]">{fieldObject.title}</p>
+              <p className="text-text-main px-2 pt-2 font-bold">{fieldContent.join(" - ")}</p>
+            </div>
+          </>
+        )}
+        {!fieldContent && <p>Ошибка!</p>}
       </Forms.DefaultItems>
     </>
   )

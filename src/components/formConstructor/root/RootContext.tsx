@@ -19,9 +19,9 @@ export type TextInputProperties = {
   placeholder?: string
 }
 
-export type RadioSelectInputProperties = {
-  fieldType: "radio_select"
-}
+// export type RadioSelectInputProperties = {
+//   fieldType: "radio_select"
+// }
 
 export type NumberInputProperties = {
   fieldType: "number"

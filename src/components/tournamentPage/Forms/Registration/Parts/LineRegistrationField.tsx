@@ -18,10 +18,10 @@ export default function LineRegistrationField({
           <div className="border-border bg-bg-main-accent relative h-15 w-full rounded-md border">
             <p className="text-text-alt absolute h-4 px-2 pt-1 text-[13px]">{fieldObject.title}</p>
             <Forms.InputField
-              className="placeholder:text-text-main size-full h-full px-2 pt-4 leading-[2.75rem] font-bold"
+              className="placeholder:text-text-main size-full h-full px-2 pt-4 leading-11 font-bold"
               type={fieldObject.type}
               name={fieldObject.key}
-              placeholder={fieldObject.title}
+              placeholder={fieldObject.metadata.placeholder ?? fieldObject.title}
               onVerification={(value: string) => {
                 return {
                   isSuccess: true,

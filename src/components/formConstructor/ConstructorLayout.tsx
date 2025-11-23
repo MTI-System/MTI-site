@@ -10,7 +10,7 @@ export function ConstructorLayout() {
   const counter = useRef<number>(0)
   return (
     <>
-      <div className="bg-bg-alt relative h-[100vh] w-full pt-2">
+      <div className="bg-bg-alt relative h-screen w-full pt-2">
         <DragDropProvider
           onDragEnd={(e) => {
             setFields(move(fields, e))

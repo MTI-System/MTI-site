@@ -21,6 +21,7 @@ export default function FieldTypes({ setFieldType }: { setFieldType: (value: ava
         defaultValue={"text"}
         onValueChange={(value) => {
           // valueRef.current = value
+          if (value === null) return
           setFieldType(value)
         }}
       >

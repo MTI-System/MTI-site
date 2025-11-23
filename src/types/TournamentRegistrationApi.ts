@@ -10,6 +10,19 @@ export const TournamentRegistrationFormFieldMetadata = z.object({
       }
     }),
   ),
+  placeholder: z.string().optional(),
+  minValue: z.number().optional(),
+  maxValue: z.number().optional(),
+  selectMode: z.enum(["single", "range"]).optional(),
+  selectableDateRanges: z
+    .array(
+      z.object({
+        start: z.string(),
+        end: z.string(),
+      }),
+    )
+    .optional(),
+  accept: z.string().optional(),
 })
 
 export const TournamentRegistrationFormField = z.object({
