@@ -26,4 +26,4 @@ export const authApiClient = createApiClient({
   endpoints: defineAuthEndpoints,
 })
 
-export const { useLoginMutation, useFetchPermissionsMutation } = authApiClient
+export const { useLoginMutation, useRegisterMutation, useFetchPermissionsMutation } = authApiClient

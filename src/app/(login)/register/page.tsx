@@ -1,12 +1,14 @@
 "use client"
+import { useRegisterMutation } from "@/api/auth/clientApiInterface"
 import LoginLayout from "@/components/login/mainLayout"
 import DatePicker from "@/components/pickers/DatePicker"
 import { Button } from "@/components/ui/Buttons"
-import Modal from "@/components/ui/Modals"
+import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 import { Checkbox, Field, Form } from "@base-ui-components/react"
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react"
+import cookies from "js-cookie"
 import { redirect } from "next/navigation"
-import { Dispatch, FormEvent, SetStateAction, useState } from "react"
-import { PiWarningBold } from "react-icons/pi"
+import { FormEvent, useCallback, useEffect, useState } from "react"
 import { z } from "zod"
 
 interface RegisterFormData {
@@ -27,16 +29,32 @@ interface RegisterFormData {
 export default function Page() {
   const [displayedStep, setDisplayedStep] = useState(1)
   const [formData, setFormData] = useState<RegisterFormData>({})
+  const [register, { data, isLoading, error, isSuccess }] = useRegisterMutation()
   // -----------TMP---------------
-  const [isLoading, setIsLoading] = useState(false)
+  // const [isLoading, setIsLoading] = useState(false)
   // TODO: Write RTK query for registration
-  async function handleRegister() {
+  const handleRegister = useCallback(()=> {
     // TODO: implement actual registration logic
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 5000))
-    setIsLoading(false)
-  }
+    // setIsLoading(true)
+    const fd = new FormData()
+    Object.entries(formData).forEach(([key, value]) => {
+      fd.append(key, value)
+    })
+    register({ formData: fd })
+    // await new Promise((resolve) => setTimeout(resolve, 5000))
+  }, [formData, register])
   // ------------------------------
+  useEffect(() => {
+    if (isSuccess && data) cookies.set(AUTH_TOKEN_KEY_NAME, data)
+  }, [isSuccess])
+
+  useEffect(()=>{
+    console.log("exchange fd", formData)
+  }, [formData])
+
+  useEffect(()=>{
+    if(displayedStep === 4) handleRegister()
+  }, [displayedStep, handleRegister])
 
   let displayForm = <></>
   let displayedTitle = ""
@@ -46,6 +64,7 @@ export default function Page() {
       displayForm = (
         <Step1
           onStepComplete={(data) => {
+            console.log("1---", data)
             setFormData((prev) => ({ ...prev, ...data }))
             setDisplayedStep(2)
           }}
@@ -58,11 +77,11 @@ export default function Page() {
       displayForm = (
         <Step2
           onStepComplete={(data) => {
+            console.log("2---", data)
             setFormData((prev) => ({ ...prev, ...data }))
             if (calculateAge(new Date(data.usersBirthday!!)) < 14) setDisplayedStep(3)
             else {
               setDisplayedStep(4)
-              handleRegister()
             }
           }}
         ></Step2>
@@ -74,9 +93,9 @@ export default function Page() {
       displayForm = (
         <Step3
           onStepComplete={(data) => {
+            console.log("3---", data)
             setFormData((prev) => ({ ...prev, ...data }))
             setDisplayedStep(4)
-            handleRegister()
           }}
         ></Step3>
       )
@@ -87,19 +106,21 @@ export default function Page() {
     case 4:
       displayForm = (
         <Button
-          disabled={isLoading}
+          disabled={isLoading || error !== undefined}
           className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
-          onClick={()=>{
+          onClick={() => {
             redirect("/")
           }}
         >
-          {isLoading ? "Загрузка..." : "Ура, идём на главную"}
+          {isLoading ? "Загрузка..." : error ? "Ошибка" : "Ура, идём на главную"}
         </Button>
       )
-      displayedTitle = isLoading ? "ПОЧТИ ГОТОВО..." : "ПОЗДРАВЛЯЕМ!"
+      displayedTitle = isLoading ? "ПОЧТИ ГОТОВО..." : error ? "ОШИБКА" : "ПОЗДРАВЛЯЕМ!"
       displayedDescription = isLoading
         ? "Мы собираем все данные и создаем для вас аккаунт. Это займет некоторое время."
-        : "Вы успешно зарегистрировались в системе. Теперь вы можете начать использовать все возможности нашего сервиса."
+        : error
+          ? `Произошла ошибка при регистрации. Попробуйте позже. Код ошибки: ${(error as FetchBaseQueryError).status}`
+          : "Вы успешно зарегистрировались в системе. Теперь вы можете начать использовать все возможности нашего сервиса."
       break
   }
 
@@ -144,7 +165,8 @@ function Step1({ onStepComplete }: { onStepComplete: (data: Step1Interface) => v
       return
     }
     setFormErrors({})
-    onStepComplete(parsedData.data)
+    const {passwordConfirm, ...data} = parsedData.data
+    onStepComplete(data)
   }
   return (
     <>
@@ -223,7 +245,8 @@ function Step2({ onStepComplete }: { onStepComplete: (data: Step2Interface) => v
       return
     }
     setFormErrors({})
-    onStepComplete({ ...parsedData.data, usersBirthday: birthDate!!.getTime() })
+    const {isAcceptedPolicy, ...data} = parsedData.data
+    onStepComplete({ ...data, usersBirthday: birthDate!!.getTime() })
   }
 
   return (

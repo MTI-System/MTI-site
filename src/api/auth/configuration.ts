@@ -7,6 +7,18 @@ export const authReducerPath = "notificationsApi" as const
 export const authBaseQuery = fetchBaseQuery({ baseUrl: AUTH_API })
 
 export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuery, never, typeof authReducerPath>) => ({
+  register: builder.mutation({
+    query: ({ formData }: { formData: FormData }) => ({
+      url: "register",
+      method: "PUT",
+      body: formData,
+    }),
+    transformResponse: (response: string): string | null => {
+      if (!response) return null
+      if (!response.trim()) return null
+      return response
+    },
+  }),
   login: builder.mutation({
     query: ({ formData }: { formData: FormData }) => ({
       url: "login",
