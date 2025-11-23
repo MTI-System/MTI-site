@@ -16,7 +16,7 @@ export default function PersonPicker({
   selectedValue: RefObject<User | null>
 }) {
   const [query, setQuery] = useState("")
-  const { data, isFetching, isError } = useFindUsersQuery({ query: query })
+  const { data, isFetching, isError } = useFindUsersQuery({ query: query }, {skip: query.length < 1})
   const hiddenInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function PersonPicker({
             </AutocompleteWithPreview.Status.Info>
             <AutocompleteWithPreview.Status.Error className="text-red-500"></AutocompleteWithPreview.Status.Error>
           </AutocompleteWithPreview.Status.Root>
-          <AutocompleteWithPreview.Popup className="flex max-h-[min(var(--available-height),23rem)] w-[calc(var(--anchor-width)*2)] max-w-[var(--available-width)] flex-row rounded-md border-t-2 border-gray-200 bg-[canvas] text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+          <AutocompleteWithPreview.Popup className="flex max-h-[min(var(--available-height),23rem)] w-[calc(var(--anchor-width)*2)] max-w-(--available-width) flex-row rounded-md border-t-2 border-gray-200 bg-[canvas] text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
             <div className="w-1/2 scroll-pt-2 scroll-pb-2 overflow-y-auto overscroll-contain">
               <AutocompleteWithPreview.Empty className="px-4 py-2 text-[0.925rem] leading-4 text-gray-600 empty:m-0 empty:p-0">
                 Люди не найдены.
@@ -72,7 +72,7 @@ export default function PersonPicker({
                 {(user: User) => (
                   <AutocompleteWithPreview.Item
                     key={user.id}
-                    className="flex cursor-default py-2 pr-8 pl-4 text-base leading-4 outline-none select-none data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-2 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded data-[highlighted]:before:bg-gray-900"
+                    className="flex cursor-default py-2 pr-8 pl-4 text-base leading-4 outline-none select-none data-highlighted:relative data-highlighted:z-0 data-highlighted:text-gray-50 data-highlighted:before:absolute data-highlighted:before:inset-x-2 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1] data-highlighted:before:rounded data-highlighted:before:bg-gray-900"
                     value={`${user.firstName} ${user.secondName} ${user.thirdName}`}
                   >
                     {user.firstName} {user.secondName} {user.thirdName}

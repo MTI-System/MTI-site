@@ -4,6 +4,7 @@ import {
   TournamentRegistrationFormInfo,
   TournamentRegistrationFormInfoInterface,
 } from "@/types/TournamentRegistrationApi"
+import { BooleanResponseSchema } from "@/types/generalAPITypes"
 
 export const registrationReducerPath = "registrationApi" as const
 
@@ -21,9 +22,22 @@ export const defineRegistrationEndpoints = (
       return null
     },
   }),
+  isFormFilled: builder.query({
+    query: ({tournamentId, formFlag, userId}: {tournamentId: number,
+      formFlag: string, userId: number
+    }) => ({
+      url: `is_form_filled/${tournamentId}/${formFlag}?userId=${userId}`,
+      method: "GET"
+    }),
+    transformResponse: (response: string): boolean=> {
+      if (!response) return false
+      const is_login_taken = BooleanResponseSchema.safeParse(response)
+      return is_login_taken.data?.result ?? false 
+    }
+  }),
   submitFormAnswer: builder.mutation({
-    query: ({ formData }: { formData: FormData }) => ({
-      url: "answer_form",
+    query: ({ formData, formId}: { formData: FormData, formId:number }) => ({
+      url: `answer_form/${formId}`,
       method: "POST",
       body: formData,
     }),

@@ -24,8 +24,8 @@ function isValidUrl(url: string) {
 interface ExpandableImageProps extends Omit<ImageProps, "alt" | "width" | "height" | "src"> {
   className?: string
   embedding: EmbeddingInterface
-  problemId: number
-  isModerator: boolean
+  problemId?: number
+  isModerator?: boolean
   src: string
   onExpand?: () => void
   onShrink?: () => void
@@ -35,7 +35,7 @@ export function ExpandableImage({
   onExpand,
   embedding,
   problemId,
-  isModerator,
+  isModerator = false,
   src,
   ...props
 }: ExpandableImageProps) {
@@ -108,6 +108,7 @@ export function ExpandableImage({
         problem_global_number={1}
         problem_title={embedding.title}
         onConfirm={async () => {
+          if (!problemId) return
           deleteMaterialMutation({ problemId: problemId, materialId: embedding.id, token: token })
         }}
       />

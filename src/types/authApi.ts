@@ -13,5 +13,11 @@ export const UserSchema = z.object({
   rights: z.array(RightSchema),
 })
 
+export const TokenSchema = z.object({
+  token: z.string().nonempty(),
+})
+
+
+export type Token = z.infer<typeof TokenSchema>
 export type Right = z.infer<typeof RightSchema>
 export type User = z.infer<typeof UserSchema>

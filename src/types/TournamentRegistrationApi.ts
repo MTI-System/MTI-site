@@ -30,7 +30,7 @@ export const TournamentRegistrationFormField = z.object({
   type: z.string(),
   title: z.string(),
   key: z.string(),
-  metadata: TournamentRegistrationFormFieldMetadata,
+  metadata: TournamentRegistrationFormFieldMetadata.optional(),
 })
 
 export const TournamentRegistrationFormInfo = z.object({

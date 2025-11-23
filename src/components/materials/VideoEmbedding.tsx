@@ -16,11 +16,11 @@ import { useDeleteMaterialMutation } from "@/api/problems/clientApiInterface"
 
 interface UniversalPlayerProps {
   embedding: EmbeddingInterface
-  problemId: number
-  isModerator: boolean
+  problemId?: number
+  isModerator?: boolean
 }
 
-export default function UniversalPlayer({ embedding, problemId, isModerator }: UniversalPlayerProps) {
+export default function UniversalPlayer({ embedding, problemId, isModerator=false }: UniversalPlayerProps) {
   const typeName = embedding.content_type.type_name
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -174,6 +174,7 @@ export default function UniversalPlayer({ embedding, problemId, isModerator }: U
         problem_global_number={1}
         problem_title={embedding.title}
         onConfirm={async () => {
+          if(!problemId) return
           deleteMaterialMutation({ problemId: problemId, materialId: embedding.id, token: token })
         }}
       />

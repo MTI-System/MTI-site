@@ -5,6 +5,8 @@ import LineRegistrationField from "./Parts/LineRegistrationField"
 import DateRegistrationField from "./Parts/DateRegistrationField"
 import DropdownRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/DropdownRegistrationField"
 import PickPersonRegistrationField from "./Parts/PickPersonRegistrationField"
+import { useSubmitFormAnswerMutation } from "@/api/registration/clientApiInterface"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 
 export default function TournamentRegistrationForm({
   formInfo,
@@ -15,16 +17,25 @@ export default function TournamentRegistrationForm({
   className: string
   isEdit: boolean
 }) {
+  const [submitFormAnswer, { data, isLoading, isError, error }] = useSubmitFormAnswerMutation()
+  const token = useAppSelector((state) => state.auth.token)
   console.log("Getted form: ", formInfo)
   return (
     <>
       <h1>Регистрация на турнир</h1>
 
-      <Forms.Root isEdit={true} isExpanded={false}>
+      <Forms.Root isEdit={isEdit} isExpanded={false}>
         <Forms.Trigger
           className="mt-4 flex flex-col gap-2"
           onConfirm={(e) => {
-            console.log("form result", e.entries().toArray())
+            console.log("filled form", e.entries().toArray())
+            e.set("token", token)
+            submitFormAnswer(
+              {
+                formData: e,
+                formId: formInfo?.id ?? -1,
+              }
+            )
           }}
         >
           {formInfo?.fields.map((field) => {
@@ -33,27 +44,29 @@ export default function TournamentRegistrationForm({
               case "text":
                 return (
                   <LineRegistrationField
-                    key={field.id}
+                    key={field.key}
                     field={{
-                      id: 0,
+                      id: -1,
                       formField: field,
                       content: "Ответ",
                     }}
                   />
                 )
               case "date":
-                return <DateRegistrationField key={field.id} field={field} />
+                return <DateRegistrationField key={field.key} field={field} />
               case "dropdown":
-                return <DropdownRegistrationField key={field.id} field={field} />
+                return <DropdownRegistrationField key={field.key} field={field} />
               case "player":
-                return <PickPersonRegistrationField key={field.id} field={field} />
+                return <PickPersonRegistrationField key={field.key} field={field} />
               default:
                 return <p>Unknown</p>
             }
           })}
-          <Forms.ConfirmButton className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary h-10 rounded-xl border px-10 font-bold">
-            Отправить форму
-          </Forms.ConfirmButton>
+          {isEdit && (
+            <Forms.ConfirmButton className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary h-10 rounded-xl border px-10 font-bold">
+              Отправить форму
+            </Forms.ConfirmButton>
+          )}
         </Forms.Trigger>
       </Forms.Root>
     </>

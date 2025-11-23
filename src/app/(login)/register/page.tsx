@@ -1,5 +1,5 @@
 "use client"
-import { useRegisterMutation } from "@/api/auth/clientApiInterface"
+import { useIsLoginTakenMutation, useRegisterMutation } from "@/api/auth/clientApiInterface"
 import LoginLayout from "@/components/login/mainLayout"
 import DatePicker from "@/components/pickers/DatePicker"
 import { Button } from "@/components/ui/Buttons"
@@ -7,7 +7,8 @@ import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
 import { Checkbox, Field, Form } from "@base-ui-components/react"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react"
 import cookies from "js-cookie"
-import { redirect } from "next/navigation"
+import Link from "next/link"
+import { redirect, useRouter } from "next/navigation"
 import { FormEvent, useCallback, useEffect, useState } from "react"
 import { z } from "zod"
 
@@ -26,35 +27,46 @@ interface RegisterFormData {
   parentContact?: string
 }
 
+const formCardClass =
+  "flex w-full max-w-3xl flex-col gap-6 rounded-2xl bg-white/95 py-5 overflow-visible max-h-[calc(100vh-6rem)] min-h-[14rem] sm:min-h-[20rem] lg:min-h-[26rem] min-w-[18rem]"
+const fieldRootClass = "flex w-full flex-col items-start gap-1 text-gray-900"
+const fieldLabelClass = "text-sm font-semibold uppercase tracking-wide text-gray-700"
+const fieldErrorClass = "text-sm font-medium text-red-600"
+const inputClass =
+  "h-15 w-full rounded-xl border border-border bg-white/80 px-4 text-lg text-gray-900 placeholder:text-gray-400 transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+const actionButtonClass =
+  "bg-accent-primary-alt border border-accent-primary text-accent-primary h-15 w-full rounded-xl font-semibold tracking-wide transition duration-200 outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-70"
+const inlineGridClass = "grid w-full gap-5 md:grid-cols-2"
+const datePickerClass =
+  "outline-none flex h-15 w-full items-center justify-between rounded-xl border border-border bg-white/70 px-4 text-lg text-gray-900 transition duration-200 focus-within:ring-2 focus-within:ring-accent-primary focus-within:ring-offset-2 focus-within:ring-offset-white"
+const policyCardClass =
+  "flex w-full h-15 flex-col gap-3 rounded-xl border border-border bg-white/80 p-4 text-sm leading-relaxed text-gray-900 sm:flex-row sm:items-center sm:justify-between sm:gap-4 select-none"
+const checkboxRootClass =
+  "flex size-5 items-center justify-center rounded-md border border-gray-300 bg-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white data-checked:border-transparent data-checked:bg-gray-900"
+
 export default function Page() {
   const [displayedStep, setDisplayedStep] = useState(1)
   const [formData, setFormData] = useState<RegisterFormData>({})
   const [register, { data, isLoading, error, isSuccess }] = useRegisterMutation()
-  // -----------TMP---------------
-  // const [isLoading, setIsLoading] = useState(false)
-  // TODO: Write RTK query for registration
-  const handleRegister = useCallback(()=> {
-    // TODO: implement actual registration logic
-    // setIsLoading(true)
-    const fd = new FormData()
-    Object.entries(formData).forEach(([key, value]) => {
-      fd.append(key, value)
-    })
-    register({ formData: fd })
-    // await new Promise((resolve) => setTimeout(resolve, 5000))
-  }, [formData, register])
+  const router = useRouter()
+  const handleRegister = useCallback(
+    (addData: RegisterFormData) => {
+      const fd = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        fd.append(key, value)
+      })
+      Object.entries(addData).forEach(([key, value]) => {
+        fd.append(key, value)
+      })
+      console.log("fd", fd)
+      register({ formData: fd })
+    },
+    [formData, register],
+  )
   // ------------------------------
   useEffect(() => {
     if (isSuccess && data) cookies.set(AUTH_TOKEN_KEY_NAME, data)
   }, [isSuccess])
-
-  useEffect(()=>{
-    console.log("exchange fd", formData)
-  }, [formData])
-
-  useEffect(()=>{
-    if(displayedStep === 4) handleRegister()
-  }, [displayedStep, handleRegister])
 
   let displayForm = <></>
   let displayedTitle = ""
@@ -82,6 +94,7 @@ export default function Page() {
             if (calculateAge(new Date(data.usersBirthday!!)) < 14) setDisplayedStep(3)
             else {
               setDisplayedStep(4)
+              handleRegister(data)
             }
           }}
         ></Step2>
@@ -96,6 +109,7 @@ export default function Page() {
             console.log("3---", data)
             setFormData((prev) => ({ ...prev, ...data }))
             setDisplayedStep(4)
+            handleRegister(data)
           }}
         ></Step3>
       )
@@ -106,13 +120,16 @@ export default function Page() {
     case 4:
       displayForm = (
         <Button
-          disabled={isLoading || error !== undefined}
-          className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
+          disabled={isLoading}
+          className={`${actionButtonClass} text-xl md:text-2xl`}
           onClick={() => {
-            redirect("/")
+            if (error) {
+              setDisplayedStep(1)
+              setFormData({})
+            } else redirect("/")
           }}
         >
-          {isLoading ? "Загрузка..." : error ? "Ошибка" : "Ура, идём на главную"}
+          {isLoading ? "Загрузка..." : error ? "Попробовать ещё раз" : "Ура, идём на главную"}
         </Button>
       )
       displayedTitle = isLoading ? "ПОЧТИ ГОТОВО..." : error ? "ОШИБКА" : "ПОЗДРАВЛЯЕМ!"
@@ -146,10 +163,26 @@ type Step1Interface = Omit<z.infer<typeof Step1Schema>, "passwordConfirm">
 
 function Step1({ onStepComplete }: { onStepComplete: (data: Step1Interface) => void }) {
   const [formErrors, setFormErrors] = useState({})
+  const [formData, setFormData] = useState<z.infer<typeof Step1Schema>|null>(null)
 
-  // TODO: Add RTK Query for checking username availability
+  const [checkLogin, { data: isLoginTaken, isLoading, error, isSuccess } ] = useIsLoginTakenMutation()
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    if (!formData) return
+    if (!isSuccess && !isLoading) {
+      setFormErrors({ login: "Не удалось проверить свободность имени пользователя" })
+      console.error("Error checking login availability", error)
+      return
+    }
+    if (isLoginTaken) {
+      setFormErrors({ login: "Имя пользователя уже занято" })
+      return
+    }
+    setFormErrors({})
+    const { passwordConfirm, ...data } = formData
+    onStepComplete(data)
+  }, [isSuccess])
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const parsedData = Step1Schema.safeParse(Object.fromEntries(formData))
@@ -164,47 +197,37 @@ function Step1({ onStepComplete }: { onStepComplete: (data: Step1Interface) => v
       )
       return
     }
-    setFormErrors({})
-    const {passwordConfirm, ...data} = parsedData.data
-    onStepComplete(data)
+    setFormData(parsedData.data)
+    checkLogin({ login: parsedData.data.login })
   }
   return (
     <>
-      <Form className="flex w-full flex-col items-center gap-5" onSubmit={handleSubmit} errors={formErrors}>
-        <Field.Root name="login" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Имя пользователя</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
-          <Field.Control
-            type="text"
-            placeholder="ВашЛогин"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-          />
+      <Form className={formCardClass} onSubmit={handleSubmit} errors={formErrors}>
+        <Field.Root name="login" className={fieldRootClass}>
+          <Field.Label className={fieldLabelClass}>Имя пользователя</Field.Label>
+          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Control type="text" placeholder="ВашЛогин" className={inputClass} />
         </Field.Root>
-        <Field.Root name="password" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Пароль</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
-          <Field.Control
-            type="password"
-            placeholder="admin"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-          />
+        <Field.Root name="password" className={fieldRootClass}>
+          <Field.Label className={fieldLabelClass}>Пароль</Field.Label>
+          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Control type="password" placeholder="admin" className={inputClass} />
         </Field.Root>
-        <Field.Root name="passwordConfirm" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">И его же ещё разок</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
-          <Field.Control
-            type="password"
-            placeholder="admin"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-          />
+        <Field.Root name="passwordConfirm" className={fieldRootClass}>
+          <Field.Label className={fieldLabelClass}>И его же ещё разок</Field.Label>
+          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Control type="password" placeholder="admin" className={inputClass} />
         </Field.Root>
-        <Button
-          className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
-          type="submit"
-        >
-          ДАЛЕЕ {">"}
+        <Button className={`${actionButtonClass} text-lg uppercase md:text-xl`} type="submit" disabled={isLoading}>
+          {isLoading ? "Загрузка..." : "ДАЛЕЕ >"}
         </Button>
       </Form>
+      <p>
+        Уже есть аккаунт?{" "}
+        <Link className="text-accent-primary font-medium hover:underline" href="/login">
+          Войдите
+        </Link>
+      </p>
     </>
   )
 }
@@ -245,75 +268,61 @@ function Step2({ onStepComplete }: { onStepComplete: (data: Step2Interface) => v
       return
     }
     setFormErrors({})
-    const {isAcceptedPolicy, ...data} = parsedData.data
+    const { isAcceptedPolicy, ...data } = parsedData.data
     onStepComplete({ ...data, usersBirthday: birthDate!!.getTime() })
   }
 
   return (
-    <Form className="flex w-full flex-col items-center gap-5" onSubmit={handleSubmit} errors={formErrors}>
-      <div className="flex w-full flex-row justify-between gap-5">
-        <Field.Root name="usersFirstName" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Имя</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
-          <Field.Control
-            type="text"
-            placeholder="Антон"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-          />
+    <Form className={formCardClass} onSubmit={handleSubmit} errors={formErrors}>
+      <div className={inlineGridClass}>
+        <Field.Root name="usersFirstName" className={fieldRootClass}>
+          <Field.Label className={fieldLabelClass}>Имя</Field.Label>
+          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Control type="text" placeholder="Антон" className={inputClass} />
         </Field.Root>
-        <Field.Root name="usersSecondName" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Фамилия</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
-          <Field.Control
-            type="text"
-            placeholder="Фоломин"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-          />
+        <Field.Root name="usersSecondName" className={fieldRootClass}>
+          <Field.Label className={fieldLabelClass}>Фамилия</Field.Label>
+          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Control type="text" placeholder="Фоломин" className={inputClass} />
         </Field.Root>
       </div>
-      <Field.Root name="usersThirdName" className="flex w-full flex-col items-start gap-1">
-        <Field.Label className="text-lg font-medium text-gray-900">Отчество</Field.Label>
-        <Field.Error className="text-md text-red-800" match="customError" />
-        <Field.Control
-          type="text"
-          placeholder="Отчество (при наличии)"
-          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-        />
+      <Field.Root name="usersThirdName" className={fieldRootClass}>
+        <Field.Label className={fieldLabelClass}>Отчество</Field.Label>
+        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Control type="text" placeholder="Отчество (при наличии)" className={inputClass} />
       </Field.Root>
-      <Field.Root name="email" className="flex w-full flex-col items-start gap-1">
-        <Field.Label className="text-lg font-medium text-gray-900">Email</Field.Label>
-        <Field.Error className="text-md text-red-800" match="customError" />
-        <Field.Control
-          type="text"
-          placeholder="email@example.xyz"
-          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-        />
+      <Field.Root name="email" className={fieldRootClass}>
+        <Field.Label className={fieldLabelClass}>Email</Field.Label>
+        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Control type="text" placeholder="email@example.xyz" className={inputClass} />
       </Field.Root>
-      <Field.Root name="usersBirthday" className="flex w-full flex-col items-start gap-1">
-        <Field.Label className="text-lg font-medium text-gray-900">Дата Рождения</Field.Label>
-        <Field.Error className="text-md text-red-800" match="customError" />
+      <Field.Root name="usersBirthday" className={fieldRootClass}>
+        <Field.Label className={fieldLabelClass}>Дата Рождения</Field.Label>
+        <Field.Error className={fieldErrorClass} match="customError" />
         <DatePicker
           type="single"
-          className="border-border bg-bg-main-accent flex h-10 w-full items-center justify-between rounded-md border px-2"
+          className={datePickerClass}
           onPick={(date) => {
             setBirthDate(date)
           }}
           captionLayout="dropdown"
         />
       </Field.Root>
-      {/*TODO: Style date picxker and error display*/}
-      <Field.Root name="isAcceptedPolicy" className="flex w-full flex-col items-start gap-1">
-        <Field.Error className="text-md text-red-800" match="customError" />
-        <div className="text-md border-border flex w-full items-start justify-between gap-2 rounded-xl border p-4 text-gray-900 select-none">
+      <Field.Root name="isAcceptedPolicy" className={fieldRootClass}>
+        <Field.Error className={fieldErrorClass} match="customError" />
+        <div className={policyCardClass}>
           <p>
             Я соглашаюсь с{" "}
-            <a className="text-accent-primary underline" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+            <a
+              className="text-accent-primary underline underline-offset-4 transition hover:opacity-80"
+              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            >
               Политикой Конфиденциальности
             </a>
           </p>
-          <Field.Item>
-            <Checkbox.Root className="flex size-5 items-center justify-center rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800 data-checked:bg-gray-900 data-unchecked:border data-unchecked:border-gray-300">
-              <Checkbox.Indicator className="flex text-gray-50 data-unchecked:hidden">
+          <Field.Item className="shrink-0">
+            <Checkbox.Root className={checkboxRootClass}>
+              <Checkbox.Indicator className="flex text-gray-50 transition data-unchecked:hidden">
                 <CheckIcon className="size-3" />
               </Checkbox.Indicator>
             </Checkbox.Root>
@@ -321,10 +330,7 @@ function Step2({ onStepComplete }: { onStepComplete: (data: Step2Interface) => v
         </div>
       </Field.Root>
       {/*TODO: Insert correct link on privsacy policy*/}
-      <Button
-        className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
-        type="submit"
-      >
+      <Button className={`${actionButtonClass} text-lg uppercase md:text-xl`} type="submit">
         ДАЛЕЕ {">"}
       </Button>
     </Form>
@@ -371,70 +377,56 @@ function Step3({ onStepComplete }: { onStepComplete: (data: Step3Interface) => v
   }
 
   return (
-    <Form className="flex w-full flex-col items-center gap-5" onSubmit={handleSubmit} errors={formErrors}>
-      <div className="flex w-full flex-row justify-between gap-5">
-        <Field.Root name="parentFirstName" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Имя</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
-          <Field.Control
-            type="text"
-            placeholder="Антон"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-          />
+    <Form className={formCardClass} onSubmit={handleSubmit} errors={formErrors}>
+      <div className={inlineGridClass}>
+        <Field.Root name="parentFirstName" className={fieldRootClass}>
+          <Field.Label className={fieldLabelClass}>Имя</Field.Label>
+          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Control type="text" placeholder="Антон" className={inputClass} />
         </Field.Root>
-        <Field.Root name="parentSecondName" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Фамилия</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
-          <Field.Control
-            type="text"
-            placeholder="Фоломин"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-          />
+        <Field.Root name="parentSecondName" className={fieldRootClass}>
+          <Field.Label className={fieldLabelClass}>Фамилия</Field.Label>
+          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Control type="text" placeholder="Фоломин" className={inputClass} />
         </Field.Root>
       </div>
-      <Field.Root name="parentThirdName" className="flex w-full flex-col items-start gap-1">
-        <Field.Label className="text-lg font-medium text-gray-900">Отчество</Field.Label>
-        <Field.Error className="text-md text-red-800" match="customError" />
-        <Field.Control
-          type="text"
-          placeholder="Отчество (при наличии)"
-          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-        />
+      <Field.Root name="parentThirdName" className={fieldRootClass}>
+        <Field.Label className={fieldLabelClass}>Отчество</Field.Label>
+        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Control type="text" placeholder="Отчество (при наличии)" className={inputClass} />
       </Field.Root>
-      <Field.Root name="parentContact" className="flex w-full flex-col items-start gap-1">
-        <Field.Label className="text-lg font-medium text-gray-900">Контактный номер</Field.Label>
-        <Field.Error className="text-md text-red-800" match="customError" />
-        <Field.Control
-          type="text"
-          placeholder="+79999999999"
-          className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-        />
+      <Field.Root name="parentContact" className={fieldRootClass}>
+        <Field.Label className={fieldLabelClass}>Контактный номер</Field.Label>
+        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Control type="text" placeholder="+79999999999" className={inputClass} />
       </Field.Root>
-      <Field.Root name="parentBirthday" className="flex w-full flex-col items-start gap-1">
-        <Field.Label className="text-lg font-medium text-gray-900">Дата Рождения</Field.Label>
-        <Field.Error className="text-md text-red-800" match="customError" />
+      <Field.Root name="parentBirthday" className={fieldRootClass}>
+        <Field.Label className={fieldLabelClass}>Дата Рождения</Field.Label>
+        <Field.Error className={fieldErrorClass} match="customError" />
         <DatePicker
           type="single"
-          className="border-border bg-bg-main-accent flex h-10 w-full items-center justify-between rounded-md border px-2"
+          className={datePickerClass}
           onPick={(date) => {
             setBirthDate(date)
           }}
           captionLayout="dropdown"
         />
       </Field.Root>
-      {/*TODO: Style date picxker and error display*/}
-      <Field.Root name="isAcceptedPolicy" className="flex w-full flex-col items-start gap-1">
-        <Field.Error className="text-md text-red-800" match="customError" />
-        <div className="text-md border-border flex w-full items-start justify-between gap-2 rounded-xl border p-4 text-gray-900 select-none">
+      <Field.Root name="isAcceptedPolicy" className={fieldRootClass}>
+        <Field.Error className={fieldErrorClass} match="customError" />
+        <div className={policyCardClass}>
           <p>
             Я соглашаюсь с{" "}
-            <a className="text-accent-primary underline" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+            <a
+              className="text-accent-primary underline underline-offset-4 transition hover:opacity-80"
+              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            >
               Политикой Конфиденциальности
             </a>
           </p>
-          <Field.Item>
-            <Checkbox.Root className="flex size-5 items-center justify-center rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800 data-checked:bg-gray-900 data-unchecked:border data-unchecked:border-gray-300">
-              <Checkbox.Indicator className="flex text-gray-50 data-unchecked:hidden">
+          <Field.Item className="shrink-0">
+            <Checkbox.Root className={checkboxRootClass}>
+              <Checkbox.Indicator className="flex text-gray-50 transition data-unchecked:hidden">
                 <CheckIcon className="size-3" />
               </Checkbox.Indicator>
             </Checkbox.Root>
@@ -442,10 +434,7 @@ function Step3({ onStepComplete }: { onStepComplete: (data: Step3Interface) => v
         </div>
       </Field.Root>
       {/*TODO: Insert correct link on privsacy policy*/}
-      <Button
-        className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
-        type="submit"
-      >
+      <Button className={`${actionButtonClass} text-lg uppercase md:text-xl`} type="submit">
         ДАЛЕЕ {">"}
       </Button>
     </Form>

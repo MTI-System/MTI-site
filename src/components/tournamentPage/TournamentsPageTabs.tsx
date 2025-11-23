@@ -7,6 +7,9 @@ import { NavigationMenu } from "@base-ui-components/react"
 import Link from "next/link"
 import { TournamentCardInterface } from "@/types/TournamentsAPI"
 import { MdLock } from "react-icons/md"
+import { useIsFormFilledQuery } from "@/api/registration/clientApiInterface"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import twclsx from "@/utils/twClassMerge"
 
 interface LinkInterface {
   href: string
@@ -25,6 +28,15 @@ export default function TournamentsPageTabs({
   const router = useRouter()
   const searchParams = useSearchParams()
   const isModerate = searchParams.get("isModerate") ?? false
+  const user = useAppSelector((state) => state.auth.authInfo)
+  const {
+    data: isFormFilled,
+    isLoading,
+    error,
+  } = useIsFormFilledQuery(
+    { tournamentId: tournamentCard.id, formFlag: "registration", userId: user?.user_id!! },
+    { skip: !user },
+  )
 
   const infoLinks: LinkInterface[] = [
     {
@@ -37,7 +49,7 @@ export default function TournamentsPageTabs({
       href: `/tournaments/${tournamentCard.id}/info/teams`,
       title: "Команды",
       description: "Все зарегистрированные команды",
-      isLocked: false,
+      isLocked: true,
     },
     {
       href: `/tournaments/${tournamentCard.id}/info/problems`,
@@ -51,12 +63,12 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/results/team`,
       title: "Командный зачет",
-      isLocked: tournamentCard.badge.badge_flag === "futured" || tournamentCard.badge.badge_flag === "registration",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
     },
     {
       href: `/tournaments/${tournamentCard.id}/results/personal`,
       title: "Личный зачет",
-      isLocked: tournamentCard.badge.badge_flag === "futured" || tournamentCard.badge.badge_flag === "registration",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
     },
   ]
 
@@ -64,12 +76,12 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/fights/all`,
       title: `Все бои`,
-      isLocked: tournamentCard.badge.badge_flag === "futured" || tournamentCard.badge.badge_flag === "registration",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
     },
     ...tournamentCard.fight_containers_cards.map((container) => ({
       href: `/tournaments/${tournamentCard.id}/fights/${container.id}`,
       title: container.title,
-      isLocked: tournamentCard.badge.badge_flag === "futured" || tournamentCard.badge.badge_flag === "registration",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
     })),
   ]
 
@@ -137,10 +149,10 @@ export default function TournamentsPageTabs({
         <NavigationItem hasDescription={false} items={resultsLinks} itemTitle="Результаты" />
         <NavigationItem hasDescription={false} items={fightsLinks} itemTitle="Бои" />
         <NavigationItem hasDescription={true} items={statsLinks} itemTitle="Статистика" />
-        {tournamentCard.badge.badge_flag === "registration" && !isAdmin && (
+        {tournamentCard.badge.badge_flag === "REGISTRATION" && !isAdmin && (
           <NavigationMenu.Item>
             <Link className={registrationTriggerClassName} href={`/tournaments/${tournamentCard.id}/registration`}>
-              Регистрация на турнир
+              {isLoading ? "..." : isFormFilled ? "посмотреть заявку" : "Регистрация на турнир"}
             </Link>
           </NavigationMenu.Item>
         )}
@@ -151,14 +163,14 @@ export default function TournamentsPageTabs({
           sideOffset={10}
           collisionPadding={{ top: 5, bottom: 5, left: 20, right: 20 }}
           collisionAvoidance={{ side: "none" }}
-          className="box-border h-[var(--positioner-height)] w-[var(--positioner-width)] transition-[top,left,right,bottom] duration-[var(--duration)] ease-[var(--easing)] before:absolute before:content-[''] data-[instant]:transition-none data-[side=bottom]:before:top-[-10px] data-[side=bottom]:before:right-0 data-[side=bottom]:before:left-0 data-[side=bottom]:before:h-2.5 data-[side=left]:before:top-0 data-[side=left]:before:right-[-10px] data-[side=left]:before:bottom-0 data-[side=left]:before:w-2.5 data-[side=right]:before:top-0 data-[side=right]:before:bottom-0 data-[side=right]:before:left-[-10px] data-[side=right]:before:w-2.5 data-[side=top]:before:right-0 data-[side=top]:before:bottom-[-10px] data-[side=top]:before:left-0 data-[side=top]:before:h-2.5"
+          className="box-border h-(--positioner-height) w-(--positioner-width) transition-[top,left,right,bottom] duration-(--duration) ease-(--easing) before:absolute before:content-[''] data-instant:transition-none data-[side=bottom]:before:top-[-10px] data-[side=bottom]:before:right-0 data-[side=bottom]:before:left-0 data-[side=bottom]:before:h-2.5 data-[side=left]:before:top-0 data-[side=left]:before:right-[-10px] data-[side=left]:before:bottom-0 data-[side=left]:before:w-2.5 data-[side=right]:before:top-0 data-[side=right]:before:bottom-0 data-[side=right]:before:left-[-10px] data-[side=right]:before:w-2.5 data-[side=top]:before:right-0 data-[side=top]:before:bottom-[-10px] data-[side=top]:before:left-0 data-[side=top]:before:h-2.5"
           style={{
             ["--duration" as string]: "0.35s",
             ["--easing" as string]: "cubic-bezier(0.22, 1, 0.36, 1)",
           }}
         >
-          <NavigationMenu.Popup className="data-[ending-style]:easing-[ease] xs:w-[var(--popup-width)] relative h-[var(--popup-height)] w-[var(--popup-width)] origin-[var(--transform-origin)] rounded-lg bg-[canvas] text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[opacity,transform,width,height,scale,translate] duration-[var(--duration)] ease-[var(--easing)] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[ending-style]:duration-150 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
-            <NavigationMenu.Arrow className="flex transition-[left] duration-[var(--duration)] ease-[var(--easing)] data-[side=bottom]:top-[-8px] data-[side=left]:right-[-13px] data-[side=left]:rotate-90 data-[side=right]:left-[-13px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-8px] data-[side=top]:rotate-180">
+          <NavigationMenu.Popup className="data-[ending-style]:easing-[ease] xs:w-[var(--popup-width)] relative z-10 h-(--popup-height) w-(--popup-width) origin-(--transform-origin) rounded-lg bg-[canvas] text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[opacity,transform,width,height,scale,translate] duration-(--duration) ease-(--easing) data-ending-style:scale-90 data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+            <NavigationMenu.Arrow className="flex transition-[left] duration-(--duration) ease-(--easing) data-[side=bottom]:top-[-8px] data-[side=left]:right-[-13px] data-[side=left]:rotate-90 data-[side=right]:left-[-13px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-8px] data-[side=top]:rotate-180">
               <ArrowSvg />
             </NavigationMenu.Arrow>
             <NavigationMenu.Viewport className="relative h-full w-full overflow-hidden" />
@@ -210,7 +222,7 @@ function NavigationItem({
       <NavigationMenu.Item>
         <NavigationMenu.Trigger className={triggerClassName}>
           {itemTitle}
-          <NavigationMenu.Icon className="transition-transform duration-200 ease-in-out data-[popup-open]:rotate-180">
+          <NavigationMenu.Icon className="transition-transform duration-200 ease-in-out data-popup-open:rotate-180">
             <ChevronDownIcon />
           </NavigationMenu.Icon>
         </NavigationMenu.Trigger>
@@ -247,11 +259,18 @@ const triggerClassName =
   "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 focus-visible:relative"
 
 const registrationTriggerClassName =
-  "box-border  flex items-center justify-center gap-1.5 h-6 ms-5 my-2 me-2 " +
+  "box-border flex items-center justify-center gap-1.5 h-6 ms-5 my-2 me-2 " +
   "px-2 xs:px-3.5 m-0 rounded-md bg-accent-primary text-text-on-accent font-medium " +
   "text-[0.925rem] xs:text-base leading-6 select-none no-underline " +
-  "hover:bg-accent-primary/70 hover:shadow-accent-primary/70 shadow-accent-primary shadow-[0_0_0_2px_var(--tw-shadow-color),0_0_30px_0_var(--tw-shadow-color)]  data-[popup-open]:bg-hover " +
+  "hover:bg-accent-primary/70 hover:shadow-accent-primary/70 shadow-accent-primary shadow-[0_0_0_2px_var(--tw-shadow-color),0_0_30px_0_var(--tw-shadow-color)] data-[popup-open]:bg-hover " +
   "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 focus-visible:relative"
+
+// const registrationTriggerClassName =
+//   "box-border flex items-center justify-center gap-1.5 h-6 ms-5 my-2 me-2 " +
+//   "px-2 xs:px-3.5 m-0 rounded-md font-medium" +
+//   "text-[0.925rem] xs:text-base leading-6 select-none no-underline " +
+//   "data-[popup-open]:bg-hover" +
+//   "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 focus-visible:relative"
 
 const contentClassName =
   "w-fit h-full p-2 xs:w-max xs:min-w-[400px] xs:w-max" +

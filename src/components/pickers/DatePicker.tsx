@@ -31,7 +31,15 @@ export const formatDate = (date: Date) => {
   }).format(date)
 }
 
-export default function DatePicker({ onPick, type, defaultDate, className, startMonth, endMonth, captionLayout="label"}: DatePickerProps) {
+export default function DatePicker({
+  onPick,
+  type,
+  defaultDate,
+  className,
+  startMonth,
+  endMonth,
+  captionLayout = "label",
+}: DatePickerProps) {
   console.log(defaultDate)
   const [selected, setSelected] = useState<any>(defaultDate)
   const [isPopoverOpened, setIsPopoverOpened] = useState(false)
@@ -51,23 +59,21 @@ export default function DatePicker({ onPick, type, defaultDate, className, start
         }
       }}
     >
-      <Popover.Trigger className="">
-        <div
-          className={className ?? "hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors"}
-        >
-          <span className="text-[0.8rem]">
-            {selected ? (
-              type === "range" ? (
-                `${formatDate(selected?.from)}-${formatDate(selected?.to)}`
-              ) : (
-                formatDate(selected)
-              )
+      <Popover.Trigger
+        className={className ?? "hover:text-accent-primary flex cursor-pointer items-center gap-2 transition-colors"}
+      >
+        <span className="text-[0.8rem]">
+          {selected ? (
+            type === "range" ? (
+              `${formatDate(selected?.from)}-${formatDate(selected?.to)}`
             ) : (
-              <p>Выберите дату</p>
-            )}
-          </span>
-          <FaEdit />
-        </div>
+              formatDate(selected)
+            )
+          ) : (
+            <p>Выберите дату</p>
+          )}
+        </span>
+        <FaEdit />
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner className="relative z-2" sideOffset={8} align={"start"}>

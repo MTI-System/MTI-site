@@ -11,6 +11,7 @@ import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { cookies } from "next/headers"
 import { makeAuthStoreServer } from "@/api/auth/serverStore"
 import { authApiServer } from "@/api/auth/serverApiInterface"
+import RegistrationProviderWrapper from "@/api/registration/ClientWrapper"
 
 export default async function TournamentPage({
   params,
@@ -51,16 +52,18 @@ export default async function TournamentPage({
   return (
     <>
       <TournamentPageStoreProviderWrapper tournament={tournament}>
-        <Suspense fallback={<Loading />}>
-          {tournament && (
-            <div className="pt-5">
-              <TournamentCard tournamentCard={tournament} isExtended={true} isCreate={false} isAdmin={isAdmin} />
-            </div>
-          )}
-          {/*{!tournament && <NotFound />}
-          <TournamentsPageTabs tournamentCard={tournament} isAdmin={isAdmin} />
-          <div className="bg-bg-alt mb-5 min-h-[50rem] w-full rounded-2xl px-2 py-5">{children}</div>*/}
-        </Suspense>
+        <RegistrationProviderWrapper>
+          <Suspense fallback={<Loading />}>
+            {tournament && (
+              <div className="pt-5">
+                <TournamentCard tournamentCard={tournament} isExtended={true} isCreate={false} isAdmin={isAdmin} />
+              </div>
+            )}
+            {!tournament && <NotFound />}
+            <TournamentsPageTabs tournamentCard={tournament} isAdmin={isAdmin} />
+            <div className="bg-bg-alt mb-5 min-h-200 w-full rounded-2xl px-2 py-5">{children}</div>
+          </Suspense>
+        </RegistrationProviderWrapper>
       </TournamentPageStoreProviderWrapper>
     </>
   )

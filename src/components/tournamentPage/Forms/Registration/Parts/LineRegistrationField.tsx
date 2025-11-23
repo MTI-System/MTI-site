@@ -21,7 +21,7 @@ export default function LineRegistrationField({
               className="placeholder:text-text-main size-full h-full px-2 pt-4 leading-11 font-bold"
               type={fieldObject.type}
               name={fieldObject.key}
-              placeholder={fieldObject.metadata.placeholder ?? fieldObject.title}
+              placeholder={fieldObject?.metadata?.placeholder ?? fieldObject.title}
               onVerification={(value: string) => {
                 return {
                   isSuccess: true,

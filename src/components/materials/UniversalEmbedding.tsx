@@ -16,11 +16,11 @@ import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 export default function UniversalEmbedding({
   embedding,
   problemId,
-  isModerator,
+  isModerator = false,
 }: {
   embedding: EmbeddingInterface
-  problemId: number
-  isModerator: boolean
+  problemId?: number
+  isModerator?: boolean
 }) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const router = useRouter()
@@ -70,6 +70,7 @@ export default function UniversalEmbedding({
         problem_global_number={1}
         problem_title={embedding.title}
         onConfirm={async () => {
+          if(!problemId) return
           deleteMaterialMutation({ problemId: problemId, materialId: embedding.id, token: token })
         }}
       />

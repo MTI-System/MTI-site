@@ -23,7 +23,7 @@ export default function DateRegistrationField({
             <Forms.DatePickerField
               className="border-border bg-bg-main-accent flex h-10 w-full items-center justify-between rounded-md border px-2"
               name={fieldObject.key}
-              type={fieldObject.metadata.selectMode ?? "single"}
+              type={fieldObject?.metadata?.selectMode ?? "single"}
               onVerification={(value: string) => {
                 // TODO: implement verification forfieldObject.metadata.selectableDateRanges
                 return {

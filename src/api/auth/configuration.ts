@@ -1,6 +1,7 @@
 import { EndpointBuilder, fetchBaseQuery } from "@reduxjs/toolkit/query"
 import { AUTH_API } from "@/constants/APIEndpoints"
-import { User, UserSchema } from "@/types/authApi"
+import { Token, TokenSchema, User, UserSchema } from "@/types/authApi"
+import { BooleanResponseSchema } from "@/types/generalAPITypes"
 
 export const authReducerPath = "notificationsApi" as const
 
@@ -15,8 +16,8 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
     }),
     transformResponse: (response: string): string | null => {
       if (!response) return null
-      if (!response.trim()) return null
-      return response
+      const token = TokenSchema.safeParse(response)
+      return token.data?.token ?? null
     },
   }),
   login: builder.mutation({
@@ -27,9 +28,20 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
     }),
     transformResponse: (response: string): string | null => {
       if (!response) return null
-      if (!response.trim()) return null
-      return response
+      const token = TokenSchema.safeParse(response)
+      return token.data?.token ?? null
     },
+  }),
+  isLoginTaken: builder.mutation({
+    query: ({login}: {login: string}) => ({
+      url: `is_login_taken?login=${login}`,
+      method: "GET"
+    }),
+    transformResponse: (response: string): boolean=> {
+      if (!response) return false
+      const is_login_taken = BooleanResponseSchema.safeParse(response)
+      return is_login_taken.data?.result ?? false 
+    }
   }),
   fetchPermissions: builder.mutation({
     query: ({ token }: { token: string }) => {
@@ -50,4 +62,5 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
       return user.data
     },
   }),
+  
 })

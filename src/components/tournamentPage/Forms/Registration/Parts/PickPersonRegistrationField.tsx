@@ -8,7 +8,7 @@ export default function PickPersonRegistrationField({ field }: { field: Tourname
         {
           <Forms.UserPickerField
             key={field.id}
-            name="drop_multi"
+            name={field.key}
             onVerification={() => {
               return {
                 isSuccess: true,

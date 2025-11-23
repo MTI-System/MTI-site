@@ -23,16 +23,19 @@ export function DatePickerField({
   className,
   ...rest
 }: DatePickerFieldProps) {
-  const { register, setFormField } = useCardsRoot()
+  const { register, unregister, setFormField } = useCardsRoot()
   const [verificationResult, setVerificationResult] = useState<InputVerificationStatus | undefined>(undefined)
   const [pickedDate, setPickedDate] = useState<Date | DateRange | undefined>(undefined)
-
+  const lastId = useRef<number>(-1)
   const verifyCallback = useCallback(() => {
     let stringDate = ""
+    console.log("pickedDate", pickedDate)
     if (pickedDate instanceof Date) {
-      stringDate = formatDate(pickedDate)
+      stringDate = pickedDate.getTime().toString()
     } else {
-      stringDate = formatDate(pickedDate?.from ?? new Date()) + " " + formatDate(pickedDate?.to ?? new Date())
+      if (type == "range") {
+        stringDate =  pickedDate?.from?.getTime().toString() + " " + pickedDate?.to?.getTime().toString()
+      }
     }
     const result = onVerification(stringDate)
     setVerificationResult(result)
@@ -43,8 +46,15 @@ export function DatePickerField({
   }, [pickedDate])
 
   useEffect(() => {
-    register(verifyCallback)
-  }, [])
+    lastId.current = register(verifyCallback)
+    return () => {
+      if (lastId.current !== -1) unregister(lastId.current)
+    }
+  }, [pickedDate])
+
+  useEffect(() => {
+    console.log("pickedDate change", pickedDate)
+  }, [pickedDate])
 
   return (
     <>

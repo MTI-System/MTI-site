@@ -13,6 +13,7 @@ import LogoWithTT from "@/components/ui/LogoWithTT"
 import { Field, Form } from "@base-ui-components/react"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react"
 import LoginLayout from "@/components/login/mainLayout"
+import Link from "next/link"
 
 export default function Page() {
   return (
@@ -27,9 +28,7 @@ export default function Page() {
 }
 
 function LoginPage() {
-  // const [formState, setFormState] = useState<FormState>(FormState.AwaitLogin)
   const [formErrors, setFormErrors] = useState({})
-  const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
 
   const searchParams = useSearchParams()
@@ -78,6 +77,7 @@ function LoginPage() {
     }
   }, [error])
   useEffect(() => {
+    console.log("data", data)
     if (isSuccess && data) {
       dispatcher(setToken(data))
       cookies.set(AUTH_TOKEN_KEY_NAME, data)
@@ -93,7 +93,6 @@ function LoginPage() {
       <Form
         className="flex w-full flex-col items-center gap-5"
         onSubmit={handleSubmit}
-        ref={formRef}
         errors={formErrors}
       >
         <Field.Root name="username" className="flex w-full flex-col items-start gap-1">
@@ -121,6 +120,7 @@ function LoginPage() {
         >
           {isLoading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
         </Button>
+        <p>Нет аккаунта? <Link className="text-accent-primary hover:underline font-medium" href="/register">Зарегистрируйтесь</Link></p>
       </Form>
     </LoginLayout>
   )
