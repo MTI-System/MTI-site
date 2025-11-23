@@ -76,7 +76,7 @@ export default function TournamentTypeSelector({
         selectionState={selectedState}
         trigger={
           <Tooltip.Provider>
-            <Tooltip.Root disabled={!isTTLocked} delay={300}>
+            <Tooltip.Root disabled={!isTTLocked} >
               <Tooltip.Trigger render={<div></div>}>
                 <DropdownTrigger className="border-none" disabled={isPending || isTTLocked}>
                   {selectedState[0]?.value}

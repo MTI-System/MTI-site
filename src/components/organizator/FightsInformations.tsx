@@ -110,7 +110,7 @@ function InputRow() {
   console.log(titleErrors, dateErrors)
   return (
     <div className="flex flex-row justify-between">
-      <Tooltip.Provider delay={150}>
+      <Tooltip.Provider>
         {isEditable ? (
           <Tooltip.Root disabled={titleErrors.length === 0}>
             <Tooltip.Trigger>

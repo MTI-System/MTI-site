@@ -75,7 +75,7 @@ export function Root<T>({
           rest.onItemHighlighted?.(itemValue, e)
         }}
         onOpenChange={(open, e) => {
-          if (!open) onClose(preview)
+          if (!open && preview) onClose(preview)
           rest.onOpenChange && rest.onOpenChange(open, e)
         }}
         {...rest}

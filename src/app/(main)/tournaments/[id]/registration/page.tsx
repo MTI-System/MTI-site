@@ -4,6 +4,34 @@ import TournamentRegistrationForm from "@/components/tournamentPage/Forms/Regist
 import { authApiServer } from "@/api/auth/serverApiInterface"
 import { cookies } from "next/headers"
 import { makeAuthStoreServer } from "@/api/auth/serverStore"
+import type {Metadata} from "next";
+import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore";
+import {tournamentsApiServer} from "@/api/tournaments/serverApiInterface";
+
+export async function generateMetadata({
+                                         params,
+                                       }: {
+  params: Promise<{ id: number }>
+}): Promise<Metadata> {
+  const searchP = await params
+
+  const store = makeTournamentsStoreServer()
+  const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentCard.initiate({id: searchP.id}))
+  const { data: tournamentCard } = await promise
+  const titleText = tournamentCard ? `Заявка · ${tournamentCard.title} – МТИ` : `Турнир – МТИ`
+
+  const descriptionText = tournamentCard
+    ? `Подача заявки на турнир ${tournamentCard.title} ${tournamentCard.year} года: регистрируйся на научный турнир!.`
+    : "Подача заявки на турнир в системе МТИ."
+
+  return {
+    title: titleText,
+    description: descriptionText,
+    verification: { yandex: "aa838087dd1ef992" },
+  }
+}
+
+
 
 export default async function RegisterTournamentsPage({ params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id

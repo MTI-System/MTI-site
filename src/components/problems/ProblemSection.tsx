@@ -29,7 +29,7 @@ function FilterButton({ section }: { section: ProblemSectionInterface }) {
 
   return (
     <Tooltip.Provider>
-      <Tooltip.Root delay={200}>
+      <Tooltip.Root>
         <Tooltip.Trigger>
           <FaFilter className="cursor-pointer text-[0.6rem]" onClick={handleFilterClick} />
         </Tooltip.Trigger>

@@ -15,7 +15,7 @@ import DropdownFieldConstructor from "@/components/formConstructor/fieldTypesCon
 import { debounce } from "next/dist/server/utils"
 import { CiSettings } from "react-icons/ci"
 import FileFieldFormConstructor from "@/components/formConstructor/fieldTypesConstructors/FileFieldFormConstructor"
-import DateFieldConstructor from "@/components/formConstructor/fieldTypesConstructors/DatepickerFormConstructor"
+import DateFieldConstructor from "@/components/formConstructor/fieldTypesConstructors/DatePickerFormConstructor";
 
 export function ConstructorItem({ id, index, field }: { index: number; id: number; field: Field }) {
   const handleRef = useRef<HTMLInputElement | null>(null)

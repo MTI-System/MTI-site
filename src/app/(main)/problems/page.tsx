@@ -112,7 +112,6 @@ export default async function Page({
   const { data: possibleTournaments } = await tournamentsStore.dispatch(
     tournamentsApiServer.endpoints.getTournamentCards.initiate({ tt: Number(tt), year: Number(year) }),
   )
-  console.log("end request", problems, isError, error)
 
   const availableProblemSections: ProblemSectionInterface[] = []
   problems?.forEach((problem: ProblemInterface) => {
@@ -129,42 +128,52 @@ export default async function Page({
   return (
     <ProblemsReduxProviderWrapper>
       <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
-      <ProblemFilters
-        possibleSections={availableProblemSections}
-        possibleYears={possibleYears ?? [2026]}
-        isModerator={isEditable}
-        possibleTournaments={possibleTournaments}
-      >
-        <div className="relative h-full w-full pt-10">
-          <Suspense fallback={<div>Loading...</div>}>
-            {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}
-            {!isUndefYear && (
-              <div className="flex flex-col-reverse gap-5 lg:flex-row">
-                <div className="w-full">
-                  <ProblemsList
-                    sectionsFilter={sectionsFilter ?? []}
-                    problems={problems ?? null}
-                    isEditable={isEditable}
-                  />
-                </div>
-                {currentTournament !== null && (
-                  <>
-                    <div className="border-border my-5 block h-0 w-full border-b-2 lg:hidden"></div>
-                    <div className="static aspect-auto md:top-2 md:aspect-8/9 md:h-148 lg:sticky">
-                      <TournamentCard
-                        tournamentCard={currentTournament}
-                        isExtended={false}
-                        isCreate={false}
-                        onUpdateCreate={null}
-                      />
+      <section className="relative isolate">
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-2 pb-12 pt-6 sm:px-4 lg:px-0">
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-bg-main-accent shadow-lg shadow-black/5">
+            <div className="relative p-4 sm:p-6 lg:p-8">
+              <ProblemFilters
+                possibleSections={availableProblemSections}
+                possibleYears={possibleYears ?? [2026]}
+                isModerator={isEditable}
+                possibleTournaments={possibleTournaments}
+              >
+                <Suspense fallback={<div>Loading...</div>}>
+                  {isUndefYear && (
+                    <p className="text-text-alt rounded-2xl bg-bg-alt p-4 text-center text-base">
+                      На {sp.year} год не найдено опубликованных задач
+                    </p>
+                  )}
+                  {!isUndefYear && (
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+                      <div className="flex w-full flex-col gap-4 rounded-2xl border border-border bg-bg-alt/70 p-4 shadow-sm backdrop-blur-sm sm:p-6">
+                        <ProblemsList
+                          sectionsFilter={sectionsFilter ?? []}
+                          problems={problems ?? null}
+                          isEditable={isEditable}
+                        />
+                      </div>
+                      {currentTournament !== null && (
+                        <div className="space-y-4 lg:sticky lg:top-6">
+                          <div className="border-border block h-px w-full border-b lg:hidden" />
+                          <div className="rounded-2xl border border-border bg-bg-alt shadow-sm">
+                            <TournamentCard
+                              tournamentCard={currentTournament}
+                              isExtended={false}
+                              isCreate={false}
+                              onUpdateCreate={null}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </>
-                )}
-              </div>
-            )}
-          </Suspense>
+                  )}
+                </Suspense>
+              </ProblemFilters>
+            </div>
+          </div>
         </div>
-      </ProblemFilters>
+      </section>
     </ProblemsReduxProviderWrapper>
   )
 }

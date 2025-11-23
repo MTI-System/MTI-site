@@ -12,6 +12,7 @@ import { cookies } from "next/headers"
 import { makeAuthStoreServer } from "@/api/auth/serverStore"
 import { authApiServer } from "@/api/auth/serverApiInterface"
 import RegistrationProviderWrapper from "@/api/registration/ClientWrapper"
+import AuthProviderWrapper from "@/api/auth/ClientWrapper";
 
 export default async function TournamentPage({
   params,
@@ -61,7 +62,10 @@ export default async function TournamentPage({
             )}
             {!tournament && <NotFound />}
             <TournamentsPageTabs tournamentCard={tournament} isAdmin={isAdmin} />
-            <div className="bg-bg-alt mb-5 min-h-200 w-full rounded-2xl px-2 py-5">{children}</div>
+            <AuthProviderWrapper>
+              <div className="bg-bg-alt mb-5 min-h-200 w-full rounded-2xl px-2 py-5">{children}</div>
+            </AuthProviderWrapper>
+
           </Suspense>
         </RegistrationProviderWrapper>
       </TournamentPageStoreProviderWrapper>

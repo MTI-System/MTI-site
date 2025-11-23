@@ -17,7 +17,21 @@ export const TokenSchema = z.object({
   token: z.string().nonempty(),
 })
 
+export const PersonalDataTypeSchema = z.object({
+  id: z.number(),
+  typeTitle: z.string(),
+  typeFlag: z.string(),
+  triggerType: z.string()
+})
+
+export const PersonalDataSchema = z.object({
+  requestId: z.number(),
+  type: PersonalDataTypeSchema
+})
+
+
 
 export type Token = z.infer<typeof TokenSchema>
 export type Right = z.infer<typeof RightSchema>
 export type User = z.infer<typeof UserSchema>
+export type PersonalDataRequest = z.infer<typeof PersonalDataSchema>

@@ -10,20 +10,27 @@ export default function ProblemsList({
   isEditable: boolean
   sectionsFilter: number[]
 }) {
+  const filteredProblems =
+    problems &&
+    (sectionsFilter.length === 0
+      ? problems
+      : problems.filter(
+          (problemValue) =>
+            problemValue.problem_sections.find(
+              (section) => sectionsFilter.find((sec) => sec === section.id) !== undefined,
+            ) !== undefined,
+        ))
+
   return (
-    <div className="flex flex-col gap-2">
-      {problems &&
-        (sectionsFilter.length === 0
-          ? problems
-          : problems.filter(
-              (problemValue) =>
-                problemValue.problem_sections.find(
-                  (section) => sectionsFilter.find((sec) => sec === section.id) !== undefined,
-                ) !== undefined,
-            )
-        ).map((problem: ProblemInterface, index: number) => (
-          <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>
-        ))}
+    <div className="flex w-full flex-col gap-4">
+      {filteredProblems?.map((problem: ProblemInterface, index: number) => (
+        <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>
+      ))}
+      {filteredProblems && filteredProblems.length === 0 && (
+        <p className="text-text-alt rounded-xl border border-border bg-bg-main/60 px-4 py-5 text-center text-sm sm:text-base">
+          Для выбранных фильтров задач не нашлось
+        </p>
+      )}
       {problems === null && <FetchingErrorBanner />}
     </div>
   )

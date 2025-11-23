@@ -1,7 +1,8 @@
 import { EndpointBuilder, fetchBaseQuery } from "@reduxjs/toolkit/query"
 import { AUTH_API } from "@/constants/APIEndpoints"
-import { Token, TokenSchema, User, UserSchema } from "@/types/authApi"
+import {PersonalDataRequest, PersonalDataSchema, Token, TokenSchema, User, UserSchema} from "@/types/authApi"
 import { BooleanResponseSchema } from "@/types/generalAPITypes"
+import {z} from "zod";
 
 export const authReducerPath = "notificationsApi" as const
 
@@ -61,6 +62,25 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
       }
       return user.data
     },
+
   }),
-  
+  personalDataRequests: builder.query({
+    query: ({token}: {token: string}) => {
+      const form = new FormData()
+      form.set("token", token)
+      return {
+        url: "get_all_actual_personal_data_requests",
+        method: "POST",
+        body: form
+      }
+    },
+    transformResponse: (response: unknown): PersonalDataRequest[] | null =>{
+      const pd = z.array(PersonalDataSchema).safeParse(response)
+      console.log(response)
+      if (!pd){
+        return null
+      }
+      return pd.data ?? null
+    }
+  })
 })

@@ -15,7 +15,7 @@ export default function DotWithTooltip({
 }) {
   return (
     <Tooltip.Provider>
-      <Tooltip.Root delay={300}>
+      <Tooltip.Root>
         <Tooltip.Trigger>
           <div
             className="h-4 w-4 rounded-full border-2 border-[var(--color)] bg-[rgba(from_var(--color)_r_g_b/0.25)] transition-colors duration-300 hover:bg-[var(--color)] dark:border-[var(--dark-color)] dark:bg-[rgba(from_var(--dark-color)_r_g_b/0.25)] dark:hover:bg-[var(--dark-color)]"

@@ -13,7 +13,7 @@ export default function PersonPicker({
   label: string
   placeholder: string
   name: string
-  selectedValue: RefObject<User | null>
+  selectedValue?: RefObject<User | null>
 }) {
   const [query, setQuery] = useState("")
   const { data, isFetching, isError } = useFindUsersQuery({ query: query }, {skip: query.length < 1})
@@ -42,7 +42,11 @@ export default function PersonPicker({
       onClose={(item) => {
         if (item != null) {
           console.log("closed", item)
-          selectedValue.current = item
+
+          if (selectedValue) {
+            selectedValue.current = item
+          }
+
         }
       }}
     >

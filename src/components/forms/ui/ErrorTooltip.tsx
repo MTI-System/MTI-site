@@ -14,7 +14,7 @@ export function ErrorTooltip({
   return (
     <>
       <Tooltip.Provider>
-        <Tooltip.Root disabled={!isActive} delay={0}>
+        <Tooltip.Root disabled={!isActive}>
           <div className="relative flex size-full items-center">
             {children}
             <div className="absolute right-10 flex w-fit gap-2">
