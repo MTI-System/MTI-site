@@ -17,16 +17,11 @@ import { useAddTournamentMutation } from "@/api/tournaments/clientApiInterface"
 import { Toast } from "@base-ui-components/react/toast"
 import { FaTimes } from "react-icons/fa"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
-import type {Metadata} from "next";
-
-
 
 
 export interface TournamentCardCallback {
   (card: Partial<TournamentCreationRequest>): void
 }
-
-
 
 export default function CreateTournamentPage() {
   return (

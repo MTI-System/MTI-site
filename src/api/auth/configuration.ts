@@ -65,9 +65,10 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
 
   }),
   personalDataRequests: builder.query({
-    query: ({token}: {token: string}) => {
+    query: ({token, tournamentId}: {token: string, tournamentId: number}) => {
       const form = new FormData()
       form.set("token", token)
+      form.set("tournamentId", tournamentId.toString())
       return {
         url: "get_all_actual_personal_data_requests",
         method: "POST",

@@ -16,7 +16,7 @@ export default function DropdownRegistrationField({
           <>
             <label className="flex flex-col gap-1 text-sm leading-5 font-medium text-gray-900">{fieldObject.title}</label>
             <Forms.DropdownField
-              fields={fieldObject.metadata.dropdown_options ?? []}
+              fields={fieldObject.metadata?.dropdown_options ?? []}
               key={fieldObject.id}
               name={fieldObject.key}
               onVerification={() => {

@@ -6,6 +6,7 @@ import { InputField } from "./fields/InputField"
 import { DatePickerField } from "./fields/DatePickerField"
 import { DropdownField } from "./fields/DropdownField"
 import { UserPickerField } from "./fields/UserPickerField"
+import {CheckboxField} from "./fields/CheckboxField"
 import { FormTrigger as Trigger } from "./root/FormTrigger"
 
 export const Forms = {
@@ -18,4 +19,5 @@ export const Forms = {
   DatePickerField,
   Trigger,
   DropdownField,
+  CheckboxField,
 }
