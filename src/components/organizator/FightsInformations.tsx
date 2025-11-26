@@ -26,8 +26,7 @@ export default function FightsInformations({ update }: { update: TournamentCardC
                 <Popover.Title className="text-base font-medium">
                   Добавьте список боев, которые будут играться на турнире!
                 </Popover.Title>
-                <Popover.Description className="text-base text-gray-600">
-                  Каждый добавленный пунки - это один отборочный бой или финал.
+                  Каждый добавленный пункт - это один отборочный бой или финал.
                   <br />
                   Пример списка:
                   <ol className="ms-5 list-disc">
@@ -35,7 +34,6 @@ export default function FightsInformations({ update }: { update: TournamentCardC
                     <li>Второй отборочный бой</li>
                     <li>Финал</li>
                   </ol>
-                </Popover.Description>
               </Popover.Popup>
             </Popover.Positioner>
           </Popover.Portal>

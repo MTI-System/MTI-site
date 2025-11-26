@@ -11,9 +11,10 @@ import { User } from "@/types/UsersApi"
 interface UserPickerFieldProps {
   onVerification: (value: string) => InputVerificationStatus
   name: string
+  title: string
 }
 
-export function UserPickerField({ onVerification, name, ...rest }: UserPickerFieldProps) {
+export function UserPickerField({ onVerification, name, title, ...rest }: UserPickerFieldProps) {
   const { register, setFormField } = useCardsRoot()
 
   const [verificationResult, setVerificationResult] = useState<InputVerificationStatus | undefined>(undefined)
@@ -38,7 +39,7 @@ export function UserPickerField({ onVerification, name, ...rest }: UserPickerFie
       >
         {/*<input name={name} className={twclsx({"border border-red-700": !(verificationResult?.isSuccess ?? true)})} ref={inputRef} {...rest} />*/}
         <UsersProviderWrapper>
-          <PersonPicker selectedValue={selectedUser} label={"asdasdad"} placeholder={"asfsadfas"} name={"asdasd"} />
+          <PersonPicker selectedValue={selectedUser} label={title} placeholder={title} name={name} />
         </UsersProviderWrapper>
       </ErrorTooltip>
     </>

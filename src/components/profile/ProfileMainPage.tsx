@@ -16,47 +16,47 @@ export default function ProfileMainPage({ profileData }: { profileData: User }) 
   const [isPending, startTransition] = useTransition()
 
   return (
-    <div className={"w-full flex justify-center py-2 w-[90%]"}>
-      <div className={"py-5 bg-bg-alt flex flex-col items-center justify-center w-full"}>
+    <div className={"flex justify-center py-2 w-full"}>
+      <div className={"py-5 bg-bg-alt flex flex-col items-center justify-center w-full rounded-2xl"}>
         <h1 className={"font-bold text-3xl"}>Добро пожаловать, {profileData?.username}!</h1>
         <p className={"py-5"}>Ниже представлены разделы, с инструкцией по работе с сайтом в зависимости от вашей роли.</p>
         <div className={"w-full px-10 min-h-[50vh] "}>
           <Tabs.Root className="rounded-md border border-gray-200 size-full" defaultValue="player">
             <Tabs.List className="relative z-0 flex gap-1 px-2 shadow-[inset_0_-1px] shadow-gray-200 w-full justify-between">
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline focus-visible:before:outline-2 data-[active]:text-gray-900"
+                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-gray-900"
                 value="player"
               >
                 Участник
               </Tabs.Tab>
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline focus-visible:before:outline-2 data-[active]:text-gray-900"
+                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-gray-900"
+                value="trainer"
+              >
+                Тренер команды
+              </Tabs.Tab>
+              <Tabs.Tab
+                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-gray-900"
                 value="jury"
               >
                 Жюри
               </Tabs.Tab>
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline focus-visible:before:outline-2 data-[active]:text-gray-900"
-                value="projects"
+                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-gray-900"
+                value="organizators"
               >
                 Организатор
               </Tabs.Tab>
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline focus-visible:before:outline-2 data-[active]:text-gray-900"
-                value="account"
+                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-gray-900"
+                value="moderator"
               >
                 Модератор
               </Tabs.Tab>
-              <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline focus-visible:before:outline-2 data-[active]:text-gray-900"
-                value="trainee"
-              >
-                Тренер команды
-              </Tabs.Tab>
-              <Tabs.Indicator className="absolute top-1/2 left-0 z-[-1] h-6 w-[var(--active-tab-width)] translate-x-[var(--active-tab-left)] -translate-y-1/2 rounded-sm bg-gray-100 transition-all duration-200 ease-in-out" />
+              <Tabs.Indicator className="absolute top-1/2 left-0 z-[-1] h-6 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-sm bg-gray-100 transition-all duration-200 ease-in-out" />
             </Tabs.List>
             <Tabs.Panel
-              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline focus-visible:outline-2"
+              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline"
               value="player"
             >
               <p>
@@ -66,14 +66,32 @@ export default function ProfileMainPage({ profileData }: { profileData: User }) 
               </p>
             </Tabs.Panel>
             <Tabs.Panel
-              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline focus-visible:outline-2"
-              value="projects"
+              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline"
+              value="trainer"
+            >
+              <p>
+                Вы должны зарегистрировать свою команду на турнир и добавить в неё участников в форме регистрации.
+              </p>
+            </Tabs.Panel>
+            <Tabs.Panel
+              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline"
+              value="organizators"
+            >
+              <p>
+                Для участия в турнире тренер команды должен подать заявку, в которой указать вас в качестве участника.
+                <br/>
+                Далее вам необходимо подтвердить заявку (в уведомлении на сайте).
+              </p>
+            </Tabs.Panel>
+            <Tabs.Panel
+              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline"
+              value="jury"
             >
               <ProjectIcon className="size-10 text-gray-300" />
             </Tabs.Panel>
             <Tabs.Panel
-              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline focus-visible:outline-2"
-              value="account"
+              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline"
+              value="moderator"
             >
               <PersonIcon className="size-10 text-gray-300" />
             </Tabs.Panel>

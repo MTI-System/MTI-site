@@ -9,9 +9,10 @@ import { Checkbox } from "@base-ui-components/react"
 interface CheckboxFieldProps extends Omit<Checkbox.Root.Props, "inputRef" | "name"> {
   onVerification: (value: string) => InputVerificationStatus
   name: string
+  value: string
 }
 
-export function CheckboxField({ onVerification, name, className, ...rest }: CheckboxFieldProps) {
+export function CheckboxField({ onVerification, name, value, className, ...rest }: CheckboxFieldProps) {
   const { register, setFormField } = useCardsRoot()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -37,6 +38,7 @@ export function CheckboxField({ onVerification, name, className, ...rest }: Chec
         <Checkbox.Root
           name={name}
           inputRef={inputRef}
+          value={value}
           className={twclsx(
             "flex size-5 items-center justify-center rounded-sm focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-blue-800 data-checked:bg-gray-900 data-unchecked:border data-unchecked:border-gray-300",
             className,

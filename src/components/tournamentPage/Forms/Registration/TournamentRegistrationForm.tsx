@@ -19,10 +19,9 @@ export default function TournamentRegistrationForm({
 }) {
   const [submitFormAnswer, { data, isLoading, isError, error }] = useSubmitFormAnswerMutation()
   const token = useAppSelector((state) => state.auth.token)
-  console.log("Getted form: ", formInfo)
   return (
     <>
-      <h1>Регистрация на турнир</h1>
+      <h1 className={"font-bold text-2xl text-center w-full"}>Регистрация на турнир</h1>
 
       <Forms.Root isEdit={isEdit} isExpanded={false}>
         <Forms.Trigger
