@@ -26,9 +26,10 @@ export default function CheckboxGroupRegistrationField(
   useEffect(() => {
     register(() => {
       const result = {
-        isSuccess: false
+        isSuccess: true
       }
       // onVerification(inputRef.current?.value || "")
+      console.log("aaa", result, fields.current)
       setVerificationResult(result)
       if (result.isSuccess) {
         setFormField(group.key, fields.current.keys().toArray().toString())

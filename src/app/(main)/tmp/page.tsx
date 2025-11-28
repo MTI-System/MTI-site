@@ -31,6 +31,7 @@ export default function TempPage(){
         >
             <Forms.EdiatableItems>
                 <CheckboxGroupRegistrationField group={{
+                    key: "aaaa",
                     fields: [{
                         name: "aaa",
                         value: "bbb",
@@ -55,7 +56,8 @@ export default function TempPage(){
                     title: "test"
                 }}/>
             </Forms.EdiatableItems>
-            <button type="submit">test</button>
+            <Forms.ConfirmButton>Тест</Forms.ConfirmButton>
+            {/* <button type="submit">test</button> */}
         </Forms.Trigger>
       </Forms.Root>
         </>

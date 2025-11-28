@@ -8,8 +8,8 @@ export const FightContainerCard = z.object({
 export const TournamentLocation = z.object({
   id: z.number(),
   location_text: z.string(),
-  location_lat: z.number(),
-  location_lon: z.number(),
+  location_lat: z.number().optional(),
+  location_lon: z.number().optional(),
 })
 
 export const Badge = z.object({

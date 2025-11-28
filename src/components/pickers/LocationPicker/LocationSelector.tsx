@@ -62,6 +62,7 @@ export default function LocationSelector({ onPick }: { onPick: TournamentCardCal
               {!isOnline && (
                 <LocationPicker
                   onChange={(textAddress: string, lat: number | null, lon: number | null) => {
+                    console.log("first", lat, lon)
                     setCurrentObject({
                       textAddress: textAddress,
                       lat: lat,
@@ -75,6 +76,7 @@ export default function LocationSelector({ onPick }: { onPick: TournamentCardCal
                 onClick={() => {
                   setIsPopoverOpened(false)
                   setDisplayedValue(isOnline ? "Онлайн" : currentObject.textAddress)
+                  console.log("Second", currentObject.lat, currentObject.lon)
                   onPick &&
                     onPick({
                       location: isOnline ? "Онлайн" : currentObject.textAddress,

@@ -65,27 +65,26 @@ export default function UniversalEmbedding({
           )}
         </EmbeddingCard>
       </a>
-      <DeletionMaterialConfirmationModal
-        openState={[isDeleteDialogOpen, setIsDeleteDialogOpen]}
-        problem_global_number={1}
-        problem_title={embedding.title}
-        onConfirm={async () => {
-          if(!problemId) return
-          deleteMaterialMutation({ problemId: problemId, materialId: embedding.id, token: token })
-        }}
-      />
+      {isModerator && (
+        <DeletionMaterialConfirmationModal
+          openState={[isDeleteDialogOpen, setIsDeleteDialogOpen]}
+          problem_title={embedding.title}
+          onConfirm={async () => {
+            if (!problemId) return
+            deleteMaterialMutation({ problemId: problemId, materialId: embedding.id, token: token })
+          }}
+        />
+      )}
     </>
   )
 }
 
 export function DeletionMaterialConfirmationModal({
   openState,
-  problem_global_number,
   problem_title,
   onConfirm,
 }: {
   openState: [boolean, Dispatch<SetStateAction<boolean>>]
-  problem_global_number: number
   problem_title: string
   onConfirm: () => Promise<void>
 }) {

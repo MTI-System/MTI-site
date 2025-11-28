@@ -43,6 +43,7 @@ export function CardsRootProvider({
   }, [])
 
   const setFormField = useCallback((key: string, value: string) => {
+    console.log("setting form field: ", key, value)
     formDataMap.current.set(key, value)
   }, [])
 
