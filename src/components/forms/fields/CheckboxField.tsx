@@ -10,9 +10,11 @@ interface CheckboxFieldProps extends Omit<Checkbox.Root.Props, "inputRef" | "nam
   onVerification: (value: string) => InputVerificationStatus
   name: string
   value: string
+  onChange?: (value: string, state: boolean) => void
+  is_grouped?: boolean
 }
 
-export function CheckboxField({ onVerification, name, value, className, ...rest }: CheckboxFieldProps) {
+export function CheckboxField({ onVerification, name, value, className, is_grouped=false, onChange=(value, is_chacked)=>{}, ...rest }: CheckboxFieldProps) {
   const { register, setFormField } = useCardsRoot()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -20,12 +22,18 @@ export function CheckboxField({ onVerification, name, value, className, ...rest 
 
   useEffect(() => {
     register(() => {
-      const result = onVerification(inputRef.current?.value || "")
-      setVerificationResult(result)
-      if (result.isSuccess) {
-        setFormField(name, inputRef.current?.value || "")
+      if (!is_grouped){
+        const result = onVerification(inputRef.current?.value || "")
+        setVerificationResult(result)
+        if (result.isSuccess) {
+          setFormField(name, inputRef.current?.value || "")
+        }
+        return result
       }
-      return result
+
+      return {
+        isSuccess: true
+      }
     })
   }, [])
 
@@ -38,6 +46,11 @@ export function CheckboxField({ onVerification, name, value, className, ...rest 
         <Checkbox.Root
           name={name}
           inputRef={inputRef}
+          onCheckedChange={(e)=>{
+            // console.log("checked changed", value)
+            onChange(name, e)
+          }}
+
           value={value}
           className={twclsx(
             "flex size-5 items-center justify-center rounded-sm focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-blue-800 data-checked:bg-gray-900 data-unchecked:border data-unchecked:border-gray-300",
