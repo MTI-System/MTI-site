@@ -58,6 +58,7 @@ function CreateTournamentForm() {
   })
   const [createTournament, { data: newTournament, isLoading, isSuccess, error }] = useAddTournamentMutation()
   useEffect(() => {
+    console.log("new tournament", newTournament, isLoading, isSuccess)
     if (!isLoading && isSuccess) {
       redirect(`/tournaments/${newTournament?.id}/info/about`)
     } else if (error) {

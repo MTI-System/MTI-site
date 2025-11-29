@@ -76,6 +76,7 @@ export const defineTournamentsEndpoints = (
       }
     },
     transformResponse: (response: unknown): TournamentCardInterface | null => {
+      console.log("creating tournament response", response)
       const parsed = TournamentCard.safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing organizator tournaments: ${parsed.error}`)
