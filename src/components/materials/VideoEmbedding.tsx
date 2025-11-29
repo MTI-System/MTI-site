@@ -89,7 +89,7 @@ export default function UniversalPlayer({ embedding, problemId, isModerator=fals
 
   return (
     <>
-      <div className={style.videoContainer} style={{ opacity: isPending ? 0.5 : 1 }}>
+      <div className="w-full h-auto sm:h-full sm:w-auto flex rounded-2xl overflow-hidden relative aspect-video" style={{ opacity: isPending ? 0.5 : 1 }}>
         <>
           {isModerator && (
             <MdOutlineClose
@@ -106,22 +106,22 @@ export default function UniversalPlayer({ embedding, problemId, isModerator=fals
             />
           )}
           {!isVideoLoaded && (
-            <div className={style.videoPlaceholderContainer}>
+            <div className="absolute z-10 w-full aspect-video bg-inactive-color flex flex-col justify-center items-center">
               {isYouTube && !isVideoLoadingError && (
                 <>
-                  <h1>Видео загружается</h1>
-                  <p className={style.videoPlaceholderDescription}>Проблемы с загрузкой?</p>
+                  <h1 className="font-bold text-xl sm:text-4xl text-text-main">Видео загружается</h1>
+                  <p className="text-text-main">Проблемы с загрузкой?</p>
                   <Link href={"https://youtube.com/watch?v=" + vidURL} target="_blank">
-                    <Button className={style.youtubePlaceholderButton}>Смотрите видео на YouTube!</Button>
+                    <Button className="mt-4 bg-red-500/36 border-2 border-red-500 text-white hover:bg-red-500 rounded-3xl p-[2%]">Смотрите видео на YouTube!</Button>
                   </Link>
                 </>
               )}
               {isYouTube && isVideoLoadingError && (
                 <>
-                  <h1>Ошибка при загрузке видео</h1>
-                  <p className={style.videoPlaceholderDescription}>Причина: {errorMessage}</p>
+                  <h1 className="font-bold text-xl sm:text-4xl text-text-main">Ошибка при загрузке видео</h1>
+                  <p className="text-text-main">Причина: {errorMessage}</p>
                   <Link href={"https://youtube.com/watch?v=" + vidURL} target="_blank">
-                    <Button className={style.youtubePlaceholderButton}>Открыть ссылку</Button>
+                    <Button className="mt-4 bg-red-500/36 border-2 border-red-500 text-white hover:bg-red-500 rounded-3xl p-[2%]">Открыть ссылку</Button>
                   </Link>
                 </>
               )}

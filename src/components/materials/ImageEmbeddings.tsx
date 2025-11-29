@@ -58,7 +58,7 @@ export function ExpandableImage({
 
   return (
     <div
-      className={clsx(style.expandableImageContainer, className)}
+      className={clsx(className)}
       onClick={() => {
         setIsExpanded(true)
       }}
@@ -82,6 +82,7 @@ export function ExpandableImage({
       <Image
         src={checkedSrc}
         {...props}
+        className="sm:max-w-none"
         width={500}
         height={500}
         placeholder="blur"

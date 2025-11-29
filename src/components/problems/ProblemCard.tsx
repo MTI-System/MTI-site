@@ -86,7 +86,7 @@ export function ProblemCardContent({
 
   return (
     <>
-      <div className="border-b-border flex flex-col gap-2 border-b px-7 pb-3">
+      <div className="border-b-border flex flex-col gap-2 border-b pb-3">
         <div className="flex items-center justify-between">
           {is_edit_page && (
             <div className="">
@@ -179,8 +179,8 @@ export function ProblemCardContent({
           </div>
         )}
       </div>
-      <div className="px-7 pt-3">
-        <p className="text-text-alt pt-3 pb-2 text-xl font-medium">Условие</p>
+      <div className="pt-3">
+        <p className="text-text-alt pb-2 text-xl font-medium">Условие</p>
         {is_edit_page && (
           <div>
             <textarea
@@ -236,7 +236,7 @@ export function ProblemCardContent({
         </Button>
       )}
 
-      <div className="px-7">
+      <div className="mb-3">
         <ProblemsProviderWrapper>
           <ScienceList problem={problem} setHovered={setHoveredScience} />
           <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
@@ -347,7 +347,7 @@ function SectionsList({
   const pathname = usePathname()
 
   return (
-    <div className="flex flex-wrap gap-4 pt-3">
+    <div className="flex flex-wrap gap-4">
       {problem.problem_sections.map((section) => {
         return (
           <ProblemSection
