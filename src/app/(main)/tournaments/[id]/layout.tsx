@@ -63,7 +63,7 @@ export default async function TournamentPage({
             {!tournament && <NotFound />}
             <TournamentsPageTabs tournamentCard={tournament} isAdmin={isAdmin} />
             <AuthProviderWrapper>
-              <div className="bg-bg-alt mb-5 min-h-200 w-full rounded-2xl px-2 py-5">{children}</div>
+              <div className="bg-bg-alt mb-5 min-h-200 h-fit w-full rounded-2xl px-2 py-5">{children}</div>
             </AuthProviderWrapper>
           </Suspense>
         </RegistrationProviderWrapper>

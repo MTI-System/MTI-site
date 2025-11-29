@@ -15,7 +15,9 @@ import DropdownFieldConstructor from "@/components/formConstructor/fieldTypesCon
 import { debounce } from "next/dist/server/utils"
 import { CiSettings } from "react-icons/ci"
 import FileFieldFormConstructor from "@/components/formConstructor/fieldTypesConstructors/FileFieldFormConstructor"
-import DateFieldConstructor from "@/components/formConstructor/fieldTypesConstructors/DatePickerFormConstructor";
+import PlayerFieldConstructor from "../fieldTypesConstructors/PlayerFieldConstructor"
+import DateFieldConstructor from "../fieldTypesConstructors/DatepickerFormConstructor"
+import CoachFieldConstructor from "../fieldTypesConstructors/CoachFormConstructor"
 
 export function ConstructorItem({ id, index, field }: { index: number; id: number; field: Field }) {
   const handleRef = useRef<HTMLInputElement | null>(null)
@@ -49,7 +51,7 @@ export function ConstructorItem({ id, index, field }: { index: number; id: numbe
                 }}
               />
               {/*<h3>{field.fieldName}</h3>*/}
-              <FieldTypes setFieldType={(value: availableFields) => setFieldType(value, id)} />
+              <FieldTypes setFieldType={(value: availableFields) => setFieldType(value, id)} defaultValue={field.properties.fieldType}/>
             </div>
             {/*<p className="text-[22px] font-bold text-text-alt">{field.properties.fieldType}</p>*/}
             <div className="mt-2 flex items-center gap-2">
@@ -69,9 +71,15 @@ export function ConstructorItem({ id, index, field }: { index: number; id: numbe
                 <FileFieldFormConstructor id={id} />
               ) : field.properties.fieldType === "geolocation" ? (
                 <p className="text-text-alt text-[22px] font-bold">Геолокация</p>
-              ) : (
+              ) : field.properties.fieldType === "player" ? (
+                <PlayerFieldConstructor id={id}/>
+              ): field.properties.fieldType === "coach" ? (
+                <CoachFieldConstructor id={id}/>
+              ): (
                 <p className="text-text-alt text-[22px] font-bold">Неизвестный тип поля</p>
-              )}
+              )
+              } 
+              
             </div>
           </div>
           <div ref={handleRef} className="size-10 cursor-grab">
@@ -79,6 +87,7 @@ export function ConstructorItem({ id, index, field }: { index: number; id: numbe
           </div>
         </div>
       </li>
+      
     </>
   )
 }

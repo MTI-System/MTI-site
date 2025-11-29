@@ -1,8 +1,10 @@
 "use client"
-import { createContext, ReactNode, useContext, useState } from "react"
+import { useGetRegistrationFormQuery } from "@/api/registration/clientApiInterface"
+import Loading from "@/app/loading"
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react"
 import { DateRange } from "react-day-picker"
 
-export type availableFields = "dropdown" | "text" | "number" | "date" | "file" | "geolocation"
+export type availableFields = "dropdown" | "text" | "number" | "date" | "file" | "geolocation" | "player" | "coach" | "problems_checkboxes"
 
 export type DropdownOption = {
   label: string
@@ -44,13 +46,28 @@ export type GeolocationInputProperties = {
   fieldType: "geolocation"
 }
 
-export type FieldProperties =
+export type PlayerInputProperties = {
+  fieldType: "player"
+}
+
+export type CoachInputProperties = {
+  fieldType: "coach"
+}
+
+export type ProblemsCheckboxesInputProperties = {
+  fieldType: "problems_checkboxes"
+}
+
+export type FieldProperties = 
   | DropdownProperties
   | TextInputProperties
   | NumberInputProperties
   | DateInputProperties
   | FileInputProperties
   | GeolocationInputProperties
+  | PlayerInputProperties
+  | CoachInputProperties
+  | ProblemsCheckboxesInputProperties
 
 export type Field = {
   id: number
@@ -65,7 +82,8 @@ type ConstructorRootContextType = {
   setFieldType: (type: availableFields, id: number) => void
   setProperties: (properties: FieldProperties, id: number) => void
   changeName: (name: string, id: number) => void
-  getFieldById: (id: number) => Field | null
+  getFieldById: (id: number) => Field | null,
+  formType: string,
 }
 
 const ConstructorRootContext = createContext<ConstructorRootContextType | null>(null)
@@ -74,12 +92,41 @@ export function ConstructorRootProvider({
   isEdit = false,
   isExpanded = false,
   children,
+  formType,
+  tournamentId
 }: {
   isEdit?: boolean
   isExpanded?: boolean
   children: ReactNode
+  formType: string
+  tournamentId: number
 }) {
+  const {data, isLoading: isInformationLoading, isSuccess, isError} = useGetRegistrationFormQuery({id: tournamentId, type: formType})
   const [fields, setFields] = useState<Field[]>([])
+  
+  useEffect(()=>{
+    if (isInformationLoading==false){
+      if (isSuccess){
+        const initFields = data?.fields.map((field, idx)=>{
+          return {
+            id: idx,
+            fieldName: field.title,
+            properties: {
+              fieldType: field.type,
+              ...field.metadata
+            }
+          }
+        })
+        console.log("initFields", initFields)
+        //@ts-ignore
+        setFields(initFields)
+      }
+      if(isError){
+        setFields([])
+      }
+    }
+  }, [isInformationLoading])
+
   const addField = (fieldName: string, id: number) => {
     setFields((prev) => [
       ...prev,
@@ -144,9 +191,11 @@ export function ConstructorRootProvider({
 
   return (
     <ConstructorRootContext
-      value={{ getFieldById, fields, addField, setFields, setFieldType, setProperties, changeName }}
+      value={{ getFieldById, fields, addField, setFields, setFieldType, setProperties, changeName, formType}}
     >
-      {children}
+
+      {!isInformationLoading && children}
+      {isInformationLoading && <Loading/>}
     </ConstructorRootContext>
   )
 }

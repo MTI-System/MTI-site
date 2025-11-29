@@ -171,7 +171,6 @@ export default function UniversalPlayer({ embedding, problemId, isModerator=fals
       </div>
       <DeletionMaterialConfirmationModal
         openState={[isDeleteDialogOpen, setIsDeleteDialogOpen]}
-        problem_global_number={1}
         problem_title={embedding.title}
         onConfirm={async () => {
           if(!problemId) return

@@ -10,7 +10,7 @@ export function ConstructorLayout() {
   const counter = useRef<number>(0)
   return (
     <>
-      <div className="bg-bg-alt relative h-screen w-full pt-2">
+      <div className="bg-bg-alt relative h-fit w-full pt-2">
         <DragDropProvider
           onDragEnd={(e) => {
             setFields(move(fields, e))
@@ -22,22 +22,26 @@ export function ConstructorLayout() {
             ))}
           </ul>
         </DragDropProvider>
+        <div className="flex gap-2">
+          <button
+            className={"bg-accent-primary/30 px-2 py-1 border border-accent-primary y rounded-md hover:bg-accent-primary/50"}
+            onClick={() => {
+              addField("Новое поле", counter.current)
+              counter.current += 1
+            }}
+          >
+            Добавить поле
+          </button>
+          <button
+            className={"bg-accent-primary/30 px-2 py-1 border border-accent-primary y rounded-md hover:bg-accent-primary/50"}
+            onClick={() => {
+              console.log(fields)
+            }}
+          >
+            Подтвердить изменение
+          </button>
+        </div>
 
-        <button
-          onClick={() => {
-            addField("Новое поле", counter.current)
-            counter.current += 1
-          }}
-        >
-          click me
-        </button>
-        <button
-          onClick={() => {
-            console.log(fields)
-          }}
-        >
-          !!Verify form!!
-        </button>
       </div>
     </>
   )

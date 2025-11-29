@@ -1,15 +1,22 @@
 "use client"
-import { useContext, useEffect, useState } from "react"
-import { EmbeddingTypeInterface } from "@/types/embeddings"
+import { CSSProperties, useContext, useEffect, useRef, useState } from "react"
+import { EmbeddingInterface, EmbeddingTypeInterface } from "@/types/embeddings"
 import Loading from "@/app/loading"
-import { Popover } from "@base-ui-components/react"
+import { Popover, Select } from "@base-ui-components/react"
 import { useGetAvailableContentTypesQuery } from "@/api/materials/clientApiInterface"
 import AddFileField from "../materials/AddFileField"
-import { AppendableInfoContext } from "../ui/AppendableInfoContainer"
+import AppendableInfoContainer, { AppendableInfoContext } from "../ui/AppendableInfoContainer"
 import UniversalEmbedding from "../materials/UniversalEmbedding"
 import { ExpandableImage } from "../materials/ImageEmbeddings"
 import UniversalPlayer from "../materials/VideoEmbedding"
 import { TextEmbedding } from "../materials/TextEmbedding"
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
+import { RiExpandUpDownFill } from "react-icons/ri"
+import { FaCheck } from "react-icons/fa6"
+import { EmbeddingCard } from "../materials/FileEmbeddings"
+import { MdOutlineClose, MdOutlineRefresh } from "react-icons/md"
+import axios from "axios"
+import { FILES_API, MATERIAL_API } from "@/constants/APIEndpoints"
 
 type MaterialInterface = {
   title: string
@@ -176,6 +183,22 @@ export default function TournamentInformationConstructor() {
             isInline={true}
           />
         </div>
+        <AppendableInfoContainer
+          prevInfoInitial={{
+            embedding: {
+              id: 0,
+              title: "Test",
+              content: "http://11.0.0.1:5002/files/get/Рисунок6_1.jpg",
+              content_type: { id: 0, type_name: "Picture", extension_color: "" },
+              metadata: { is_external: "false", is_primary: "true" },
+            },
+          }}
+          className="flex flex-row justify-between"
+          btnDivClassName="flex flex-row justify-between"
+          btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+        >
+          <InputRow />
+        </AppendableInfoContainer>
       </div>
     </>
   )
@@ -185,15 +208,178 @@ function InputRow() {
   const { info, setAppendableInfo, isEditable, error } = useContext(AppendableInfoContext)
   if (!isEditable)
     return info.embedding.content_type.type_name === "Picture" ? (
-      <ExpandableImage embedding={info.embedding} src={info.embedding.content} />
+      <ProblemsProviderWrapper>
+        <ExpandableImage embedding={info.embedding} src={info.embedding.content} />
+      </ProblemsProviderWrapper>
     ) : info.embedding.content_type.type_name === "Video" ? (
-      <UniversalPlayer embedding={info.embedding} />
+      <ProblemsProviderWrapper>
+        <UniversalPlayer embedding={info.embedding} />
+      </ProblemsProviderWrapper>
     ) : info.embedding.content_type.type_name === "Text" ? (
       <TextEmbedding text={info.embedding.content} title={info.embedding.title} />
     ) : info.embedding.content_type.type_name === "Location" ? (
       <>{/* TODO: Location Embedding */}</>
     ) : (
-      <UniversalEmbedding embedding={info.embedding} />
+      <ProblemsProviderWrapper>
+        <UniversalEmbedding embedding={info.embedding} />
+      </ProblemsProviderWrapper>
     )
-  return <></>
+  return (
+    <div className="flex flex-row justify-between w-full">
+      <EmbeddingInput />
+      <EmbeddingTypeSelector defaultValue={info.embedding.content_type.id} onSelect={(v) => {setAppendableInfo({dstType: v})}} />
+    </div>
+  )
+}
+
+function EmbeddingInput() {
+  return <p>12345</p>
+}
+
+function EmbeddingTypeSelector({
+  onSelect,
+  defaultValue,
+}: {
+  onSelect: (selection: number | null) => void
+  defaultValue: number
+}) {
+  const {data, isLoading, isSuccess, error} = useGetAvailableContentTypesQuery({})
+  const availableTypes = data?.map((v)=>({label: v.display_name, value:v.id})) ?? []
+  // const [availableTypes, setAvailableTypes] = useState<{ label: string; value: string }[]>([])
+  // const availableTypes: { label: string; value: string }[] = [
+  //   { label: "Текст", value: "Text" },
+  //   { label: "Видео", value: "Video" },
+  //   { label: "Картинка", value: "Picture" },
+  //   { label: "Геолокация", value: "Location" },
+  //   { label: "Файл", value: "File" },
+  // ]
+  return (
+    <Select.Root
+      items={availableTypes}
+      defaultValue={
+        availableTypes.find((v) => v.value === defaultValue)?.value
+      }
+      onValueChange={onSelect}
+    >
+      <Select.Trigger className="flex h-10 w-fit min-w-36 cursor-default items-center justify-between gap-3 rounded-md border border-gray-200 pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-popup-open:bg-gray-100">
+        <Select.Value />
+        <Select.Icon className="flex">
+          <RiExpandUpDownFill />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
+          <Select.Popup className="group origin-(--transform-origin) rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-[side=none]:data-ending-style:transition-none data-starting-style:scale-90 data-starting-style:opacity-0 data-[side=none]:data-starting-style:scale-100 data-[side=none]:data-starting-style:opacity-100 data-[side=none]:data-starting-style:transition-none dark:shadow-none dark:outline-gray-300">
+            <Select.ScrollUpArrow className="top-0 z-1 flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:-top-full" />
+            <Select.List className="relative max-h-(--available-height) scroll-py-6 overflow-y-auto py-1">
+              {availableTypes.map(({ label, value }) => (
+                <Select.Item
+                  key={label}
+                  value={value}
+                >
+                  <Select.ItemIndicator className="col-start-1">
+                    <FaCheck />
+                  </Select.ItemIndicator>
+                  <Select.ItemText className="col-start-2">{label}</Select.ItemText>
+                </Select.Item>
+              ))}
+            </Select.List>
+            <Select.ScrollDownArrow className="bottom-0 z-1 flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:-bottom-full" />
+          </Select.Popup>
+        </Select.Positioner>
+      </Select.Portal>
+    </Select.Root>
+  )
+}
+
+function LoadingFileEmbedding({
+  file,
+  token,
+  displayTitle,
+  onUploadComplete,
+  onUploadCancel,
+}: {
+  file:File,
+  token:string,
+  displayTitle:string,
+  onUploadComplete: () => void
+  onUploadCancel: (noWait: boolean) => void
+}) {
+  const [isError, setIsError] = useState(false)
+  const progresRef = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState<number>(0)
+  const abortControllerRef = useRef<AbortController>(null)
+  const formData = new FormData()
+  formData.set("file", file)
+  formData.set("token", token)
+
+  const uploadFile = () => {
+    const abortController = new AbortController()
+    abortControllerRef.current = abortController
+    axios
+      .post(FILES_API + "add_material", formData, {
+        onUploadProgress: (event) => {
+          if (!event.progress) return
+          progresRef.current?.style.setProperty("--progress-shift", `${event.progress * 100 - 100}%`)
+          setProgress(event.progress * 100)
+        },
+        signal: abortController.signal,
+      })
+      .then((data) => {
+        if (data.status === 200) {
+          progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
+          progresRef.current?.style.setProperty("--progress-color", "#00FF00")
+          onUploadComplete()
+        } else {
+          console.error("File loaded with error")
+          progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
+          progresRef.current?.style.setProperty("--progress-color", "#FF0000")
+          setIsError(true)
+        }
+      })
+      .catch((error) => {
+        console.error("File loaded with error", error)
+        progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
+        progresRef.current?.style.setProperty("--progress-color", "#FF0000")
+        setIsError(true)
+      })
+  }
+
+  useEffect(() => {
+    uploadFile()
+  }, [])
+
+  return (
+    <EmbeddingCard
+      title={displayTitle}
+      subtitle={isError ? "Ошибка" : `Загрузка: ${progress.toFixed(2)}%`}
+      embeddingImageURL="/uploading.svg"
+    >
+      <div className="flex h-full items-center justify-center">
+        {isError && (
+          <MdOutlineRefresh
+            className="hover:text-text-alt"
+            onClick={() => {
+              setIsError(false)
+              uploadFile()
+              progresRef.current?.style.setProperty("--progress-shift", `${-100}%`)
+              progresRef.current?.style.setProperty("--progress-color", "var(--primary-accent)")
+            }}
+          />
+        )}
+        <MdOutlineClose
+          className="hover:text-text-alt"
+          onClick={() => {
+            abortControllerRef.current?.abort()
+            onUploadCancel(isError)
+          }}
+        />
+      </div>
+      <div
+        className="after:bg-(--progress-color) absolute right-0 bottom-0 left-0 h-2 after:absolute after:bottom-0 after:left-(--progress-shift) after:h-2 after:w-full after:transition-all after:duration-250 after:ease-in-out after:content-['']"
+        style={{ "--progress-shift": `${-100}%`, "--progress-color": "var(--primary-accent)" } as CSSProperties}
+        ref={progresRef}
+      ></div>
+    </EmbeddingCard>
+  )
 }

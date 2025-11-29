@@ -1,9 +1,8 @@
 "use client"
 import { PROBLEM_API } from "@/constants/APIEndpoints"
 import { LoadMaterialForm } from "@/types/embeddings"
-import { useState, useEffect, useRef, CSSProperties, ReactNode } from "react"
+import { useState, useEffect, useRef, CSSProperties } from "react"
 import { EmbeddingCard } from "../FileEmbeddings"
-import style from "@/styles/components/ui/Files/LoadingEmbeddings/LoadingFileEmbedding.module.css"
 import axios from "axios"
 import { MdOutlineRefresh, MdOutlineClose } from "react-icons/md"
 
@@ -72,10 +71,10 @@ export default function LoadingFileEmbedding({
       subtitle={isError ? "Ошибка" : `Загрузка: ${progress.toFixed(2)}%`}
       embeddingImageURL="/uploading.svg"
     >
-      <div className={style.iconButtons}>
+      <div className="flex h-full items-center justify-center">
         {isError && (
           <MdOutlineRefresh
-            className={style.retryIcon}
+            className="hover:text-text-alt"
             onClick={() => {
               setIsError(false)
               uploadFile()
@@ -85,14 +84,18 @@ export default function LoadingFileEmbedding({
           />
         )}
         <MdOutlineClose
-          className={style.abortIcon}
+          className="hover:text-text-alt"
           onClick={() => {
             abortControllerRef.current?.abort()
             onUploadCancel(isError)
           }}
         />
       </div>
-      <div className={style.loadingWrapper} ref={progresRef}></div>
+      <div
+        className="after:bg-(--progress-color) absolute right-0 bottom-0 left-0 h-2 after:absolute after:bottom-0 after:left-(--progress-shift) after:h-2 after:w-full after:transition-all after:duration-250 after:ease-in-out after:content-['']"
+        style={{ "--progress-shift": `${-100}%`, "--progress-color": "var(--primary-accent)" } as CSSProperties}
+        ref={progresRef}
+      ></div>
     </EmbeddingCard>
   )
 }

@@ -1,9 +1,12 @@
 import {Constructor} from "@/components/formConstructor";
 
-export default function ConstructorTournamentRegistrationFormPage(){
+export default async function ConstructorTournamentRegistrationFormPage(
+  { params }: { params: Promise<{ id: number }> }
+){  
+    const id = (await params).id
     return (
       <>
-        <Constructor.Root>
+        <Constructor.Root formType={"registration"} tournamentId={id}>
           <Constructor.Layout/>
         </Constructor.Root>
       </>

@@ -2,23 +2,28 @@ import { Select } from "@base-ui-components/react"
 import { RiExpandUpDownFill } from "react-icons/ri"
 import { FaCheck } from "react-icons/fa6"
 import { availableFields } from "@/components/formConstructor/root/RootContext"
+import { useState } from "react"
 
-export default function FieldTypes({ setFieldType }: { setFieldType: (value: availableFields) => void }) {
+export default function FieldTypes({ setFieldType, defaultValue }: { defaultValue: string, setFieldType: (value: availableFields) => void }) {
   const types: { label: string; value: availableFields }[] = [
     { label: "Текст", value: "text" },
     { label: "Число", value: "number" },
     { label: "Файл", value: "file" },
     { label: "Геолокация", value: "geolocation" },
     { label: "Дата", value: "date" },
+    { label: "Участник", value: "player" },
+    { label: "Руководитель", value: "coach" },
     { label: "Выбор из списка", value: "dropdown" },
+    { label: "Чекбоксы со списком задач текущего года", value: "problems_checkboxes" },
   ]
+  const [defVal, ] = useState(defaultValue)
 
   return (
     <>
       <Select.Root
         multiple={false}
         items={types}
-        defaultValue={"text"}
+        defaultValue={defVal}
         onValueChange={(value) => {
           // valueRef.current = value
           if (value === null) return

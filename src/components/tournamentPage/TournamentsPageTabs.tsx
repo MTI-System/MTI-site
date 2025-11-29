@@ -114,7 +114,7 @@ export default function TournamentsPageTabs({
       isLocked: false,
     },
     {
-      href: `/tournaments/${tournamentCard.id}/applications/constructor`,
+      href: `/tournaments/${tournamentCard.id}/applications/construction`,
       title: "Конструктор",
       description: "Конструктор формы заявок",
       isLocked: false,
