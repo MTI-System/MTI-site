@@ -1,7 +1,7 @@
 "use client"
 import { useGetRegistrationFormQuery } from "@/api/registration/clientApiInterface"
 import Loading from "@/app/loading"
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react"
+import { createContext, ReactNode, RefObject, useContext, useEffect, useRef, useState } from "react"
 import { DateRange } from "react-day-picker"
 
 export type availableFields = "dropdown" | "text" | "number" | "date" | "file" | "geolocation" | "player" | "coach" | "problems_checkboxes"
@@ -84,6 +84,8 @@ type ConstructorRootContextType = {
   changeName: (name: string, id: number) => void
   getFieldById: (id: number) => Field | null,
   formType: string,
+  tId: number,
+  counter: RefObject<number>
 }
 
 const ConstructorRootContext = createContext<ConstructorRootContextType | null>(null)
@@ -103,11 +105,13 @@ export function ConstructorRootProvider({
 }) {
   const {data, isLoading: isInformationLoading, isSuccess, isError} = useGetRegistrationFormQuery({id: tournamentId, type: formType})
   const [fields, setFields] = useState<Field[]>([])
-  
+  const [tId, ] = useState(tournamentId) 
+  const counter = useRef(0)
   useEffect(()=>{
     if (isInformationLoading==false){
+      
       if (isSuccess){
-        const initFields = data?.fields.map((field, idx)=>{
+        const initFields = data?.fields?.map((field, idx)=>{
           return {
             id: idx,
             fieldName: field.title,
@@ -116,7 +120,8 @@ export function ConstructorRootProvider({
               ...field.metadata
             }
           }
-        })
+        }) ?? []
+        counter.current = initFields.length
         console.log("initFields", initFields)
         //@ts-ignore
         setFields(initFields)
@@ -191,7 +196,7 @@ export function ConstructorRootProvider({
 
   return (
     <ConstructorRootContext
-      value={{ getFieldById, fields, addField, setFields, setFieldType, setProperties, changeName, formType}}
+      value={{ getFieldById, fields, addField, setFields, setFieldType, setProperties, changeName, formType, tId, counter}}
     >
 
       {!isInformationLoading && children}

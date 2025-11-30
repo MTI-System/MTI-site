@@ -11,6 +11,8 @@ export default function LineRegistrationField({
 }) {
   const fieldObject = "formField" in field ? field.formField : field
   const fieldContent = "formField" in field ? field.content : undefined
+
+  console.log("field: ", field)
   return (
     <>
       <Forms.EdiatableItems>

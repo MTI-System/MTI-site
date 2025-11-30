@@ -1,5 +1,5 @@
 "use client"
-import { TournamentRegistrationFormInfoInterface } from "@/types/TournamentRegistrationApi"
+import { TournamentRegistrationAnswerInterface, TournamentRegistrationFormInfoInterface } from "@/types/TournamentRegistrationApi"
 import { Forms } from "@/components/forms"
 import LineRegistrationField from "./Parts/LineRegistrationField"
 import DateRegistrationField from "./Parts/DateRegistrationField"
@@ -13,7 +13,7 @@ export default function TournamentRegistrationForm({
   className,
   isEdit,
 }: {
-  formInfo: TournamentRegistrationFormInfoInterface | null
+  formInfo: TournamentRegistrationFormInfoInterface | TournamentRegistrationAnswerInterface | null
   className: string
   isEdit: boolean
 }) {
@@ -37,26 +37,23 @@ export default function TournamentRegistrationForm({
             )
           }}
         >
-          {formInfo?.fields.map((field) => {
+          {formInfo?.fields?.map((fieldObject) => {
+            const field = "type" in fieldObject ? fieldObject : fieldObject.formField
             switch (field.type) {
               case "number":
               case "text":
                 return (
                   <LineRegistrationField
                     key={field.key}
-                    field={{
-                      id: -1,
-                      formField: field,
-                      content: "Ответ",
-                    }}
+                    field={fieldObject}
                   />
                 )
               case "date":
-                return <DateRegistrationField key={field.key} field={field} />
+                return <DateRegistrationField key={field.key} field={fieldObject} />
               case "dropdown":
-                return <DropdownRegistrationField key={field.key} field={field} />
+                return <DropdownRegistrationField key={field.key} field={fieldObject} />
               case "player":
-                return <PickPersonRegistrationField key={field.key} field={field} />
+                return <PickPersonRegistrationField key={field.key} field={fieldObject} />
               default:
                 return <p>Unknown</p>
             }

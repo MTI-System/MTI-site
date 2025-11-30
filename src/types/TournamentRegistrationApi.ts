@@ -11,8 +11,8 @@ export const TournamentRegistrationFormFieldMetadata = z.object({
     }),
   ),
   placeholder: z.string().optional(),
-  minValue: z.number().optional(),
-  maxValue: z.number().optional(),
+  minValue: z.string().optional(),
+  maxValue: z.string().optional(),
   selectMode: z.enum(["single", "range"]).optional(),
   selectableDateRanges: z
     .array(
@@ -36,7 +36,7 @@ export const TournamentRegistrationFormField = z.object({
 export const TournamentRegistrationFormInfo = z.object({
   id: z.number(),
   tournament: z.number(),
-  fields: z.array(TournamentRegistrationFormField),
+  fields: z.array(TournamentRegistrationFormField).optional(),
 })
 
 export const TournamentRegistrationAnswerField = z.object({
@@ -51,7 +51,22 @@ export const TournamentRegistrationAnswer = z.object({
   fields: z.array(TournamentRegistrationAnswerField),
 })
 
+
+export const TournamentInformationFormResponse = z.object({
+  form_id: z.number(),
+  title: z.string(),
+  form_type_name: z.string(),
+  form_type_flag: z.string()
+})
+
+export const TournamentInformationResponse = z.object({
+  available_forms: z.array(TournamentInformationFormResponse)
+})
+
+
+
 export type TournamentRegistrationFormInfoInterface = z.infer<typeof TournamentRegistrationFormInfo>
+export type TournamentInformationResponseInterface = z.infer<typeof TournamentInformationResponse>
 export type TournamentRegistrationFormFieldInterface = z.infer<typeof TournamentRegistrationFormField>
 export type TournamentRegistrationAnswerFieldInterface = z.infer<typeof TournamentRegistrationAnswerField>
 export type TournamentRegistrationAnswerInterface = z.infer<typeof TournamentRegistrationAnswer>

@@ -1,7 +1,10 @@
-export default function ApplicationsPageList() {
+import ApplicationsPage from "@/components/tournamentPage/Forms/Applications/ApplicationsPage";
+
+export default async function ApplicationsPageList({ params }: { params: Promise<{ id: number }> }) {
+  const id = (await params).id
   return (
     <>
-      <h1>Форма заявки</h1>
+      <ApplicationsPage id={id}/>
     </>
   )
 }

@@ -1,10 +1,15 @@
 export type FormField = {
   title: string;
   type: string;
-  metadata: string[]
+  metadata: {
+    "key": string,
+    "value": string
+  }[]
 }
 
 export type FormConstructorResponse = {
   formId: number; // это id турнира
-  formType: number; // это id типа
+  formType: string; // это тип
+  fields: FormField[];
+  token: string;
 }

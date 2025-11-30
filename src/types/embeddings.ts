@@ -1,5 +1,7 @@
 import z from "zod"
 
+export const AddEmbeddingResponseSchema = z.number()
+
 export const EmbeddingTypeSchema = z.object({
   id: z.number(),
   type_name: z.string(),

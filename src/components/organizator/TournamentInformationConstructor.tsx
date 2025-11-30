@@ -1,9 +1,9 @@
 "use client"
 import { CSSProperties, useContext, useEffect, useRef, useState } from "react"
-import { EmbeddingInterface, EmbeddingTypeInterface } from "@/types/embeddings"
+import { EmbeddingInterface, EmbeddingmetadataInterface, EmbeddingTypeInterface } from "@/types/embeddings"
 import Loading from "@/app/loading"
 import { Input, Popover, Select } from "@base-ui-components/react"
-import { useGetAvailableContentTypesQuery } from "@/api/materials/clientApiInterface"
+import { useGetAvailableContentTypesQuery, useAddMaterialMutation } from "@/api/materials/clientApiInterface"
 import AddFileField from "../materials/AddFileField"
 import AppendableInfoContainer, { AppendableInfoContext } from "../ui/AppendableInfoContainer"
 import UniversalEmbedding from "../materials/UniversalEmbedding"
@@ -131,16 +131,43 @@ type MaterialInterface = {
 //   )
 // }
 
+interface PendingInterface {
+  pendingContent?: string | File | null
+  pendingMetadata?: EmbeddingmetadataInterface
+  dstType?: EmbeddingTypeInterface | null
+  pendingTitle?: string | null
+  isLoading: boolean
+  id: number
+}
+
 export default function TournamentInformationConstructor() {
-  const [materials, setMaterials] = useState<MaterialInterface[]>([])
-  const { data: contentTypes, error } = useGetAvailableContentTypesQuery({})
+  const [materials, setMaterials] = useState<(MaterialInterface | PendingInterface)[]>([])
+  const [addMaterial] = useAddMaterialMutation()
 
-  if (!contentTypes) return <Loading />
+  const handleEditDone = (info: { [key: string]: any }, editIdx?: number) => {
+    const errors = []
+    if (!info.pendingContent) errors.push({ key: "pendingContent", message: "" })
+    if (!info.dstType) errors.push({ key: "dstType", message: "" })
+    if (!info.pendingTitle) errors.push({ key: "pendingTitle", message: "" })
+    if (errors.length > 0) return errors
+    if (info.dstType.type_name === "Text" || info.dstType.type_name === "Location") {
+      setMaterials((prev) => {
+        const newArr = [...prev]
+        const idx = editIdx ?? -(prev.length + 1)
+        const pendingObj: PendingInterface = {
+          pendingContent: info.pendingContent,
+          dstType: info.dstType,
+          pendingTitle: info.pendingTitle,
+          isLoading: true,
+          id: idx
+        }
+        if (editIdx) newArr[newArr.findIndex(v=>v.id === idx)]
+        return newArr
+      })
+      
+    }
+  }
 
-  const dropdownEls = contentTypes.map((item, i) => ({
-    children: <h1>{item.display_name}</h1>,
-    value: item.id,
-  }))
   return (
     <>
       <div className="flex justify-between">
@@ -174,23 +201,13 @@ export default function TournamentInformationConstructor() {
         {materials.map((material, index) => (
           <></>
         ))}
-        <div className="w-120">
-          <AddFileField
-            onFileSet={(file) => {
-              console.log(file)
-            }}
-            disabled={false}
-            accept="*/*"
-            isInline={true}
-          />
-        </div>
         <AppendableInfoContainer
           prevInfoInitial={{
             embedding: {
               id: 0,
               title: "Test",
               content: "http://11.0.0.1:5002/files/get/Рисунок6_1.jpg",
-              content_type: { id: 0, type_name: "Picture", extension_color: "" },
+              content_type: { id: 4, type_name: "Picture", extension_color: "" },
               metadata: { is_external: "false", is_primary: "true" },
             },
           }}
@@ -198,33 +215,44 @@ export default function TournamentInformationConstructor() {
           btnDivClassName="flex flex-row justify-between"
           btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
         >
-          <InputRow />
+          <InputRow onUploadComplete={() => {}} onUploadError={() => {}} />
         </AppendableInfoContainer>
       </div>
     </>
   )
 }
 
-function InputRow() {
+function InputRow({
+  onUploadComplete,
+  onUploadError,
+}: {
+  onUploadComplete: (filename: string) => void
+  onUploadError: () => void
+}) {
   const { info, setAppendableInfo, isEditable, error } = useContext(AppendableInfoContext)
+
   const token = useSelector((state: any) => state.auth.token)
   if (!isEditable)
-    return info.pendingcontent ? (
+    return info.isLoading ? (
+      <p>Loading...</p>
+    ) : info.pendingContent ? (
       info.dstType?.type_name === "Text" || info.dstType?.type_name === "Location" ? (
         <>
           <p>12345</p>
           {/* TODO: Text and location Embedding */}
         </>
-      ):(
+      ) : (
         <LoadingFileEmbedding
-          file={info.pendingcontent}
+          file={info.pendingContent}
           token={token}
           displayTitle={info.pendingTitle}
-          onUploadComplete={(filepath) => {
-            setAppendableInfo({ pendingcontent: null })
+          onUploadComplete={(filename) => {
+            setAppendableInfo({ pendingContent: null })
+            onUploadComplete(filename)
           }}
           onUploadCancel={(noWait) => {
-            setAppendableInfo({ pendingcontent: null })
+            setAppendableInfo({ pendingContent: null })
+            onUploadError()
           }}
         />
       )
@@ -250,7 +278,7 @@ function InputRow() {
       <EmbeddingInput
         contentType={info.dstType}
         onContentUpdate={(content) => {
-          setAppendableInfo({ pendingcontent: content })
+          setAppendableInfo({ pendingContent: content })
         }}
       />
       <div className="flex flex-row justify-end gap-2">
@@ -262,12 +290,12 @@ function InputRow() {
             setAppendableInfo({ pendingTitle: e.target.value })
           }}
         />
-      <EmbeddingTypeSelector
-        defaultValue={info.embedding.content_type.id}
-        onSelect={(v) => {
-          setAppendableInfo({ dstType: v })
-        }}
-      />
+        <EmbeddingTypeSelector
+          defaultValue={info.embedding.content_type.id}
+          onSelect={(v) => {
+            setAppendableInfo({ dstType: v })
+          }}
+        />
       </div>
     </div>
   )
@@ -278,9 +306,36 @@ function EmbeddingInput({
   onContentUpdate,
 }: {
   contentType: EmbeddingTypeInterface | undefined
-  onContentUpdate: (content: string | File) => void
+  onContentUpdate: (content: string | File | null) => void
 }) {
-  return <p>12345</p>
+  if (contentType?.type_name === "Text")
+    return (
+      <textarea
+        onChange={(e) => {
+          onContentUpdate(e.target.value)
+        }}
+      ></textarea>
+    )
+  else if (contentType?.type_name === "Link")
+    return (
+      <input
+        onChange={(e) => {
+          onContentUpdate(e.target.value)
+        }}
+      ></input>
+    )
+  else if (contentType?.type_name === "Location") return <p>Location {/*TODO: Add location picker*/}</p>
+  else
+    return (
+      <AddFileField
+        onFileSet={(file) => {
+          onContentUpdate(file)
+        }}
+        disabled={false}
+        accept="*/*"
+        isInline={true}
+      />
+    )
 }
 
 function EmbeddingTypeSelector({
@@ -293,11 +348,13 @@ function EmbeddingTypeSelector({
   const { data, isLoading, isSuccess, error } = useGetAvailableContentTypesQuery({})
   const availableTypes = data?.map((v) => ({ label: v.display_name, value: v.id })) ?? []
   // TODO: add error handling
-  
+
+  if (isLoading) return <p>Loading...</p>
   return (
     <Select.Root
       items={availableTypes}
-      defaultValue={defaultValue}
+      // defaultValue={availableTypes.find((v)=>v.value == defaultValue)?.label ?? "Выберите тип"}
+      defaultValue={availableTypes.find((v)=>v.value===defaultValue)?.value ?? 1}
       onValueChange={(value) => {
         onSelect(data?.find((v) => v.id === value))
       }}
@@ -371,12 +428,15 @@ function LoadingFileEmbedding({
         if (data.status === 200) {
           progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
           progresRef.current?.style.setProperty("--progress-color", "#00FF00")
-          data.data.json().then((data: { filename: string }) => {
-            onUploadComplete(data.filename)
-          }).catch((error: Error) => {
-            console.error("Error parsing JSON", error)
-            setIsError(true)
-          })
+          data.data
+            .json()
+            .then((data: { filename: string }) => {
+              onUploadComplete(data.filename)
+            })
+            .catch((error: Error) => {
+              console.error("Error parsing JSON", error)
+              setIsError(true)
+            })
         } else {
           console.error("File loaded with error")
           progresRef.current?.style.setProperty("--progress-shift", `${0}%`)

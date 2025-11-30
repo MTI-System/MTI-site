@@ -2,64 +2,31 @@
 import { Forms } from "@/components/forms";
 import CheckboxGroupRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxGroupRegistrationField";
 import CheckboxRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxRegistrationField";
+import { useState } from "react";
 
-export default function TempPage(){
-    
-    
-    return (
-        <>
-            {/* <CheckboxRegistrationField field={{
+export default function UploadImage() {
+  const [imgSrc, setImgSrc] = useState("");
 
-            }}/> */}
-{/*     
-            <Forms.Root>
-                <CheckboxGroupRegistrationField group={{
-                    fields: [{
-                        name: "aaa",
-                        value: "bbb"
-                    }],
-                    title: "test"
-                }}/>
-            </Forms.Root> */}
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-        <Forms.Root isEdit={true} isExpanded={false}>
-        <Forms.Trigger
-          className="mt-4 flex flex-col gap-2"
-          onConfirm={(e) => {
-            console.log("form_result", e.entries().toArray())
-          }}
-        >
-            <Forms.EdiatableItems>
-                <CheckboxGroupRegistrationField group={{
-                    key: "aaaa",
-                    fields: [{
-                        name: "aaa",
-                        value: "bbb",
-                        title: "Галочка 1"
-                    },
-                    {
-                        name: "aaaa",
-                        value: "bbbb",
-                         title: "Галочка 2"
-                    },
-                    {
-                        name: "aaaaa",
-                        value: "bbbbb",
-                         title: "Галочка 3"
-                    },
-                    {
-                        name: "aaaaaa",
-                        value: "bbbbbb",
-                         title: "Галочка 4"
-                    }
-                ],
-                    title: "test"
-                }}/>
-            </Forms.EdiatableItems>
-            <Forms.ConfirmButton>Тест</Forms.ConfirmButton>
-            {/* <button type="submit">test</button> */}
-        </Forms.Trigger>
-      </Forms.Root>
-        </>
-    )
+    const url = URL.createObjectURL(file); // временная ссылка на файл
+    console.log("url: ", url)
+    setImgSrc(url);
+  };
+
+  return (
+    <div>
+      <input type="file" accept="image/*" onChange={handleChange} />
+
+      {imgSrc && (
+        <img
+          src={imgSrc}
+          alt="preview"
+          style={{ maxWidth: "300px", marginTop: 16 }}
+        />
+      )}
+    </div>
+  );
 }

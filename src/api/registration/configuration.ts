@@ -1,10 +1,17 @@
+
+
 import { EndpointBuilder, fetchBaseQuery } from "@reduxjs/toolkit/query"
 import { REGISTRATION_API } from "@/constants/APIEndpoints"
 import {
+  TournamentInformationResponse,
+  TournamentInformationResponseInterface,
+  TournamentRegistrationAnswer,
+  TournamentRegistrationAnswerInterface,
   TournamentRegistrationFormInfo,
   TournamentRegistrationFormInfoInterface,
 } from "@/types/TournamentRegistrationApi"
 import { BooleanResponseSchema } from "@/types/generalAPITypes"
+import { FormConstructorResponse } from "@/types/formConstructor"
 
 export const registrationReducerPath = "registrationApi" as const
 
@@ -13,6 +20,77 @@ export const registrationBaseQuery = fetchBaseQuery({ baseUrl: REGISTRATION_API 
 export const defineRegistrationEndpoints = (
   builder: EndpointBuilder<typeof registrationBaseQuery, never, typeof registrationReducerPath>,
 ) => ({
+  formsInformation: builder.query({
+    query: ({id} : {id: number}) => `get_info_about_forms/${id}`, 
+    transformResponse: (response: unknown): TournamentInformationResponseInterface | null => {
+      const parsed = TournamentInformationResponse.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing registration form: ${parsed.error}`)
+      return null
+    }
+  }),
+
+  createForm: builder.mutation({
+    query: ({
+      token,
+      tournamentId,
+      formTypeFlag,
+      formTitle
+    } : {
+      token: string,
+      tournamentId: number,
+      formTypeFlag: string,
+      formTitle: string
+    }) => ({
+      url: `create_form`,
+      method: 'POST',
+      body: (()=>{
+        const fd = new FormData()
+        fd.set('token', token)
+        fd.set('tournamentId', tournamentId.toString())
+        fd.set('formTypeFlag', formTypeFlag)
+        fd.set('formTitle', formTitle)
+        
+        return fd
+      })()
+    }),
+    
+  }),
+
+  setFields: builder.mutation({
+    query: ({
+      newForm
+    }: {
+      newForm: FormConstructorResponse
+    })=>{
+      console.log("result: ", newForm)
+      return {
+      url: "set_from_fields",
+      method: "POST",
+      body: newForm
+    }}
+
+  }),
+   
+  getAnswers: builder.query({
+    query: ({id, token}) => ({
+      url: "get_answers",
+      method: "POST",
+      body: (()=>{
+        const fd = new FormData()
+        fd.set('token', token)
+        fd.set('formId', id.toString())
+        return fd
+      })()
+    }),
+    transformResponse: (response: unknown): TournamentRegistrationAnswerInterface | null => {
+      const parsed = TournamentRegistrationAnswer.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing registration form: ${parsed.error}`)
+      return null
+    },
+  }),
+
   getRegistrationForm: builder.query({
     query: ({ id, type }: { id: number; type: string }) => `get_form_for_tournament/${id}/${type}`,
     transformResponse: (response: unknown): TournamentRegistrationFormInfoInterface | null => {

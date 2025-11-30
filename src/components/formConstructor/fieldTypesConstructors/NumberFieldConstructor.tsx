@@ -9,6 +9,7 @@ import { type } from "node:os"
 export default function NumberFieldConstructor({ id }: { id: number }) {
   const { setProperties, getFieldById } = useConstructorRoot()
   const currentProperties = getFieldById(id)?.properties
+  
   // if (!(currentProperties && "minValue" in currentProperties && "maxValue" in currentProperties)) {
   //   return <p>error {currentProperties}</p>
   // }
@@ -24,6 +25,8 @@ export default function NumberFieldConstructor({ id }: { id: number }) {
         </label>
         <input
           type={"number"}
+          //@ts-ignore
+          defaultValue={currentProperties?.minValue ?? 0}
           onInput={(e) => {
             debouncedUpdateProperties(
               {
@@ -45,6 +48,8 @@ export default function NumberFieldConstructor({ id }: { id: number }) {
         </label>
         <input
           type={"number"}
+          //@ts-ignore
+          defaultValue={currentProperties?.maxValue ?? 0}
           onInput={(e) => {
             debouncedUpdateProperties(
               {

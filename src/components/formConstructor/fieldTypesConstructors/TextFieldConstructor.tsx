@@ -1,8 +1,9 @@
-import { FieldProperties, useConstructorRoot } from "@/components/formConstructor/root/RootContext"
+import { FieldProperties, useConstructorRoot, TextInputProperties } from "@/components/formConstructor/root/RootContext"
 import { debounce } from "next/dist/server/utils"
 
 export default function TextFieldConstructor({ id }: { id: number }) {
-  const { setProperties } = useConstructorRoot()
+  const { setProperties, getFieldById } = useConstructorRoot()
+  const field = getFieldById(id)
 
   const debouncedUpdateProperties = debounce((newProperties: FieldProperties, id: number) => {
     console.log("sendUpdate")
@@ -21,6 +22,8 @@ export default function TextFieldConstructor({ id }: { id: number }) {
           className="border-border rounded-lg border ps-2"
           placeholder={"Подсказка"}
           id={"placeholderInput"}
+          //@ts-ignore
+          defaultValue={field?.properties.placeholder}
         />
       </div>
     </>
