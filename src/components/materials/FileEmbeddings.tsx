@@ -32,10 +32,10 @@ interface EmbeddingCardProps extends EmbeddingIconProps {
 
 export function EmbeddingCard({ children, title, subtitle, isExternal, ...rest }: EmbeddingCardProps) {
   return (
-    <div className={style.embeddingContainer}>
+    <div className="border-border border rounded-2xl flex gap-2 overflow-hidden p-2">
       <EmbeddingIcon {...rest} />
-      <div className={style.textContainer}>
-        <h4 className={style.embeddingName}>{title}</h4>
+      <div className="flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+        <h4 className="font-normal overflow-hidden whitespace-nowrap text-ellipsis text-text-main">{title}</h4>
         <div className="flex items-center gap-1">
           {isExternal && (
             <img
@@ -46,7 +46,7 @@ export function EmbeddingCard({ children, title, subtitle, isExternal, ...rest }
               }}
             />
           )}
-          <p className={style.embeddingSize}>{subtitle}</p>
+          <p className="text-text-alt font-mono leading-[100%] h-[1.15rem]">{subtitle}</p>
         </div>
       </div>
       {children}
