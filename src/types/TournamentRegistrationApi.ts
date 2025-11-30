@@ -49,6 +49,7 @@ export const TournamentRegistrationAnswer = z.object({
   id: z.number(),
   status: z.string(),
   fields: z.array(TournamentRegistrationAnswerField),
+  respondingUser: z.number()
 })
 
 
