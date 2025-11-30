@@ -16,8 +16,8 @@ import { debounce } from "next/dist/server/utils"
 import { CiSettings } from "react-icons/ci"
 import FileFieldFormConstructor from "@/components/formConstructor/fieldTypesConstructors/FileFieldFormConstructor"
 import PlayerFieldConstructor from "../fieldTypesConstructors/PlayerFieldConstructor"
-import DateFieldConstructor from "../fieldTypesConstructors/DatepickerFormConstructor"
 import CoachFieldConstructor from "../fieldTypesConstructors/CoachFormConstructor"
+import DateFieldConstructor from "@/components/formConstructor/fieldTypesConstructors/DatePickerFormConstructor";
 
 export function ConstructorItem({ id, index, field }: { index: number; id: number; field: Field }) {
   const handleRef = useRef<HTMLInputElement | null>(null)
