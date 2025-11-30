@@ -12,6 +12,7 @@ import {
 } from "@/types/TournamentRegistrationApi"
 import { BooleanResponseSchema } from "@/types/generalAPITypes"
 import { FormConstructorResponse } from "@/types/formConstructor"
+import z from "zod"
 
 export const registrationReducerPath = "registrationApi" as const
 
@@ -83,8 +84,9 @@ export const defineRegistrationEndpoints = (
         return fd
       })()
     }),
-    transformResponse: (response: unknown): TournamentRegistrationAnswerInterface | null => {
-      const parsed = TournamentRegistrationAnswer.safeParse(response)
+    transformResponse: (response: unknown): TournamentRegistrationAnswerInterface[] | null => {
+      console.log("getAnswers response: ", response)
+      const parsed = z.array(TournamentRegistrationAnswer).safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing registration form: ${parsed.error}`)
       return null

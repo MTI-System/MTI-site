@@ -19,6 +19,7 @@ export default function TournamentRegistrationForm({
 }) {
   const [submitFormAnswer, { data, isLoading, isError, error }] = useSubmitFormAnswerMutation()
   const token = useAppSelector((state) => state.auth.token)
+  console.log("formInfo in TournamentRegistrationForm: ", formInfo)
   return (
     <>
       <h1 className={"font-bold text-2xl text-center w-full"}>Регистрация на турнир</h1>
@@ -39,6 +40,7 @@ export default function TournamentRegistrationForm({
         >
           {formInfo?.fields?.map((fieldObject) => {
             const field = "type" in fieldObject ? fieldObject : fieldObject.formField
+            console.log("fieldsObject", fieldObject)
             switch (field.type) {
               case "number":
               case "text":

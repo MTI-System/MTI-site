@@ -16,16 +16,17 @@ export default function ApplicationsPage(
     const {data: answers, isLoading: isAnswersLoading} = useGetAnswersQuery({
         token: token,
         id: formId
-    })
-
-
+    }, {skip: formId===undefined})
+    console.log("answers: ", answers, formId, isAnswersLoading)
     return (
         <>
-            {!formId && <Loading/>}
-
-            {formId && (
+            {!answers && <Loading/>}
+            {answers && (
               <>
-                <TournamentRegistrationForm formInfo={answers} isEdit={false} className={""}/>
+                {answers.map((answer, idx)=>
+                    <TournamentRegistrationForm key={idx} formInfo={answer} isEdit={false} className={""}/>
+                )}
+                
               </>  
             )}
         </>
