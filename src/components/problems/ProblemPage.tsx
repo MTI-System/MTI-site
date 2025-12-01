@@ -52,23 +52,23 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const primaryGifMaterial = allMaterials.filter(
     (mat) => mat.content_type.type_name === "Picture" && mat.metadata.is_primary === "true",
   )
-  const primaryVideoMaterial = allMaterials.find(
+  const primaryVideoMaterial = allMaterials.filter(
     (mat) => mat.content_type.type_name === "Video" && mat.metadata.is_primary === "true",
   )
   const listOfMaterials = allMaterials.filter((mat) => mat.metadata.is_primary !== "true")
 
   return (
-    <div className="py-5">
-      <div className="bg-bg-alt rounded-2xl pt-5">
+    <div className="py-5 w-full">
+      <div className="bg-bg-alt rounded-2xl pt-5 w-full">
         <ProblemTTUpdator newTT={problem.tournament_type ?? 1} />
-        <div className="">
-          <div className="">
+        <div className="w-full">
+          <div className="w-full px-7">
             <div className="">
               <ProblemCardContent problem={problem} isEditable={false} />
             </div>
             {(primaryGifMaterial.length > 0 || isModerator) && (
-              <div className="">
-                <div className="">
+              <div  className="flex h-full w-full pb-2 sm:overflow-auto">
+                <div className="flex flex-col w-full gap-2 sm:flex-row sm:h-65 sm:w-fit">
                   {isModerator && (
                     <PendingEmbeddingsList
                       problemId={problem.id}
@@ -87,7 +87,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
                     return (
                       <ExpandableImage
                         isModerator={isModerator}
-                        className={style.gif}
+                        className="w-full h-auto sm:h-full sm:w-auto flex rounded-2xl overflow-hidden relative"
                         src={imageSrc}
                         embedding={gifMaterial}
                         problemId={problem.id}
@@ -99,30 +99,34 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
               </div>
             )}
           </div>
-          <div className="flex flex-col gap-4 px-4 py-5">
-            {(primaryVideoMaterial || isModerator) && (
+          <div className="flex flex-col gap-4 px-7 py-5">
+            {(primaryVideoMaterial.length > 0 || isModerator) && (
               <ContentContainer containerTitle="Видео">
-                <div className={style.videoContainer}>
-                  {primaryVideoMaterial && (
-                    <UniversalPlayer
-                      embedding={primaryVideoMaterial}
-                      problemId={problem.id}
-                      isModerator={isModerator}
-                    />
-                  )}
-                  {!primaryVideoMaterial && (
-                    <div className={style.addingVideoContainer}>
-                      <PendingEmbeddingsList
-                        problemId={problem.id}
-                        LoadingFileEmbedding={LoadingFileEmbedding}
-                        buttonIcon={<AiOutlineVideoCameraAdd className={style.addImgButton} />}
-                        buttonClassName={style.video}
-                        isPrimary={true}
-                        lockedContentTypes={["Video"]}
-                        onlyOneUpload
-                      />
-                    </div>
-                  )}
+                <div className="flex h-full w-full pb-2 sm:overflow-auto">
+                  <div className="flex flex-col w-full gap-2 sm:flex-row sm:h-100 sm:w-fit">
+                    {primaryVideoMaterial.map((primaryVideoMaterial) => {
+                      return (
+                        <UniversalPlayer
+                          embedding={primaryVideoMaterial}
+                          problemId={problem.id}
+                          isModerator={isModerator}
+                        />
+                      )
+                    })}
+                    {!primaryVideoMaterial && (
+                      <div className={style.addingVideoContainer}>
+                        <PendingEmbeddingsList
+                          problemId={problem.id}
+                          LoadingFileEmbedding={LoadingFileEmbedding}
+                          buttonIcon={<AiOutlineVideoCameraAdd className={style.addImgButton} />}
+                          buttonClassName={style.video}
+                          isPrimary={true}
+                          lockedContentTypes={["Video"]}
+                          onlyOneUpload
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </ContentContainer>
             )}
@@ -132,7 +136,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
                 <p className={style.nothingMessage}>У этой задачи пока нет материалов</p>
               )}
               {(listOfMaterials.length > 0 || isModerator) && (
-                <div className={style.materialContainer}>
+                <div className="flex gap-2.5 flex-col">
                   {listOfMaterials.map((embedding) => (
                     <UniversalEmbedding
                       isModerator={isModerator}

@@ -1,6 +1,9 @@
 import { z } from "zod"
 
-export const NotificationsMetadata = z.object({})
+export const NotificationsMetadata = z.object({
+  type: z.string().optional(),
+  personalDataTournamentId: z.string().optional(),
+})
 
 export const NotificationSchema = z.object({
   id: z.number(),
