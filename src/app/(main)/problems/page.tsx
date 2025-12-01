@@ -156,16 +156,6 @@ export default async function Page({
                         isCreate={false}
                         onUpdateCreate={null}
                       />
-
-
-
-
-
-
-
-
-
-
                     </div>
                   </>
                 )}

@@ -6,7 +6,7 @@ import Loading from "@/app/loading";
 export default function RespondentUser({userId}: {
   userId: number
 }) {
-  const {data: user, isLoading} = useGetUserByIdQuery({id: +(userId)})
+  const {data: user, isLoading} = useGetUserByIdQuery({id: +(userId)}, {skip: !userId})
   return (
     <>
       <Forms.EdiatableItems>

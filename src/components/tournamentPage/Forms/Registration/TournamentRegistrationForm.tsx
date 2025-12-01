@@ -8,6 +8,7 @@ import PickPersonRegistrationField from "./Parts/PickPersonRegistrationField"
 import { useSubmitFormAnswerMutation } from "@/api/registration/clientApiInterface"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import RespondentUser from "@/components/tournamentPage/Forms/Registration/Parts/RespondentUser";
+import UsersProviderWrapper from "@/api/users/ClientWrapper";
 
 export default function TournamentRegistrationForm({
   formInfo,
@@ -56,7 +57,14 @@ export default function TournamentRegistrationForm({
               case "dropdown":
                 return <DropdownRegistrationField key={field.key} field={fieldObject} />
               case "player":
-                return <PickPersonRegistrationField key={field.key} field={fieldObject} />
+                return (
+                  <>
+                    <UsersProviderWrapper>
+                      <PickPersonRegistrationField key={field.key} field={fieldObject} />
+                    </UsersProviderWrapper>
+
+                  </>
+                )
               default:
                 return <p>Unknown</p>
             }

@@ -27,7 +27,7 @@ export default function ProblemCard({ problem, isEditable }: { problem: ProblemI
   const [isPendingDeletion, startTransition] = useTransition()
   return (
     <div
-      className={twclsx("bg-bg-alt border-border rounded-2xl border py-4", {
+      className={twclsx("bg-bg-alt border-border rounded-2xl border py-4 px-7", {
         "opacity-25": isPendingDeletion,
       })}
     >

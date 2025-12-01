@@ -8,7 +8,6 @@ export default function RegisterRequest() {
 
   return (
     <>
-
       <p>Галочка для подтверждения регистрационного разрешения</p>
     </>
   )
