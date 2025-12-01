@@ -1,6 +1,6 @@
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
-import { TournamentState } from "@/types/TournamentStateType"
+import { TournamentStateFlagsInterface, TournamentStateInterface } from "@/types/TournamentStateType"
 import { cookies } from "next/headers"
 import TournamentsStoreProvider from "@/components/Redux/TournamentsReduxProvider"
 import TournamentsSearchParams from "./TournamentsSearchParams"
@@ -18,7 +18,7 @@ export default async function TournamentListPage({
   rights,
   isNoRefresh,
 }: {
-  sp: { year: string; tt: string; page: string; state: TournamentState }
+  sp: { year: string; tt: string; page: string; state: TournamentStateFlagsInterface }
   tournamentsCards: TournamentCardInterface[] | null | undefined
   isOrganizator: boolean
   rights?: Right[] | undefined

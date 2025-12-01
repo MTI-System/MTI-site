@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { TournamentState } from "@/types/TournamentStateType"
+import { TournamentStateFlagsInterface } from "@/types/TournamentStateType"
 
 interface TournamentsSPState {
   year: number | null
   page: number | null
-  state: TournamentState
+  state: TournamentStateFlagsInterface
 }
 
 const initialState: TournamentsSPState = {
@@ -23,7 +23,7 @@ export const TournamentsPageFiltersSlice = createSlice({
     setPage(state, action: PayloadAction<number>) {
       state.page = action.payload
     },
-    setState(state, action: PayloadAction<TournamentState>) {
+    setState(state, action: PayloadAction<TournamentStateFlagsInterface>) {
       state.state = action.payload
     },
   },

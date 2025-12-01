@@ -9,7 +9,7 @@ import type { Metadata } from "next"
 import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
-import { TournamentState } from "@/types/TournamentStateType"
+import { TournamentStateFlagsInterface } from "@/types/TournamentStateType"
 import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 import { makeProblemsStoreServer } from "@/api/problems/serverStore"
 import { problemsApiServer } from "@/api/problems/serverApiInterface"
@@ -19,7 +19,7 @@ import TournamentListPage from "@/components/tournaments/TournamentListPage"
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentState }>
+  searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentStateFlagsInterface }>
 }): Promise<Metadata> {
   const searchP = await searchParams
   const tt = Array.isArray(searchP[TOURNAMENT_TYPE_SEARCH_PARAM_NAME])
@@ -100,7 +100,7 @@ export async function generateMetadata({
 export default async function TournamentsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentState }>
+  searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentStateFlagsInterface }>
 }) {
   const sp = await searchParams
   let isNoRefresh = false

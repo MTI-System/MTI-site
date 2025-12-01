@@ -10,7 +10,7 @@ import { authApiServer } from "@/api/auth/serverApiInterface"
 import { makeAuthStoreServer } from "@/api/auth/serverStore"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
-import { TournamentState } from "@/types/TournamentStateType"
+import { TournamentStateFlagsInterface } from "@/types/TournamentStateType"
 import { TournamentsStoreProvider } from "@/components/Redux/tournamentsStoreContext"
 import TournamentListPage from "@/components/tournaments/TournamentListPage"
 import type {Metadata} from "next";
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export default async function OrganizationsMainPage({
   searchParams,
 }: {
-  searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentState }>
+  searchParams: Promise<{ year: string; tt: string; page: string; state: TournamentStateFlagsInterface }>
 }) {
   const sp = await searchParams
   let isNoRefresh = false

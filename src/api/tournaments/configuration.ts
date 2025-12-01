@@ -7,7 +7,7 @@ import {
   TournamentResultsTableEntity,
 } from "@/types/TournamentsAPI"
 import { TournamentTypeIntarface, TournamentTypeSchema } from "@/types/TournamentTypeIntarface"
-import { TournamentState } from "@/types/TournamentStateType"
+import { TournamentStateInterface, tournamentStateSchema } from "@/types/TournamentStateType"
 
 export const tournamentsReducerPath = "tournamentsApi" as const
 
@@ -18,8 +18,9 @@ export const defineTournamentsEndpoints = (
 ) => ({
   getAvailableStates: builder.query({
     query: ({ year, tt }: { tt: number; year: number }) => `statuses?tournamentTypeId=${tt}&year=${year}`,
-    transformResponse: (response: unknown): TournamentState[] => {
-      if (Array.isArray(response)) return response
+    transformResponse: (response: unknown): TournamentStateInterface[] => {
+      const parsed = tournamentStateSchema.array().safeParse(response)
+      if (parsed.success) return parsed.data
       return []
     },
   }),

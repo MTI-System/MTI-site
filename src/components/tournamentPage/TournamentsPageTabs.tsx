@@ -138,7 +138,7 @@ export default function TournamentsPageTabs({
 
   return (
     <NavigationMenu.Root className="flex w-full justify-center rounded-lg p-1">
-      <NavigationMenu.List className="bg-bg-alt relative flex rounded-2xl text-gray-900">
+      <NavigationMenu.List className="bg-bg-alt text-text-main relative flex rounded-2xl">
         <NavigationItem hasDescription={true} items={infoLinks} itemTitle="Информация" />
         {isAdmin && (
           <>
@@ -231,17 +231,26 @@ function NavigationItem({
           <ul className="flex max-w-[400px] flex-col justify-center">
             {items.map((item) => (
               <li key={item.href} className="hover:bg-hover rounded-sm transition-colors">
-                <Link href={item.isLocked ? "" : item.href} className={linkCardClassName}>
-                  <div className="flex items-center gap-2">
+                <NavigationMenu.Link
+                  closeOnClick
+                  render={({ children }) => (
+                    <Link href={item.isLocked ? "" : item.href} className={linkCardClassName}>
+                      {children}
+                    </Link>
+                  )}
+                >
+                  {/* <Link href={item.isLocked ? "" : item.href} className={linkCardClassName}> */}
+                  <div className="text-text-main flex items-center gap-2">
                     {item.isLocked && <MdLock />}
                     <div>
                       <h3 className="m-0 mb-1 text-base leading-5 font-medium text-nowrap">{item.title}</h3>
                       {hasDescription && (
-                        <p className="m-0 text-sm leading-5 text-nowrap text-gray-500">{item.description}</p>
+                        <p className="text-text-alt m-0 text-sm leading-5 text-nowrap">{item.description}</p>
                       )}
                     </div>
                   </div>
-                </Link>
+                  {/* </Link> */}
+                </NavigationMenu.Link>
               </li>
             ))}
           </ul>
