@@ -20,7 +20,7 @@ export default function LogoWithTT({
   const ttObject = availableTournamentTypes.find((t) => t.id === tt)
 
   return (
-    <div className={className}>
+    <div className="text-text-main">
       {children}
       <p className="leading-none font-bold" style={{ fontSize: logoSize, marginTop: margin }}>
         {ttObject?.name?.slice(0, -1)}
