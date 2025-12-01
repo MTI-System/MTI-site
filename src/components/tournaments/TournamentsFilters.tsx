@@ -29,13 +29,15 @@ export default function TournamentsFilters({
   return (
     <>
       <div className="flex w-full items-center justify-between px-30 pt-3">
-        <div className="flex h-fit w-full content-center items-center gap-5 pt-2">
-          <p className="text-text-main text-4xl font-bold">Турниры</p>
-          <ColoredTType
-            ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
-            ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
-            className="text-text-main text-4xl font-bold"
-          />
+        <div className="flex h-fit w-full content-center items-center gap-5 pt-2 flex-row md:flex-col">
+          <div>
+            <p className="text-text-main text-4xl font-bold">Турниры</p>
+            <ColoredTType
+              ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
+              ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
+              className="text-text-main text-4xl font-bold"
+            />
+          </div>
           <div className="flex gap-2">
             <YearFilter
               possibleYears={availableYears ?? []}

@@ -1,6 +1,4 @@
 "use client"
-import style from "@/styles/components/ui/Files/imageEmbeddings.module.css"
-import clsx from "clsx"
 import { useEffect, useState, useTransition } from "react"
 import { FaMagnifyingGlass } from "react-icons/fa6"
 import Modal from "../ui/Modals"
@@ -11,6 +9,7 @@ import { EmbeddingInterface } from "@/types/embeddings"
 import Image, { ImageProps } from "next/image"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { useDeleteMaterialMutation } from "@/api/problems/clientApiInterface"
+import twclsx from "@/utils/twClassMerge"
 
 function isValidUrl(url: string) {
   try {
@@ -58,7 +57,10 @@ export function ExpandableImage({
 
   return (
     <div
-      className={clsx(className)}
+      className={twclsx(
+        "border-border relative h-full overflow-hidden rounded-2xl border max-w-fit w-full",
+        className,
+      )}
       onClick={() => {
         setIsExpanded(true)
       }}
@@ -66,11 +68,7 @@ export function ExpandableImage({
     >
       {isModerator && (
         <MdOutlineClose
-          className={style.deleteIcons}
-          style={{
-            position: "absolute",
-            margin: "0.5rem",
-          }}
+          className="aspect-1 absolute top-2 right-2 z-9 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white object-contain text-2xl text-black"
           onClick={(e) => {
             e.stopPropagation()
             e.preventDefault()
@@ -82,7 +80,7 @@ export function ExpandableImage({
       <Image
         src={checkedSrc}
         {...props}
-        className="sm:max-w-none"
+        className="h-full w-auto max-w-fit object-contain"
         width={500}
         height={500}
         placeholder="blur"
@@ -91,12 +89,13 @@ export function ExpandableImage({
         unoptimized={true}
       />
 
-      <div className={style.expandButtonContainer}>
+      <div className="absolute top-0 flex h-full w-full items-center justify-center rounded-tl-2xl bg-black/10 text-4xl text-white opacity-0 backdrop-blur-sm transition-all duration-300 hover:opacity-100">
         <FaMagnifyingGlass />
       </div>
       <Modal openState={expandedState}>
         <Image
           src={checkedSrc}
+          className="select-none"
           {...props}
           width={500}
           height={500}

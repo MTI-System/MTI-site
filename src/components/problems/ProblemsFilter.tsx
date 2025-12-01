@@ -7,7 +7,6 @@ import {
   DropdownOptionInterface,
   DropdownTrigger,
 } from "@/components/ui/Dropdown"
-import style from "@/styles/components/sections/problems/problemsFilter.module.css"
 import { ReactNode, useEffect, useState } from "react"
 import Loading from "@/app/loading"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
@@ -46,14 +45,16 @@ export default function ProblemFilters({
   const problemDispatcher = useProblemsDispatch()
   return (
     <>
-      <div className="flex h-fit w-full content-center items-center gap-5 pt-2">
-        <p className="text-text-main text-4xl font-bold">Задачи</p>
-        <ColoredTType
-          ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮЕ"}
-          ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
-          className="text-text-main text-4xl font-bold"
-        />
-        <div className={style.filters}>
+      <div className="flex h-fit w-full flex-col content-center items-center gap-5 pt-2 lg:flex-row">
+        <div className="flex gap-5">
+          <p className="text-text-main text-4xl font-bold">Задачи</p>
+          <ColoredTType
+            ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮЕ"}
+            ttColor={availableTournamentTypes.find((t) => t.id === tt)?.color ?? "#000000"}
+            className="text-text-main text-4xl font-bold"
+          />
+        </div>
+        <div className="flex-col flex w-full max-w-full min-w-60 content-start items-start justify-start gap-2 sm:flex-row sm:items-center">
           <YearFilter
             possibleYears={possibleYears}
             isPending={isPending}
@@ -115,7 +116,7 @@ function SectionFilter({
   }, [year, tt])
 
   return (
-    <div className="flex w-full min-w-0 content-center items-center">
+    <div className="flex w-full min-w-60 content-center items-center">
       <DropdownMulti
         selectionState={selectedOptionState}
         onOpenChange={(open, e, selection: DropdownOptionInterface<number>[] | null) => {
@@ -128,7 +129,7 @@ function SectionFilter({
             rootClassName="flex-1"
             disabled={isPending}
             className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full", {
-              "hover:bg-[var(--bg-color)]!": isPending,
+              "hover:bg-bg-main": isPending,
             })}
           >
             {isPending ? <p className="flex-1">Выбираем...</p> : <p className="flex-1">Выбрать разделы</p>}
@@ -149,9 +150,9 @@ function SectionFilter({
         ))}
       </DropdownMulti>
       <FaTimes
-        className={twclsx("w-20 text-[1.5rem]", {
-          "text-[var(--alt-text)]": isPending || selectedOptions?.length === 0,
-          "hover:text-[var(--alt-text)]": !isPending && selectedOptions?.length !== 0,
+        className={twclsx("w-20 text-2xl", {
+          "text-text-alt": isPending || selectedOptions?.length === 0,
+          "hover:text-text-alt": !isPending && selectedOptions?.length !== 0,
         })}
         onClick={() => {
           if (isPending || selectedOptions?.length === 0) return
@@ -212,7 +213,7 @@ export function YearFilter({
       trigger={
         <DropdownTrigger
           disabled={isPending}
-          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full", { "hover:bg-[var(--bg-color)]!": isPending })}
+          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full", { "hover:bg-bg-main": isPending })}
         >
           {/*{year}*/}
           {defaultValue}
@@ -274,8 +275,8 @@ function TournamentFilter({
           trigger={
             <DropdownTrigger
               disabled={isPending}
-              className={twclsx("bg-bg-alt hover:bg-hover h-8 w-[20rem] justify-between rounded-full", {
-                "hover:bg-[var(--bg-color)]!": isPending,
+              className={twclsx("bg-bg-alt hover:bg-hover h-8 justify-between rounded-full", {
+                "hover:bg-bg-main": isPending,
               })}
             >
               Все турниры

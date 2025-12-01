@@ -87,7 +87,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
                     return (
                       <ExpandableImage
                         isModerator={isModerator}
-                        className="w-full h-auto sm:h-full sm:w-auto flex rounded-2xl overflow-hidden relative"
+                        className=""
                         src={imageSrc}
                         embedding={gifMaterial}
                         problemId={problem.id}
