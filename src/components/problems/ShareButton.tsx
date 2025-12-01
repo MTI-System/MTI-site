@@ -1,9 +1,8 @@
 "use client"
-import { Button } from "@/components/ui/Buttons"
 import { ComponentProps, useRef, useState } from "react"
 import { FaTimes } from "react-icons/fa"
 import { FaRegCopy } from "react-icons/fa6"
-import { Checkbox, CheckboxGroup, Form, Tooltip } from "@base-ui-components/react"
+import { Checkbox, CheckboxGroup, Form, Tooltip, Popover } from "@base-ui-components/react"
 import { usePathname, useSearchParams } from "next/navigation"
 import { FaShare } from "react-icons/fa"
 
@@ -29,7 +28,7 @@ interface EditableSearchParamInterface {
 
 export default function ShareButton() {
   const searchParams = Object.fromEntries(Array.from(useSearchParams().entries()))
-  const [isExpanded, setExpanded] = useState(false)
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const pathname = usePathname()
   const [editableSearchParams, setEditableSearchParams] = useState<EditableSearchParamInterface[]>(
     Object.entries(searchParams).map(([key, value]) => {
@@ -65,12 +64,9 @@ export default function ShareButton() {
     })
   }
   return (
-    <>
-      <div className="relative z-10">
-        <Button
-          className="group text-text-main relative w-auto min-w-[4px] overflow-hidden rounded-xl border-3 border-green-400 bg-green-400/10 px-2 py-2 transition-all duration-300 ease-in-out hover:min-w-[7.5rem] hover:bg-green-400"
-          onClick={() => setExpanded(!isExpanded)}
-        >
+    <div className="relative z-10">
+      <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+        <Popover.Trigger className="group text-text-main relative w-auto min-w-[4px] overflow-hidden rounded-xl border-3 border-green-400 dark:border-green-600 bg-green-400/10 px-2 py-2 transition-all duration-300 ease-in-out hover:min-w-30 hover:bg-green-400 dark:hover:bg-green-600">
           <div className="flex items-center justify-center gap-2">
             {/* Иконка - всегда видима */}
             <span className="opacity-100 transition-all duration-300 group-hover:opacity-0">
@@ -78,7 +74,7 @@ export default function ShareButton() {
             </span>
 
             {/* Текст - скрыт по умолчанию, появляется при наведении */}
-            <span className="absolute left-2 translate-x-[0px] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+            <span className="absolute left-2 translate-x-0 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
               Поделиться
             </span>
 
@@ -88,53 +84,55 @@ export default function ShareButton() {
             {/*    <FaShare/>*/}
             {/*</span>*/}
           </div>
-        </Button>
-        {isExpanded && (
-          <div className="bg-bg-alt border-border absolute right-0 mt-1 h-fit w-[30rem] rounded-2xl border-1 py-3">
-            <div className="relative px-2">
-              <FaTimes className="absolute right-0 me-2" onClick={() => setExpanded(false)} />
-              <h3 className="text-xl">Поделиться ссылкой на страницу!</h3>
-              <div className="my-2 flex w-full items-center justify-between rounded-lg border-1 px-2">
-                <p className="w-[90%] overflow-auto text-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  https://mtiyt.ru{pathname}?{getSearchParamsText()}
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Positioner sideOffset={8} align="end">
+            <Popover.Popup className="origin-(--transform-origin) bg-bg-alt border-border h-fit w-120 rounded-2xl border py-3 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0">
+              <div className="relative px-2 text-text-main">
+                <FaTimes className="absolute right-0 me-2 cursor-pointer" onClick={() => setIsPopoverOpen(false)} />
+                <h3 className="text-xl">Поделиться ссылкой на страницу!</h3>
+                <div className="my-2 flex w-full items-center justify-between rounded-lg border px-2">
+                  <p className="w-[90%] overflow-auto text-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    https://mtiyt.ru{pathname}?{getSearchParamsText()}
+                  </p>
+                  <Tooltip.Provider>
+                    <Tooltip.Root open={isCopied}>
+                      <Tooltip.Trigger>
+                        <FaRegCopy
+                          onClick={async () => {
+                            await navigator.clipboard
+                              .writeText(`https://mtiyt.ru${pathname}?${getSearchParamsText()}`)
+                              .then(() => {
+                                setCopied(true)
+                                setTimeout(() => setCopied(false), 2000)
+                              })
+                          }}
+                        />
+                      </Tooltip.Trigger>
+                      <Tooltip.Portal>
+                        <Tooltip.Positioner sideOffset={10}>
+                          <Tooltip.Popup className="transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0">
+                            <p className="border-border bg-bg-alt text-text-main rounded-md border-2 px-2 py-1">
+                              Скопированно в буфер обмена
+                            </p>
+                          </Tooltip.Popup>
+                        </Tooltip.Positioner>
+                      </Tooltip.Portal>
+                    </Tooltip.Root>
+                  </Tooltip.Provider>
+                </div>
+                <p className="pb-2">
+                  Вы можете поделиться страницей с уже отфильтрованными значениями. В данном окне вы можете выбрать
+                  фильтры, которые будут учтены в ссылке. В поисковой строке вашего браузера вы можете скопировать ссылку{" "}
+                  <strong>со всеми параметрами</strong>
                 </p>
-                <Tooltip.Provider>
-                  <Tooltip.Root open={isCopied}>
-                    <Tooltip.Trigger>
-                      <FaRegCopy
-                        onClick={async () => {
-                          await navigator.clipboard
-                            .writeText(`https://mtiyt.ru${pathname}?${getSearchParamsText()}`)
-                            .then(() => {
-                              setCopied(true)
-                              setTimeout(() => setCopied(false), 2000)
-                            })
-                        }}
-                      />
-                    </Tooltip.Trigger>
-                    <Tooltip.Portal>
-                      <Tooltip.Positioner sideOffset={10}>
-                        <Tooltip.Popup className="transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0">
-                          <p className="border-border bg-bg-alt text-text-main rounded-md border-2 px-2 py-1">
-                            Скопированно в буфер обмена
-                          </p>
-                        </Tooltip.Popup>
-                      </Tooltip.Positioner>
-                    </Tooltip.Portal>
-                  </Tooltip.Root>
-                </Tooltip.Provider>
+                <SearchParamCheckBoxes searchParams={editableSearchParams} onChecked={checkBoxHandler} />
               </div>
-              <p className="pb-2">
-                Вы можете поделиться страницей с уже отфильтрованными значениями. В данном окне вы можете выбрать
-                фильтры, которые будут учтены в ссылке. В поисковой строке вашего браузера вы можете скопировать ссылку{" "}
-                <strong>со всеми параметрами</strong>
-              </p>
-              <SearchParamCheckBoxes searchParams={editableSearchParams} onChecked={checkBoxHandler} />
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+            </Popover.Popup>
+          </Popover.Positioner>
+        </Popover.Portal>
+      </Popover.Root>
+    </div>
   )
 }
 
@@ -162,9 +160,9 @@ function SearchParamCheckBoxes({
                 onChecked(sp.key, state)
                 // console.log("SearchParams", new FormData(formRef.current??undefined), formRef.current)
               }}
-              className="data-[checked]:bg-text-main border-border m-0 box-border flex h-5 w-5 items-center justify-center rounded border p-0 transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 data-[checked]:border-transparent"
+              className="data-checked:bg-text-main border-border m-0 box-border flex h-5 w-5 items-center justify-center rounded border p-0 transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 data-checked:border-transparent"
             >
-              <Checkbox.Indicator className="text-bg-alt flex data-[unchecked]:hidden">
+              <Checkbox.Indicator className="text-bg-alt flex data-unchecked:hidden">
                 <CheckIcon className="h-3 w-3" />
               </Checkbox.Indicator>
             </Checkbox.Root>

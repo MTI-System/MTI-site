@@ -23,7 +23,7 @@ function DropdownRoot({ children, trigger, className, ...rest }: DropdownRootPro
         <Menu.Positioner sideOffset={4} className="z-10">
           <Menu.Popup
             className={twclsx(
-              "dark:outline-gray-30 bg-bg-alt border-border max-h-[50vh] origin-[var(--transform-origin)] overflow-auto rounded-md border-1 shadow-md! shadow-black/50! transition-[transform,translate,opacity] data-[ending-style]:-translate-y-2 data-[ending-style]:opacity-0 data-[starting-style]:-translate-y-2 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1",
+              "dark:outline-gray-30 bg-bg-alt border-border max-h-[50vh] origin-(--transform-origin) overflow-auto rounded-md border shadow-md! shadow-black/50! transition-[transform,translate,opacity] data-ending-style:-translate-y-2 data-ending-style:opacity-0 data-starting-style:-translate-y-2 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1",
               className,
             )}
           >
@@ -162,7 +162,7 @@ export function DropdownTrigger({
     <Menu.Trigger disabled={disabled} {...rest} className={rootClassName}>
       <div
         className={twclsx(
-          "text-text-main ddtrig group/dropdownButton bg-bg-alt border-border flex flex-row content-between items-center gap-2 rounded-md border-1 p-2 transition hover:bg-black/10 dark:hover:bg-white/10",
+          "text-text-main ddtrig group/dropdownButton bg-bg-alt border-border flex flex-row content-between items-center gap-2 rounded-md border p-2 transition hover:bg-black/10 dark:hover:bg-white/10",
           className,
           { "hover:bg-bg-alt opacity-50": disabled },
         )}
@@ -184,7 +184,7 @@ export function DropdownElement<T>(params: DropdownOptionInterface<T>) {
   return (
     <Menu.Item
       className={twclsx(
-        "bg-bg-alt text-text-main px-2 py-0.5 pr-10 transition-colors duration-300 hover:bg-black/10 dark:hover:bg-white/10 [.ddtrig_&]:pr-0",
+        "bg-bg-alt text-text-main px-2 py-0.5 pr-10 transition-colors duration-300 hover:bg-black/10 dark:hover:bg-white/10 in-[.ddtrig]:pr-0",
         { "text-inactive opacity-50": params.inactive },
       )}
       onClick={() => {
@@ -202,7 +202,7 @@ export function DropdownMultiElement<T>(params: DropdownOptionInterface<T>) {
   return (
     <Menu.CheckboxItem
       className={twclsx(
-        "bg-bg-alt text-text-main px-2 py-0.5 transition-colors duration-300 hover:bg-black/10 data-[checked]:bg-black/4 data-[checked]:hover:bg-black/7 dark:hover:bg-white/10 dark:data-[checked]:bg-white/4 dark:data-[checked]:hover:bg-white/7 [.ddtrig_&]:pr-0",
+        "bg-bg-alt text-text-main px-2 py-0.5 transition-colors duration-300 hover:bg-black/10 data-checked:bg-black/4 data-checked:hover:bg-black/7 dark:hover:bg-white/10 dark:data-checked:bg-white/4 dark:data-checked:hover:bg-white/7 in-[.ddtrig]:pr-0",
         { "text-inactive opacity-50": params.inactive },
       )}
       checked={

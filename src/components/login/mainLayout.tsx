@@ -12,9 +12,9 @@ export default function LoginLayout({
   description: string
 }) {
   return (
-    <div className="flex h-screen w-screen items-center justify-center select-none">
+    <div className="bg-bg-main flex h-screen w-screen items-center justify-center select-none">
       <div className="flex items-center justify-center">
-        <div className="bg-bg-alt flex w-screen max-w-160 flex-col items-center justify-center gap-4 rounded-4xl px-16 py-14">
+        <div className="bg-bg-alt flex max-h-screen w-screen max-w-160 flex-col items-center justify-center gap-4 overflow-hidden rounded-4xl px-6 py-10 sm:max-h-[90vh]">
           <Link href="/" className="">
             <LogoWithTT logoSize="4rem" margin="">
               <h2 className="leading-none font-bold" style={{ fontSize: "4rem" }}>
@@ -22,11 +22,13 @@ export default function LoginLayout({
               </h2>
             </LogoWithTT>
           </Link>
-          <div className="border-border flex flex-col gap-2 rounded-2xl border py-5">
-            <h2 className="text-text-main text-center text-3xl font-bold">{title}</h2>
-            <p className="text-text-alt text-center text-lg font-medium">{description}</p>
+          <div className="px-6 w-full border-r border-border">
+            <div className="border-border flex flex-col gap-2 rounded-2xl border py-5">
+              <h2 className="text-text-main text-center text-3xl font-bold">{title}</h2>
+              <p className="text-text-alt text-center text-lg font-medium">{description}</p>
+            </div>
           </div>
-          {children}
+          <div className="h-full w-full overflow-y-auto px-6 border-r border-border">{children}</div>
         </div>
       </div>
     </div>
