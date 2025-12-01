@@ -5,7 +5,7 @@ import { TournamentCreationRequest, TournamentCreationRequestSchema } from "@/ty
 import { debounce } from "next/dist/server/utils"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { redirect, useRouter } from "next/navigation"
-import TournamentInformationConstructor from "@/components/organizator/TournamentInformationConstructor"
+import TournamentInformationConstructor, { MaterialsStateBaseType } from "@/components/organizator/TournamentInformationConstructor"
 import Loading from "@/app/loading"
 import FightsInformations from "@/components/organizator/FightsInformations"
 import Link from "next/link"
@@ -33,6 +33,8 @@ export default function CreateTournamentPage() {
 
 function CreateTournamentForm() {
   const toastManager = Toast.useToastManager()
+
+  const materialsState = useState<MaterialsStateBaseType>([])
 
   const [errors, setErrors] = useState<{ key: string; message: string }[]>([])
   const rights = useAppSelector((state) => state.auth.authInfo?.rights)
@@ -104,7 +106,7 @@ function CreateTournamentForm() {
 
       <div className="bg-bg-alt min-h-30 w-full rounded-3xl px-5 py-2">
         <MaterialsProviderWrapper>
-          <TournamentInformationConstructor />
+          <TournamentInformationConstructor materialsState={materialsState} />
         </MaterialsProviderWrapper>
       </div>
       <div className="bg-bg-alt min-h-30 w-full rounded-3xl px-5 py-2">

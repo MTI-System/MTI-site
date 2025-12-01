@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from "react"
 import twclsx from "@/utils/twClassMerge"
 
 export default function AddFileField({
+  defaultValue,
   onFileSet,
   disabled,
   accept,
   isInline = false,
   isError = false,
 }: {
+  defaultValue?: File | null
   onFileSet: (file: File | null) => void
   disabled: boolean
   accept: string
@@ -18,7 +20,7 @@ export default function AddFileField({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const targetRef = useRef<HTMLLabelElement>(null)
   const scopeRef = useRef<Scope>(null)
-  const [currentFile, setCurrentFile] = useState<File | null>(null)
+  const [currentFile, setCurrentFile] = useState<File | null>(defaultValue ?? null)
   const [isDragOver, setIsDragOver] = useState(false)
 
   useEffect(() => {
@@ -80,6 +82,10 @@ export default function AddFileField({
         rotateBoxAnim.reverse()
       })
     })
+    if (defaultValue) {
+      scopeRef.current?.methods.silentFileAdd()
+    }
+
     return () => {
       scopeRef.current?.revert()
     }
@@ -92,7 +98,8 @@ export default function AddFileField({
           "text-text-alt/50 bg-text-alt/125 hover:text-text-alt/50 hover:bg-text-alt/125": disabled,
           "flex-row gap-4 py-6 text-2xl": isInline,
           "bg-text-alt/35 text-text-main": isDragOver,
-          "border-accent-warning bg-accent-warning-alt text-accent-warning hover:text-accent-warning/75 hover:bg-accent-warning-alt/75": isError
+          "border-accent-warning bg-accent-warning-alt text-accent-warning hover:text-accent-warning/75 hover:bg-accent-warning-alt/75":
+            isError,
         },
       )}
       ref={targetRef}

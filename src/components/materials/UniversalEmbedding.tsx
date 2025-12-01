@@ -29,7 +29,7 @@ export default function UniversalEmbedding({
   const sub =
     embedding.metadata.is_external == "true"
       ? embedding.content.split("/")[2]
-      : (Number(embedding.metadata.file_size) / (8 * 1024)).toFixed(2).toString() + " КБ"
+      : (Number(embedding.metadata.file_size) / 1024).toFixed(2).toString() + " КБ"
 
   const token = useAppSelector((state) => state.auth.token)
   const [deleteMaterialMutation, { isSuccess, error }] = useDeleteMaterialMutation()
