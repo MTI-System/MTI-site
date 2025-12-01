@@ -1,11 +1,13 @@
 "use client"
 import TournamentCard from "@/components/tournaments/TournamentCard"
-import { useCallback, useEffect, useState } from "react"
+import { CSSProperties, useCallback, useEffect, useRef, useState } from "react"
 import { TournamentCreationRequest, TournamentCreationRequestSchema } from "@/types/TournamentsAPI"
 import { debounce } from "next/dist/server/utils"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { redirect, useRouter } from "next/navigation"
-import TournamentInformationConstructor, { MaterialsStateBaseType } from "@/components/organizator/TournamentInformationConstructor"
+import TournamentInformationConstructor, {
+  MaterialsStateBaseType,
+} from "@/components/organizator/TournamentInformationConstructor"
 import Loading from "@/app/loading"
 import FightsInformations from "@/components/organizator/FightsInformations"
 import Link from "next/link"
@@ -17,7 +19,12 @@ import { useAddTournamentMutation } from "@/api/tournaments/clientApiInterface"
 import { Toast } from "@base-ui-components/react/toast"
 import { FaTimes } from "react-icons/fa"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
-
+import { EmbeddingCard } from "@/components/materials/FileEmbeddings"
+import { MdOutlineRefresh } from "react-icons/md"
+import { MdOutlineClose } from "react-icons/md"
+import axios from "axios"
+import { FILES_API } from "@/constants/APIEndpoints"
+import { PendingInterface } from "@/components/organizator/TournamentInformationConstructor"
 
 export interface TournamentCardCallback {
   (card: Partial<TournamentCreationRequest>): void
@@ -35,6 +42,9 @@ function CreateTournamentForm() {
   const toastManager = Toast.useToastManager()
 
   const materialsState = useState<MaterialsStateBaseType>([])
+  const materials = materialsState[0]
+  const [pendingLoadingIDs, setPendingLoadingIDs] = useState<number[]>([])
+  const isValidatedRef = useRef<boolean>(false)
 
   const [errors, setErrors] = useState<{ key: string; message: string }[]>([])
   const rights = useAppSelector((state) => state.auth.authInfo?.rights)
@@ -72,6 +82,12 @@ function CreateTournamentForm() {
       })
     }
   }, [isLoading])
+  useEffect(() => {
+    console.log("pendingLoadingIDs", pendingLoadingIDs)
+    if (pendingLoadingIDs.length === 0 && isValidatedRef.current) {
+      createTournament({ tournamentObject: newTournamentCardResponse })
+    }
+  }, [pendingLoadingIDs])
 
   const [isMounted, setIsMounted] = useState(false)
   useEffect(() => {
@@ -105,9 +121,53 @@ function CreateTournamentForm() {
       </FilesProviderWrapper>
 
       <div className="bg-bg-alt min-h-30 w-full rounded-3xl px-5 py-2">
-        <MaterialsProviderWrapper>
-          <TournamentInformationConstructor materialsState={materialsState} />
-        </MaterialsProviderWrapper>
+        {pendingLoadingIDs.length === 0 && (
+          <MaterialsProviderWrapper>
+            <TournamentInformationConstructor materialsState={materialsState} />
+          </MaterialsProviderWrapper>
+        )}
+        {pendingLoadingIDs.length > 0 && (
+          <div>
+            <p>Загрузка материалов...</p>
+            {materials.map((material: PendingInterface) =>
+              material.pendingContent instanceof File ? (
+                <LoadingFileEmbedding
+                  key={material.id}
+                  file={material.pendingContent}
+                  token={token}
+                  displayTitle={material.pendingTitle ?? ""}
+                  onUploadComplete={(filename) => {
+                    const matIdx = newTournamentCardResponse.materials.findIndex(
+                      (m) => m.content === material.id.toString(),
+                    )
+                    if (matIdx !== -1) {
+                      setNewTournamentCardResponse((prev) => ({
+                        ...prev,
+                        materials: prev.materials.map((m, i) => (i === matIdx ? { ...m, content: filename } : m)),
+                      }))
+                      setPendingLoadingIDs((prev) => prev.filter((id) => id !== material.id))
+                    } else console.error("Material not found in tournament materials")
+                  }}
+                  onUploadCancel={(noWait) => {
+                    if (!noWait) return
+                    const matIdx = newTournamentCardResponse.materials.findIndex(
+                      (m) => m.content === material.id.toString(),
+                    )
+                    if (matIdx !== -1) {
+                      setNewTournamentCardResponse((prev) => ({
+                        ...prev,
+                        materials: prev.materials.filter((m, i) => i !== matIdx),
+                      }))
+                      setPendingLoadingIDs((prev) => prev.filter((id) => id !== material.id))
+                    } else console.error("Material not found in tournament materials")
+                  }}
+                />
+              ) : (
+                <></>
+              ),
+            )}
+          </div>
+        )}
       </div>
       <div className="bg-bg-alt min-h-30 w-full rounded-3xl px-5 py-2">
         <FightsInformations update={updateTournamentHandler} />
@@ -131,7 +191,14 @@ function CreateTournamentForm() {
 
         <SubmitButton
           newTournamentCardResponse={newTournamentCardResponse}
-          createTournament={createTournament}
+          materials={materials}
+          createTournament={(tournament) => {
+            setPendingLoadingIDs((prev) => [
+              ...materials.filter((m: PendingInterface) => m.pendingContent instanceof File).map((m) => m.id),
+            ])
+            isValidatedRef.current = true
+            setNewTournamentCardResponse(tournament.tournamentObject)
+          }}
           setErrors={setErrors}
         />
         <Toast.Portal>
@@ -146,10 +213,12 @@ function CreateTournamentForm() {
 
 function SubmitButton({
   newTournamentCardResponse,
+  materials,
   createTournament,
   setErrors,
 }: {
   newTournamentCardResponse: TournamentCreationRequest
+  materials: MaterialsStateBaseType
   createTournament: ({ tournamentObject }: { tournamentObject: TournamentCreationRequest }) => void
   setErrors: (errors: { key: string; message: string }[]) => void
 }) {
@@ -160,12 +229,18 @@ function SubmitButton({
       className="bg-accent-primary/20 hover:bg-accent-primary/50 border-accent-primary text-accent-primary h-10 w-50 cursor-pointer rounded-2xl border"
       onClick={() => {
         console.log("clicked", newTournamentCardResponse)
+        newTournamentCardResponse.materials = materials.map((material: PendingInterface) => ({
+          title: material.pendingTitle!!,
+          content:
+            material.pendingContent instanceof File ? material.id.toString() : (material.pendingContent ?? undefined),
+          content_type: material.content_type?.id!!,
+          is_external: material.pendingMetadata?.is_external === "true",
+          file_size: material.pendingMetadata?.file_size,
+        }))
         const parsed = TournamentCreationRequestSchema.safeParse(newTournamentCardResponse)
         if (!parsed.success) {
           console.error("Invalid tournament creation request", parsed.error.issues)
-          // setErrors(parsed.error.issues.map((issue) => ({ key: issue.path[0].toString(), message: issue.message })))
-          // INSERT_YOUR_CODE
-          // Remove issues with duplicate descriptions
+
           const uniqueIssues = parsed.error.issues.filter(
             (issue, index, self) => self.findIndex((i) => i.message === issue.message) === index,
           )
@@ -216,4 +291,96 @@ function ToastList() {
       </Toast.Content>
     </Toast.Root>
   ))
+}
+
+function LoadingFileEmbedding({
+  file,
+  token,
+  displayTitle,
+  onUploadComplete,
+  onUploadCancel,
+}: {
+  file: File
+  token: string
+  displayTitle: string
+  onUploadComplete: (filepath: string) => void
+  onUploadCancel: (noWait: boolean) => void
+}) {
+  const [isError, setIsError] = useState(false)
+  const progresRef = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState<number>(0)
+  const abortControllerRef = useRef<AbortController>(null)
+  const formData = new FormData()
+  formData.set("file", file)
+  formData.set("token", token)
+
+  const uploadFile = () => {
+    const abortController = new AbortController()
+    abortControllerRef.current = abortController
+    axios
+      .post(FILES_API + "add_file", formData, {
+        onUploadProgress: (event) => {
+          if (!event.progress) return
+          progresRef.current?.style.setProperty("--progress-shift", `${event.progress * 100 - 100}%`)
+          setProgress(event.progress * 100)
+        },
+        signal: abortController.signal,
+      })
+      .then((data) => {
+        if (data.status === 200) {
+          progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
+          progresRef.current?.style.setProperty("--progress-color", "#00FF00")
+          onUploadComplete(data.data.filename)
+        } else {
+          console.error("File loaded with error")
+          progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
+          progresRef.current?.style.setProperty("--progress-color", "#FF0000")
+          setIsError(true)
+        }
+      })
+      .catch((error) => {
+        console.error("File loaded with error", error)
+        progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
+        progresRef.current?.style.setProperty("--progress-color", "#FF0000")
+        setIsError(true)
+      })
+  }
+
+  useEffect(() => {
+    uploadFile()
+  }, [])
+
+  return (
+    <EmbeddingCard
+      title={displayTitle}
+      subtitle={isError ? "Ошибка" : `Загрузка: ${progress.toFixed(2)}%`}
+      embeddingImageURL="/uploading.svg"
+    >
+      <div className="flex h-full items-center justify-center">
+        {isError && (
+          <MdOutlineRefresh
+            className="hover:text-text-alt"
+            onClick={() => {
+              setIsError(false)
+              uploadFile()
+              progresRef.current?.style.setProperty("--progress-shift", `${-100}%`)
+              progresRef.current?.style.setProperty("--progress-color", "var(--primary-accent)")
+            }}
+          />
+        )}
+        <MdOutlineClose
+          className="hover:text-text-alt"
+          onClick={() => {
+            abortControllerRef.current?.abort()
+            onUploadCancel(isError)
+          }}
+        />
+      </div>
+      <div
+        className="absolute right-0 bottom-0 left-0 h-2 after:absolute after:bottom-0 after:left-(--progress-shift) after:h-2 after:w-full after:bg-(--progress-color) after:transition-all after:duration-250 after:ease-in-out after:content-['']"
+        style={{ "--progress-shift": `${-100}%`, "--progress-color": "var(--primary-accent)" } as CSSProperties}
+        ref={progresRef}
+      ></div>
+    </EmbeddingCard>
+  )
 }

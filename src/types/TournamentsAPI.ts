@@ -74,7 +74,7 @@ export const TournamentCreationRequestSchema = z.object({
   materials: z.array(
     z.object({
       title: z.string().min(1, "Название материала не может быть пустым"),
-      content: z.string().min(1, "Содержание материала не может быть пустым"),
+      content: z.string().optional(),
       content_type: z.number(),
       is_external: z.boolean(),
       file_size: z.string().optional(),

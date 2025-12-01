@@ -24,7 +24,6 @@ export interface PendingInterface {
   pendingMetadata?: EmbeddingmetadataInterface
   content_type?: EmbeddingTypeInterface | null
   pendingTitle?: string | null
-  isLoading: boolean
   id: number
 }
 
@@ -53,7 +52,6 @@ export default function TournamentInformationConstructor({
         pendingMetadata: info.pendingMetadata,
         content_type: info.content_type,
         pendingTitle: info.pendingTitle,
-        isLoading: true,
         id: idx,
       }
       if (editIdx) {
@@ -186,7 +184,8 @@ function InputRow() {
         onContentUpdate={(content) => {
           setAppendableInfo({ pendingContent: content })
           if (["Picture", "Video", "Document"].includes(info.content_type.type_name) && content instanceof File)
-            setAppendableInfo({ pendingMetadata: { file_size: content.size.toFixed(2) } })
+            setAppendableInfo({ pendingMetadata: { file_size: content.size.toFixed(2), is_external: "false" } })
+          if (info.content_type.type_name === "Link") setAppendableInfo({ pendingMetadata: { is_external: "true" } })
         }}
       />
       <div className="flex flex-row justify-end gap-2">
@@ -384,105 +383,5 @@ function PendingUniversalEmbedding({
         metadata: { ...pendingMetadata, is_external: "false" },
       }}
     />
-  )
-}
-
-function LoadingFileEmbedding({
-  file,
-  token,
-  displayTitle,
-  onUploadComplete,
-  onUploadCancel,
-}: {
-  file: File
-  token: string
-  displayTitle: string
-  onUploadComplete: (filepath: string) => void
-  onUploadCancel: (noWait: boolean) => void
-}) {
-  const [isError, setIsError] = useState(false)
-  const progresRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState<number>(0)
-  const abortControllerRef = useRef<AbortController>(null)
-  const formData = new FormData()
-  formData.set("file", file)
-  formData.set("token", token)
-
-  const uploadFile = () => {
-    const abortController = new AbortController()
-    abortControllerRef.current = abortController
-    axios
-      .post(FILES_API + "add_material", formData, {
-        onUploadProgress: (event) => {
-          if (!event.progress) return
-          progresRef.current?.style.setProperty("--progress-shift", `${event.progress * 100 - 100}%`)
-          setProgress(event.progress * 100)
-        },
-        signal: abortController.signal,
-      })
-      .then((data) => {
-        if (data.status === 200) {
-          progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
-          progresRef.current?.style.setProperty("--progress-color", "#00FF00")
-          data.data
-            .json()
-            .then((data: { filename: string }) => {
-              onUploadComplete(data.filename)
-            })
-            .catch((error: Error) => {
-              console.error("Error parsing JSON", error)
-              setIsError(true)
-            })
-        } else {
-          console.error("File loaded with error")
-          progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
-          progresRef.current?.style.setProperty("--progress-color", "#FF0000")
-          setIsError(true)
-        }
-      })
-      .catch((error) => {
-        console.error("File loaded with error", error)
-        progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
-        progresRef.current?.style.setProperty("--progress-color", "#FF0000")
-        setIsError(true)
-      })
-  }
-
-  useEffect(() => {
-    uploadFile()
-  }, [])
-
-  return (
-    <EmbeddingCard
-      title={displayTitle}
-      subtitle={isError ? "Ошибка" : `Загрузка: ${progress.toFixed(2)}%`}
-      embeddingImageURL="/uploading.svg"
-    >
-      <div className="flex h-full items-center justify-center">
-        {isError && (
-          <MdOutlineRefresh
-            className="hover:text-text-alt"
-            onClick={() => {
-              setIsError(false)
-              uploadFile()
-              progresRef.current?.style.setProperty("--progress-shift", `${-100}%`)
-              progresRef.current?.style.setProperty("--progress-color", "var(--primary-accent)")
-            }}
-          />
-        )}
-        <MdOutlineClose
-          className="hover:text-text-alt"
-          onClick={() => {
-            abortControllerRef.current?.abort()
-            onUploadCancel(isError)
-          }}
-        />
-      </div>
-      <div
-        className="absolute right-0 bottom-0 left-0 h-2 after:absolute after:bottom-0 after:left-(--progress-shift) after:h-2 after:w-full after:bg-(--progress-color) after:transition-all after:duration-250 after:ease-in-out after:content-['']"
-        style={{ "--progress-shift": `${-100}%`, "--progress-color": "var(--primary-accent)" } as CSSProperties}
-        ref={progresRef}
-      ></div>
-    </EmbeddingCard>
   )
 }

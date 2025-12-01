@@ -84,7 +84,7 @@ export default function TournamentTypeSelector({
               </Tooltip.Trigger>
               <Tooltip.Portal>
                 <Tooltip.Positioner side="right">
-                  <Tooltip.Popup className="border-border bg-bg-alt flex origin-[var(--transform-origin)] flex-col rounded-md border-2 px-2 py-1 text-sm shadow-[0_0_0.5rem_0.2rem_rgba(0,0,0,0.25)] transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-[0_0_0.5rem_0.2rem_rgba(255,255,255,0.25)]">
+                  <Tooltip.Popup className="border-border bg-bg-alt flex origin-(--transform-origin) flex-col rounded-md border-2 px-2 py-1 text-sm shadow-[0_0_0.5rem_0.2rem_rgba(0,0,0,0.25)] transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-[0_0_0.5rem_0.2rem_rgba(255,255,255,0.25)]">
                     <p className="text-text-main">На этой странице нельзя изменить тип турнира</p>
                   </Tooltip.Popup>
                 </Tooltip.Positioner>
