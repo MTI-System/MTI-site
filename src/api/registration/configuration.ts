@@ -93,6 +93,28 @@ export const defineRegistrationEndpoints = (
     },
   }),
 
+  getAnswer: builder.query({
+    query: ({tournamentId, formTypeFlag, token}: {tournamentId: number, formTypeFlag:string, token: string}) => ({
+      url: "get_answer",
+      method: "POST",
+      body: (()=>{
+        const fd = new FormData()
+        fd.set('token', token)
+        fd.set('tournamentId', tournamentId.toString())
+        fd.set('formTypeFlag', formTypeFlag)
+        return fd
+      })()
+    }),
+    transformResponse: (response: unknown): TournamentRegistrationAnswerInterface | null => {
+      console.log("getAnswers response: ", response)
+      const parsed = TournamentRegistrationAnswer.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing registration form: ${parsed.error}`)
+      return null
+    },
+  }),
+
+
   getRegistrationForm: builder.query({
     query: ({ id, type }: { id: number; type: string }) => `get_form_for_tournament/${id}/${type}`,
     transformResponse: (response: unknown): TournamentRegistrationFormInfoInterface | null => {

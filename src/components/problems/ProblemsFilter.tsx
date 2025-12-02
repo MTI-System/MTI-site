@@ -83,7 +83,8 @@ function SectionFilter({
 }: {
   possibleSections: ProblemSectionInterface[]
   isPending: boolean
-}) {
+})
+{
   const year = useProblemsSelector((state) => state.problemsPageFilters.year)
   const tt = useAppSelector((state) => state.searchParams.tt)
   const sectionList = useProblemsSelector((state) => state.problemsPageFilters.sectionList)
@@ -170,7 +171,8 @@ export function YearFilter({
   isModerator,
   onSwitchYear,
   defaultValue,
-}: {
+}:
+ {
   possibleYears: number[]
   isPending: boolean
   isModerator: boolean

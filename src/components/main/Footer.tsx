@@ -30,11 +30,6 @@ export default async function Footer() {
         <div className="text-text-alt text-base flex flex-col gap-5 px-14 lg:flex-row items-center justify-between lg:px-[6vw]">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col items-center gap-4 lg:flex-row lg:gap-8">
-              {/*{<LogoWithTT logoSize={"36px"} margin={"-6px"}>*/}
-              {/*  <h2 className="text-text-main font-bold text-4xl">*/}
-              {/*    МТИ*/}
-              {/*  </h2>*/}
-              {/*</LogoWithTT>}*/}
               <div className="flex flex-col items-center text-3xl font-bold text-text-main">
                 <span>МТИ</span>
                 <ColoredTType ttName={currentTT?.name??"ТЮФ"} ttColor={currentTT?.color??"#000000"} />

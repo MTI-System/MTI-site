@@ -128,12 +128,18 @@ export default async function Page({
   return (
     <ProblemsReduxProviderWrapper>
       <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
+
+
+
       <ProblemFilters
         possibleSections={availableProblemSections}
         possibleYears={possibleYears ?? [2026]}
         isModerator={isEditable}
         possibleTournaments={possibleTournaments}
       >
+
+
+
         <div className="relative h-full w-full pt-10">
           <Suspense fallback={<div>Loading...</div>}>
             {isUndefYear && <p>На {sp.year} год не найдено опубликованных задач</p>}

@@ -29,4 +29,4 @@ export const registrationApiClient = createApiClient({
   endpoints: defineRegistrationEndpoints,
 })
 
-export const { useGetAnswersQuery,useSetFieldsMutation, useCreateFormMutation, useFormsInformationQuery, useIsFormFilledQuery, useGetRegistrationFormQuery, useSubmitFormAnswerMutation } = registrationApiClient
+export const { useGetAnswerQuery , useGetAnswersQuery,useSetFieldsMutation, useCreateFormMutation, useFormsInformationQuery, useIsFormFilledQuery, useGetRegistrationFormQuery, useSubmitFormAnswerMutation } = registrationApiClient

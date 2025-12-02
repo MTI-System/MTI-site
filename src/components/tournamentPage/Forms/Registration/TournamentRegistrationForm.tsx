@@ -32,8 +32,7 @@ export default function TournamentRegistrationForm({
     userId: authId ?? 0,
     tournamentId: tournamentId,
     formFlag: "registration",
-
-  }, {skip: !authId || !formInfo})
+  }, {skip: !authId || !formInfo || !isEdit})
   const token = useAppSelector((state) => state.auth.token)
 
   useEffect(()=>{
@@ -70,20 +69,18 @@ export default function TournamentRegistrationForm({
 
                 }}
               >
-                {formInfo && "respondingUser" in formInfo && <RespondentUser userId={formInfo.respondingUser}/>}
+
+                {formInfo && "respondingUser" in formInfo && <UsersProviderWrapper><RespondentUser userId={formInfo.respondingUser}/></UsersProviderWrapper>}
                 {formInfo?.fields?.map((fieldObject) => {
                   const field = "type" in fieldObject ? fieldObject : fieldObject.formField
                   switch (field.type) {
                     case "number":
                     case "text":
                       return (
-                        <>
-                          <LineRegistrationField
-                            key={field.key}
-                            field={fieldObject}
-                          />
-                        </>
-
+                        <LineRegistrationField
+                          key={field.key}
+                          field={fieldObject}
+                        />
                       )
                     case "date":
                       return <DateRegistrationField key={field.key} field={fieldObject}/>
@@ -91,20 +88,17 @@ export default function TournamentRegistrationForm({
                       return <DropdownRegistrationField key={field.key} field={fieldObject}/>
                     case "player":
                       return (
-                        <>
-                          <UsersProviderWrapper>
-                            <PickPersonRegistrationField key={field.key} field={fieldObject}/>
+                          <UsersProviderWrapper key={field.key} >
+                            <PickPersonRegistrationField field={fieldObject}/>
                           </UsersProviderWrapper>
 
-                        </>
                       )
                     case "coach":
                       return (
-                        <>
-                          <UsersProviderWrapper>
-                            <PickPersonRegistrationField key={field.key} field={fieldObject}/>
+                          <UsersProviderWrapper key={field.key} >
+                            <PickPersonRegistrationField field={fieldObject}/>
                           </UsersProviderWrapper>
-                        </>
+
                       )
                     default:
                       return <p>Unknown</p>

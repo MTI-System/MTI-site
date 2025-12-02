@@ -7,6 +7,8 @@ import { Button, Form } from "@base-ui-components/react"
 import {useEffect, useState} from "react";
 import {FaCircleCheck} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
+import {useGetAnswerQuery} from "@/api/registration/clientApiInterface";
+import TournamentRegistrationForm from "@/components/tournamentPage/Forms/Registration/TournamentRegistrationForm";
 
 
 export default function ConfirmationPage(
@@ -19,6 +21,13 @@ export default function ConfirmationPage(
   const {data: personalDataRequests, isLoading, isSuccess, refetch} = usePersonalDataRequestsQuery({token: token, tournamentId: tournamentId})
   const [requestsChecks, setRequestsChecks] =  useState<boolean[]>([])
   const [grandPermission, {isLoading: isGranting, isSuccess: isGranted}] = usePersonalDAtaRequestGrandMutation()
+  const {data: filledForm} = useGetAnswerQuery(
+    {
+      tournamentId: tournamentId,
+      token: token,
+      formTypeFlag: "registration"
+    }
+  )
   const router = useRouter()
   useEffect(()=>{
     if(personalDataRequests) {
@@ -49,13 +58,10 @@ export default function ConfirmationPage(
   return (
     <>
       <div>
-
         {isLoading && <Loading/>}
         {!isLoading && ((personalDataRequests?.length ?? 0) > 0) && (
           <>
-            <p>
-              Здесь отображаем заявку
-            </p>
+            {filledForm ? <TournamentRegistrationForm formInfo={filledForm} className={""} isEdit={false} tournamentId={tournamentId}/> : <Loading/>}
             <Form
               className="flex flex-col gap-2 mt-2"
               onSubmit={async (e)=>{
