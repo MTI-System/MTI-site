@@ -7,6 +7,7 @@ import { makeAuthStoreServer } from "@/api/auth/serverStore"
 import type {Metadata} from "next";
 import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore";
 import {tournamentsApiServer} from "@/api/tournaments/serverApiInterface";
+import {FaCircleCheck} from "react-icons/fa6";
 
 export async function generateMetadata({
                                          params,
@@ -54,18 +55,19 @@ export default async function RegisterTournamentsPage({ params }: { params: Prom
     const { data: user, error: userError } = await authPromise
     if (user?.rights.find((r) => r.right_flag === `MODERATE_TOURNAMENT_${id}`) !== undefined) isAdmin = true
     
-    if (user) {
-      const registrationPromise = store.dispatch(registrationApiServer.endpoints.isFormFilled.initiate({ tournamentId: Number(id), formFlag: "registration", userId: user.user_id }))
-      const { data: isFormFilledData, error: isFormFilledError, isError: isFormFilledIsError } = await registrationPromise
-      if (isFormFilledData) isFormFilled = isFormFilledData
-    }
+    // if (user) {
+    //   const registrationPromise = store.dispatch(registrationApiServer.endpoints.isFormFilled.initiate({ tournamentId: Number(id), formFlag: "registration", userId: user.user_id }))
+    //   const { data: isFormFilledData, error: isFormFilledError, isError: isFormFilledIsError } = await registrationPromise
+    //   if (isFormFilledData) isFormFilled = isFormFilledData
+    // }
   }
 
   return (
     <>
       {isError && <h2>{JSON.stringify(error)}</h2>}
       {/* {formInfo && !isAdmin && <TournamentRegistrationForm formInfo={formInfo} className={""} isEdit={!isFormFilled} />} */}
-      {formInfo && <TournamentRegistrationForm formInfo={formInfo} className={""} isEdit={!isFormFilled} />}
+
+      {formInfo && <TournamentRegistrationForm tournamentId={Number(id)} formInfo={formInfo} className={""} isEdit={!isFormFilled} />}
       {isAdmin && <h2>Вы администратор турнира</h2>}
     </>
   )

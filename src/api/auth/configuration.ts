@@ -83,5 +83,18 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
       }
       return pd.data ?? null
     }
+  }),
+  personalDAtaRequestGrand: builder.mutation({
+    query: ({pdIds, token}: {pdIds: number[], token: string}) => {
+      const form = new FormData()
+      form.set("token", token)
+      form.set("pdIds", pdIds.toString())
+
+      return {
+        url: "grant_personal_data_permissions",
+        method: "POST",
+        body: form
+      }
+    }
   })
 })

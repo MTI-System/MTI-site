@@ -42,7 +42,13 @@ export default function LineRegistrationField({
             </div>
           </>
         )}
-        {!fieldContent && <p>Ошибка!</p>}
+        {!fieldContent && (
+          <div className="border-border bg-bg-main-accent h-15 w-full rounded-md border px-2">
+            <p className="text-text-alt h-4 px-2 pt-1 text-[13px]">{fieldObject.title}</p>
+            <p className="text-text-main px-2 pt-2 font-bold">{fieldContent}</p>
+          </div>
+        )}
+
       </Forms.DefaultItems>
     </>
   )
