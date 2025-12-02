@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux_stores/Global/tournament
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { setTT } from "@/redux_stores/Global/SearchParamsSlice"
 import { setPage, setState, setYear } from "@/redux_stores/Tournaments/TournamentsPageFiltersSlice"
-import { TournamentState } from "@/types/TournamentStateType"
+import { TournamentStateFlagsInterface } from "@/types/TournamentStateType"
 import { useGetAvailableYearsQuery } from "@/api/tournaments/clientApiInterface"
 import { setIsPending } from "@/redux_stores/Global/SystemSlice"
 
@@ -13,7 +13,7 @@ export default function TournamentsSearchParams({
   searchParams,
   isNoRefresh,
 }: {
-  searchParams: { year: string; tt: string; page: string; state: TournamentState }
+  searchParams: { year: string; tt: string; page: string; state: TournamentStateFlagsInterface }
   isNoRefresh: boolean
 }) {
   const localDispatch = useTournamentsDispatch()

@@ -1,7 +1,6 @@
 import MaterialsProviderWrapper from "@/api/materials/ClientWrapper"
 import AboutPage from "@/app/(main)/about/page"
 import AboutTournamentPage from "@/components/tournaments/AboutPage"
-import {TournamentState} from "@/types/TournamentStateType";
 import type {Metadata} from "next";
 import {TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys";
 import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore";

@@ -212,8 +212,9 @@ export function YearFilter({
     <Dropdown
       trigger={
         <DropdownTrigger
+        rootClassName="w-full sm:w-auto"
           disabled={isPending}
-          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full", { "hover:bg-bg-main": isPending })}
+          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full flex justify-between", { "hover:bg-bg-main": isPending })}
         >
           {/*{year}*/}
           {defaultValue}
@@ -275,6 +276,7 @@ function TournamentFilter({
           trigger={
             <DropdownTrigger
               disabled={isPending}
+              rootClassName="w-full sm:w-1/4 min-w-fit"
               className={twclsx("bg-bg-alt hover:bg-hover h-8 justify-between rounded-full", {
                 "hover:bg-bg-main": isPending,
               })}

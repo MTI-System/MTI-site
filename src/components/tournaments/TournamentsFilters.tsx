@@ -7,7 +7,7 @@ import { useTournamentsDispatch, useTournamentsSelector } from "@/components/Red
 import { setState, setYear } from "@/redux_stores/Tournaments/TournamentsPageFiltersSlice"
 import { Dropdown, DropdownElement, DropdownOptionInterface, DropdownTrigger } from "@/components/ui/Dropdown"
 import twclsx from "@/utils/twClassMerge"
-import { TournamentState } from "@/types/TournamentStateType"
+import { TournamentStateFlagsInterface, TournamentStateInterface } from "@/types/TournamentStateType"
 import { ReactNode } from "react"
 import Loading from "@/app/(main)/loading"
 
@@ -18,7 +18,7 @@ export default function TournamentsFilters({
 }: {
   children: ReactNode
   availableYears: number[]
-  availableStates: TournamentState[]
+  availableStates: TournamentStateInterface[]
 }) {
   const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
   const tt = useAppSelector((state) => state.searchParams.tt)
@@ -28,9 +28,9 @@ export default function TournamentsFilters({
   const isPending = useAppSelector((state) => state.system.isPending)
   return (
     <>
-      <div className="flex w-full items-center justify-between px-30 pt-3">
-        <div className="flex h-fit w-full content-center items-center gap-5 pt-2 flex-row md:flex-col">
-          <div>
+      <div className="flex w-full items-center justify-between px-8 md:px-15 lg:px-30 pt-3">
+        <div className="flex h-fit w-full flex-col content-center items-center gap-5 pt-2 md:flex-row">
+          <div className="flex flex-row gap-5">
             <p className="text-text-main text-4xl font-bold">Турниры</p>
             <ColoredTType
               ttName={availableTournamentTypes.find((t) => t.id === tt)?.name ?? "ТЮФ"}
@@ -38,7 +38,8 @@ export default function TournamentsFilters({
               className="text-text-main text-4xl font-bold"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-col md:flex-row w-full justify-between">
+          <div className="flex gap-2 flex-col md:flex-row w-full">
             <YearFilter
               possibleYears={availableYears ?? []}
               isPending={false}
@@ -51,14 +52,15 @@ export default function TournamentsFilters({
             <TournamentStateFilter
               possibleStates={availableStates}
               isPending={false}
-              onSwitch={(state: TournamentState) => {
+              onSwitch={(state: TournamentStateFlagsInterface) => {
                 dispatch(setState(state))
               }}
               defaultValue={state}
             />
           </div>
+          <ShareButton />
+          </div>
         </div>
-        <ShareButton />
       </div>
       {!isPending && children}
       {isPending && <Loading />}
@@ -72,14 +74,14 @@ export function TournamentStateFilter({
   onSwitch,
   defaultValue,
 }: {
-  possibleStates: TournamentState[]
+  possibleStates: TournamentStateInterface[]
   isPending: boolean
-  onSwitch: (state: TournamentState) => void
-  defaultValue: TournamentState
+  onSwitch: (state: TournamentStateFlagsInterface) => void
+  defaultValue: TournamentStateFlagsInterface
 }) {
   // const year = useProblemsSelector((state) => state.problemsPageFilters.year) ?? possibleYears[0]
   // const problemDispatcher = useProblemsDispatch()
-  const optionList: { children: string; value: TournamentState; active: boolean }[] = [
+  const optionList: { children: string; value: TournamentStateFlagsInterface; active: boolean }[] = [
     {
       children: `Все турниры`,
       value: "all",
@@ -88,33 +90,36 @@ export function TournamentStateFilter({
     ...possibleStates?.map((p) => {
       return {
         children:
-          p === "futured"
+          p.status_flag === "FUTURED"
             ? `Запланированные`
-            : p === "registration"
+            : p.status_flag === "REGISTRATION"
               ? "Регистрация"
-              : p === "processing"
+              : p.status_flag === "PROCESSING"
                 ? "Идущие"
-                : p === "ended"
+                : p.status_flag === "ENDED"
                   ? "Завершенные"
                   : "Другие",
-        value: p,
+        value: p.status_flag,
         active: true,
       }
     }),
   ]
+  console.log(possibleStates, optionList)
+
 
   return (
     <Dropdown
       trigger={
         <DropdownTrigger
           disabled={isPending}
-          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full", { "hover:bg-[var(--bg-color)]!": isPending })}
+          rootClassName="min-w-fit"
+          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full flex flex-row justify-between", { "hover:bg-bg-main": isPending })}
         >
           {/*{year}*/}
           {optionList.find((o) => o.value === defaultValue)?.children}
         </DropdownTrigger>
       }
-      onOptionSelect={(option: DropdownOptionInterface<TournamentState> | null) => {
+      onOptionSelect={(option: DropdownOptionInterface<TournamentStateFlagsInterface> | null) => {
         if (!option) return
         onSwitch(option.value)
         // problemDispatcher(setYear(option.value))

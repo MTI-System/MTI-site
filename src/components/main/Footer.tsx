@@ -5,14 +5,14 @@ import { FILES_SERVER } from "@/constants/APIEndpoints";
 
 export default function Footer() {
   const leftCol = [
-    { id: 1, label: 'О нас', href: "/about" },
+    { id: 1, label: 'GitHub', href: "https://github.com/https://github.com/MTI-System/MTI-site"  },
     { id: 2, label: 'Telegram', href: "https://t.me/mty_ypt" },
     { id: 3, label: 'ВКонтакте', href: "https://vk.com/mty_ypt" }
   ];
   const rightCol = [
-    { id: 1, label: 'FAQ', href: "" },
-    { id: 2, label: 'Контакты', href: "" },
-    { id: 3, label: 'Помощь', href: "" }
+    { id: 1, label: 'Соглашение', href: `${FILES_SERVER}Privacy Policy.pdf` },
+    { id: 2, label: '', href: "" },
+    { id: 3, label: 'О нас', href: "/about" }
   ];
   return (
     <>
