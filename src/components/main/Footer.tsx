@@ -2,8 +2,12 @@ import footerStyle from "@/styles/components/sections/app/footer.module.css"
 import LogoWithTT from "@/components/ui/LogoWithTT"
 import Link from "next/link"
 import { FILES_SERVER } from "@/constants/APIEndpoints";
+import {cookies} from "next/headers";
+import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore";
+import {tournamentsApiServer} from "@/api/tournaments/serverApiInterface";
+import ColoredTType from "@/components/ui/ColoredTType";
 
-export default function Footer() {
+export default async function Footer() {
   const leftCol = [
     { id: 1, label: 'GitHub', href: "https://github.com/https://github.com/MTI-System/MTI-site"  },
     { id: 2, label: 'Telegram', href: "https://t.me/mty_ypt" },
@@ -14,17 +18,28 @@ export default function Footer() {
     { id: 2, label: '', href: "" },
     { id: 3, label: 'О нас', href: "/about" }
   ];
+
+  const initTT = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
+  const store = makeTournamentsStoreServer()
+  const promise = store.dispatch(tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}))
+  const { data: tournamentTypes } = await promise
+  const currentTT = tournamentTypes?.find(tt => tt.id === Number(initTT))
   return (
     <>
       <footer className="bg-bg-alt p-5">
         <div className="text-text-alt text-base flex flex-col gap-5 px-14 lg:flex-row items-center justify-between lg:px-[6vw]">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col items-center gap-4 lg:flex-row lg:gap-8">
-              {<LogoWithTT logoSize={"36px"} margin={"-6px"}>
-                <h2 className="text-text-main font-bold text-4xl">
-                  МТИ
-                </h2>
-              </LogoWithTT>}
+              {/*{<LogoWithTT logoSize={"36px"} margin={"-6px"}>*/}
+              {/*  <h2 className="text-text-main font-bold text-4xl">*/}
+              {/*    МТИ*/}
+              {/*  </h2>*/}
+              {/*</LogoWithTT>}*/}
+              <div className="flex flex-col items-center text-3xl font-bold text-text-main">
+                <span>МТИ</span>
+                <ColoredTType ttName={currentTT?.name??"ТЮФ"} ttColor={currentTT?.color??"#000000"} />
+              </div>
+
               <div className="flex flex-col pt-3 gap-1">
                 <p className="self-start">
                   © 2025 Менеджер Турнирной Информации МТИ
