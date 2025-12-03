@@ -152,7 +152,7 @@ export default function TournamentsPageTabs({
         {tournamentCard.badge.badge_flag === "REGISTRATION" && !isAdmin && (
           <NavigationMenu.Item>
             <Link className={registrationTriggerClassName} href={`/tournaments/${tournamentCard.id}/registration`}>
-              {isLoading ? "..." : isFormFilled ? "посмотреть заявку" : "Регистрация на турнир"}
+              Регистрация на турнир
             </Link>
           </NavigationMenu.Item>
         )}
