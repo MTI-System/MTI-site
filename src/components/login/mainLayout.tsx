@@ -22,7 +22,7 @@ export default function LoginLayout({
     <div className="bg-bg-main flex h-screen w-screen items-center justify-center select-none">
       <div className="flex items-center justify-center">
         <div className="bg-bg-alt flex max-h-screen w-screen max-w-160 flex-col items-center justify-center gap-4 overflow-hidden rounded-4xl px-6 py-10 sm:max-h-[90vh]">
-          <Link href="/" className="text-6xl font-bold">
+          <Link href="/" className="text-6xl font-bold text-text-main">
             <span className="">МТИ</span>
             <ColoredTType
               ttName={ttObject?.name ?? "ТЮФ"}
@@ -30,7 +30,7 @@ export default function LoginLayout({
             />
           </Link>
           <div className="w-full px-6">
-            <div className="border-border flex flex-col gap-2 rounded-2xl border py-5">
+            <div className="border-border flex flex-col gap-2 rounded-2xl border py-5 px-2">
               <h2 className="text-text-main text-center text-3xl font-bold">{title}</h2>
               <p className="text-text-alt text-center text-lg font-medium">{description}</p>
             </div>

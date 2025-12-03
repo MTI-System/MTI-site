@@ -66,7 +66,7 @@ export function CheckboxField({ onVerification ,name, title, value, className, d
             <CheckIcon className="size-3" />
           </Checkbox.Indicator>
         </Checkbox.Root>
-        <p className="ps-2">{title}</p>
+        <p className="ps-2 text-text-main">{title}</p>
       </ErrorTooltip>
     </>
   )
