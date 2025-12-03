@@ -164,17 +164,8 @@ export default function CreateTournamentForm({tt}: {tt: TournamentTypeIntarface}
                     } else console.error("Material not found in tournament materials")
                   }}
                   onUploadCancel={(noWait) => {
-                    if (!noWait) return
-                    const matIdx = newTournamentCardResponse.materials.findIndex(
-                      (m) => m.content === material.id.toString(),
-                    )
-                    if (matIdx !== -1) {
-                      setNewTournamentCardResponse((prev) => ({
-                        ...prev,
-                        materials: prev.materials.filter((m, i) => i !== matIdx),
-                      }))
-                      setPendingLoadingIDs((prev) => prev.filter((id) => id !== material.id))
-                    } else console.error("Material not found in tournament materials")
+                    isValidatedRef.current = false
+                    setPendingLoadingIDs([])
                   }}
                 />
               ) : (
@@ -344,19 +335,19 @@ function LoadingFileEmbedding({
       .then((data) => {
         if (data.status === 200) {
           progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
-          progresRef.current?.style.setProperty("--progress-color", "#00FF00")
+          progresRef.current?.style.setProperty("--progress-color", "var(--color-accent-accept)")
           onUploadComplete(data.data.filename)
         } else {
           console.error("File loaded with error")
           progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
-          progresRef.current?.style.setProperty("--progress-color", "#FF0000")
+          progresRef.current?.style.setProperty("--progress-color", "var(--color-accent-warning)")
           setIsError(true)
         }
       })
       .catch((error) => {
         console.error("File loaded with error", error)
         progresRef.current?.style.setProperty("--progress-shift", `${0}%`)
-        progresRef.current?.style.setProperty("--progress-color", "#FF0000")
+        progresRef.current?.style.setProperty("--progress-color", "var(--color-accent-warning)")
         setIsError(true)
       })
   }
@@ -371,7 +362,7 @@ function LoadingFileEmbedding({
       subtitle={isError ? "Ошибка" : `Загрузка: ${progress.toFixed(2)}%`}
       embeddingImageURL="/uploading.svg"
     >
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-full items-center justify-center text-3xl">
         {isError && (
           <MdOutlineRefresh
             className="hover:text-text-alt"
@@ -379,7 +370,7 @@ function LoadingFileEmbedding({
               setIsError(false)
               uploadFile()
               progresRef.current?.style.setProperty("--progress-shift", `${-100}%`)
-              progresRef.current?.style.setProperty("--progress-color", "var(--primary-accent)")
+              progresRef.current?.style.setProperty("--progress-color", "var(--color-accent-primary)")
             }}
           />
         )}
@@ -393,7 +384,7 @@ function LoadingFileEmbedding({
       </div>
       <div
         className="absolute right-0 bottom-0 left-0 h-2 after:absolute after:bottom-0 after:left-(--progress-shift) after:h-2 after:w-full after:bg-(--progress-color) after:transition-all after:duration-250 after:ease-in-out after:content-['']"
-        style={{ "--progress-shift": `${-100}%`, "--progress-color": "var(--primary-accent)" } as CSSProperties}
+        style={{ "--progress-shift": `${-100}%`, "--progress-color": "var(--color-accent-primary)" } as CSSProperties}
         ref={progresRef}
       ></div>
     </EmbeddingCard>

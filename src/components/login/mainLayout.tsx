@@ -22,13 +22,13 @@ export default function LoginLayout({
               </h2>
             </LogoWithTT>
           </Link>
-          <div className="px-6 w-full border-r border-border">
+          <div className="px-6 w-full">
             <div className="border-border flex flex-col gap-2 rounded-2xl border py-5">
               <h2 className="text-text-main text-center text-3xl font-bold">{title}</h2>
               <p className="text-text-alt text-center text-lg font-medium">{description}</p>
             </div>
           </div>
-          <div className="h-full w-full overflow-y-auto px-6 border-r border-border">{children}</div>
+          <div className="h-full w-full overflow-y-auto px-6">{children}</div>
         </div>
       </div>
     </div>

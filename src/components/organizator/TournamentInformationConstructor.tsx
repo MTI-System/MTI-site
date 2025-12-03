@@ -31,7 +31,6 @@ export default function TournamentInformationConstructor({
   materialsState: [MaterialsStateBaseType, Dispatch<SetStateAction<MaterialsStateBaseType>>]
 }) {
   const [materials, setMaterials] = materialsState
-  console.log(materials)
 
   const handleEditDone = (info: { [key: string]: any }, editIdx?: number): EditError[] => {
     const errors = []
@@ -92,7 +91,7 @@ export default function TournamentInformationConstructor({
       <div className="flex flex-col gap-4 py-2">
         {materials.map((material, index) => (
           <AppendableInfoContainer
-            key={index}
+            key={material.id}
             prevInfoInitial={material}
             onInfoChange={(info) => handleEditDone(info, material.id)}
             onRemove={() => {
@@ -115,7 +114,6 @@ export default function TournamentInformationConstructor({
           </AppendableInfoContainer>
         ))}
         {materials.length > 0 && <div className="border-border w-full border-2 border-b"></div>}
-
         <AppendableInfoContainer
           key={materials.length}
           onInfoChange={handleEditDone}
@@ -344,7 +342,7 @@ function PendingPictureEmbedding({
   )
   return (
     <div className="h-full w-full">
-      <p className="text-text-main text-3xl font-bold pb-2">{pendingTitle ?? ""}</p>
+      <p className="text-text-main pb-2 text-3xl font-bold">{pendingTitle ?? ""}</p>
       <img src={url} alt={pendingTitle ?? ""}></img>
       {/* TODO: Picture Embedding */}
     </div>
@@ -364,7 +362,7 @@ function PendingVideoEmbedding({
   )
   return (
     <div className="h-full w-full">
-      <p className="text-text-main text-3xl font-bold pb-2">{pendingTitle ?? ""}</p>
+      <p className="text-text-main pb-2 text-3xl font-bold">{pendingTitle ?? ""}</p>
       <video src={url}></video>
       {/* TODO: Video Embedding */}
     </div>

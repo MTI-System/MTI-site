@@ -1,8 +1,5 @@
 import { FILES_SERVER } from "@/constants/APIEndpoints"
-import style from "@/styles/components/ui/Files/fileEmbeddings.module.css"
-import { EmbeddingInterface } from "@/types/embeddings"
 import { ReactNode, SyntheticEvent } from "react"
-import Image from "next/image"
 
 interface EmbeddingIconProps {
   embeddingImageURL: string
@@ -13,10 +10,10 @@ interface EmbeddingIconProps {
 function EmbeddingIcon({ embeddingImageURL, extension, extensionColor, isExternal }: EmbeddingIconProps) {
   extensionColor = extensionColor ?? "var(--alt-text)"
   return (
-    <div className={style.iconContainer}>
+    <div className="relative flex justify-center items-center content-center shrink-0">
       <img src={FILES_SERVER + embeddingImageURL} />
       {extension && extension.length <= 4 && (
-        <p className={style.extensionTitle} style={{ color: extensionColor, borderColor: extensionColor }}>
+        <p className="absolute bottom-1/4 text-center font-['Roboto Flex Variable'] font-bold leading-[100%] text-[0.8rem] p-[0.05rem] bg-bg-alt border-2 border-border rounded-[0.3rem]" style={{ color: extensionColor, borderColor: extensionColor }}>
           {extension}
         </p>
       )}
@@ -32,7 +29,7 @@ interface EmbeddingCardProps extends EmbeddingIconProps {
 
 export function EmbeddingCard({ children, title, subtitle, isExternal, ...rest }: EmbeddingCardProps) {
   return (
-    <div className="border-border border rounded-2xl flex gap-2 overflow-hidden p-2">
+    <div className="relative border-border border rounded-2xl flex gap-2 overflow-hidden p-2 items-center content-center">
       <EmbeddingIcon {...rest} />
       <div className="flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
         <h4 className="font-normal overflow-hidden whitespace-nowrap text-ellipsis text-text-main">{title}</h4>
