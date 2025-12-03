@@ -1,5 +1,4 @@
 "use client"
-import styleModule from "@/styles/components/ui/button.module.css"
 import twclsx from "@/utils/twClassMerge"
 import { animate, createScope, Scope } from "animejs"
 import { ButtonHTMLAttributes, CSSProperties, PropsWithChildren, useEffect, useRef } from "react"
@@ -44,7 +43,7 @@ export function HoldButton({
   useEffect(() => {
     scope.current = createScope({ root: target }).add((self) => {
       if (!self) return
-      const confirmationAnim = animate(`.${styleModule.holdOverlay}`, {
+      const confirmationAnim = animate(`.holdOverlay`, {
         left: ["-100%", 0],
         ease: "outCubic",
         duration: holdTimeout,
@@ -69,7 +68,10 @@ export function HoldButton({
   }, [isDisabled])
   return (
     <button
-      className={twclsx(styleModule.button, styleModule.holdButton, className)}
+      className={twclsx(
+        "disabled:bg-inactive/20 disabled:border-inactive disabled:text-bg-main relative overflow-hidden p-2 text-ellipsis border-4 rounded-xl",
+        className,
+      )}
       onPointerDown={() => {
         if (!scope.current || rest.disabled) return
         scope.current.methods.caPlay()
@@ -82,7 +84,7 @@ export function HoldButton({
       ref={target}
       {...rest}
     >
-      <div className={styleModule.holdOverlay}></div>
+      <div className="holdOverlay bg-bg-alt absolute top-0 left-[1vw] block h-full w-full opacity-20"></div>
       {children}
     </button>
   )
