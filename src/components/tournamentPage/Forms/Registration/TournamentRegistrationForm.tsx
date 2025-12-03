@@ -61,10 +61,10 @@ export default function TournamentRegistrationForm({
         (
           <>
 
-            <h1 className={"font-bold text-2xl text-center w-full"}>Регистрация на турнир</h1>
+            <h1 className={"font-bold text-2xl text-center w-full text-text-main"}>Регистрация на турнир</h1>
             <Forms.Root isEdit={isEdit} isExpanded={false}>
               <Forms.Trigger
-                className="mt-4 flex flex-col gap-2"
+                className="mt-4 flex flex-col gap-2 text-text-main"
                 onConfirm={(e) => {
                   console.log("filled form", e.entries().toArray())
                   e.set("token", token)
@@ -123,6 +123,7 @@ export default function TournamentRegistrationForm({
                       return <p>Unknown</p>
                   }
                 })}
+                {error && (<p className="text-red-500">При отправке формы произошла ошибка</p>)}
                 {isEdit && (
                   <Forms.ConfirmButton
                     className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary h-10 rounded-xl border px-10 font-bold">

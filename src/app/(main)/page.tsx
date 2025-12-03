@@ -118,7 +118,7 @@ export default async function Home() {
           href={``}
         >
           <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
-            <FaLock className="size-full p-15 md:p-30"/>
+            <FaLock className="text-text-main size-full p-15 md:p-30"/>
             {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
           </div>
           <div className="relative z-1 size-full">
@@ -149,7 +149,7 @@ export default async function Home() {
           href={``}
         >
           <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
-            <FaLock className="size-full p-15 md:px-30"/>
+            <FaLock className="text-text-main size-full p-15 md:px-30"/>
             {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
           </div>
           <div className="relative z-1 size-full">
@@ -186,7 +186,7 @@ export default async function Home() {
           href={``}
         >
           <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
-            <FaLock className="size-full p-15 md:p-30"/>
+            <FaLock className="size-full text-text-main p-15 md:p-30"/>
             {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
           </div>
           <div className="relative z-1 size-full">
