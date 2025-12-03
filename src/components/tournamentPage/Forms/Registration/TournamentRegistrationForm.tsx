@@ -108,7 +108,7 @@ export default function TournamentRegistrationForm({
                     case "problems_checkboxes":
                       return (
                         <ProblemsProviderWrapper key={field.key}>
-                          <CheckboxesWithProblems key={field.key} title={field.title} year={formInfo.} ttype={}/>
+                          <CheckboxesWithProblems key={field.key} title={field.title} year={2026} ttype={"1"}/>
                         </ProblemsProviderWrapper>
                       )
                     default:

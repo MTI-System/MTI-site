@@ -16,6 +16,7 @@ export const tournamentsBaseQuery = fetchBaseQuery({ baseUrl: TOURNAMENTS_API })
 export const defineTournamentsEndpoints = (
   builder: EndpointBuilder<typeof tournamentsBaseQuery, never, typeof tournamentsReducerPath>,
 ) => ({
+  
   getAvailableStates: builder.query({
     query: ({ year, tt }: { tt: number; year: number }) => `statuses?tournamentTypeId=${tt}&year=${year}`,
     transformResponse: (response: unknown): TournamentStateInterface[] => {

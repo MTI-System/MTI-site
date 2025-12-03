@@ -98,8 +98,7 @@ export default function ProfileMainPage({ profileData }: { profileData: User }) 
           </Tabs.Root>
         </div>
         <HoldButton
-          className={style.logout}
-          style={{ "--main-color": "#FF0000", "--main-light-color": "#FF0000" }}
+          className="text-3xl border-accent-warning bg-accent-warning-alt text-accent-warning"
           onConfirm={() => {
             startTransition(() => {
               cookies.remove("mtiyt_auth_token")
