@@ -30,7 +30,7 @@ export default function LoginLayout({
             />
           </Link>
           <div className="w-full px-6">
-            <div className="border-border flex flex-col gap-2 rounded-2xl border py-5">
+            <div className="border-border flex flex-col gap-2 rounded-2xl border py-5 px-2">
               <h2 className="text-text-main text-center text-3xl font-bold">{title}</h2>
               <p className="text-text-alt text-center text-lg font-medium">{description}</p>
             </div>
