@@ -96,21 +96,21 @@ function LoginPage() {
       <Form className="flex w-full flex-col items-center gap-5" onSubmit={handleSubmit} errors={formErrors}>
         <Field.Root name="username" className="flex w-full flex-col items-start gap-1">
           <Field.Label className="text-lg font-medium text-gray-900">Логин</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
+          <Field.Error className="text-md text-accent-warning" match="customError" />
           <Field.Control
             type="username"
             placeholder="Ваш ник"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-text-alt focus:outline-2 focus:-outline-offset-1 focus:outline-accent-primary"
             
           />
         </Field.Root>
         <Field.Root name="password" className="flex w-full flex-col items-start gap-1">
           <Field.Label className="text-lg font-medium text-gray-900">Пароль</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
+          <Field.Error className="text-md text-accent-warning" match="customError" />
           <Field.Control
             type="password"
             placeholder="Имя Вашего Кота"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-text-alt focus:outline-2 focus:-outline-offset-1 focus:outline-accent-primary"
           />
         </Field.Root>
         <Button
@@ -124,7 +124,7 @@ function LoginPage() {
         >
           {isLoading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
         </Button>
-        <p>
+        <p className="text-text-main">
           Нет аккаунта?{" "}
           <Link className="text-accent-primary font-medium hover:underline" href="/register">
             Зарегистрируйтесь
