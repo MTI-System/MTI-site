@@ -9,6 +9,7 @@ import { setAuth } from "@/redux_stores/Global/AuthSlice"
 import { HoldButton } from "@/components/ui/Buttons"
 import { useTransition } from "react"
 import { Tabs } from "@base-ui-components/react"
+import { FILES_SERVER } from "@/constants/APIEndpoints"
 
 export default function ProfileMainPage({ profileData }: { profileData: User }) {
   const dispatch = useAppDispatch()
@@ -18,87 +19,113 @@ export default function ProfileMainPage({ profileData }: { profileData: User }) 
   return (
     <div className={"flex justify-center py-2 w-full text-text-main"}>
       <div className={"py-5 bg-bg-alt flex flex-col items-center justify-center w-full rounded-2xl"}>
-        <h1 className={"font-bold text-3xl"}>Добро пожаловать, {profileData?.username}!</h1>
-        <p className={"py-5"}>Ниже представлены разделы, с инструкцией по работе с сайтом в зависимости от вашей роли.</p>
-        <div className={"w-full px-10 min-h-[50vh] "}>
-          <Tabs.Root className="rounded-md border border-border size-full" defaultValue="player">
-            <Tabs.List className="relative z-0 flex gap-1 px-2 shadow-[inset_0_-1px] shadow-border w-full justify-between">
-              <Tabs.Tab
-                className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
-                value="player"
-              >
-                Участник
-              </Tabs.Tab>
-              <Tabs.Tab
-                className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-text-main"
-                value="trainer"
-              >
-                Тренер команды
-              </Tabs.Tab>
-              <Tabs.Tab
-                className="pointer-events-none flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
-                value="jury"
-              >
-                Жюри
-              </Tabs.Tab>
-              <Tabs.Tab
-                className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-text-main"
-                value="organizators"
-              >
-                Организатор
-              </Tabs.Tab>
-              <Tabs.Tab
-                className="pointer-events-none flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
-                value="moderator"
-              >
-                Модератор
-              </Tabs.Tab>
-              <Tabs.Indicator className="absolute top-1/2 left-0 -z-1 h-6 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-sm bg-gray-100 dark:bg-border transition-all duration-200 ease-in-out" />
-            </Tabs.List>
-            <Tabs.Panel
-              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
-              value="player"
-            >
-              <p>
-                Для участия в турнире тренер команды должен подать заявку, в которой указать вас в качестве участника.
-                <br />
-                Далее вам необходимо подтвердить заявку (в уведомлении на сайте).
-              </p>
-            </Tabs.Panel>
-            <Tabs.Panel
-              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
-              value="trainer"
-            >
-              <p>
-                Вы должны зарегистрировать свою команду на турнир и добавить в неё участников в форме регистрации.
-              </p>
-            </Tabs.Panel>
-            <Tabs.Panel
-              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
-              value="organizators"
-            >
-              <p>
-                Для участия в турнире тренер команды должен подать заявку, в которой указать вас в качестве участника.
-                <br />
-                Далее вам необходимо подтвердить заявку (в уведомлении на сайте).
-              </p>
-            </Tabs.Panel>
-            <Tabs.Panel
-              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
-              value="jury"
-            >
-              <ProjectIcon className="size-10 text-gray-300" />
-            </Tabs.Panel>
-            <Tabs.Panel
-              className="relative flex h-32 items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
-              value="moderator"
-            >
-              <PersonIcon className="size-10 text-gray-300" />
-            </Tabs.Panel>
-          </Tabs.Root>
+        <h1 className={"font-bold text-3xl text-center"}>Добро пожаловать, {profileData?.username}!</h1>
+        <p className={"py-5 text-center"}>Ниже представлены разделы с инструкциями в зависимости от вашей роли.</p>
+        <div className={"w-full px-2 md:px-10 min-h-[50vh] py-5"}>
+<Tabs.Root
+  orientation="horizontal"
+  className="rounded-md border border-border size-full"
+  defaultValue="player"
+>
+  <Tabs.List
+    className="relative z-0 flex flex-col md:flex-row gap-1 px-2 shadow-[inset_0_-1px] shadow-border"
+  >
+    <Tabs.Tab
+      className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main data-active:bg-gray-100 dark:data-active:bg-border"
+      value="player"
+    >
+      Участник
+    </Tabs.Tab>
+    <Tabs.Tab
+      className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-text-main data-active:bg-gray-100 dark:data-active:bg-border"
+      value="trainer"
+    >
+      Тренер команды
+    </Tabs.Tab>
+    <Tabs.Tab
+      className="pointer-events-none flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main data-active:bg-gray-100 dark:data-active:bg-border"
+      value="jury"
+    >
+      Жюри
+    </Tabs.Tab>
+    <Tabs.Tab
+      className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-text-main data-active:bg-gray-100 dark:data-active:bg-border"
+      value="organizators"
+    >
+      Организатор
+    </Tabs.Tab>
+    <Tabs.Tab
+      className="pointer-events-none flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main data-active:bg-gray-100 dark:data-active:bg-border"
+      value="moderator"
+    >
+      Модератор
+    </Tabs.Tab>
+
+    {/* Индикатор только на md+ (горизонтальный вариант) */}
+    <Tabs.Indicator className="absolute hidden md:block top-1/2 left-0 -z-1 h-6 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-sm bg-gray-100 dark:bg-border transition-all duration-200 ease-in-out" />
+  </Tabs.List>
+
+  <Tabs.Panel
+    className="relative flex h-fit items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
+    value="player"
+  >
+    <p className="py-4 text-center flex flex-col items-center">
+      <span className="px-2">Для участия в турнире тренер команды должен подать заявку, указав Вас в качестве участника.</span>
+      <span className="px-2">После подачи заявки Вам придет уведомление о необходимости ее подтвердить.</span>
+      <img className="w-screen md:w-[60vw] my-2" src={FILES_SERVER + "img6.png"} alt={"Изображение"} />
+      <span className="px-2">Нажмите на уведомление, на открывшейся странице внизу подтвердите согласие на передачу информации.</span>
+      <img className="w-screen md:w-[60vw] my-2" src={FILES_SERVER + "img7.png"} alt={"Изображение"} />
+      <span className="px-2">Если все сделано верно, Вы увидете, что заявка подтверждена.</span>
+      <img className="w-screen md:w-[60vw] my-2" src={FILES_SERVER + "img8.png"} alt={"Изображение"} />
+    </p>
+  </Tabs.Panel>
+
+  <Tabs.Panel
+    className="relative flex h-fit items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
+    value="trainer"
+  >
+    <p className="py-4 text-center flex flex-col items-center">
+      <span className="px-2">Вам необходимо зарегистрировать свою команду на турнир и добавить в неё участников в форме регистрации.</span>
+      <span className="px-2">Для этого перейдите на страницу турнира и нажмите "Регистрация на турнир".</span>
+
+      <span className="px-2">vВ открывшейся форме заполните поля, выберите задачи и отправьте форму.</span>
+      <img className="w-screen md:w-[60vw] mt-2" src={FILES_SERVER + "img2.png"} alt={"Изображение"} />
+      <img className="w-screen md:w-[60vw] mb-2" src={FILES_SERVER + "img3.png"} alt={"Изображение"} />
+      <span className="px-2">Если все сделано верно, Вы увидете подтверждение, что форма заполнена.</span>
+      <img className="w-screen md:w-[60vw] my-2" src={FILES_SERVER + "img4.png"} alt={"Изображение"} />
+    </p>
+  </Tabs.Panel>
+
+  <Tabs.Panel
+    className="relative flex h-32 items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
+    value="organizators"
+  >
+    <div className="bg-bg-alt mx-30 flex size-full rounded-2xl flex-col gap-2 px-2 sm:px-10">
+      <p className="text-start w-full pt-4">Для участия в организации турнира обратитесь в поддержку:</p>
+      <ol>
+        <li>Email: <a href={"mailto:antoon.s.ivanov@gmail.com"}>antoon.s.ivanov@gmail.com</a></li>
+        <li>Телеграм: <a className="text-accent-primary" href={"https://t.me/AntonIvanov1111"}>Антон Иванов</a></li>
+      </ol>
+    </div>
+  </Tabs.Panel>
+
+  <Tabs.Panel
+    className="relative flex h-32 items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
+    value="jury"
+  >
+    <ProjectIcon className="size-10 text-gray-300" />
+  </Tabs.Panel>
+
+  <Tabs.Panel
+    className="relative flex h-32 items-center justify-center -outline-offset-1 outline-accent-primary focus-visible:rounded-md focus-visible:outline"
+    value="moderator"
+  >
+    <PersonIcon className="size-10 text-gray-300" />
+  </Tabs.Panel>
+</Tabs.Root>
         </div>
         <HoldButton
-          className="text-3xl border-accent-warning bg-accent-warning-alt text-accent-warning"
+          className="text-3xl border-accent-warning bg-accent-warning-alt text-accent-warning з-2"
           onConfirm={() => {
             startTransition(() => {
               cookies.remove("mtiyt_auth_token")

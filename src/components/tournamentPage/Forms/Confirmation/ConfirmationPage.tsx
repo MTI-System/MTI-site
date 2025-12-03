@@ -98,7 +98,7 @@ export default function ConfirmationPage(
         {(personalDataRequests?.length ?? 1) === 0 && (
           <>
             <FaCircleCheck className="text-green-700 w-full h-[300px]"/>
-            <h1 className="w-full text-center text-3xl font-bold pt-2">Заявка подтверждена</h1>
+            <h1 className="w-full text-center text-3xl font-bold pt-2 text-text-main">Заявка подтверждена</h1>
           </>
         )}
       </div>
