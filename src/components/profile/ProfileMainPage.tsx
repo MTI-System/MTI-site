@@ -24,31 +24,31 @@ export default function ProfileMainPage({ profileData }: { profileData: User }) 
           <Tabs.Root className="rounded-md border border-border size-full" defaultValue="player">
             <Tabs.List className="relative z-0 flex gap-1 px-2 shadow-[inset_0_-1px] shadow-border w-full justify-between">
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
+                className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
                 value="player"
               >
                 Участник
               </Tabs.Tab>
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-text-main"
+                className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-text-main"
                 value="trainer"
               >
                 Тренер команды
               </Tabs.Tab>
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
+                className="pointer-events-none flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
                 value="jury"
               >
                 Жюри
               </Tabs.Tab>
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-text-main"
+                className="cursor-pointer flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline data-active:text-text-main"
                 value="organizators"
               >
                 Организатор
               </Tabs.Tab>
               <Tabs.Tab
-                className="flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
+                className="pointer-events-none flex flex-1 h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-text-alt outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-accent-primary hover:text-text-main focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2 data-active:text-text-main"
                 value="moderator"
               >
                 Модератор
@@ -61,7 +61,7 @@ export default function ProfileMainPage({ profileData }: { profileData: User }) 
             >
               <p>
                 Для участия в турнире тренер команды должен подать заявку, в которой указать вас в качестве участника.
-                <br/>
+                <br />
                 Далее вам необходимо подтвердить заявку (в уведомлении на сайте).
               </p>
             </Tabs.Panel>
@@ -79,7 +79,7 @@ export default function ProfileMainPage({ profileData }: { profileData: User }) 
             >
               <p>
                 Для участия в турнире тренер команды должен подать заявку, в которой указать вас в качестве участника.
-                <br/>
+                <br />
                 Далее вам необходимо подтвердить заявку (в уведомлении на сайте).
               </p>
             </Tabs.Panel>

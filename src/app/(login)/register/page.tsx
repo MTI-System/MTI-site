@@ -84,7 +84,7 @@ export default function Page() {
         ></Step1>
       )
       displayedTitle = "СОЗДАЙТЕ АККАУНТ"
-      displayedDescription = "Создайте аккаунт чтобы участвовать в соревнованиях, получать призы, и что то еще."
+      displayedDescription = "Создайте аккаунт, чтобы получить доступ к функциям менеджера турнирной информации"
       break
     case 2:
       displayForm = (
@@ -101,7 +101,7 @@ export default function Page() {
         ></Step2>
       )
       displayedTitle = "РАССКАЖИТЕ О СЕБЕ"
-      displayedDescription = "Расскажите нам о себе, чтобы мы могли рекомендовать вам подходящие мероприятия."
+      displayedDescription = "Расскажите нам о себе, чтобы мы могли рекомендовать вам подходящие мероприятия"
       break
     case 3:
       displayForm = (
@@ -116,7 +116,7 @@ export default function Page() {
       )
       displayedTitle = "НЕБОЛЬШАЯ ЗАМИНКА"
       displayedDescription =
-        "Вам не исполнилось 14 лет, а значит вы не можете дать нам согласие на ОПД. Для продолжения регистрации необходимо, чтобы согласие на ОПД дал Ваш законный представитель"
+        "Вам не исполнилось 14 лет, поэтому для регистрации необходимо, чтобы согласие на обработку персональных данных дал Ваш законный представитель"
       break
     case 4:
       displayForm = (
@@ -207,20 +207,20 @@ function Step1({ onStepComplete }: { onStepComplete: (data: Step1Interface) => v
         <Field.Root name="login" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Имя пользователя</Field.Label>
           <Field.Error className={fieldErrorClass} match="customError" />
-          <Field.Control type="text" placeholder="ВашЛогин" className={inputClass} />
+          <Field.Control type="text" placeholder="ВашНик" className={inputClass} />
         </Field.Root>
         <Field.Root name="password" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Пароль</Field.Label>
           <Field.Error className={fieldErrorClass} match="customError" />
-          <Field.Control type="password" placeholder="admin" className={inputClass} />
+          <Field.Control type="password" placeholder="ИмяВашегоКота" className={inputClass} />
         </Field.Root>
         <Field.Root name="passwordConfirm" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>И его же ещё разок</Field.Label>
           <Field.Error className={fieldErrorClass} match="customError" />
-          <Field.Control type="password" placeholder="admin" className={inputClass} />
+          <Field.Control type="password" placeholder="ИмяВашегоКота" className={inputClass} />
         </Field.Root>
         <Button className={`${actionButtonClass} text-lg uppercase md:text-xl`} type="submit" disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "ДАЛЕЕ >"}
+          {isLoading ? "Загрузка..." : "ДАЛЕЕ"}
         </Button>
       </Form>
       <p className="text-text-main text-center">
@@ -332,7 +332,7 @@ function Step2({ onStepComplete }: { onStepComplete: (data: Step2Interface) => v
       </Field.Root>
       {/*TODO: Insert correct link on privsacy policy*/}
       <Button className={`${actionButtonClass} text-lg uppercase md:text-xl`} type="submit">
-        ДАЛЕЕ {">"}
+        ДАЛЕЕ
       </Button>
     </Form>
   )
@@ -383,18 +383,18 @@ function Step3({ onStepComplete }: { onStepComplete: (data: Step3Interface) => v
         <Field.Root name="parentFirstName" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Имя</Field.Label>
           <Field.Error className={fieldErrorClass} match="customError" />
-          <Field.Control type="text" placeholder="Антон" className={inputClass} />
+          <Field.Control type="text" placeholder="Иван" className={inputClass} />
         </Field.Root>
         <Field.Root name="parentSecondName" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Фамилия</Field.Label>
           <Field.Error className={fieldErrorClass} match="customError" />
-          <Field.Control type="text" placeholder="Фоломин" className={inputClass} />
+          <Field.Control type="text" placeholder="Иванов" className={inputClass} />
         </Field.Root>
       </div>
       <Field.Root name="parentThirdName" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Отчество</Field.Label>
         <Field.Error className={fieldErrorClass} match="customError" />
-        <Field.Control type="text" placeholder="Отчество (при наличии)" className={inputClass} />
+        <Field.Control type="text" placeholder="Иванович" className={inputClass} />
       </Field.Root>
       <Field.Root name="parentContact" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Контактный номер</Field.Label>
@@ -436,7 +436,7 @@ function Step3({ onStepComplete }: { onStepComplete: (data: Step3Interface) => v
       </Field.Root>
       {/*TODO: Insert correct link on privsacy policy*/}
       <Button className={`${actionButtonClass} text-lg uppercase md:text-xl`} type="submit">
-        ДАЛЕЕ {">"}
+        ДАЛЕЕ
       </Button>
     </Form>
   )
