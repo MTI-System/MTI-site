@@ -28,7 +28,8 @@ export default function Page() {
 }
 
 function LoginPage() {
-  const [formErrors, setFormErrors] = useState({})
+  const isErrorInQuery = useRef<boolean>(false)
+  const [formErrors, setFormErrors] = useState<{ username?: string; password?: string}>({})
   const router = useRouter()
 
   const searchParams = useSearchParams()
@@ -57,7 +58,7 @@ function LoginPage() {
 
   async function handleLogin(form: HTMLFormElement) {
     const formData = new FormData(form)
-    const newFormErrors: { username?: string; password?: string } = {}
+    const newFormErrors: { username?: string; password?: string; } = {}
     const email = formData.get("username")
     if (email === "") newFormErrors.username = "Логин не может быть пустым"
     const password = formData.get("password")
@@ -72,8 +73,10 @@ function LoginPage() {
     if (!error) return
     if ((error as FetchBaseQueryError).status === 401) {
       setFormErrors({ username: "Неверный логин", password: "Или пароль" })
+      isErrorInQuery.current = true
     } else {
       setFormErrors({ username: "Произошла неизвестная ошибка", password: "Попробуйте позже" })
+      isErrorInQuery.current = true
     }
   }, [error])
   useEffect(() => {
@@ -90,18 +93,15 @@ function LoginPage() {
       title="ВОЙТИ В АККАУНТ"
       description="Войдите в аккаунт, чтобы получить доступ к функциям организаторов"
     >
-      <Form
-        className="flex w-full flex-col items-center gap-5"
-        onSubmit={handleSubmit}
-        errors={formErrors}
-      >
+      <Form className="flex w-full flex-col items-center gap-5" onSubmit={handleSubmit} errors={formErrors}>
         <Field.Root name="username" className="flex w-full flex-col items-start gap-1">
           <Field.Label className="text-lg font-medium text-gray-900">Логин</Field.Label>
           <Field.Error className="text-md text-red-800" match="customError" />
           <Field.Control
             type="username"
-            placeholder="ВашеНик"
+            placeholder="Ваш ник"
             className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+            
           />
         </Field.Root>
         <Field.Root name="password" className="flex w-full flex-col items-start gap-1">
@@ -109,7 +109,7 @@ function LoginPage() {
           <Field.Error className="text-md text-red-800" match="customError" />
           <Field.Control
             type="password"
-            placeholder="ИмяВашегоКота"
+            placeholder="Имя Вашего Кота"
             className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
           />
         </Field.Root>
@@ -117,10 +117,19 @@ function LoginPage() {
           className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
           disabled={isLoading}
           type="submit"
+          onClick={() => {
+            if (isErrorInQuery.current) setFormErrors({})
+            isErrorInQuery.current = false
+          }}
         >
           {isLoading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
         </Button>
-        <p>Нет аккаунта? <Link className="text-accent-primary hover:underline font-medium" href="/register">Зарегистрируйтесь</Link></p>
+        <p>
+          Нет аккаунта?{" "}
+          <Link className="text-accent-primary font-medium hover:underline" href="/register">
+            Зарегистрируйтесь
+          </Link>
+        </p>
       </Form>
     </LoginLayout>
   )
