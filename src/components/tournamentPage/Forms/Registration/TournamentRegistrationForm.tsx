@@ -20,6 +20,7 @@ import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
 import CheckboxesWithProblems from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxesWithProblems";
 import {useGetTournamentCardQuery} from "@/api/tournaments/clientApiInterface";
 import Loading from "@/app/loading";
+import {useRouter} from "next/navigation";
 
 export default function TournamentRegistrationForm({
                                                      formInfo,
@@ -42,6 +43,14 @@ export default function TournamentRegistrationForm({
     formFlag: "registration",
   }, {skip: !authId || !formInfo || !isEdit})
   const token = useAppSelector((state) => state.auth.token)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!token){
+      router.push("/login")
+    }
+
+  }, [token]);
 
   useEffect(()=>{
     if (isSuccess){
@@ -126,7 +135,7 @@ export default function TournamentRegistrationForm({
                 {error && (<p className="text-red-500">При отправке формы произошла ошибка. Попробуйте позже</p>)}
                 {isEdit && (
                   <Forms.ConfirmButton
-                    className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary h-10 rounded-xl border px-10 font-bold">
+                    className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary h-10 rounded-xl border px-10 font-bold cursor-pointer">
                     Отправить форму
                   </Forms.ConfirmButton>
                 )}

@@ -72,7 +72,6 @@ export default function CheckboxGroupRegistrationField(
           ))}
       </Forms.EdiatableItems>
       <Forms.DefaultItems>
-        <h1>Future</h1>
         {group.fields.map((checkbox) => (
           <div key={checkbox.value}>
             <label className="flex justify-start items-center gap-2 text-base text-gray-900">
