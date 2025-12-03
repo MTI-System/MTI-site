@@ -35,9 +35,9 @@ export default function PersonPicker({
       error={isError ? "Не найдено" : undefined}
       placeholder={placeholder}
       classNames={{
-        label: "flex flex-col gap-1 text-sm leading-5 font-medium text-gray-900",
+        label: "flex flex-col gap-1 text-sm leading-5 font-medium text-gray-900 text-text-main",
         input:
-          "bg-[canvas] h-10 w-[16rem] md:w-[20rem] font-normal rounded-md border border-gray-200 pl-3.5 text-base text-gray-900 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800",
+          "bg-[canvas] h-10 w-[16rem] md:w-[20rem] font-normal rounded-md border border-gray-200 pl-3.5 text-base text-gray-900 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800 text-text-main",
       }}
       onClose={(item) => {
         if (item != null) {
