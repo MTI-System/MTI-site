@@ -31,6 +31,7 @@ export const TournamentCard = z.object({
   location: TournamentLocation,
   start_date_timestamp: z.number(),
   end_date_timestamp: z.number(),
+  tournament_type: z.number(),
 })
 
 export const TournamentScoreEntity = z.object({

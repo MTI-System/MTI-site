@@ -8,7 +8,6 @@ export default async function ApplicationsPageList({ params }: { params: Promise
       <UsersProviderWrapper>
         <ApplicationsPage id={id}/>
       </UsersProviderWrapper>
-
     </>
   )
 }

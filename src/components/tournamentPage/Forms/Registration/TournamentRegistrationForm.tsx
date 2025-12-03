@@ -18,6 +18,8 @@ import CheckboxGroupRegistrationField
   from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxGroupRegistrationField";
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
 import CheckboxesWithProblems from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxesWithProblems";
+import {useGetTournamentCardQuery} from "@/api/tournaments/clientApiInterface";
+import Loading from "@/app/loading";
 
 export default function TournamentRegistrationForm({
                                                      formInfo,
@@ -32,6 +34,7 @@ export default function TournamentRegistrationForm({
 }) {
   const [submitFormAnswer, {data, isLoading, isError, error, isSuccess}] = useSubmitFormAnswerMutation()
   const authId = useAppSelector(state => state.auth.authInfo?.user_id)
+  const {data: tournamentCard, isLoading: isTournamentCardLoading} = useGetTournamentCardQuery({id: tournamentId})
   // const year = useAppSelecto
   const {data: isFromFilled, refetch} = useIsFormFilledQuery({
     userId: authId ?? 0,
@@ -108,7 +111,12 @@ export default function TournamentRegistrationForm({
                     case "problems_checkboxes":
                       return (
                         <ProblemsProviderWrapper key={field.key}>
-                          <CheckboxesWithProblems key={field.key} title={field.title} year={formInfo.} ttype={}/>
+                          {isTournamentCardLoading && <Loading/>}
+                          {!isTournamentCardLoading
+                            &&
+                              <CheckboxesWithProblems formKey={field.key} title={field.title}
+                                                   year={tournamentCard?.year ?? 2026}
+                                                   ttype={tournamentCard?.tournament_type?.toString() ?? "1"}/>}
                         </ProblemsProviderWrapper>
                       )
                     default:

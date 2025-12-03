@@ -4,7 +4,7 @@ import CheckboxGroupRegistrationField
 import {useGetProblemsQuery} from "@/api/problems/clientApiInterface";
 import Loading from "@/app/loading";
 
-export default function CheckboxesWithProblems({key, title, ttype, year}: {key: string, title: string, year: number, ttype: string}) {
+export default function CheckboxesWithProblems({formKey, title, ttype, year}: {formKey: string, title: string, year: number, ttype: string}) {
   const {data, isLoading} = useGetProblemsQuery({tournament: ttype, year: year})
   const fieldsProps = data?.map((item) => {
     return {
@@ -17,11 +17,12 @@ export default function CheckboxesWithProblems({key, title, ttype, year}: {key: 
   return (
     <>
       {isLoading && <Loading/>}
-      {!isLoading && <CheckboxGroupRegistrationField group={{
-        key: key,
-        title: title,
-        fields: fieldsProps,
-      }}/>}
+      {!isLoading &&
+          <CheckboxGroupRegistrationField group={{
+            key: formKey,
+            title: title,
+            fields: fieldsProps,
+          }}/>}
     </>
   )
 }

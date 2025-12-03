@@ -2,24 +2,28 @@
 import {usePersonalDAtaRequestGrandMutation, usePersonalDataRequestsQuery} from "@/api/auth/clientApiInterface"
 import Loading from "@/app/loading"
 import RegisterRequest from "@/components/personalDataRequests/RegisterRequest"
-import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
-import { Button, Form } from "@base-ui-components/react"
+import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore"
+import {Button, Form} from "@base-ui-components/react"
 import {useEffect, useState} from "react";
 import {FaCircleCheck} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
 import {useGetAnswerQuery} from "@/api/registration/clientApiInterface";
 import TournamentRegistrationForm from "@/components/tournamentPage/Forms/Registration/TournamentRegistrationForm";
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper";
 
 
 export default function ConfirmationPage(
-  {tournamentId}: { tournamentId: number}
-){
+  {tournamentId}: { tournamentId: number }
+) {
   // Сначала ищется заявка с этим пользователем (сделать эндпоинт)
   // Эта заявка отображается.
   // Далее галочки, которые летят со специального эндпоинта и кнопка подтвердить заявку. ready
   const token = useAppSelector(store => store.auth.token)
-  const {data: personalDataRequests, isLoading, isSuccess, refetch} = usePersonalDataRequestsQuery({token: token, tournamentId: tournamentId})
-  const [requestsChecks, setRequestsChecks] =  useState<boolean[]>([])
+  const {data: personalDataRequests, isLoading, isSuccess, refetch} = usePersonalDataRequestsQuery({
+    token: token,
+    tournamentId: tournamentId
+  })
+  const [requestsChecks, setRequestsChecks] = useState<boolean[]>([])
   const [grandPermission, {isLoading: isGranting, isSuccess: isGranted}] = usePersonalDAtaRequestGrandMutation()
   const {data: filledForm} = useGetAnswerQuery(
     {
@@ -29,9 +33,9 @@ export default function ConfirmationPage(
     }
   )
   const router = useRouter()
-  useEffect(()=>{
-    if(personalDataRequests) {
-      setRequestsChecks(personalDataRequests.map(()=>false))
+  useEffect(() => {
+    if (personalDataRequests) {
+      setRequestsChecks(personalDataRequests.map(() => false))
     }
   }, [personalDataRequests])
 
@@ -41,7 +45,7 @@ export default function ConfirmationPage(
 
   useEffect(() => {
     console.log("granted", isGranted)
-    if (isGranted){
+    if (isGranted) {
       refetch()
       // router.refresh()
     }
@@ -49,10 +53,9 @@ export default function ConfirmationPage(
 
 
   const acceptAll = () => {
-    grandPermission({token: token, pdIds: personalDataRequests?.map(item=>item.requestId) ?? []})
+    grandPermission({token: token, pdIds: personalDataRequests?.map(item => item.requestId) ?? []})
     router.refresh()
   }
-
 
 
   return (
@@ -61,10 +64,13 @@ export default function ConfirmationPage(
         {isLoading && <Loading/>}
         {!isLoading && ((personalDataRequests?.length ?? 0) > 0) && (
           <>
-            {filledForm ? <TournamentRegistrationForm formInfo={filledForm} className={""} isEdit={false} tournamentId={tournamentId}/> : <Loading/>}
+            <TournamentsProviderWrapper>
+              {filledForm ? <TournamentRegistrationForm formInfo={filledForm} className={""} isEdit={false}
+                                                        tournamentId={tournamentId}/> : <Loading/>}
+            </TournamentsProviderWrapper>
             <Form
               className="flex flex-col gap-2 mt-2"
-              onSubmit={async (e)=>{
+              onSubmit={async (e) => {
                 e.preventDefault();
                 acceptAll()
 
@@ -72,7 +78,9 @@ export default function ConfirmationPage(
               {personalDataRequests?.map((item, idx) => {
                 switch (item.type.typeFlag) {
                   case "tournamentPdGifting":
-                    return <RegisterRequest key={item.requestId} updateCheck={(isOn: boolean)=>{changeFlag(idx, isOn)}}/>
+                    return <RegisterRequest key={item.requestId} updateCheck={(isOn: boolean) => {
+                      changeFlag(idx, isOn)
+                    }}/>
                 }
               })}
               <Button

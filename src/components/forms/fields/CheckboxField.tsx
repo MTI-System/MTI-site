@@ -12,9 +12,11 @@ interface CheckboxFieldProps extends Omit<Checkbox.Root.Props, "inputRef" | "nam
   value: string
   onChange?: (value: string, state: boolean) => void
   is_grouped?: boolean
+  title: string
+  defaultChecked?: boolean
 }
 
-export function CheckboxField({ onVerification, name, value, className, is_grouped=false, onChange=(value, is_chacked)=>{}, ...rest }: CheckboxFieldProps) {
+export function CheckboxField({ onVerification, name, title, value, className, is_grouped=false, defaultChecked=false, onChange=(value, is_chacked)=>{}, ...rest }: CheckboxFieldProps) {
   const { register, setFormField } = useCardsRoot()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -46,11 +48,10 @@ export function CheckboxField({ onVerification, name, value, className, is_group
         <Checkbox.Root
           name={name}
           inputRef={inputRef}
+          checked={defaultChecked}
           onCheckedChange={(e)=>{
-            // console.log("checked changed", value)
             onChange(name, e)
           }}
-
           value={value}
           className={twclsx(
             "flex size-5 items-center justify-center rounded-sm focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-blue-800 data-checked:bg-gray-900 data-unchecked:border data-unchecked:border-gray-300",
@@ -63,6 +64,7 @@ export function CheckboxField({ onVerification, name, value, className, is_group
             <CheckIcon className="size-3" />
           </Checkbox.Indicator>
         </Checkbox.Root>
+        <p className="ps-2">{title}</p>
       </ErrorTooltip>
     </>
   )

@@ -39,13 +39,14 @@ export default function CheckboxGroupRegistrationField(
   }, [])
 
   return (
-    <>
-      {group.title}
+    <div className={"border p-2 border-border rounded-lg"}>
+      <h4 className="font-bold pb-2">{group.title}</h4>
       <Forms.EdiatableItems>
           {group.fields.map((checkbox) => (
             <>
               <label className="flex justify-start items-center gap-2 text-base text-gray-900">
                 <Forms.CheckboxField
+                  title={checkbox.title}
                   value={checkbox.value}
                   is_grouped={true}
                   onChange={(value, is_checked)=>{
@@ -55,7 +56,6 @@ export default function CheckboxGroupRegistrationField(
                     else {
                       fields.current.delete(value)
                     }
-                    // console.log("fields ___", fields.current.keys().toArray().toString())
                   }}
                   onVerification={() => {
                     return {
@@ -64,17 +64,40 @@ export default function CheckboxGroupRegistrationField(
                   }}
                   name={checkbox.value}
                 />
-                {checkbox.title}
               </label>
             </>
 
           ))}
-
-
-
       </Forms.EdiatableItems>
       <Forms.DefaultItems>
         <h1>Future</h1>
+        {group.fields.map((checkbox) => (
+          <>
+            <label className="flex justify-start items-center gap-2 text-base text-gray-900">
+              <Forms.CheckboxField
+                defaultChecked={true}
+                title={checkbox.title}
+                value={checkbox.value}
+                is_grouped={true}
+                onChange={(value, is_checked)=>{
+                  if (is_checked) {
+                    fields.current.add(value)
+                  }
+                  else {
+                    fields.current.delete(value)
+                  }
+                }}
+                onVerification={() => {
+                  return {
+                    isSuccess: true,
+                  }
+                }}
+                name={checkbox.value}
+              />
+            </label>
+          </>
+
+        ))}
         {/* {fieldContent && (
             <>
                 <div className="border-border bg-bg-main-accent h-15 w-full rounded-md border px-2">
@@ -86,7 +109,7 @@ export default function CheckboxGroupRegistrationField(
             )}
             {!fieldContent && <p>Ошибка!</p>} */}
       </Forms.DefaultItems>
-    </>
+    </div>
 
   )
 }

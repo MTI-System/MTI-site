@@ -5,6 +5,8 @@ import Loading from "@/app/loading"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import TournamentRegistrationForm from "../Registration/TournamentRegistrationForm"
 import { Accordion } from "@base-ui-components/react"
+import {useGetTournamentCardQuery} from "@/api/tournaments/clientApiInterface";
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper";
 
 export default function ApplicationsPage(
     {id}: {id: number}
@@ -34,7 +36,8 @@ export default function ApplicationsPage(
                         </Accordion.Trigger>
                       </Accordion.Header>
                       <Accordion.Panel className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-gray-600 transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
-                        <TournamentRegistrationForm formInfo={answer} isEdit={false} className={""} tournamentId={id}/>
+                        <TournamentsProviderWrapper>
+                          <TournamentRegistrationForm formInfo={answer} isEdit={false} className={""} tournamentId={id}/> </TournamentsProviderWrapper>
                       </Accordion.Panel>
                     </Accordion.Item>
                 )}
