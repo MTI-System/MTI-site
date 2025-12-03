@@ -126,13 +126,13 @@ export default function TournamentsPageTabs({
       href: `/tournaments/${tournamentCard.id}/staff/management`,
       title: "Администраторы",
       description: "Выдачи прав администрации турнира",
-      isLocked: false,
+      isLocked: true,
     },
     {
       href: `/tournaments/${tournamentCard.id}/staff/jury`,
       title: "Жюри",
       description: "Список жюри",
-      isLocked: false,
+      isLocked: true,
     },
   ]
 

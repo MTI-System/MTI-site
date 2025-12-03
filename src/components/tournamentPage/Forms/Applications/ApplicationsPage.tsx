@@ -34,7 +34,7 @@ export default function ApplicationsPage(
                         </Accordion.Trigger>
                       </Accordion.Header>
                       <Accordion.Panel className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-gray-600 transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
-                        <TournamentRegistrationForm formInfo={answer} isEdit={false} className={""}/>
+                        <TournamentRegistrationForm formInfo={answer} isEdit={false} className={""} tournamentId={id}/>
                       </Accordion.Panel>
                     </Accordion.Item>
                 )}

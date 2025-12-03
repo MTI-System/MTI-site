@@ -7,8 +7,7 @@ import NotificationsButton from "@/components/notifications/NotificationsButton"
 import { cookies } from "next/headers"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
-import { authApiServer } from "@/api/auth/serverApiInterface"
-import { makeAuthStoreServer } from "@/api/auth/serverStore"
+
 
 export default async function Header() {
   const initTT = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"

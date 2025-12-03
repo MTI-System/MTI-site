@@ -4,8 +4,8 @@ import Link from "next/link";
 export default function NotificationItem({ notification }: { notification: NotificationInterface }) {
   return (
     <div className="relative">
-      {notification.metadata.type === "personalData" ? (
-        <Link href={`/tournaments/${notification.metadata.personalDataTournamentId}/registration/conformation`} >
+      {(notification.metadata.type === "personalData" && !notification.is_read) ? (
+        <Link href={`/tournaments/${notification.metadata.personalDataTournamentId}/registration/conformation`}>
           <div className="border-border text-text-main rounded-2xl border p-2">
             <h3 className="font-bold">{notification.title}</h3>
             <p>{notification.content}</p>

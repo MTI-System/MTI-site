@@ -20,4 +20,18 @@ export const defineNotificationsEndpoints = (
       return null
     },
   }),
-})
+  markAsRead: builder.mutation({
+    query: ({ notificationId, token }: { notificationId: number, token: string }) => {
+      const formData = new FormData()
+      formData.set("token", token)
+      formData.set("notifyId", notificationId.toString())
+      return {
+        url: `read_notifications`,
+        method: "POST",
+        body: formData
+      }
+    }
+  })
+}
+
+)
