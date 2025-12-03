@@ -16,7 +16,7 @@ type ButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> & 
  */
 export function Button({ children, className = "", style, ...rest }: ButtonProps) {
   return (
-    <button className={twclsx(className)} style={style} {...rest}>
+    <button className={twclsx("cursor-pointer", className)} style={style} {...rest}>
       {children}
     </button>
   )
