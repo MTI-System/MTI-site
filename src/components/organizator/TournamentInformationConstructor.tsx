@@ -12,12 +12,8 @@ import { TextEmbedding } from "../materials/TextEmbedding"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import { RiExpandUpDownFill } from "react-icons/ri"
 import { FaCheck } from "react-icons/fa6"
-import { EmbeddingCard } from "../materials/FileEmbeddings"
-import { MdOutlineClose, MdOutlineRefresh } from "react-icons/md"
-import axios from "axios"
-import { FILES_API, MATERIAL_API } from "@/constants/APIEndpoints"
 import { useSelector } from "react-redux"
-import { string } from "zod"
+import TextareaAutosize from "react-textarea-autosize"
 
 export interface PendingInterface {
   pendingContent?: string | File | null
@@ -93,8 +89,7 @@ export default function TournamentInformationConstructor({
           </Popover.Portal>
         </Popover.Root>
       </div>
-
-      <div className="flex flex-col gap-2 py-2">
+      <div className="flex flex-col gap-4 py-2">
         {materials.map((material, index) => (
           <AppendableInfoContainer
             key={index}
@@ -107,19 +102,31 @@ export default function TournamentInformationConstructor({
               })
               return undefined
             }}
-            className="flex flex-row justify-between"
-            btnDivClassName="flex flex-row justify-between"
-            btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+            className="flex flex-row justify-between gap-2"
+            btnDivClassName="flex flex-row justify-between gap-2"
+            btnClassName="max-h-22 h-full w-20 rounded-xl border-2 flex items-center justify-center text-2xl"
+            addClassName="text-accent-primary border-accent-primary bg-accent-primary-alt"
+            editClassName="text-accent-primary border-accent-primary bg-accent-primary-alt"
+            deleteClassName="text-accent-warning border-accent-warning bg-accent-warning-alt"
+            confirmClassName="text-accent-accept border-accent-accept bg-accent-accept-alt"
+            discardClassName="text-accent-warning border-accent-warning bg-accent-warning-alt"
           >
             <InputRow />
           </AppendableInfoContainer>
         ))}
+        {materials.length > 0 && <div className="border-border w-full border-2 border-b"></div>}
+
         <AppendableInfoContainer
           key={materials.length}
           onInfoChange={handleEditDone}
-          className="flex flex-row justify-between"
-          btnDivClassName="flex flex-row justify-between"
-          btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+          className="flex flex-row justify-between gap-2"
+          btnDivClassName="flex flex-row justify-between gap-2"
+          btnClassName="max-h-22 h-full w-20 rounded-xl border-2 flex items-center justify-center text-2xl"
+          addClassName="text-accent-primary border-accent-primary bg-accent-primary-alt w-42"
+          editClassName="text-accent-primary border-accent-primary bg-accent-primary-alt"
+          deleteClassName="text-accent-warning border-accent-warning bg-accent-warning-alt"
+          confirmClassName="text-accent-accept border-accent-accept bg-accent-accept-alt"
+          discardClassName="text-accent-warning border-accent-warning bg-accent-warning-alt"
         >
           <InputRow />
         </AppendableInfoContainer>
@@ -130,10 +137,9 @@ export default function TournamentInformationConstructor({
 
 function InputRow() {
   const { info, setAppendableInfo, isEditable, error } = useContext(AppendableInfoContext)
+  // TODO: Add error handling
 
-  const token = useSelector((state: any) => state.auth.token)
   if (!isEditable)
-    // TODO: Add display of pending object s and remove file upload from here
     return info.pendingContent ? (
       info.content_type?.type_name === "Text" ? (
         <TextEmbedding text={info.pendingContent as string} title={info.pendingTitle as string} />
@@ -177,7 +183,7 @@ function InputRow() {
       </ProblemsProviderWrapper>
     )
   return (
-    <div className="flex w-full flex-row justify-between">
+    <div className="flex w-full flex-row justify-between gap-2">
       <EmbeddingInput
         defaultValue={info.pendingContent ?? info.embedding?.content ?? null}
         contentType={info.content_type}
@@ -188,10 +194,10 @@ function InputRow() {
           if (info.content_type.type_name === "Link") setAppendableInfo({ pendingMetadata: { is_external: "true" } })
         }}
       />
-      <div className="flex flex-row justify-end gap-2">
+      <div className="flex w-fit flex-col justify-start gap-2">
         <Input
           className="border-border h-10 w-full rounded-md border p-2 text-sm text-gray-900"
-          placeholder="Название"
+          placeholder="Заголовок"
           value={info.pendingTitle ?? info.embedding?.title ?? ""}
           onChange={(e) => {
             setAppendableInfo({ pendingTitle: e.target.value })
@@ -219,34 +225,39 @@ function EmbeddingInput({
 }) {
   if (contentType?.type_name === "Text")
     return (
-      <textarea
+      <TextareaAutosize
+        className="border-border text-text-main w-full max-w-200 resize-none rounded-md border p-2 text-sm"
         defaultValue={typeof defaultValue === "string" ? defaultValue : ""}
         onChange={(e) => {
           onContentUpdate(e.target.value)
         }}
-      ></textarea>
+      ></TextareaAutosize>
     )
   else if (contentType?.type_name === "Link")
     return (
-      <input
-        defaultValue={typeof defaultValue === "string" ? defaultValue : ""}
+      <Input
+        className="border-border text-text-main text-md field-sizing-content h-fit w-full max-w-200 rounded-md border px-2 pt-2 pb-14"
+        placeholder="Ссылка"
+        value={typeof defaultValue === "string" ? defaultValue : ""}
         onChange={(e) => {
           onContentUpdate(e.target.value)
         }}
-      ></input>
+      ></Input>
     )
   else if (contentType?.type_name === "Location") return <p>Location {/*TODO: Add location picker*/}</p>
   else
     return (
-      <AddFileField
-        defaultValue={typeof defaultValue === "string" ? null : defaultValue}
-        onFileSet={(file) => {
-          onContentUpdate(file)
-        }}
-        disabled={false}
-        accept={contentType?.allowed_mime_types ?? "*/*"}
-        isInline={true}
-      />
+      <div className="w-full max-w-200">
+        <AddFileField
+          defaultValue={typeof defaultValue === "string" ? null : defaultValue}
+          onFileSet={(file) => {
+            onContentUpdate(file)
+          }}
+          disabled={false}
+          accept={contentType?.allowed_mime_types ?? "*/*"}
+          isInline={true}
+        />
+      </div>
     )
 }
 
@@ -273,7 +284,10 @@ function EmbeddingTypeSelector({
     }
   }, [isLoading, isSuccess])
 
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading)
+    return (
+      <p className="border-border h-10 w-full rounded-md border p-2 text-center text-sm text-gray-500">Loading...</p>
+    )
   return (
     <Select.Root
       items={availableTypes}
@@ -285,7 +299,7 @@ function EmbeddingTypeSelector({
         }
       }}
     >
-      <Select.Trigger className="flex h-10 w-fit min-w-36 cursor-default items-center justify-between gap-3 rounded-md border border-gray-200 pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-popup-open:bg-gray-100">
+      <Select.Trigger className="border-border flex h-10 w-full min-w-fit cursor-default items-center justify-between gap-3 rounded-md border pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-popup-open:bg-gray-100">
         <Select.Value />
         <Select.Icon className="flex">
           <RiExpandUpDownFill />
@@ -329,10 +343,11 @@ function PendingPictureEmbedding({
     [pendingContent],
   )
   return (
-    <>
+    <div className="h-full w-full">
+      <p className="text-text-main text-3xl font-bold pb-2">{pendingTitle ?? ""}</p>
       <img src={url} alt={pendingTitle ?? ""}></img>
       {/* TODO: Picture Embedding */}
-    </>
+    </div>
   )
 }
 
@@ -348,10 +363,11 @@ function PendingVideoEmbedding({
     [pendingContent],
   )
   return (
-    <>
+    <div className="h-full w-full">
+      <p className="text-text-main text-3xl font-bold pb-2">{pendingTitle ?? ""}</p>
       <video src={url}></video>
       {/* TODO: Video Embedding */}
-    </>
+    </div>
   )
 }
 
@@ -380,7 +396,7 @@ function PendingUniversalEmbedding({
           display_name: "Руизвестный тип",
           allowed_mime_types: "",
         },
-        metadata: { ...pendingMetadata, is_external: "false" },
+        metadata: { is_external: "false", ...pendingMetadata },
       }}
     />
   )

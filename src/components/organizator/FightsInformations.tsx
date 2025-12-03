@@ -13,7 +13,7 @@ type ContainerInterface = {
 export default function FightsInformations({ update }: { update: TournamentCardCallback }) {
   const [fightContainers, setFightContainers] = useState<ContainerInterface[]>([])
   return (
-    <>
+    <div className="w-full h-full flex flex-col gap-2">
       <div className="flex h-fit justify-between">
         <h2 className="text-xl font-medium">Конструктор информации о боях</h2>
         <Popover.Root>
@@ -26,14 +26,14 @@ export default function FightsInformations({ update }: { update: TournamentCardC
                 <Popover.Title className="text-base font-medium">
                   Добавьте список боев, которые будут играться на турнире!
                 </Popover.Title>
-                  Каждый добавленный пункт - это один отборочный бой или финал.
-                  <br />
-                  Пример списка:
-                  <ol className="ms-5 list-disc">
-                    <li>Первый отборочный бой</li>
-                    <li>Второй отборочный бой</li>
-                    <li>Финал</li>
-                  </ol>
+                Каждый добавленный пункт - это один отборочный бой или финал.
+                <br />
+                Пример списка:
+                <ol className="ms-5 list-disc">
+                  <li>Первый отборочный бой</li>
+                  <li>Второй отборочный бой</li>
+                  <li>Финал</li>
+                </ol>
               </Popover.Popup>
             </Popover.Positioner>
           </Popover.Portal>
@@ -65,14 +65,19 @@ export default function FightsInformations({ update }: { update: TournamentCardC
             })
             return undefined
           }}
-          className="flex flex-row justify-between"
-          btnDivClassName="flex flex-row justify-between"
-          btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+          className="flex flex-row justify-between gap-2"
+          btnDivClassName="flex flex-row justify-between gap-2"
+          btnClassName="max-h-22 h-full w-20 rounded-xl border-2 flex items-center justify-center text-2xl"
+          addClassName="text-accent-primary border-accent-primary bg-accent-primary-alt w-42"
+          editClassName="text-accent-primary border-accent-primary bg-accent-primary-alt"
+          deleteClassName="text-accent-warning border-accent-warning bg-accent-warning-alt"
+          confirmClassName="text-accent-accept border-accent-accept bg-accent-accept-alt"
+          discardClassName="text-accent-warning border-accent-warning bg-accent-warning-alt"
         >
           <InputRow />
         </AppendableInfoContainer>
       ))}
-      {fightContainers.length > 0 && <div className="my-2 w-full border-2 border-b border-gray-300"></div>}
+      {fightContainers.length > 0 && <div className="w-full border-2 border-b border-border"></div>}
       <AppendableInfoContainer
         key={fightContainers.length + "new"}
         onInfoChange={(info) => {
@@ -87,13 +92,18 @@ export default function FightsInformations({ update }: { update: TournamentCardC
           })
           return []
         }}
-        className="flex flex-row justify-between"
-        btnDivClassName="flex flex-row justify-between"
-        btnClassName="border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border"
+        className="flex flex-row justify-between gap-2"
+        btnDivClassName="flex flex-row justify-between gap-2"
+        btnClassName="max-h-22 h-full w-20 rounded-xl border-2 flex items-center justify-center text-2xl"
+        addClassName="text-accent-primary border-accent-primary bg-accent-primary-alt w-42"
+        editClassName="text-accent-primary border-accent-primary bg-accent-primary-alt"
+        deleteClassName="text-accent-warning border-accent-warning bg-accent-warning-alt"
+        confirmClassName="text-accent-accept border-accent-accept bg-accent-accept-alt"
+        discardClassName="text-accent-warning border-accent-warning bg-accent-warning-alt"
       >
         <InputRow />
       </AppendableInfoContainer>
-    </>
+    </div>
   )
 }
 
@@ -107,14 +117,14 @@ function InputRow() {
   const dateErrors = error.filter((err) => err.key === "date_timestamp")
   console.log(titleErrors, dateErrors)
   return (
-    <div className="flex flex-row justify-between">
+    <div className={twclsx("flex w-full max-w-100 flex-row items-center justify-between", !isEditable && "py-2")}>
       <Tooltip.Provider>
         {isEditable ? (
           <Tooltip.Root disabled={titleErrors.length === 0}>
             <Tooltip.Trigger>
               <Input
                 className={twclsx(
-                  "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-[2.5rem] w-[6rem] rounded-2xl border",
+                  "border-primary-accent bg-primary-accent/20 text-primary-accent h-10 w-42 rounded-xl border p-2",
                   titleErrors.length > 0 && "border-red-500",
                 )}
                 defaultValue={initialValue ? initialValue : ""}
@@ -126,18 +136,27 @@ function InputRow() {
             </Tooltip.Trigger>
             <Tooltip.Portal>
               <Tooltip.Positioner sideOffset={10}>
-                <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                   <p className="text-red-500">{titleErrors.length > 0 ? titleErrors[0].message : ""}</p>
                 </Tooltip.Popup>
               </Tooltip.Positioner>
             </Tooltip.Portal>
           </Tooltip.Root>
         ) : (
-          <p>{info.title}</p>
+          <p className="text-text-main text-2xl font-bold">{info.title}</p>
         )}
         {isEditable ? (
           <Tooltip.Root disabled={dateErrors.length === 0}>
-            <Tooltip.Trigger render={<div className={twclsx(dateErrors.length > 0 && "text-red-500")}></div>}>
+            <Tooltip.Trigger
+              render={
+                <div
+                  className={twclsx(
+                    "border-primary-accent bg-primary-accent/20 text-primary-accent h-10 rounded-xl border p-2",
+                    dateErrors.length > 0 && "text-red-500",
+                  )}
+                ></div>
+              }
+            >
               <DatePicker
                 type="single"
                 onPick={(date) => {
@@ -149,16 +168,14 @@ function InputRow() {
             </Tooltip.Trigger>
             <Tooltip.Portal>
               <Tooltip.Positioner sideOffset={10}>
-                <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                   <p className="text-red-500">{dateErrors.length > 0 ? dateErrors[0].message : ""}</p>
                 </Tooltip.Popup>
               </Tooltip.Positioner>
             </Tooltip.Portal>
           </Tooltip.Root>
         ) : (
-          <span className="text-[0.8rem]">
-            {info.date_timestamp ? formatDate(info.date_timestamp) : <p>Дата не выбрана</p>}
-          </span>
+          <span className="">{info.date_timestamp ? formatDate(info.date_timestamp) : <p>Дата не выбрана</p>}</span>
         )}
       </Tooltip.Provider>
     </div>

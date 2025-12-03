@@ -1,9 +1,10 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from "react"
-import { FaCheck, FaCross, FaMinus, FaPlus } from "react-icons/fa6"
+import { createContext, useState } from "react"
+import { FaCheck, FaMinus, FaPlus } from "react-icons/fa6"
 import { HoldButton } from "./Buttons"
-import { FaEdit } from "react-icons/fa"
+import { FaEdit, FaTimes } from "react-icons/fa"
+import twclsx from "@/utils/twClassMerge"
 
 export interface EditError {
   key: string
@@ -29,6 +30,11 @@ interface AppendableInfoContainerProps extends React.HTMLAttributes<HTMLDivEleme
   prevInfoInitial?: { [key: string]: any }
   btnDivClassName?: string
   btnClassName?: string
+  editClassName?: string
+  deleteClassName?:string
+  confirmClassName?: string
+  discardClassName?: string
+  addClassName?: string
 }
 
 export default function AppendableInfoContainer({
@@ -38,6 +44,11 @@ export default function AppendableInfoContainer({
   prevInfoInitial,
   btnDivClassName,
   btnClassName,
+  editClassName,
+  deleteClassName,
+  confirmClassName,
+  discardClassName,
+  addClassName,
   ...props
 }: AppendableInfoContainerProps) {
   const [prevInfo, setPrevInfo] = useState<{ [key: string]: any } | undefined>(prevInfoInitial)
@@ -76,7 +87,7 @@ export default function AppendableInfoContainer({
         {prevInfo && !isEditable && (
           <>
             <button
-              className={btnClassName}
+              className={twclsx(btnClassName, editClassName)}
               onClick={() => {
                 setIsEditable(true)
               }}
@@ -84,7 +95,7 @@ export default function AppendableInfoContainer({
               <FaEdit />
             </button>
             <HoldButton
-              className={btnClassName}
+              className={twclsx(btnClassName, deleteClassName)}
               onConfirm={() => {
                 if (onRemove) {
                   const res = onRemove()
@@ -100,7 +111,7 @@ export default function AppendableInfoContainer({
         {prevInfo && isEditable && (
           <>
             <button
-              className={btnClassName}
+              className={twclsx(btnClassName, confirmClassName)}
               onClick={() => {
                 handleEditDone()
               }}
@@ -108,19 +119,19 @@ export default function AppendableInfoContainer({
               <FaCheck />
             </button>
             <button
-              className={btnClassName}
+              className={twclsx(btnClassName, discardClassName)}
               onClick={() => {
                 setIsEditable(false)
                 setAppendableInfo(prevInfo)
               }}
             >
-              <FaCross />
+              <FaTimes />
             </button>
           </>
         )}
         {!prevInfo && (
           <button
-            className={btnClassName}
+            className={twclsx(btnClassName, addClassName)}
             onClick={() => {
               handleEditDone()
             }}
