@@ -123,7 +123,7 @@ export default function TournamentRegistrationForm({
                       return <p>Unknown</p>
                   }
                 })}
-                {error && (<p className="text-red-500">При отправке формы произошла ошибка</p>)}
+                {error && (<p className="text-red-500">При отправке формы произошла ошибка. Попробуйте позже</p>)}
                 {isEdit && (
                   <Forms.ConfirmButton
                     className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary h-10 rounded-xl border px-10 font-bold">
