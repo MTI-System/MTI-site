@@ -14,6 +14,10 @@ import RespondentUser from "@/components/tournamentPage/Forms/Registration/Parts
 import UsersProviderWrapper from "@/api/users/ClientWrapper";
 import {FaCircleCheck} from "react-icons/fa6";
 import {useEffect} from "react";
+import CheckboxGroupRegistrationField
+  from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxGroupRegistrationField";
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
+import CheckboxesWithProblems from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxesWithProblems";
 
 export default function TournamentRegistrationForm({
                                                      formInfo,
@@ -28,6 +32,7 @@ export default function TournamentRegistrationForm({
 }) {
   const [submitFormAnswer, {data, isLoading, isError, error, isSuccess}] = useSubmitFormAnswerMutation()
   const authId = useAppSelector(state => state.auth.authInfo?.user_id)
+  // const year = useAppSelecto
   const {data: isFromFilled, refetch} = useIsFormFilledQuery({
     userId: authId ?? 0,
     tournamentId: tournamentId,
@@ -99,6 +104,12 @@ export default function TournamentRegistrationForm({
                             <PickPersonRegistrationField field={fieldObject}/>
                           </UsersProviderWrapper>
 
+                      )
+                    case "problems_checkboxes":
+                      return (
+                        <ProblemsProviderWrapper key={field.key}>
+                          <CheckboxesWithProblems key={field.key} title={field.title} year={formInfo.} ttype={}/>
+                        </ProblemsProviderWrapper>
                       )
                     default:
                       return <p>Unknown</p>
