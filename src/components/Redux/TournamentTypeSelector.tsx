@@ -19,7 +19,6 @@ export default function TournamentTypeSelector({
   initTournamentType: number
   availableTournamentTypes: TournamentTypeIntarface[]
 }) {
-  // const availableTournamentTypes = useAppSelector((state) => state.searchParams.availableTournamentTypes) ?? []
   const ttddElements = availableTournamentTypes.map((value) => ({
     id: value.id,
     children: (
@@ -35,6 +34,7 @@ export default function TournamentTypeSelector({
   const pathname = usePathname()
   const [hasMounted, setHasMounted] = useState(false)
 
+
   const selectedState = useState<DropdownOptionInterface<string> | null>(
     ttddElements.find((e) => {
       return e.id === initTournamentType
@@ -43,10 +43,6 @@ export default function TournamentTypeSelector({
 
   console.log("asdfqwe", initTournamentType, Number(initTournamentType))
 
-  // useEffect( ()=>{
-  //   dispatcher(setAvailableTournamentTypes(availableTournamentTypes))
-  // }, []
-  // )
   useEffect(() => {
     console.log("bbbb", selectedState)
   }, [selectedState])
@@ -58,6 +54,9 @@ export default function TournamentTypeSelector({
   }, [tt])
 
   useEffect(() => {
+    if (!cookies.get("mtiyt_tournamentType")){
+      cookies.set("mtiyt_tournamentType", "1")
+    }
     setHasMounted(true)
   }, [])
 

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/Buttons"
 import type { Metadata } from "next"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { MaskLineForMenuCard } from "@/components/main/MaskLineForCard"
+import {FaLock} from "react-icons/fa";
 
 export const metadata: Metadata = {
   title: {
@@ -114,8 +115,12 @@ export default async function Home() {
         </ClickableCard>
         <ClickableCard
           className={`bg-bg-alt border-border relative flex h-40 overflow-hidden border transition-opacity hover:opacity-80 sm:row-span-2 sm:h-auto`}
-          href={`/fights`}
+          href={``}
         >
+          <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
+            <FaLock className="size-full p-15 md:p-30"/>
+            {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
+          </div>
           <div className="relative z-1 size-full">
             <div className="relative flex size-full flex-col justify-between">
               <div className="w-full pt-4 pl-5 sm:flex sm:flex-col sm:items-center sm:pl-0 md:items-start md:pl-5">
@@ -141,8 +146,12 @@ export default async function Home() {
         </ClickableCard>
         <ClickableCard
           className={`bg-bg-alt border-border relative flex h-40 overflow-hidden border transition-opacity hover:opacity-80 sm:h-auto`}
-          href={`/peoples`}
+          href={``}
         >
+          <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
+            <FaLock className="size-full p-15 md:px-30"/>
+            {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
+          </div>
           <div className="relative z-1 size-full">
             <div className="relative flex size-full flex-col justify-between">
               <div className="w-full pt-4 pl-5 sm:flex sm:flex-col sm:items-center sm:pl-0 md:items-start md:pl-5">
@@ -174,8 +183,12 @@ export default async function Home() {
         </ClickableCard>
         <ClickableCard
           className={`bg-bg-alt border-border relative flex h-40 overflow-hidden border transition-opacity hover:opacity-80 sm:row-[3/5] sm:h-auto`}
-          href={`/stats`}
+          href={``}
         >
+          <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
+            <FaLock className="size-full p-15 md:p-30"/>
+            {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
+          </div>
           <div className="relative z-1 size-full">
             <div className="relative flex size-full flex-col justify-between">
               <div className="w-full pt-4 pl-5 sm:flex sm:flex-col sm:items-center sm:pl-0 md:items-start md:pl-5">

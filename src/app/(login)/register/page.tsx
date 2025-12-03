@@ -279,18 +279,18 @@ function Step2({ onStepComplete }: { onStepComplete: (data: Step2Interface) => v
         <Field.Root name="usersFirstName" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Имя</Field.Label>
           <Field.Error className={fieldErrorClass} match="customError" />
-          <Field.Control type="text" placeholder="Антон" className={inputClass} />
+          <Field.Control type="text" placeholder="Иванов" className={inputClass} />
         </Field.Root>
         <Field.Root name="usersSecondName" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Фамилия</Field.Label>
           <Field.Error className={fieldErrorClass} match="customError" />
-          <Field.Control type="text" placeholder="Фоломин" className={inputClass} />
+          <Field.Control type="text" placeholder="Иванов" className={inputClass} />
         </Field.Root>
       </div>
       <Field.Root name="usersThirdName" className={fieldRootClass}>
-        <Field.Label className={fieldLabelClass}>Отчество</Field.Label>
+        <Field.Label className={fieldLabelClass}>Отчество (При наличии)</Field.Label>
         <Field.Error className={fieldErrorClass} match="customError" />
-        <Field.Control type="text" placeholder="Отчество (при наличии)" className={inputClass} />
+        <Field.Control type="text" placeholder="Иванович" className={inputClass} />
       </Field.Root>
       <Field.Root name="email" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Email</Field.Label>

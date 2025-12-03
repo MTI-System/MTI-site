@@ -181,11 +181,11 @@ function CardContent({
             </div>
           )}
 
-          {isAdmin && (
-            <Link href={`/tournaments/${tournamentCard?.id ?? 0}/settings`}>
-              <IoMdSettings className="absolute right-0 z-1 m-2 size-10 cursor-pointer rounded-xl bg-white p-1 hover:opacity-75" />
-            </Link>
-          )}
+          {/*{isAdmin && (*/}
+          {/*  <Link href={`/tournaments/${tournamentCard?.id ?? 0}/settings`}>*/}
+          {/*    <IoMdSettings className="absolute right-0 z-1 m-2 size-10 cursor-pointer rounded-xl bg-white p-1 hover:opacity-75" />*/}
+          {/*  </Link>*/}
+          {/*)}*/}
         </div>
 
         <div className="z-1 flex h-0 w-full items-center pl-5">
@@ -365,10 +365,10 @@ function CardContent({
                 </Tooltip.Root>
               )}
             </div>
-            <div className="text-text-alt flex items-center gap-2">
-              <GoPeople className="text-xl" />
-              <p className="text-xs">10 команд</p>
-            </div>
+            {/*<div className="text-text-alt flex items-center gap-2">*/}
+            {/*  <GoPeople className="text-xl" />*/}
+            {/*  <p className="text-xs">10 команд</p>*/}
+            {/*</div>*/}
 
             {!isCreate && <p className="text-xs">{tournamentCard?.description ?? "Неисвестный турнир"}</p>}
             {isCreate && (
