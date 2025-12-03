@@ -12,7 +12,7 @@ export default function ApplicationsPage(
     const {data, isLoading} = useFormsInformationQuery({
         id: id
     })
-    const formId = data?.available_forms.find(f=>f.form_type_flag==="registration")?.form_id
+    const formId = data?.available_forms?.find(f=>f.form_type_flag==="registration")?.form_id
     const token = useAppSelector(state=>state.auth.token)
     const {data: answers, isLoading: isAnswersLoading} = useGetAnswersQuery({
         token: token,
@@ -21,8 +21,8 @@ export default function ApplicationsPage(
     console.log("answers: ", answers, formId, isAnswersLoading)
     return (
         <>
-            {!answers && <Loading/>}
-            {answers && (
+            {isAnswersLoading && <Loading/>}
+            {answers ? (
               <>
                 <Accordion.Root className="flex w-full max-w-[calc(100vw-8rem)] flex-col justify-center text-gray-900 gap-2">
                   {answers.map((answer, idx)=>
@@ -40,7 +40,7 @@ export default function ApplicationsPage(
                 )}
               </Accordion.Root>
               </>  
-            )}
+            ): <p>Нет заявок</p>}
         </>
     )
 }

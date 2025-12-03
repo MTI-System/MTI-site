@@ -46,11 +46,11 @@ export default function NotificationList() {
           {!isFetching && !isError && (
             <div className="flex flex-col gap-2">
               {data?.map((notification) => (
-                <div  key={notification.id} onClick={()=>{
-                  markAsRead({token: token??"", notificationId: notification.id})
-                }}>
-                  <NotificationItem notification={notification} />
-                </div>
+
+                  <NotificationItem key={notification.id} notification={notification} markAsReaded={()=>{
+                    markAsRead({token: token??"", notificationId: notification.id})
+                  }}/>
+
 
               ))}
             </div>

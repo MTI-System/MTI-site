@@ -61,7 +61,7 @@ export const TournamentInformationFormResponse = z.object({
 })
 
 export const TournamentInformationResponse = z.object({
-  available_forms: z.array(TournamentInformationFormResponse)
+  available_forms: z.array(TournamentInformationFormResponse).optional()
 })
 
 

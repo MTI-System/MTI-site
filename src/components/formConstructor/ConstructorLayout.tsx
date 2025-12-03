@@ -46,7 +46,7 @@ export function ConstructorLayout() {
   }, [isFormCreating])
 
   const onSubmit = ()=>{
-    if (formInformation?.available_forms.find((it)=>it.form_type_flag === formType) === undefined){
+    if (formInformation?.available_forms?.find((it)=>it.form_type_flag === formType) === undefined){
       createForm({token: token, tournamentId: tId, formTypeFlag: formType, formTitle: "Форма регистрации"})
       return
     }
