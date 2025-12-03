@@ -27,13 +27,13 @@ export default function RegistrationForm({
   async function handleSend(form: HTMLFormElement) {
     const formData = new FormData(form)
     formData.set("formId", (formInfo?.id ?? 0).toString())
-    submitFormAnswer({ formData: formData })
+    submitFormAnswer({ formData: formData, formId: formInfo?.id ?? 0 })
   }
 
   return (
     <>
       <form className={className} onSubmit={submitHandler} ref={formReference}>
-        {formInfo?.fields.map((field) => {
+        {formInfo?.fields?.map((field) => {
           switch (field.type) {
             case "text":
               return <TextFormField title={field.title} key={field.id} id_key={field.key} />

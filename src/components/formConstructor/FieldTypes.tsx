@@ -4,7 +4,7 @@ import { FaCheck } from "react-icons/fa6"
 import { availableFields } from "@/components/formConstructor/root/RootContext"
 import { useState } from "react"
 
-export default function FieldTypes({ setFieldType, defaultValue }: { defaultValue: string, setFieldType: (value: availableFields) => void }) {
+export default function FieldTypes({ setFieldType, defaultValue }: { defaultValue: availableFields, setFieldType: (value: availableFields) => void }) {
   const types: { label: string; value: availableFields }[] = [
     { label: "Текст", value: "text" },
     { label: "Число", value: "number" },
@@ -23,6 +23,7 @@ export default function FieldTypes({ setFieldType, defaultValue }: { defaultValu
       <Select.Root
         multiple={false}
         items={types}
+
         defaultValue={defVal}
         onValueChange={(value) => {
           // valueRef.current = value

@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export default function UploadImage() {
   const [imgSrc, setImgSrc] = useState("");
-
+  //@ts-ignore
   const handleChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
