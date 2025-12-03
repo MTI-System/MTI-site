@@ -10,7 +10,8 @@ import {
 
 export default function CheckboxesWithProblems({ttype, year, field}: {field: TournamentRegistrationFormFieldInterface | TournamentRegistrationAnswerFieldInterface, year: number, ttype: string}) {
   const fieldObject = "formField" in field ? field.formField : field
-  const fieldContent = "formField" in field ? field.content : undefined
+  const fieldContent = "formField" in field ? field.content : ""
+  const checkedFields = fieldContent.split(",")
 
   const {data, isLoading} = useGetProblemsQuery({tournament: ttype, year: year})
   const fieldsProps = data?.map((item) => {
@@ -18,7 +19,8 @@ export default function CheckboxesWithProblems({ttype, year, field}: {field: Tou
       key: `${item.id}`,
       title: item.problem_translations[0].problem_name,
       name: item.id.toString(),
-      value: item.id.toString()
+      value: item.id.toString(),
+      isChecked: fieldContent.includes(item.id.toString()),
     }
   }) ?? []
   return (
@@ -28,7 +30,7 @@ export default function CheckboxesWithProblems({ttype, year, field}: {field: Tou
           <CheckboxGroupRegistrationField group={{
             key: fieldObject.key,
             title: fieldObject.title,
-            fields: fieldsProps,
+            fields: fieldsProps
           }}/>}
     </>
   )

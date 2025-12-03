@@ -14,6 +14,7 @@ interface CheckBoxProps {
   name: string,
   value: string,
   title: string
+  isChecked: boolean
 }
 
 export default function CheckboxGroupRegistrationField(
@@ -43,11 +44,12 @@ export default function CheckboxGroupRegistrationField(
       <h4 className="font-bold pb-2">{group.title}</h4>
       <Forms.EdiatableItems>
           {group.fields.map((checkbox) => (
-            <>
+            <div key={checkbox.value}>
               <label className="flex justify-start items-center gap-2 text-base text-gray-900">
                 <Forms.CheckboxField
                   title={checkbox.title}
                   value={checkbox.value}
+                  // defaultChecked={checkbox}
                   is_grouped={true}
                   onChange={(value, is_checked)=>{
                     if (is_checked) {
@@ -65,20 +67,22 @@ export default function CheckboxGroupRegistrationField(
                   name={checkbox.value}
                 />
               </label>
-            </>
+            </div>
 
           ))}
       </Forms.EdiatableItems>
       <Forms.DefaultItems>
         <h1>Future</h1>
         {group.fields.map((checkbox) => (
-          <>
+          <div key={checkbox.value}>
             <label className="flex justify-start items-center gap-2 text-base text-gray-900">
               <Forms.CheckboxField
-                defaultChecked={true}
+                defaultChecked={checkbox.isChecked}
                 title={checkbox.title}
                 value={checkbox.value}
                 is_grouped={true}
+                disabled={true}
+
                 onChange={(value, is_checked)=>{
                   if (is_checked) {
                     fields.current.add(value)
@@ -95,7 +99,7 @@ export default function CheckboxGroupRegistrationField(
                 name={checkbox.value}
               />
             </label>
-          </>
+          </div>
 
         ))}
         {/* {fieldContent && (

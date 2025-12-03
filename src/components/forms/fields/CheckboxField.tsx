@@ -14,9 +14,10 @@ interface CheckboxFieldProps extends Omit<Checkbox.Root.Props, "inputRef" | "nam
   is_grouped?: boolean
   title: string
   defaultChecked?: boolean
+  disabled?: boolean
 }
 
-export function CheckboxField({ onVerification, name, title, value, className, is_grouped=false, defaultChecked=false, onChange=(value, is_chacked)=>{}, ...rest }: CheckboxFieldProps) {
+export function CheckboxField({ onVerification ,name, title, value, className, disabled=false, is_grouped=false, defaultChecked=false, onChange=(value, is_chacked)=>{}, ...rest }: CheckboxFieldProps) {
   const { register, setFormField } = useCardsRoot()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -47,8 +48,9 @@ export function CheckboxField({ onVerification, name, title, value, className, i
       >
         <Checkbox.Root
           name={name}
+          disabled={disabled}
           inputRef={inputRef}
-          checked={defaultChecked}
+          defaultChecked={defaultChecked}
           onCheckedChange={(e)=>{
             onChange(name, e)
           }}
