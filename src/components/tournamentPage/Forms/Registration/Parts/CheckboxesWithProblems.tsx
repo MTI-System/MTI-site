@@ -3,8 +3,15 @@ import CheckboxGroupRegistrationField
   from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxGroupRegistrationField";
 import {useGetProblemsQuery} from "@/api/problems/clientApiInterface";
 import Loading from "@/app/loading";
+import {
+  TournamentRegistrationAnswerFieldInterface,
+  TournamentRegistrationFormFieldInterface
+} from "@/types/TournamentRegistrationApi";
 
-export default function CheckboxesWithProblems({formKey, title, ttype, year}: {formKey: string, title: string, year: number, ttype: string}) {
+export default function CheckboxesWithProblems({ttype, year, field}: {field: TournamentRegistrationFormFieldInterface | TournamentRegistrationAnswerFieldInterface, year: number, ttype: string}) {
+  const fieldObject = "formField" in field ? field.formField : field
+  const fieldContent = "formField" in field ? field.content : undefined
+
   const {data, isLoading} = useGetProblemsQuery({tournament: ttype, year: year})
   const fieldsProps = data?.map((item) => {
     return {
@@ -19,8 +26,8 @@ export default function CheckboxesWithProblems({formKey, title, ttype, year}: {f
       {isLoading && <Loading/>}
       {!isLoading &&
           <CheckboxGroupRegistrationField group={{
-            key: formKey,
-            title: title,
+            key: fieldObject.key,
+            title: fieldObject.title,
             fields: fieldsProps,
           }}/>}
     </>

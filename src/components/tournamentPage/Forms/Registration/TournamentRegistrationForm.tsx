@@ -114,7 +114,7 @@ export default function TournamentRegistrationForm({
                           {isTournamentCardLoading && <Loading/>}
                           {!isTournamentCardLoading
                             &&
-                              <CheckboxesWithProblems formKey={field.key} title={field.title}
+                              <CheckboxesWithProblems field={fieldObject}
                                                    year={tournamentCard?.year ?? 2026}
                                                    ttype={tournamentCard?.tournament_type?.toString() ?? "1"}/>}
                         </ProblemsProviderWrapper>

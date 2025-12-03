@@ -16,6 +16,7 @@ export default function CheckboxRegistrationField({
       <Forms.EdiatableItems>
         <label className="flex items-center gap-2 text-base text-gray-900">
           <Forms.CheckboxField
+            title={fieldObject.title}
             value={fieldObject.key}
             onVerification={() => {
               return {
