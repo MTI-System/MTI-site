@@ -21,6 +21,7 @@ import CheckboxesWithProblems from "@/components/tournamentPage/Forms/Registrati
 import {useGetTournamentCardQuery} from "@/api/tournaments/clientApiInterface";
 import Loading from "@/app/loading";
 import {useRouter} from "next/navigation";
+import RegisterRequest from "@/components/personalDataRequests/RegisterRequest"
 
 export default function TournamentRegistrationForm({
                                                      formInfo,
@@ -64,13 +65,14 @@ export default function TournamentRegistrationForm({
       {isFromFilled ? (
           <>
             <FaCircleCheck className="text-green-700 w-full h-[300px]"/>
-            <h1 className="w-full text-center text-3xl font-bold pt-2">Форма заполнена</h1>
+            <h1 className="w-full text-center text-3xl text-text-main font-bold pt-2">Форма заполнена</h1>
           </>
         ) :
         (
           <>
 
             <h1 className={"font-bold text-2xl text-center w-full text-text-main"}>Регистрация на турнир</h1>
+            <p className={"font-bold text-xl text-center w-full text-text-main"}>Обращаем Ваше внимание, что все участники команды должны подтверить заявку.</p>
             <Forms.Root isEdit={isEdit} isExpanded={false}>
               <Forms.Trigger
                 className="mt-4 flex flex-col gap-2 text-text-main"
@@ -132,6 +134,9 @@ export default function TournamentRegistrationForm({
                       return <p>Unknown</p>
                   }
                 })}
+                <RegisterRequest updateCheck={(isOn: boolean) => {}} 
+                  CheckboxText={"Даю согласие на обработку ПД с целью регистрации на турнир " + tournamentCard?.title}/>
+                  
                 {error && (<p className="text-red-500">При отправке формы произошла ошибка. Попробуйте позже</p>)}
                 {isEdit && (
                   <Forms.ConfirmButton

@@ -208,7 +208,7 @@ function CardContent({
         </div>
         <div className="text-text-main flex h-fit w-full flex-col gap-2 px-2 pt-10 pb-5">
           <Tooltip.Provider delay={150}>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-1">
               {!isCreate && (
                 <h3 className="overflow-hidden pe-5 text-base font-medium text-ellipsis whitespace-nowrap">
                   {tournamentCard?.title ?? "Неизвестный турнир"}
@@ -226,7 +226,7 @@ function CardContent({
                         onUpdateCreate({ title: event.target.value })
                       }}
                       className={twclsx(
-                        "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-10 w-24 rounded-2xl border transition-colors",
+                        "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 w-[80vw] md:w-[60vw] h-10 pl-2 rounded-2xl border transition-colors",
                         errorsInternal.some((error) => error.key === "title") && "border-red-500",
                       )}
                       placeholder={"Название турнира"}
@@ -245,7 +245,7 @@ function CardContent({
               )}
               <div
                 className={twclsx(
-                  "me-5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-3 transition-colors md:h-7 md:min-w-fit md:border",
+                  "me-5 flex h-4 w-4 mt-1.5 shrink-0 items-center justify-center rounded-full border-3 transition-colors md:h-7 md:min-w-fit md:border",
                   { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.badge.badge_flag === "ENDED" },
                   {
                     "border-[#32E875] bg-[#32E875]/20 text-[#32E875]":
@@ -383,7 +383,7 @@ function CardContent({
                       onUpdateCreate({ description: event.target.value })
                     }}
                     className={twclsx(
-                      "border-border border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-20 w-full resize-none rounded-2xl border p-2 text-xs transition-colors",
+                      "border-border border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-20 w-full resize-none rounded-2xl border p-2 text-sm transition-colors",
                       errorsInternal.some((error) => error.key === "description") && "border-red-500",
                     )}
                     placeholder="Описание турнира"

@@ -80,7 +80,7 @@ export default function ConfirmationPage(
                   case "tournamentPdGifting":
                     return <RegisterRequest key={item.requestId} updateCheck={(isOn: boolean) => {
                       changeFlag(idx, isOn)
-                    }}/>
+                    }} CheckboxText="Я даю согласие на передачу моей информации турнирным операторам для участия в турнире."/>
                 }
               })}
               <Button
