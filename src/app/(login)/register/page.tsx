@@ -13,7 +13,7 @@ import { redirect, useRouter } from "next/navigation"
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react"
 import { z } from "zod"
 import twclsx from "@/utils/twClassMerge"
-import { useRequestEmailVerificationMutation, useVerifyEmailQuery } from "@/api/users/clientApiInterface"
+import { useVerifyEmailQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
 
 interface RegisterFormData {
@@ -54,12 +54,12 @@ export default function Page() {
   const [register, { data, isLoading, error, isSuccess }] = useRegisterMutation()
   const router = useRouter()
   const handleRegister = useCallback(
-    (addData: RegisterFormData) => {
+    (addData?: RegisterFormData) => {
       const fd = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
-        fd.append(key, value)
+        fd.append(key, value as string)
       })
-      Object.entries(addData).forEach(([key, value]) => {
+      Object.entries(addData ?? {}).forEach(([key, value]) => {
         fd.append(key, value)
       })
       console.log("fd", fd)
@@ -99,7 +99,6 @@ export default function Page() {
             if (calculateAge(new Date(data.usersBirthday!!)) < 14) setDisplayedStep(3)
             else {
               setDisplayedStep(4)
-              handleRegister(data)
             }
           }}
           onBack={() => setDisplayedStep(1)}
@@ -116,7 +115,7 @@ export default function Page() {
             console.log("3---", data)
             setFormData((prev) => ({ ...prev, ...data }))
             setDisplayedStep(4)
-            handleRegister(data)
+            // handleRegister(data)
           }}
           onBack={() => setDisplayedStep(2)}
           filledData={formData}
@@ -129,7 +128,13 @@ export default function Page() {
     case 4:
       displayForm = (
         <UsersProviderWrapper>
-          <VerificationStep onStepComplete={() => setDisplayedStep(5)} filledData={formData}></VerificationStep>
+          <VerificationStep
+            onStepComplete={() => {
+              setDisplayedStep(5)
+              handleRegister()
+            }}
+            filledData={formData}
+          ></VerificationStep>
         </UsersProviderWrapper>
       )
       displayedTitle = "ПОДТВЕРДИТЕ EMAIL"
@@ -143,8 +148,7 @@ export default function Page() {
           className={twclsx(actionButtonClass, "text-xl md:text-2xl")}
           onClick={() => {
             if (error) {
-              setDisplayedStep(1)
-              setFormData({})
+              handleRegister()
             } else redirect("/")
           }}
         >
@@ -193,8 +197,8 @@ function Step1({
   const [checkLogin, { data: isLoginTaken, isLoading, error, isSuccess }] = useIsLoginTakenMutation()
 
   useEffect(() => {
-    if (!formData) return
-    if (!isSuccess && !isLoading) {
+    if (!formData || isLoading) return
+    if (!isSuccess) {
       setFormErrors({ login: "Не удалось проверить свободность имени пользователя" })
       console.error("Error checking login availability", error)
       return
@@ -328,8 +332,8 @@ function Step2({
   }, [])
 
   useEffect(() => {
-    if (!formData) return
-    if (!isSuccess && !isLoading) {
+    if (!formData || isLoading) return
+    if (!isSuccess) {
       setFormErrors({ email: "Не удалось проверить свободность email" })
       console.error("Error checking email availability", error)
       return
@@ -648,42 +652,39 @@ function VerificationStep({
     }
     return status
   })
-  const [
-    requestEmailVerification,
-    { data: requestResponse, isLoading: isRequestSending, error: requestError, isSuccess: isRequestSuccess },
-  ] = useRequestEmailVerificationMutation()
+  const unverifiedList = Object.keys(emailVerificationStatus).filter(
+    (email) => emailVerificationStatus[email] === 0,
+  )
+  const emailOnVerify = unverifiedList[0]
   const {
     data: verifyEmail,
     isLoading: isVerifyLoading,
     error: verifyError,
     isSuccess: isVerifySuccess,
-  } = useVerifyEmailQuery()
-  const pendingEmailRequesRef = useRef<string | null>(null)
-
+  } = useVerifyEmailQuery({ email: emailOnVerify })
+  
   useEffect(() => {
-    if (isRequestSuccess) {
+    console.log("isVerifySuccess", isVerifySuccess)
+    console.log("verifyEmail", verifyEmail)
+    console.log("emailOnVerify", emailOnVerify)
+    if (!isVerifySuccess || isVerifyLoading) return
+    if (verifyEmail === "ok") {
       setEmailVerificationStatus((prev) => {
+        if (!emailOnVerify) return prev
         const newStatus = { ...prev }
-        newStatus[pendingEmailRequesRef.current!] = 1
+        newStatus[emailOnVerify] = 1
         return newStatus
       })
-      pendingEmailRequesRef.current = null
+      return
     }
-    const unverifiedList = Object.keys(emailVerificationStatus).filter((email) => emailVerificationStatus[email] === 0)
-    if (unverifiedList.length === 0) return
-    pendingEmailRequesRef.current = unverifiedList[0]
-    requestEmailVerification({ email: pendingEmailRequesRef.current! })
-  }, [isRequestSuccess])
-
-  useEffect(() => {
-    if (!isVerifySuccess) return
     if (!verifyEmail) return
     setEmailVerificationStatus((prev) => {
       const newStatus = { ...prev }
       newStatus[verifyEmail] = 2
       return newStatus
     })
-  }, [isVerifySuccess])
+  }, [verifyEmail])
+
   return (
     <div className={formCardClass}>
       <div className="">

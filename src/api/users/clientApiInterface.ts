@@ -26,4 +26,4 @@ export const usersApiClient = createApiClient({
   endpoints: defineUsersEndpoints,
 })
 
-export const { useGetUserByIdQuery, useGetUserByAuthIdQuery, useFindUsersQuery, useRequestEmailVerificationMutation, useVerifyEmailQuery } = usersApiClient
+export const { useGetUserByIdQuery, useGetUserByAuthIdQuery, useFindUsersQuery, useVerifyEmailQuery } = usersApiClient
