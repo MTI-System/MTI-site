@@ -14,6 +14,7 @@ import { FormEvent, useCallback, useEffect, useRef, useState } from "react"
 import { z } from "zod"
 import twclsx from "@/utils/twClassMerge"
 import { useRequestEmailVerificationMutation, useVerifyEmailQuery } from "@/api/users/clientApiInterface"
+import UsersProviderWrapper from "@/api/users/ClientWrapper"
 
 interface RegisterFormData {
   email?: string
@@ -127,14 +128,14 @@ export default function Page() {
       break
     case 4:
       displayForm = (
-        <VerificationStep
-          onStepComplete={() => setDisplayedStep(5)}
-          filledData={formData}
-        ></VerificationStep>
+        <UsersProviderWrapper>
+          <VerificationStep onStepComplete={() => setDisplayedStep(5)} filledData={formData}></VerificationStep>
+        </UsersProviderWrapper>
       )
       displayedTitle = "ПОДТВЕРДИТЕ EMAIL"
       displayedDescription = "Подтвердите ваш email, чтобы..."
       // TODO: Rewrite description so it handles both cases verification of participant email and both participant and parent emails
+      break
     case 5:
       displayForm = (
         <Button
@@ -687,8 +688,8 @@ function VerificationStep({
     <div className={formCardClass}>
       <div className="">
         {Object.entries(emailVerificationStatus).map(([email, status]) => (
-          <div key={email}>
-            <p>{email}</p>
+          <div className="flex items-center gap-2" key={email}>
+            <p>{email}:</p>
             {/* TOFO: Add a button to resend the verification email and add colors in the p below based on the status */}
             <p>
               {status === 0 ? "Отправляем сообщение..." : status === 1 ? "Ожидаем подтверждения..." : "Подтверждено"}
