@@ -106,7 +106,7 @@ export default function UniversalPlayer({ embedding, problemId, isModerator=fals
             />
           )}
           {!isVideoLoaded && (
-            <div className="absolute z-10 w-full aspect-video bg-inactive-color flex flex-col justify-center items-center">
+            <div className="absolute z-10 w-full aspect-video bg-inactive flex flex-col justify-center items-center">
               {isYouTube && !isVideoLoadingError && (
                 <>
                   <h1 className="font-bold text-xl sm:text-4xl text-text-main">Видео загружается</h1>

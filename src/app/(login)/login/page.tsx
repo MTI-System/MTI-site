@@ -15,21 +15,18 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react"
 import LoginLayout from "@/components/login/mainLayout"
 import Link from "next/link"
 
+
 export default function Page() {
   return (
-    <>
-      <AuthProviderWrapper>
-        <Suspense fallback={<Loading />}>
-          <LoginPage />
-        </Suspense>
-      </AuthProviderWrapper>
-    </>
+    <Suspense fallback={<Loading />}>
+      <LoginPage />
+    </Suspense>
   )
 }
 
 function LoginPage() {
   const isErrorInQuery = useRef<boolean>(false)
-  const [formErrors, setFormErrors] = useState<{ username?: string; password?: string}>({})
+  const [formErrors, setFormErrors] = useState<{ username?: string; password?: string }>({})
   const router = useRouter()
 
   const searchParams = useSearchParams()
@@ -58,7 +55,7 @@ function LoginPage() {
 
   async function handleLogin(form: HTMLFormElement) {
     const formData = new FormData(form)
-    const newFormErrors: { username?: string; password?: string; } = {}
+    const newFormErrors: { username?: string; password?: string } = {}
     const email = formData.get("username")
     if (email === "") newFormErrors.username = "Логин не может быть пустым"
     const password = formData.get("password")
@@ -95,26 +92,25 @@ function LoginPage() {
     >
       <Form className="flex w-full flex-col items-center gap-5" onSubmit={handleSubmit} errors={formErrors}>
         <Field.Root name="username" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Логин</Field.Label>
+          <Field.Label className="text-text-alt text-lg font-medium">Логин</Field.Label>
           <Field.Error className="text-md text-accent-warning" match="customError" />
           <Field.Control
             type="username"
             placeholder="ВашНик"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-text-alt focus:outline-2 focus:-outline-offset-1 focus:outline-accent-primary"
-            
+            className="border-border text-text-main focus:outline-accent-primary h-15 w-full rounded-xl border pl-3.5 text-xl focus:outline-2 focus:-outline-offset-1"
           />
         </Field.Root>
         <Field.Root name="password" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Пароль</Field.Label>
+          <Field.Label className="text-text-alt text-lg font-medium">Пароль</Field.Label>
           <Field.Error className="text-md text-accent-warning" match="customError" />
           <Field.Control
             type="password"
             placeholder="ИмяВашегоКота"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-text-alt focus:outline-2 focus:-outline-offset-1 focus:outline-accent-primary"
+            className="border-border text-text-main focus:outline-accent-primary h-15 w-full rounded-xl border pl-3.5 text-xl focus:outline-2 focus:-outline-offset-1"
           />
         </Field.Root>
         <Button
-          className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
+          className="bg-accent-primary-alt border-accent-primary text-accent-primary disabled:text-inactive disabled:border-inactive disabled:bg-inactive/20 h-15 w-full rounded-xl border-2 text-2xl font-bold transition-colors duration-300"
           disabled={isLoading}
           type="submit"
           onClick={() => {

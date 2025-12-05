@@ -44,6 +44,17 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
       return is_login_taken.data?.result ?? false 
     }
   }),
+  isEmailTaken: builder.mutation({
+    query: ({email}: {email: string}) => ({
+      url: `is_email_taken?email=${email}`,
+      method: "GET"
+    }),
+    transformResponse: (response: string): boolean=> {
+      if (!response) return false
+      const is_email_taken = BooleanResponseSchema.safeParse(response)
+      return is_email_taken.data?.result ?? false 
+    }
+  }),
   fetchPermissions: builder.mutation({
     query: ({ token }: { token: string }) => {
       return {
@@ -96,5 +107,5 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
         body: form
       }
     }
-  })
+  }),
 })

@@ -13,8 +13,8 @@ import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import "react-day-picker/style.css"
 
 export function generateMetadata(): Metadata {
-  const titleText = "Вход в аккаунт · МТИ"
-  const descriptionText = "Вход в аккаунт Менеджера Турнирной Информации"
+  const titleText = "Главная · МТИ"
+  const descriptionText = "Главная страница Менеджера Турнирной Информации"
 
   return {
     title: titleText,

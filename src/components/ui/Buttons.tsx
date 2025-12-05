@@ -84,7 +84,7 @@ export function HoldButton({
       ref={target}
       {...rest}
     >
-      <div className="holdOverlay bg- absolute top-0 left-[1vw] block h-full w-full opacity-20"></div>
+      <div className="holdOverlay bg-inactive/50 absolute top-0 left-[1vw] block h-full w-full opacity-20"></div>
       {children}
     </button>
   )
