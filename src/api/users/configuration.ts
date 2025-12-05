@@ -10,6 +10,17 @@ export const usersBaseQuery = fetchBaseQuery({ baseUrl: USERS_API })
 export const defineUsersEndpoints = (
   builder: EndpointBuilder<typeof usersBaseQuery, never, typeof usersReducerPath>,
 ) => ({
+  getUserByAuthId: builder.query({
+    query: ({ id }: { id: number }) => `users/by_auth/${id}`,
+    transformResponse: (response: unknown): User | null => {
+      const user = UserSchema.safeParse(response)
+      if (!user.success) {
+        console.error(`Unexpected response while parsing user: ${user.error}`)
+        return null
+      }
+      return user.data
+    },
+  }),
   getUserById: builder.query({
     query: ({ id }: { id: number }) => `user/${id}`,
     transformResponse: (response: unknown): User | null => {
@@ -74,7 +85,7 @@ function createSocketFactory() {
       if (_socket.disconnected) _socket.connect()
       return _socket
     }
-    _socket = io(USERS_API + "/verify")
+    _socket = io(USERS_API + "/test")
     return _socket
   }
 }
