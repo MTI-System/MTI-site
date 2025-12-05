@@ -72,7 +72,7 @@ export default function TournamentRegistrationForm({
           <>
 
             <h1 className={"font-bold text-2xl text-center w-full text-text-main"}>Регистрация на турнир</h1>
-            <p className={"font-bold text-xl text-center w-full text-text-main"}>Обращаем Ваше внимание, что все участники команды должны подтверить заявку.</p>
+            <p className={"font-bold text-xl text-center w-full text-text-main"}>Обращаем Ваше внимание, что все участники команды должны подтвердить заявку.</p>
             <Forms.Root isEdit={isEdit} isExpanded={false}>
               <Forms.Trigger
                 className="mt-4 flex flex-col gap-2 text-text-main"
