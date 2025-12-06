@@ -19,7 +19,7 @@ export default function ProfileMainPage({profileData}: { profileData: User }) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
-  const {data: user, isLoading} = useGetUserByAuthIdQuery(
+  const {data: user, isLoading, refetch} = useGetUserByAuthIdQuery(
     {id: profileData.user_id}
   );
   return (
@@ -43,7 +43,7 @@ export default function ProfileMainPage({profileData}: { profileData: User }) {
               <Accordion.Panel
                 className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-gray-600 transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
                 <div className="p-3">
-                  {user && <UserInformation isEditing={false} user={user}/>}
+                  {user && <UserInformation isEditing={false} user={user} refetch={refetch}/>}
                 </div>
                 <div className="p-3">
                   {!user && <p>Ошибка загрузки информации о пользователе</p>}

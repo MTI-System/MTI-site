@@ -9,6 +9,20 @@ export const usersBaseQuery = fetchBaseQuery({ baseUrl: USERS_API })
 export const defineUsersEndpoints = (
   builder: EndpointBuilder<typeof usersBaseQuery, never, typeof usersReducerPath>,
 ) => ({
+  editUser: builder.mutation({
+    query: ({token, firstName, secondName, thirdName}:{token: string, firstName: string, secondName: string, thirdName: string}) => {
+      const formData = new FormData()
+      formData.set("token", token)
+      formData.set("firstName", firstName)
+      formData.set("secondName", secondName)
+      formData.set("thirdName", thirdName)
+      return {
+        url: "users/edit",
+        method: "POST",
+        body: formData
+      }
+    },
+  }),
   getUserByAuthId: builder.query({
     query: ({ id }: { id: number }) => `users/by_auth/${id}`,
     transformResponse: (response: unknown): User | null => {

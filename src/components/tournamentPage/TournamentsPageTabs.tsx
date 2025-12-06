@@ -29,14 +29,7 @@ export default function TournamentsPageTabs({
   const searchParams = useSearchParams()
   const isModerate = searchParams.get("isModerate") ?? false
   const user = useAppSelector((state) => state.auth.authInfo)
-  const {
-    data: isFormFilled,
-    isLoading,
-    error,
-  } = useIsFormFilledQuery(
-    { tournamentId: tournamentCard.id, formFlag: "registration", userId: user?.user_id!! },
-    { skip: !user },
-  )
+
 
   const infoLinks: LinkInterface[] = [
     {
@@ -118,6 +111,12 @@ export default function TournamentsPageTabs({
       title: "Конструктор",
       description: "Конструктор формы заявок",
       isLocked: false,
+    },
+    {
+      href: `/tournaments/${tournamentCard.id}/registration`,
+      title: "Заполнить форму",
+      description: "Если вы руководитель",
+      isLocked: tournamentCard.badge.badge_flag !== "REGISTRATION",
     },
   ]
 
