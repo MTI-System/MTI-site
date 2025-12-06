@@ -13,9 +13,10 @@ import { redirect, useRouter } from "next/navigation"
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react"
 import { z } from "zod"
 import twclsx from "@/utils/twClassMerge"
-import { useVerifyEmailQuery } from "@/api/users/clientApiInterface"
+import { usersApiClient, useVerifyEmailQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
 import { closeSocket } from "@/api/users/configuration"
+import { useDispatch } from "react-redux"
 
 interface RegisterFormData {
   email?: string
@@ -41,7 +42,7 @@ const inputClass =
   "h-15 w-full rounded-xl border border-border bg-bg-alt px-4 text-lg text-text-main transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-main"
 const actionButtonClass =
   "bg-accent-primary-alt border border-accent-primary text-accent-primary h-15 w-full rounded-xl font-semibold tracking-wide transition duration-200 outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-main disabled:cursor-not-allowed disabled:opacity-70"
-const inlineGridClass = "grid w-full gap-6 md:gap-[5%] md:grid-cols-[44%_51%]"
+const inlineGridClass = "grid w-full gap-6 md:gap-[2%] md:grid-cols-[46%_52%]"
 const datePickerClass =
   "outline-none flex h-15 w-full items-center justify-between rounded-xl border border-border bg-bg-alt px-4 text-lg text-text-main transition duration-200 focus-within:ring-2 focus-within:ring-accent-primary focus-within:ring-offset-2 focus-within:ring-offset-bg-main"
 const policyCardClass =
@@ -644,6 +645,7 @@ function VerificationStep({
   onStepComplete: () => void
   filledData: RegisterFormData
 }) {
+  const waitTime = 120
   const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ [key: string]: number }>(() => {
     const status: { [key: string]: number } = {}
     if (filledData.email) {
@@ -654,6 +656,7 @@ function VerificationStep({
     }
     return status
   })
+  const [timeRemaining, setTimeRemaining] = useState(waitTime) // 2 minutes in seconds
   const unverifiedList = Object.keys(emailVerificationStatus).filter((email) => emailVerificationStatus[email] === 0)
   const emailOnVerify = unverifiedList[0]
   const {
@@ -662,6 +665,22 @@ function VerificationStep({
     error: verifyError,
     isSuccess: isVerifySuccess,
   } = useVerifyEmailQuery({ email: emailOnVerify })
+
+  useEffect(() => {
+    if (timeRemaining <= 0) return
+
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [timeRemaining])
 
   useEffect(() => {
     console.log("isVerifySuccess", isVerifySuccess)
@@ -685,9 +704,15 @@ function VerificationStep({
     })
   }, [verifyEmail])
 
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+  }
+
   return (
     <div className={formCardClass}>
-      <div className="">
+      <div className="flex flex-col gap-4">
         {Object.entries(emailVerificationStatus).map(([email, status]) => (
           <div className="flex items-center gap-2" key={email}>
             <p>{email}:</p>
@@ -697,6 +722,32 @@ function VerificationStep({
             </p>
           </div>
         ))}
+
+        <div className="text-text-main flex items-center justify-center gap-2 text-lg font-semibold">
+          {timeRemaining > 0 ? (
+            <>
+              <span>Не пришло письмо? Отправить ещё одно через:</span>
+              <span className="text-accent-primary">{formatTime(timeRemaining)}</span>
+            </>
+          ) : (
+            <span
+              className="text-accent-primary cursor-pointer"
+              onClick={() => {
+                closeSocket().then(() => {
+                  setTimeRemaining(waitTime)
+                  setEmailVerificationStatus((prev) => {
+                    Object.keys(prev).forEach((email) => {
+                      prev[email] = 0
+                    })
+                    return prev
+                  })
+                })
+              }}
+            >
+              Отправить ещё одно письмо
+            </span>
+          )}
+        </div>
       </div>
       <Button
         className={twclsx(actionButtonClass, "text-lg uppercase md:text-xl")}

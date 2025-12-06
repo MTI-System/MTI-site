@@ -106,6 +106,6 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
         method: "POST",
         body: form
       }
-    }
+    },
   }),
 })

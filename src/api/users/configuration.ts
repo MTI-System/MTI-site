@@ -99,7 +99,6 @@ const getSocket = () => {
       _socket.removeEventListener("close", closeHandler)
       _socket.removeEventListener("error", errorHandler)
       _socket.removeEventListener("open", openHandler)
-      _socket = null
       reject(new Error("Failed to connect to socket"))
     }
     _socket.addEventListener("error", errorHandler)
@@ -107,10 +106,24 @@ const getSocket = () => {
   })
 }
 
-export const closeSocket = () => {
+export const closeSocket = async () => {
   console.log("closeSocket", _socket)
-  if (!_socket) return
-  console.log("closing socket", _socket)
-  _socket.close()
-  _socket = null
+  return new Promise((resolve, reject) => {
+    if (!_socket) {
+      resolve(true)
+      return
+    }
+    console.log("closing socket", _socket)
+    _socket.close()
+    const closeHandler = () => {
+      if (!_socket) {
+        resolve(true)
+        return
+      }
+      _socket.removeEventListener("close", closeHandler)
+      _socket = null
+      resolve(true)
+    }
+    _socket.addEventListener("close", closeHandler)
+  })
 }
