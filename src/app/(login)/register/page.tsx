@@ -15,6 +15,7 @@ import { z } from "zod"
 import twclsx from "@/utils/twClassMerge"
 import { useVerifyEmailQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
+import { closeSocket } from "@/api/users/configuration"
 
 interface RegisterFormData {
   email?: string
@@ -142,6 +143,7 @@ export default function Page() {
       // TODO: Rewrite description so it handles both cases verification of participant email and both participant and parent emails
       break
     case 5:
+      closeSocket()
       displayForm = (
         <Button
           disabled={isLoading}
@@ -652,9 +654,7 @@ function VerificationStep({
     }
     return status
   })
-  const unverifiedList = Object.keys(emailVerificationStatus).filter(
-    (email) => emailVerificationStatus[email] === 0,
-  )
+  const unverifiedList = Object.keys(emailVerificationStatus).filter((email) => emailVerificationStatus[email] === 0)
   const emailOnVerify = unverifiedList[0]
   const {
     data: verifyEmail,
@@ -662,7 +662,7 @@ function VerificationStep({
     error: verifyError,
     isSuccess: isVerifySuccess,
   } = useVerifyEmailQuery({ email: emailOnVerify })
-  
+
   useEffect(() => {
     console.log("isVerifySuccess", isVerifySuccess)
     console.log("verifyEmail", verifyEmail)

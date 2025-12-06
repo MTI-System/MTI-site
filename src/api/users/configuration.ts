@@ -42,16 +42,16 @@ export const defineUsersEndpoints = (
       return users.data
     },
   }),
-  verifyEmail: builder.query<string | null, { email: string|null }>({
+  verifyEmail: builder.query<string | null, { email: string | null }>({
     queryFn: async ({ email }) => {
       if (!email) return { data: null }
-      const socket = await getSocket
+      const socket = await getSocket()
       console.log("sending email to socket", email)
       socket.send(email)
       return { data: null }
     },
     async onCacheEntryAdded(arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
-      const socket = await getSocket
+      const socket = await getSocket()
 
       const handleMessage = (event: MessageEvent) => {
         console.log("received message2:", event.data)
@@ -68,26 +68,49 @@ export const defineUsersEndpoints = (
 })
 
 let _socket: WebSocket | null = null
-const getSocket = new Promise<WebSocket>((resolve, reject) => {
-  console.log("initializing socket")
-  if (_socket !== null) resolve(_socket)
+const getSocket = () => {
+  return new Promise<WebSocket>((resolve, reject) => {
+    console.log("getSocket", _socket)
+    if (_socket !== null && _socket.readyState === WebSocket.OPEN) {
+      resolve(_socket)
+      return
+    }
+    console.log("initializing socket")
 
-  _socket = new WebSocket(EMAIL_VERIFICATION_API) as WebSocket
-  const openHandler = () => {
-    if (!_socket) return
-    console.log("socket opened")
-    resolve(_socket)
-  }
-  _socket.addEventListener("open", openHandler)
-  const errorHandler = (event: Event) => {
-    if (!_socket) return
-    console.log("socket error", event)
-    reject(new Error("Failed to connect to socket"))
-    _socket.removeEventListener("error", errorHandler)
-    _socket.removeEventListener("open", openHandler)
-  }
-  _socket.addEventListener("error", errorHandler)
-  _socket.addEventListener("close", ()=>{
-    console.log("Closed!")
+    _socket = new WebSocket(EMAIL_VERIFICATION_API) as WebSocket
+    const openHandler = () => {
+      if (!_socket) return
+      console.log("socket opened")
+      _socket.removeEventListener("open", openHandler)
+      resolve(_socket)
+    }
+    _socket.addEventListener("open", openHandler)
+    const errorHandler = (event: Event) => {
+      if (!_socket) return
+      console.log("socket error", event)
+      _socket.removeEventListener("error", errorHandler)
+      _socket.removeEventListener("open", openHandler)
+      _socket.removeEventListener("close", closeHandler)
+      reject(new Error("Failed to connect to socket"))
+    }
+    const closeHandler = () => {
+      if (!_socket) return
+      console.log("socket closed!")
+      _socket.removeEventListener("close", closeHandler)
+      _socket.removeEventListener("error", errorHandler)
+      _socket.removeEventListener("open", openHandler)
+      _socket = null
+      reject(new Error("Failed to connect to socket"))
+    }
+    _socket.addEventListener("error", errorHandler)
+    _socket.addEventListener("close", closeHandler)
   })
-})
+}
+
+export const closeSocket = () => {
+  console.log("closeSocket", _socket)
+  if (!_socket) return
+  console.log("closing socket", _socket)
+  _socket.close()
+  _socket = null
+}
