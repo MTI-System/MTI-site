@@ -20,7 +20,7 @@
     "framer-motion": "^12.23.12",
     "get-video-id": "^4.1.7",
     "js-cookie": "^3.0.5",
-    "next": "15.4.5",
+    "next": "15.4.8",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",
