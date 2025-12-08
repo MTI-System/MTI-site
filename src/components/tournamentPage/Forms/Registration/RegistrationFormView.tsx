@@ -90,11 +90,18 @@ export default function RegistrationFormView(
           }
         })}
         {/*{error && (<p className="text-red-500">При отправке формы произошла ошибка. Попробуйте позже</p>)}*/}
+
         {isEdit && (
-          <Forms.ConfirmButton
-            className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary h-10 rounded-xl border px-10 font-bold cursor-pointer">
-            Отправить форму
-          </Forms.ConfirmButton>
+          <>
+            <p className="text-center text-red-600">
+                Перед тем, как заявка попадет к организатору, необходимо чтобы каждый участник подтвердил её. Это можно будет сделать в уведомлениях.
+            </p>
+            <Forms.ConfirmButton
+              className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary h-10 rounded-xl border px-10 font-bold cursor-pointer">
+              Отправить форму
+            </Forms.ConfirmButton>
+          </>
+
         )}
       </Forms.Trigger>
     </Forms.Root>

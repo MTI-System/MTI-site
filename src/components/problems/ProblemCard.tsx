@@ -1,20 +1,20 @@
 "use client"
-import { FaEdit, FaPlus } from "react-icons/fa"
-import { MdDeleteOutline } from "react-icons/md"
-import { ProblemInterface, ProblemSectionInterface } from "@/types/problemAPI"
+import {FaEdit, FaPlus} from "react-icons/fa"
+import {MdDeleteOutline} from "react-icons/md"
+import {ProblemInterface, ProblemSectionInterface} from "@/types/problemAPI"
 import Link from "next/link"
-import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useEffect, useRef, useState, useTransition } from "react"
-import { PiGlobeBold, PiGlobeLight } from "react-icons/pi"
+import {redirect, usePathname, useRouter, useSearchParams} from "next/navigation"
+import {CSSProperties, useEffect, useRef, useState, useTransition} from "react"
+import {PiGlobeBold, PiGlobeLight} from "react-icons/pi"
 import ProblemSection from "@/components/problems/ProblemSection"
 import DeletionConfirmationModal from "./DeletionConfirmationModal"
-import { DropdownMulti, DropdownMultiElement, DropdownOptionInterface, DropdownTrigger } from "@/components/ui/Dropdown"
-import { Input } from "@/components/ui/Input"
-import { Button } from "@/components/ui/Buttons"
-import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import {DropdownMulti, DropdownMultiElement, DropdownOptionInterface, DropdownTrigger} from "@/components/ui/Dropdown"
+import {Input} from "@/components/ui/Input"
+import {Button} from "@/components/ui/Buttons"
+import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore"
 import DotWithTooltip from "@/components/ui/DotWithTooltip"
-import { Menu } from "@base-ui-components/react"
-import { PROBLEM_API } from "@/constants/APIEndpoints"
+import {Menu, Tooltip} from "@base-ui-components/react"
+import {PROBLEM_API} from "@/constants/APIEndpoints"
 import twclsx from "@/utils/twClassMerge"
 import {
   useDeleteProblemMutation,
@@ -23,7 +23,7 @@ import {
 } from "@/api/problems/clientApiInterface"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 
-export default function ProblemCard({ problem, isEditable }: { problem: ProblemInterface; isEditable: boolean }) {
+export default function ProblemCard({problem, isEditable}: { problem: ProblemInterface; isEditable: boolean }) {
   const [isPendingDeletion, startTransition] = useTransition()
   return (
     <div
@@ -31,16 +31,16 @@ export default function ProblemCard({ problem, isEditable }: { problem: ProblemI
         "opacity-25": isPendingDeletion,
       })}
     >
-      <ProblemCardContent problem={problem} isEditable={isEditable} startTransition={startTransition} />
+      <ProblemCardContent problem={problem} isEditable={isEditable} startTransition={startTransition}/>
     </div>
   )
 }
 
 export function ProblemCardContent({
-  problem,
-  isEditable,
-  startTransition,
-}: {
+                                     problem,
+                                     isEditable,
+                                     startTransition,
+                                   }: {
   problem: ProblemInterface
   isEditable: boolean
   startTransition?: (trh: () => void) => void
@@ -75,7 +75,7 @@ export function ProblemCardContent({
     formData.set("newProblemFirstTranslationText", editedProblemTextRef.current)
     formData.set("newProblemFirstTranslationBy", editedProblemByRef.current)
     formData.set("token", token)
-    const resp = await fetch(PROBLEM_API + "edit_problem", { method: "POST", body: formData })
+    const resp = await fetch(PROBLEM_API + "edit_problem", {method: "POST", body: formData})
     return resp.ok
   }
   useEffect(() => {
@@ -135,21 +135,63 @@ export function ProblemCardContent({
             <Link href={"/problems/" + problem.id.toString()}>
               <h2
                 className={twclsx("text-text-main text-xl font-bold transition-colors duration-300", {
-                  "hover:text-text-hover": !pathname.startsWith("/problems/" + problem.id.toString()),
+                  "hover:text-text-hover flex items-center gap-1": !pathname.startsWith("/problems/" + problem.id.toString()),
                 })}
               >
-                {problem.global_number}
+                {problem.local_number !== problem.global_number ? <>{problem.local_number} <span>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger
+                      delay={0}
+                      className="
+                        flex items-center justify-center
+                        border-0 rounded-sm
+                        bg-transparent
+                        text-text-main
+                        select-none
+                        {/*data-popup-open:bg-gray-100*/}
+                        focus-visible:bg-none
+                        focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800
+                        hover:bg-hover
+                        focus-visible:not-[&:hover]:bg-transparent"
+                    >
+                      ({problem.global_number})
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Positioner sideOffset={10}>
+                        <Tooltip.Popup
+                          className="
+                            flex flex-col
+                            px-2 py-1
+                            rounded-md
+                            bg-[canvas]
+                            text-sm
+                            origin-(--transform-origin)
+                            shadow-lg outline-1
+                            transition-[transform,scale,opacity]
+                            data-ending-style:opacity-0 data-ending-style:scale-90
+                            data-instant:transition-none
+                            data-starting-style:opacity-0 data-starting-style:scale-90
+                            text-text-main
+                            dark:shadow-none dark:outline-gray-300 dark:-outline-offset-1"
+                        >
+                          Номер задачи в списке задач всероссийского турнира юных физиков
+                        </Tooltip.Popup>
+                      </Tooltip.Positioner>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+
+                </span></> : problem.global_number}
                 <span className="font-sans">. </span>
                 {problem.problem_translations[selectedTrnslation].problem_name}
               </h2>
             </Link>
           )}
-          {isEditable && <EditButtons startTransition={startTransition} problem={problem} />}
+          {isEditable && <EditButtons startTransition={startTransition} problem={problem}/>}
         </div>
 
         {is_edit_page && (
           <div className="">
-            <PiGlobeLight />
+            <PiGlobeLight/>
             <div className="">
               <input
                 className="border-border h-full w-full rounded-2xl border p-2 text-[0.8rem]"
@@ -174,7 +216,7 @@ export function ProblemCardContent({
         )}
         {!is_edit_page && (
           <div className="text-text-alt flex items-center gap-2 text-base">
-            <PiGlobeBold className="text-2xl" />
+            <PiGlobeBold className="text-2xl"/>
             <h2 className="font-bold">{problem.problem_translations[selectedTrnslation].problem_by}</h2>
           </div>
         )}
@@ -238,8 +280,8 @@ export function ProblemCardContent({
 
       <div className="mb-3">
         <ProblemsProviderWrapper>
-          <ScienceList problem={problem} setHovered={setHoveredScience} />
-          <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience} />
+          <ScienceList problem={problem} setHovered={setHoveredScience}/>
+          <SectionsList problem={problem} isEditable={is_edit_page || isEditable} hoveredScience={hoveredScience}/>
         </ProblemsProviderWrapper>
       </div>
     </>
@@ -247,9 +289,9 @@ export function ProblemCardContent({
 }
 
 function EditButtons({
-  startTransition,
-  problem,
-}: {
+                       startTransition,
+                       problem,
+                     }: {
   startTransition: (transitionHandler: () => void) => void
   problem: ProblemInterface
 }) {
@@ -258,7 +300,7 @@ function EditButtons({
   const setIsDelModalOpen = isDelModalOpenState[1]
   const token = useAppSelector((state) => state.auth.token)
 
-  const [deleteProblemMutation, { isSuccess }] = useDeleteProblemMutation()
+  const [deleteProblemMutation, {isSuccess}] = useDeleteProblemMutation()
   useEffect(() => {
     if (isSuccess) {
       startTransition(() => {
@@ -271,7 +313,7 @@ function EditButtons({
     <>
       <div className="flex gap-1">
         <Link href={"/problems/" + problem.id.toString() + "?is_edit=true"}>
-          <FaEdit className="text-accent-primary" />
+          <FaEdit className="text-accent-primary"/>
         </Link>
         <MdDeleteOutline
           className="text-red-600"
@@ -285,14 +327,14 @@ function EditButtons({
         problem_title={problem.problem_translations[0].problem_name}
         openState={isDelModalOpenState}
         onConfirm={async () => {
-          deleteProblemMutation({ problemId: problem.id, tournamentTypeId: problem.tournament_type, token: token })
+          deleteProblemMutation({problemId: problem.id, tournamentTypeId: problem.tournament_type, token: token})
         }}
       />
     </>
   )
 }
 
-function ScienceList({ problem, setHovered }: { problem: ProblemInterface; setHovered: (id: number | null) => void }) {
+function ScienceList({problem, setHovered}: { problem: ProblemInterface; setHovered: (id: number | null) => void }) {
   return (
     <div className="flex gap-3">
       <h3 className="text-text-alt py-2 pt-3 text-xl font-medium">
@@ -317,10 +359,10 @@ function ScienceList({ problem, setHovered }: { problem: ProblemInterface; setHo
 }
 
 function SectionsList({
-  problem,
-  isEditable,
-  hoveredScience,
-}: {
+                        problem,
+                        isEditable,
+                        hoveredScience,
+                      }: {
   problem: ProblemInterface
   isEditable: boolean
   hoveredScience: number | null
@@ -330,7 +372,7 @@ function SectionsList({
   // const isSectionLoading = useAppSelector((state) => state.problems.isLoaded)
   // const dispatcher = useAppDispatch()
   // const problems = useAppSelector((state) => state.problems)
-  const { data: allSections } = useGetAllAvailableSectionsQuery({})
+  const {data: allSections} = useGetAllAvailableSectionsQuery({})
 
   useEffect(() => {
     setAddableSections(
@@ -340,7 +382,7 @@ function SectionsList({
             problem.problem_sections.find((existing_section) => section.id === existing_section.id) === undefined &&
             section.tournament_type === problem.tournament_type,
         )
-        .map((value) => ({ ...value, section_science: value.section_science.id })),
+        .map((value) => ({...value, section_science: value.section_science.id})),
     )
   }, [problem.problem_sections.length, allSections])
 
@@ -374,15 +416,15 @@ function SectionsList({
           }}
         />
       )}
-      {isEditable && <AddNewSection problemId={problem.id} addableSections={addableSections ?? []} />}
+      {isEditable && <AddNewSection problemId={problem.id} addableSections={addableSections ?? []}/>}
     </div>
   )
 }
 
 function AddNewSection({
-  problemId,
-  addableSections,
-}: {
+                         problemId,
+                         addableSections,
+                       }: {
   problemId: number
   addableSections: ProblemSectionInterface[]
 }) {
@@ -400,7 +442,7 @@ function AddNewSection({
   const [selectedOptions, setSelectedOption] = selectionState
   const token = useAppSelector((state) => state.auth.token)
 
-  const [addSectionMutation, { isSuccess, isError }] = useModifySectionOnTaskMutation()
+  const [addSectionMutation, {isSuccess, isError}] = useModifySectionOnTaskMutation()
   useEffect(() => {
     if (isSuccess) {
       startTransition(() => {
@@ -414,7 +456,7 @@ function AddNewSection({
   useEffect(() => {
     if (isErrorShown) {
       setColor((curColor) => {
-        const newColor = { ...curColor }
+        const newColor = {...curColor}
         newColor["--border-color"] = "var(--color-accent-warning)"
         newColor["--bg-color"] = "rgba(from var(--border-color) r g b / 0.125)"
         newColor.opacity = 1
@@ -433,13 +475,13 @@ function AddNewSection({
           style={color as CSSProperties}
           className={twclsx(
             "hover:bg-bg-alt rounded-full border-2 border-(--border-color) bg-(--bg-color) py-0.5 font-bold text-(--border-color) opacity-100!",
-            { "hover:bg-(--bg-color)!": isPending || isErrorShown || isLoading },
+            {"hover:bg-(--bg-color)!": isPending || isErrorShown || isLoading},
           )}
           disabled={isPending || isErrorShown || isLoading}
           dontDisplaySelection
         >
           <div className="flex min-w-70 flex-row content-center items-center justify-start gap-2">
-            <FaPlus />
+            <FaPlus/>
             {isErrorShown || isLoading ? (
               isErrorShown ? (
                 <p>Ошибка</p>
@@ -482,10 +524,10 @@ function AddNewSection({
           <div className="grid cursor-default grid-cols-[2rem_1fr] items-center gap-1">
             <Menu.CheckboxItemIndicator className="col-start-1">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill={section.tile_color}>
-                <path d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z" />
+                <path d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
               </svg>
             </Menu.CheckboxItemIndicator>
-            <ProblemSection key={section.id} section={section} problemId={problemId} className="col-start-2" />
+            <ProblemSection key={section.id} section={section} problemId={problemId} className="col-start-2"/>
           </div>
         </DropdownMultiElement>
       ))}

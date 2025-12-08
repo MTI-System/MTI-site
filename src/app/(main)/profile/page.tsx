@@ -30,6 +30,7 @@ export default async function ProfilePage() {
     }),
   )
   const { data: userAuth, error } = await authPromise
+  console.log("auth is ",userAuth)
   if (error != null) {
     redirect("/login?redirect=profile")
   }

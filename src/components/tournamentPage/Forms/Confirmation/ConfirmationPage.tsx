@@ -3,13 +3,14 @@ import {usePersonalDAtaRequestGrandMutation, usePersonalDataRequestsQuery} from 
 import Loading from "@/app/loading"
 import RegisterRequest from "@/components/personalDataRequests/RegisterRequest"
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore"
-import {Button, Form} from "@base-ui-components/react"
-import {useEffect, useState} from "react";
+import {Accordion, Button, Form} from "@base-ui-components/react"
+import React, {useEffect, useState} from "react";
 import {FaCircleCheck} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
-import {useGetAnswerQuery} from "@/api/registration/clientApiInterface";
+import {useGetAnswerQuery, useGetUserAnswersQuery} from "@/api/registration/clientApiInterface";
 import TournamentRegistrationForm from "@/components/tournamentPage/Forms/Registration/TournamentRegistrationForm";
 import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper";
+import {ConfirmationForm} from "@/components/tournamentPage/Forms/Confirmation/ConfirmationForm";
 
 
 export default function ConfirmationPage(
@@ -19,89 +20,73 @@ export default function ConfirmationPage(
   // Эта заявка отображается.
   // Далее галочки, которые летят со специального эндпоинта и кнопка подтвердить заявку. ready
   const token = useAppSelector(store => store.auth.token)
-  const {data: personalDataRequests, isLoading, isSuccess, refetch} = usePersonalDataRequestsQuery({
-    token: token,
-    tournamentId: tournamentId
-  })
+  // const {data: personalDataRequests, isLoading, isSuccess, refetch} = usePersonalDataRequestsQuery({
+  //   token: token,
+  //   tournamentId: tournamentId
+  // })
   const [requestsChecks, setRequestsChecks] = useState<boolean[]>([])
   const [grandPermission, {isLoading: isGranting, isSuccess: isGranted}] = usePersonalDAtaRequestGrandMutation()
-  const {data: filledForm} = useGetAnswerQuery(
-    {
-      tournamentId: tournamentId,
-      token: token,
-      formTypeFlag: "registration"
-    }
-  )
+  // const {data: filledForm} = useGetAnswerQuery(
+  //   {
+  //     tournamentId: tournamentId,
+  //     token: token,
+  //     formTypeFlag: "registration"
+  //   }
+  // )
+  const {data: filledForms, isLoading: isFilledFormsLoading, isError: isFilledFormsError} = useGetUserAnswersQuery({token: token, tournamentId: tournamentId, formTypeFlag: "registration"})
+
   const router = useRouter()
-  useEffect(() => {
-    if (personalDataRequests) {
-      setRequestsChecks(personalDataRequests.map(() => false))
-    }
-  }, [personalDataRequests])
-
-  const changeFlag = (idx: number, isOn: boolean) => {
-    setRequestsChecks((prevChecks) => prevChecks.map((x, id) => idx === id ? isOn : x))
-  }
-
-  useEffect(() => {
-    console.log("granted", isGranted)
-    if (isGranted) {
-      refetch()
-      // router.refresh()
-    }
-  }, [isGranted]);
+  // useEffect(() => {
+  //   if (personalDataRequests) {
+  //     setRequestsChecks(personalDataRequests.map(() => false))
+  //   }
+  // }, [personalDataRequests])
 
 
-  const acceptAll = () => {
-    grandPermission({token: token, pdIds: personalDataRequests?.map(item => item.requestId) ?? []})
-    router.refresh()
-  }
+  // useEffect(() => {
+  //   console.log("granted", isGranted)
+  //   if (isGranted) {
+  //     refetch()
+  //     // router.refresh()
+  //   }
+  // }, [isGranted]);
+
+
+  // const acceptAll = () => {
+  //   grandPermission({token: token, pdIds: personalDataRequests?.map(item => item.requestId) ?? []})
+  //   router.refresh()
+  // }
 
 
   return (
     <>
-      <div>
-        {isLoading && <Loading/>}
-        {!isLoading && ((personalDataRequests?.length ?? 0) > 0) && (
-          <>
-            <TournamentsProviderWrapper>
-              {filledForm ? <TournamentRegistrationForm formInfo={filledForm} className={""} isEdit={false}
-                                                        tournamentId={tournamentId}/> : <Loading/>}
-            </TournamentsProviderWrapper>
-            <Form
-              className="flex flex-col gap-2 mt-2"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                acceptAll()
+      {isFilledFormsLoading && <Loading/>}
+      {isFilledFormsError && <p>Ошибка загрузки заполненных форм</p>}
+      <Accordion.Root className="flex w-full flex-col justify-center text-text-main gap-2 ">
+      {filledForms?.map((filledForm, idx) => (
+          <Accordion.Item className="border border-border rounded-xl overflow-hidden" key={idx}>
+            <Accordion.Header>
+              <Accordion.Trigger className="group relative flex w-full items-baseline justify-between gap-4 bg-ba-main py-2 pr-1 pl-3 text-left font-medium hover:bg-hover focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
+                Заявка {idx + 1}
+                <PlusIcon className="mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45" />
+              </Accordion.Trigger>
+            </Accordion.Header>
+            <Accordion.Panel className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-gray-600 transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
+              <ConfirmationForm key={idx} filledForm={filledForm} tournamentId={tournamentId}/>
+            </Accordion.Panel>
+          </Accordion.Item>
 
-              }}>
-              {personalDataRequests?.map((item, idx) => {
-                switch (item.type.typeFlag) {
-                  case "tournamentPdGifting":
-                    return <RegisterRequest key={item.requestId} updateCheck={(isOn: boolean) => {
-                      changeFlag(idx, isOn)
-                    }}/>
-                }
-              })}
-              <Button
-                disabled={!requestsChecks.every(Boolean)}
-                focusableWhenDisabled
-                type="submit"
-                className="flex items-center justify-center h-10 px-3.5 m-0 outline-0 border border-gray-200 rounded-md bg-gray-50 font-inherit text-base font-medium leading-6 text-gray-900 select-none hover:data-[disabled]:bg-gray-50 hover:bg-gray-100 active:data-[disabled]:bg-gray-50 active:bg-gray-200 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] active:border-t-gray-300 active:data-[disabled]:shadow-none active:data-[disabled]:border-t-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800 focus-visible:-outline-offset-1 data-[disabled]:text-gray-500"
-              >
-                Подтвердить заявку
-              </Button>
-            </Form>
-
-          </>
-        )}
-        {(personalDataRequests?.length ?? 1) === 0 && (
-          <>
-            <FaCircleCheck className="text-green-700 w-full h-[300px]"/>
-            <h1 className="w-full text-center text-3xl font-bold pt-2 text-text-main">Заявка подтверждена</h1>
-          </>
-        )}
-      </div>
+      ))}
+      </Accordion.Root>
+      <p className="text-red-500 text-center">Организатор увидит только те заявки, в которых есть подпись "все разрешения выданы"</p>
     </>
   )
+}
+
+function PlusIcon(props: React.ComponentProps<'svg'>) {
+  return (
+    <svg viewBox="0 0 12 12" fill="currentcolor" {...props}>
+      <path d="M6.75 0H5.25V5.25H0V6.75L5.25 6.75V12H6.75V6.75L12 6.75V5.25H6.75V0Z" />
+    </svg>
+  );
 }

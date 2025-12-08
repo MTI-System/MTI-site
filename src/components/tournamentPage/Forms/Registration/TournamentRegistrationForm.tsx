@@ -32,16 +32,18 @@ export default function TournamentRegistrationForm({
                                                      className,
                                                      isEdit,
                                                      tournamentId,
-                                                     formInfo
+                                                     formInfo,
+                                                     defaultForceAnswer=false
                                                    }: {
   formInfo: TournamentRegistrationFormInfoInterface | TournamentRegistrationAnswerInterface | null,
   className: string
   isEdit: boolean,
-  tournamentId: number
+  tournamentId: number,
+  defaultForceAnswer?: boolean
 }) {
   const [submitFormAnswer, {data, isLoading, isError, error, isSuccess}] = useSubmitFormAnswerMutation()
   const authId = useAppSelector(state => state.auth.authInfo?.user_id)
-  const [forceRegistration, setForceRegistration] = useState(false)
+  const [forceRegistration, setForceRegistration] = useState(defaultForceAnswer ?? false)
   // const year = useAppSelecto
   const token = useAppSelector((state) => state.auth.token)
 
