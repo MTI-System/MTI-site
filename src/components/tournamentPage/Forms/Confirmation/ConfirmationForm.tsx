@@ -10,6 +10,7 @@ import {usePersonalDAtaRequestGrandMutation, usePersonalDataRequestsQuery} from 
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 import {FaCircleCheck} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
+import twclsx from "@/utils/twClassMerge";
 
 
 
@@ -23,8 +24,9 @@ export function ConfirmationForm(
   const token = useAppSelector(store => store.auth.token)
   const [requestsChecks, setRequestsChecks] = useState<boolean[]>([])
   const [grandPermission, {isLoading: isGranting, isSuccess: isGranted}] = usePersonalDAtaRequestGrandMutation()
+
   const router = useRouter()
-  const {data: personalDataRequests, isLoading: isPdLoading} = usePersonalDataRequestsQuery({token: token, neededPd: (filledForm.neededPd ?? [])})
+  const {data: personalDataRequests, isLoading: isPdLoading, refetch: updatePermissions} = usePersonalDataRequestsQuery({token: token, neededPd: (filledForm.neededPd ?? [])})
   const changeFlag = (idx: number, isOn: boolean) => {
     setRequestsChecks((prevChecks) => prevChecks.map((x, id) => idx === id ? isOn : x))
   }
@@ -37,7 +39,7 @@ export function ConfirmationForm(
 
   const acceptAll = () => {
     grandPermission({token: token, pdIds: personalDataRequests?.map(item => item.requestId) ?? []})
-    router.refresh()
+    updatePermissions()
   }
 
   return (
@@ -67,15 +69,23 @@ export function ConfirmationForm(
               })}
               {isPdLoading && <Loading/>}
 
-              {(personalDataRequests?.length??0) > 0 && <Button
+              {((personalDataRequests?.length??0) > 0 && !isGranting )&& <Button
                 disabled={!requestsChecks.every(Boolean)}
                 focusableWhenDisabled
                 type="submit"
-                className="w-full h-12 bg-accent-primary/20 border border-accent-primary text-accent-primary  data-disabled:bg-accent-primary/5 data-disabled:cursor-not-allowed cursor-pointer hover:bg-accent-primary/50 rounded-2xl"
+                className={twclsx("text-center items-center w-full h-12 bg-accent-primary/20 border border-accent-primary text-accent-primary  data-disabled:bg-accent-primary/5 data-disabled:cursor-not-allowed cursor-pointer hover:bg-accent-primary/50 rounded-2xl")}
               >
                 Подтвердить заявку
               </Button>}
-
+              {isGranting && (
+                <>
+                  <div
+                    className="flex items-center w-full h-12  border border-accent-primary text-accent-primary  bg-accent-primary/5 cursor-progress  rounded-2xl animate-pulse"
+                  >
+                    <p className="w-full text-center">Выдача разрешений</p>
+                  </div>
+                </>
+              )}
               {(personalDataRequests?.length??0) == 0 && (
                 <>
                   <p className="text-green-500 text-center py-5">Заявка подтверждена</p>
@@ -86,13 +96,6 @@ export function ConfirmationForm(
 
           </>
         )}
-        {/*{(personalDataRequests?.length ?? 1) === 0 && (*/}
-        {/*  <>*/}
-        {/*    <FaCircleCheck className="text-green-700 w-full h-[300px]"/>*/}
-        {/*    /!*{JSON.stringify(personalDataRequests)}*!/*/}
-        {/*    <h1 className="w-full text-center text-3xl font-bold pt-2 text-text-main">Заявка подтверждена</h1>*/}
-        {/*  </>*/}
-        {/*)}*/}
       </div>
     </>
   )

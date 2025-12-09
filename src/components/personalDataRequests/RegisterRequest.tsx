@@ -44,12 +44,6 @@ export default function RegisterRequest({updateCheck}: {
         <div className={policyCardClass}>
           <p>
             Я даю согласие на передачу моей информации турнирным операторам для участия в турнире.
-            {/*<a*/}
-            {/*  className="text-accent-primary underline underline-offset-4 transition hover:opacity-80"*/}
-            {/*  href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"*/}
-            {/*>*/}
-            {/*  Политикой политикой передачи информации турнирным операторам*/}
-            {/*</a>*/}
           </p>
           <Field.Item className="shrink-0">
             <Checkbox.Root className={checkboxRootClass} onCheckedChange={updateCheck}>
