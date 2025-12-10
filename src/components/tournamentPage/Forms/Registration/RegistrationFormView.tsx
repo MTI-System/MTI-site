@@ -15,6 +15,7 @@ import { Forms } from "@/components/forms";
 import {useGetTournamentCardQuery} from "@/api/tournaments/clientApiInterface";
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 import RespondentUser from "@/components/tournamentPage/Forms/Registration/Parts/RespondentUser";
+import RegisterRequest from "@/components/personalDataRequests/RegisterRequest";
 
 export default function RegistrationFormView(
   {formInfo, isEdit, onSubmit, tournamentId}: {
@@ -38,9 +39,6 @@ export default function RegistrationFormView(
           console.log("filled form", e.entries().toArray())
           e.set("token", token)
           onSubmit?.(e)
-
-
-
         }}
       >
 
@@ -93,6 +91,8 @@ export default function RegistrationFormView(
 
         {isEdit && (
           <>
+            <RegisterRequest updateCheck={(isOn: boolean) => {}}
+                             checkboxText={"Даю согласие на обработку ПД с целью регистрации на турнир " + tournamentCard?.title}/>
             <p className="text-center text-red-600">
                 Перед тем, как заявка попадет к организатору, необходимо чтобы каждый участник подтвердил её. Это можно будет сделать в уведомлениях.
             </p>

@@ -47,6 +47,13 @@ export default function TournamentRegistrationForm({
   // const year = useAppSelecto
   const token = useAppSelector((state) => state.auth.token)
 
+  useEffect(() => {
+    if (isSuccess){
+      setForceRegistration(false)
+      refetch()
+    }
+  }, [isSuccess]);
+
   const {data: oldAnswers, isLoading: isFormsLoading, refetch} = useGetUserAnswersQuery({
     token: token,
     tournamentId: tournamentId,
@@ -78,20 +85,25 @@ export default function TournamentRegistrationForm({
           </>
         ) :
         (
-          <RegistrationFormView
-            formInfo={formInfo}
-            isEdit={isEdit}
-            onSubmit={function (formData: FormData): void {
-              submitFormAnswer(
-                {
-                  formData: formData,
-                  formId: formInfo?.id ?? -1,
-                }
-              )
-              setForceRegistration(false)
-              refetch()
-            }}
-            tournamentId={tournamentId}/>
+          <div className="relative">
+            {isLoading && <div className="absolute size-full bg-bg-alt/60 z-2 animate-pulse">
+              <Loading/>
+            </div>}
+            <RegistrationFormView
+              formInfo={formInfo}
+              isEdit={isEdit}
+              onSubmit={function (formData: FormData): void {
+                submitFormAnswer(
+                  {
+                    formData: formData,
+                    formId: formInfo?.id ?? -1,
+                  }
+                )
+
+              }}
+              tournamentId={tournamentId}/>
+          </div>
+
         )
       }
     </>

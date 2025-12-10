@@ -104,4 +104,22 @@ export const defineTournamentsEndpoints = (
       return null
     },
   }),
+  closeRegistration: builder.mutation({
+    query: ({tournamentId, token}: {tournamentId: number, token: string}) => {
+      const body = new FormData()
+      body.set("tournamentId", tournamentId.toString())
+      body.set("token", token.toString())
+      return {
+        url: "close_registration",
+        method: "POST",
+        body: body
+      }
+    },
+    transformResponse: (response: unknown): TournamentCardInterface | null => {
+      const parsed = TournamentCard.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing tournament card: ${parsed.error}`)
+      return null
+    },
+  })
 })

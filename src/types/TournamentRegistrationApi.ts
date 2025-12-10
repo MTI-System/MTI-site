@@ -50,7 +50,7 @@ export const TournamentRegistrationAnswer = z.object({
   status: z.string(),
   fields: z.array(TournamentRegistrationAnswerField),
   respondingUser: z.number(),
-  neededPd: z.array(z.number())
+  neededPd: z.array(z.number()).optional()
 })
 
 

@@ -63,7 +63,7 @@ export function ConfirmationForm(
                   case "tournamentPdGifting":
                     return <RegisterRequest key={item.requestId} updateCheck={(isOn: boolean) => {
                       changeFlag(idx, isOn)
-                    }}/>
+                    }} checkboxText={"Даю согласие на передачу персональных данных организатору турнира"}/>
 
                 }
               })}

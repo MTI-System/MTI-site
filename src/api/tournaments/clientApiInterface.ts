@@ -30,6 +30,7 @@ export const tournamentsApiClient = createApiClient({
 })
 
 export const {
+  useCloseRegistrationMutation,
   useGetAvailableStatesQuery,
   useGetAvailableYearsQuery,
   useGetAvailableTournamentTypesQuery,
