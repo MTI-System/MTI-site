@@ -126,6 +126,12 @@ function LoginPage() {
             Зарегистрируйтесь
           </Link>
         </p>
+        <p className="text-text-main">
+          Забыли пароль?{" "}
+          <Link className="text-accent-primary font-medium hover:underline" href="/register">
+            Восстановить
+          </Link>
+        </p>
       </Form>
     </LoginLayout>
   )
