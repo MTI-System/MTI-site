@@ -59,7 +59,7 @@ function LoginPage() {
     const email = formData.get("username")
     if (email === "") newFormErrors.username = "Логин не может быть пустым"
     const password = formData.get("password")
-    if (password === "") newFormErrors.password = "Пароль не можетр быть пустым"
+    if (password === "") newFormErrors.password = "Пароль не может быть пустым"
     if (newFormErrors.username || newFormErrors.password) {
       setFormErrors(newFormErrors)
       return

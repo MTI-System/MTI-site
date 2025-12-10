@@ -74,7 +74,7 @@ export default function TournamentRegistrationForm({
               </>
             )
             }
-              {!oldAnswers && <Loading/>}
+            {!oldAnswers && <Loading/>}
           </>
         ) :
         (

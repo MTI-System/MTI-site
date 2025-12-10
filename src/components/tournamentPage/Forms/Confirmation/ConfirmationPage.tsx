@@ -63,7 +63,7 @@ export default function ConfirmationPage(
       {isFilledFormsLoading && <Loading/>}
       {isFilledFormsError && <p>Ошибка загрузки заполненных форм</p>}
       <Accordion.Root className="flex w-full flex-col justify-center text-text-main gap-2 ">
-      {filledForms?.map((filledForm, idx) => (
+        {filledForms?.map((filledForm, idx) => (
           <Accordion.Item className="border border-border rounded-xl overflow-hidden" key={idx}>
             <Accordion.Header>
               <Accordion.Trigger className="group relative flex w-full items-baseline justify-between gap-4 bg-ba-main py-2 pr-1 pl-3 text-left font-medium hover:bg-hover focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
@@ -76,7 +76,7 @@ export default function ConfirmationPage(
             </Accordion.Panel>
           </Accordion.Item>
 
-      ))}
+        ))}
       </Accordion.Root>
       <p className="text-red-500 text-center">Организатор увидит только те заявки, в которых есть подпись "все разрешения выданы"</p>
     </>
