@@ -19,7 +19,7 @@ export default function ApplicationsPage(
     const token = useAppSelector(state=>state.auth.token)
     const {data: answers, isLoading: isAnswersLoading} = useGetAnswersQuery({
         token: token,
-        id: formId
+        id: formId ?? 0
     }, {skip: formId===undefined})
     console.log("answers: ", answers, formId, isAnswersLoading)
     return (
