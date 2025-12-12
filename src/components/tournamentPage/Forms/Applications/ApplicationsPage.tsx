@@ -29,7 +29,7 @@ export default function ApplicationsPage(
               <>
                 <ApplicationsList answers={answers} tournamentId={id}/>
               </>  
-            ): <p>Нет заявок для формы {formId} {JSON.stringify(data)}</p>}
+            ): <p>Нет заявок</p>}
         </>
     )
 }
