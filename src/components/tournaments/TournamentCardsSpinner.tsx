@@ -29,7 +29,7 @@ export default function TournamentCardsSpinner({
   const isOrganizator = (rights ?? []).filter((r) => r.right_flag === "CREATE_TOURNAMENTS").length !== 0 && isModerating
   const currentItems = tournamentsCards
 
-  if (tournamentsCards.length === 0 && !isOrganizator) {
+  if (tournamentsCards.length === 0 && isOrganizator) {
     return (
       <>
         <div className="h-full">
