@@ -19,10 +19,24 @@ export default function DropdownRegistrationField({
               fields={fieldObject.metadata?.dropdown_options ?? []}
               key={fieldObject.id}
               name={fieldObject.key}
-              onVerification={() => {
+              onVerification={(value: string) => {
+                if (fieldObject?.metadata?.optional != "true") {
+                  if(!value) {
+                    return {
+                      isSuccess: false,
+                      errorMessage: "Поле не может быть пустым"
+                    }
+                  }
+                  else {
+                    return {
+                      isSuccess: true,
+                    }
+                  }
+                }
                 return {
                   isSuccess: true,
                 }
+
               }}
               type="single"
             />

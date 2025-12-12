@@ -1,6 +1,7 @@
 import { Tooltip } from "@base-ui-components/react"
 import React, { ReactNode } from "react"
 import { FaExclamation } from "react-icons/fa"
+import {IoAlertCircleOutline} from "react-icons/io5";
 
 export function ErrorTooltip({
   children,
@@ -18,11 +19,15 @@ export function ErrorTooltip({
           <div className="relative flex size-fit items-center size-full">
             {children}
             <div className="absolute right-10 flex w-fit gap-2">
-              <Tooltip.Trigger aria-label="Bold">
+              <Tooltip.Trigger aria-label="Bold" delay={0}>
                 {isActive && (
-                  <div className="size-5 rounded-full border border-red-500 bg-red-500/40">
-                    <FaExclamation />
+                  // <div className="size-5 rounded-full border border-red-500 bg-red-500/40">
+                  //   {/*<FaExclamation />*/}
+                  // </div>
+                  <div className="size-5 text-red-800">
+                    <IoAlertCircleOutline  size="100%"/>
                   </div>
+
                 )}
               </Tooltip.Trigger>
             </div>

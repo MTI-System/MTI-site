@@ -24,6 +24,7 @@ export const defineRegistrationEndpoints = (
   formsInformation: builder.query({
     query: ({id} : {id: number}) => `get_info_about_forms/${id}`, 
     transformResponse: (response: unknown): TournamentInformationResponseInterface | null => {
+      console.log("info: ", response)
       const parsed = TournamentInformationResponse.safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing registration form: ${parsed.error}`)

@@ -18,10 +18,24 @@ export default function CheckboxRegistrationField({
           <Forms.CheckboxField
             title={fieldObject.title}
             value={fieldObject.key}
-            onVerification={() => {
+            onVerification={(value: string) => {
+              if (fieldObject?.metadata?.optional != "true") {
+                if(!value) {
+                  return {
+                    isSuccess: false,
+                    errorMessage: "Поле не может быть пустым"
+                  }
+                }
+                else {
+                  return {
+                    isSuccess: true,
+                  }
+                }
+              }
               return {
                 isSuccess: true,
               }
+
             }}
             name={fieldObject.key}
           />

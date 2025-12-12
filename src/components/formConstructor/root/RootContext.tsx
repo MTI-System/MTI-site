@@ -73,6 +73,7 @@ export type Field = {
   id: number
   fieldName: string
   properties: FieldProperties
+  optional: boolean
 }
 
 type ConstructorRootContextType = {
@@ -82,7 +83,9 @@ type ConstructorRootContextType = {
   setFieldType: (type: availableFields, id: number) => void
   setProperties: (properties: FieldProperties, id: number) => void
   changeName: (name: string, id: number) => void
+  setOptional: (optional: boolean, id: number) => void
   getFieldById: (id: number) => Field | null,
+  removeField: (id: number) => void
   formType: string,
   tId: number,
   counter: RefObject<number>
@@ -118,7 +121,8 @@ export function ConstructorRootProvider({
             properties: {
               fieldType: field.type,
               ...field.metadata
-            }
+            },
+            optional: field.metadata?.optional == "true"
           }
         }) ?? []
         counter.current = initFields.length
@@ -132,14 +136,21 @@ export function ConstructorRootProvider({
     }
   }, [isInformationLoading])
 
-  const addField = (fieldName: string, id: number) => {
+  const addField = (fieldName: string, id: number, optional: boolean = false) => {
     setFields((prev) => [
       ...prev,
       {
         fieldName: fieldName,
         properties: { fieldType: "text" },
         id,
+        optional
       },
+    ])
+  }
+
+  const removeField = (id: number) => {
+    setFields((prev) => [
+      ...prev.filter((field) => field.id !== id)
     ])
   }
 
@@ -185,6 +196,19 @@ export function ConstructorRootProvider({
     )
   }
 
+  const setOptional =  (optional: boolean, id: number)=> {
+    setFields((prev) =>
+      prev.map((val) => {
+        if (val.id !== id) return val
+        else
+          return {
+            ...val,
+            optional: optional,
+          }
+      }),
+    )
+  }
+
   const getFieldById = (id: number) => {
     for (let i = 0; i < fields.length; i++) {
       if (fields[i].id === id) {
@@ -196,7 +220,7 @@ export function ConstructorRootProvider({
 
   return (
     <ConstructorRootContext
-      value={{ getFieldById, fields, addField, setFields, setFieldType, setProperties, changeName, formType, tId, counter}}
+      value={{ getFieldById, fields, addField, setFields, setFieldType, setProperties, changeName, formType, tId, counter, setOptional, removeField}}
     >
 
       {!isInformationLoading && children}

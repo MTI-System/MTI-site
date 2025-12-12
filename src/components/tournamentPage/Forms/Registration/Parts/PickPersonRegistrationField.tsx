@@ -21,10 +21,24 @@ export default function PickPersonRegistrationField({field}: {
             key={fieldObject.id}
             name={fieldObject.key}
             title={fieldObject.title}
-            onVerification={() => {
+            onVerification={(value: string) => {
+              if (fieldObject?.metadata?.optional != "true") {
+                if(!value) {
+                  return {
+                    isSuccess: false,
+                    errorMessage: "Поле не может быть пустым"
+                  }
+                }
+                else {
+                  return {
+                    isSuccess: true,
+                  }
+                }
+              }
               return {
                 isSuccess: true,
               }
+
             }}
           />
         }

@@ -15,7 +15,7 @@ export default function ApplicationsPage(
     const {data, isLoading} = useFormsInformationQuery({
         id: id
     })
-    const formId = data?.available_forms?.find(f=>f.form_type_flag==="registration")?.form_id
+    const formId = data?.availableForms?.find(f=>f.formTypeFlag==="registration")?.formId
     const token = useAppSelector(state=>state.auth.token)
     const {data: answers, isLoading: isAnswersLoading} = useGetAnswersQuery({
         token: token,
@@ -29,7 +29,7 @@ export default function ApplicationsPage(
               <>
                 <ApplicationsList answers={answers} tournamentId={id}/>
               </>  
-            ): <p>Нет заявок</p>}
+            ): <p>Нет заявок для формы {formId} {JSON.stringify(data)}</p>}
         </>
     )
 }
