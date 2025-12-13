@@ -7,4 +7,5 @@ export const usersApiServer = createApiServer({
   reducerPath: usersReducerPath,
   baseQuery: usersBaseQuery,
   endpoints: defineUsersEndpoints,
+  tagTypes: ["Users"],
 })

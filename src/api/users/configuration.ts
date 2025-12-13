@@ -7,10 +7,20 @@ export const usersReducerPath = "usersApi" as const
 export const usersBaseQuery = fetchBaseQuery({ baseUrl: USERS_API })
 
 export const defineUsersEndpoints = (
-  builder: EndpointBuilder<typeof usersBaseQuery, never, typeof usersReducerPath>,
+  builder: EndpointBuilder<typeof usersBaseQuery, "Users", typeof usersReducerPath>,
 ) => ({
   editUser: builder.mutation({
-    query: ({token, firstName, secondName, thirdName}:{token: string, firstName: string, secondName: string, thirdName: string}) => {
+    query: ({
+      token,
+      firstName,
+      secondName,
+      thirdName,
+    }: {
+      token: string
+      firstName: string
+      secondName: string
+      thirdName: string
+    }) => {
       const formData = new FormData()
       formData.set("token", token)
       formData.set("firstName", firstName)
@@ -19,7 +29,7 @@ export const defineUsersEndpoints = (
       return {
         url: "users/edit",
         method: "POST",
-        body: formData
+        body: formData,
       }
     },
   }),
@@ -64,6 +74,7 @@ export const defineUsersEndpoints = (
       socket.send(email)
       return { data: null }
     },
+    providesTags: ["Users"],
     async onCacheEntryAdded(arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
       const socket = await getSocket()
 
@@ -89,9 +100,11 @@ const getSocket = () => {
       resolve(_socket)
       return
     }
-    console.log("initializing socket")
 
-    _socket = new WebSocket(EMAIL_VERIFICATION_API) as WebSocket
+    if (_socket === null) {
+      console.log("initializing socket")
+      _socket = new WebSocket(EMAIL_VERIFICATION_API) as WebSocket
+    }
     const openHandler = () => {
       if (!_socket) return
       console.log("socket opened")

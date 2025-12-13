@@ -13,12 +13,13 @@ import { redirect, useRouter } from "next/navigation"
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react"
 import { z } from "zod"
 import twclsx from "@/utils/twClassMerge"
-import { usersApiClient, useVerifyEmailQuery } from "@/api/users/clientApiInterface"
+import { usersApiClient, useUsersDispatch, useVerifyEmailQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
 import { closeSocket } from "@/api/users/configuration"
 import { useDispatch } from "react-redux"
-import Loading from "@/app/loading";
-import {IoIosCheckmarkCircle} from "react-icons/io";
+import Loading from "@/app/loading"
+import { IoIosCheckmarkCircle } from "react-icons/io"
+import { UsersApiContext } from "@/api/users/clientApiInterface"
 
 interface RegisterFormData {
   email?: string
@@ -647,7 +648,7 @@ function VerificationStep({
   onStepComplete: () => void
   filledData: RegisterFormData
 }) {
-  const waitTime = 120
+  // const waitTime = 1
   const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ [key: string]: number }>(() => {
     const status: { [key: string]: number } = {}
     if (filledData.email) {
@@ -658,7 +659,8 @@ function VerificationStep({
     }
     return status
   })
-  const [timeRemaining, setTimeRemaining] = useState(waitTime) // 2 minutes in seconds
+  // const dispatch = useUsersDispatch()
+  // const [timeRemaining, setTimeRemaining] = useState(waitTime)
   const unverifiedList = Object.keys(emailVerificationStatus).filter((email) => emailVerificationStatus[email] === 0)
   const emailOnVerify = unverifiedList[0]
   const {
@@ -668,21 +670,21 @@ function VerificationStep({
     isSuccess: isVerifySuccess,
   } = useVerifyEmailQuery({ email: emailOnVerify })
 
-  useEffect(() => {
-    if (timeRemaining <= 0) return
+  // useEffect(() => {
+  //   if (timeRemaining <= 0) return
 
-    const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer)
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
+  //   const timer = setInterval(() => {
+  //     setTimeRemaining((prev) => {
+  //       if (prev <= 1) {
+  //         clearInterval(timer)
+  //         return 0
+  //       }
+  //       return prev - 1
+  //     })
+  //   }, 1000)
 
-    return () => clearInterval(timer)
-  }, [timeRemaining])
+  //   return () => clearInterval(timer)
+  // }, [timeRemaining])
 
   useEffect(() => {
     console.log("isVerifySuccess", isVerifySuccess)
@@ -716,37 +718,33 @@ function VerificationStep({
     <div className={formCardClass}>
       <div className="flex flex-col gap-4">
         {Object.entries(emailVerificationStatus).map(([email, status]) => (
-          <div className="flex items-center gap-2 border border-border px-2 py-5 rounded-2xl flex-col" key={email}>
-
+          <div
+            className="text-text-main border-border flex flex-col items-center gap-2 rounded-2xl border px-2 py-5"
+            key={email}
+          >
             <p>{email}:</p>
             {/* TOFO: Add a button to resend the verification email and add colors in the p below based on the status */}
 
-                {status === 0 ?
-                  (
-                    <div>
-                      <Loading/>
-                      <p>Отправляем сообщение</p>
-                    </div>
-                  )
-                  : status === 1 ?
-                    (
-                      <div>
-                        <Loading/>
-                        <p>Ожидаем подтверждения</p>
-                      </div>
-                    )
-                    :
-                    (
-                      <div>
-                        <IoIosCheckmarkCircle className="w-full text-5xl text-green-500"/>
-                        <p>Подтверждено</p>
-                      </div>
-                    )
-                }
+            {status === 0 ? (
+              <div>
+                <Loading />
+                <p>Отправляем сообщение</p>
+              </div>
+            ) : status === 1 ? (
+              <div>
+                <Loading />
+                <p>Ожидаем подтверждения</p>
+              </div>
+            ) : (
+              <div>
+                <IoIosCheckmarkCircle className="w-full text-5xl text-green-500" />
+                <p>Подтверждено</p>
+              </div>
+            )}
           </div>
         ))}
 
-        <div className="text-text-main flex items-center justify-center gap-2 text-lg font-semibold">
+        {/* <div className="text-text-main flex items-center justify-center gap-2 text-lg font-semibold">
           {timeRemaining > 0 ? (
             <>
               <span>Не пришло письмо? Отправить ещё одно через:</span>
@@ -759,10 +757,11 @@ function VerificationStep({
                 closeSocket().then(() => {
                   setTimeRemaining(waitTime)
                   setEmailVerificationStatus((prev) => {
-                    Object.keys(prev).forEach((email) => {
-                      prev[email] = 0
+                    const newStatuses = { ...prev }
+                    Object.keys(newStatuses).forEach((email) => {
+                      newStatuses[email] = 0
                     })
-                    return prev
+                    return newStatuses
                   })
                 })
               }}
@@ -770,7 +769,8 @@ function VerificationStep({
               Отправить ещё одно письмо
             </span>
           )}
-        </div>
+        </div> */}
+        {/* TODO: Make retry send button (commented code not working) */}
       </div>
       <Button
         className={twclsx(actionButtonClass, "text-lg uppercase md:text-xl")}
