@@ -56,12 +56,12 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/results/team`,
       title: "Командный зачет",
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
     {
       href: `/tournaments/${tournamentCard.id}/results/personal`,
       title: "Личный зачет",
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
   ]
 
@@ -69,12 +69,12 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/fights/all`,
       title: `Все бои`,
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
     ...tournamentCard.fight_containers_cards.map((container) => ({
       href: `/tournaments/${tournamentCard.id}/fights/${container.id}`,
       title: container.title,
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     })),
   ]
 

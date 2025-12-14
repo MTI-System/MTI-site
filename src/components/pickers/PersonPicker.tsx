@@ -93,7 +93,7 @@ export default function PersonPicker({
                       ? (
                         <>
                           <p>{`${preview.firstName} ${preview.secondName} ${preview.thirdName}`}</p>
-                          <p>Дата рождения: {formatDate(new Date(preview.birthday ?? 0))}</p>
+                          {/*<p>Дата рождения: {formatDate(new Date(preview.birthday ?? 0))}</p>*/}
                           <p>Почта: {preview.email}</p>
                         </>
 

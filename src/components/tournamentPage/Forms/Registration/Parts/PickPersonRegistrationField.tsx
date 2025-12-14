@@ -49,7 +49,7 @@ export default function PickPersonRegistrationField({field}: {
           <div className="border-border bg-bg-main-accent h-fit w-full min-h-15 rounded-md border px-2">
             <p className="text-text-alt h-4 px-2 pt-1 text-[13px]">{fieldObject.title}</p>
             <p className="text-text-main px-2 pt-2 font-bold">{user?.firstName} {user?.secondName} {user?.thirdName}</p>
-            {user?.birthday && <p  className="text-text-alt px-2 font-bold">{"Дата рождения: " + formatDate(new Date(user?.birthday ?? 0))}</p>}
+            {fieldObject.key !== "player" && user?.birthday && <p  className="text-text-alt px-2 font-bold">{"Дата рождения: " + formatDate(new Date(user?.birthday ?? 0))}</p>}
             {user?.email && <p  className="text-text-alt px-2 pb-2 font-bold">{"email: " + user?.email}</p>}
           </div>
         )}
