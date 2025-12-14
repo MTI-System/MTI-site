@@ -49,7 +49,7 @@ const inlineGridClass = "grid w-full gap-6 md:gap-[2%] md:grid-cols-[46%_52%]"
 const datePickerClass =
   "outline-none flex h-15 w-full items-center justify-between rounded-xl border border-border bg-bg-alt px-4 text-lg text-text-main transition duration-200 focus-within:ring-2 focus-within:ring-accent-primary focus-within:ring-offset-2 focus-within:ring-offset-bg-main"
 const policyCardClass =
-  "flex w-full h-15 flex-col gap-3 rounded-xl border border-border bg-bg-alt p-4 text-sm leading-relaxed text-text-main sm:flex-row sm:items-center sm:justify-between sm:gap-4 select-none"
+  "flex w-full h-15 flex-row items-center gap-3 rounded-xl border border-border bg-bg-alt p-4 text-sm leading-relaxed text-text-main sm:flex-row sm:items-center sm:justify-between sm:gap-4 select-none"
 const checkboxRootClass =
   "flex size-5 items-center justify-center rounded-md border border-border bg-bg-alt transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-main data-checked:border-transparent data-checked:bg-text-main"
 
@@ -413,7 +413,7 @@ function Step2({
       <Field.Root name="isAcceptedPolicy" className={fieldRootClass}>
         <Field.Error className={fieldErrorClass} match="customError" />
         <div className={policyCardClass}>
-          <p>
+          <p >
             Я соглашаюсь с{" "}
             <a
               className="text-accent-primary underline underline-offset-4 transition hover:opacity-80"
