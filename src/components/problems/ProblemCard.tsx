@@ -138,7 +138,7 @@ export function ProblemCardContent({
                   "hover:text-text-hover flex items-center gap-1": !pathname.startsWith("/problems/" + problem.id.toString()),
                 })}
               >
-                {problem.local_number !== problem.global_number ? <>{problem.local_number} <span>
+                {(problem.local_number !== problem.global_number && problem.local_number !== undefined) ? <>{problem.local_number} <span>
                   <Tooltip.Root>
                     <Tooltip.Trigger
                       delay={0}
