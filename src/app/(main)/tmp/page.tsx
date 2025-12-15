@@ -1,32 +1,38 @@
 "use client"
-import { Forms } from "@/components/forms";
-import CheckboxGroupRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxGroupRegistrationField";
-import CheckboxRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxRegistrationField";
-import { useState } from "react";
+import { useGetAllTournamentCardsQuery, useGetTournamentCardsQuery } from "@/api/tournaments/clientApiInterface"
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
+import { useEffect, useState } from "react"
 
-export default function UploadImage() {
-  const [imgSrc, setImgSrc] = useState("");
-  //@ts-ignore
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+export default function Page() {
+  return (
+    <TournamentsProviderWrapper>
+      <QueryTest />
+    </TournamentsProviderWrapper>
+  )
+}
 
-    const url = URL.createObjectURL(file); // временная ссылка на файл
-    console.log("url: ", url)
-    setImgSrc(url);
-  };
+function QueryTest() {
+  // const { data, isLoading, error, isSuccess } = useGetAllTournamentCardsQuery({})
+  const [tt, setTT] = useState(1)
+  const { data, isLoading, error, isSuccess } = useGetTournamentCardsQuery({ tt: tt, year: 2026 })
+
+  useEffect(() => {
+    console.log(data, isLoading, isSuccess, error)
+    if (isLoading) return
+    if (!isSuccess) {
+      console.error(error)
+      return
+    }
+    console.log(data?.length)
+  }, [isLoading])
 
   return (
-    <div>
-      <input type="file" accept="image/*" onChange={handleChange} />
-
-      {imgSrc && (
-        <img
-          src={imgSrc}
-          alt="preview"
-          style={{ maxWidth: "300px", marginTop: 16 }}
-        />
-      )}
-    </div>
-  );
+    <p
+      onClick={() => {
+        setTT((prev) => prev + 1)
+      }}
+    >
+      {data?.length}
+    </p>
+  )
 }

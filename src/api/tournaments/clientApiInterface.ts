@@ -34,6 +34,7 @@ export const {
   useGetAvailableYearsQuery,
   useGetAvailableTournamentTypesQuery,
   useGetTournamentCardsQuery,
+  useGetAllTournamentCardsQuery,
   useGetOrganizatorTournamentsMutation,
   useGetTournamentCardQuery,
   useGetTournamentTableQuery,

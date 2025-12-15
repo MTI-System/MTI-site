@@ -16,7 +16,6 @@ export const tournamentsBaseQuery = fetchBaseQuery({ baseUrl: TOURNAMENTS_API })
 export const defineTournamentsEndpoints = (
   builder: EndpointBuilder<typeof tournamentsBaseQuery, never, typeof tournamentsReducerPath>,
 ) => ({
-  
   getAvailableStates: builder.query({
     query: ({ year, tt }: { tt: number; year: number }) => `statuses?tournamentTypeId=${tt}&year=${year}`,
     transformResponse: (response: unknown): TournamentStateInterface[] => {
@@ -48,6 +47,16 @@ export const defineTournamentsEndpoints = (
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing tournament cards: ${parsed.error}`)
       return null
+    },
+  }),
+  getAllTournamentCards: builder.query({
+    query: () => `all_tournaments`,
+    transformResponse: (response: unknown): TournamentCardInterface[] | null => {
+      return response as any[]
+      // const parsed = TournamentCard.array().safeParse(response)
+      // if (parsed.success) return parsed.data
+      // console.error(`Unexpected response while parsing tournament cards: ${parsed.error}`)
+      // return null
     },
   }),
   getOrganizatorTournaments: builder.mutation({
@@ -101,6 +110,24 @@ export const defineTournamentsEndpoints = (
       const parsed = TournamentResultsTableEntity.safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing tournament table: ${parsed.error}`)
+      return null
+    },
+  }),
+  closeRegistration: builder.mutation({
+    query: ({ tournamentId, token }: { tournamentId: number; token: string }) => {
+      const body = new FormData()
+      body.set("tournamentId", tournamentId.toString())
+      body.set("token", token.toString())
+      return {
+        url: "close_registration",
+        method: "POST",
+        body: body,
+      }
+    },
+    transformResponse: (response: unknown): TournamentCardInterface | null => {
+      const parsed = TournamentCard.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing tournament card: ${parsed.error}`)
       return null
     },
   }),
