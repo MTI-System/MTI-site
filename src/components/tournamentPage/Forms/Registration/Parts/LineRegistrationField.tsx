@@ -25,9 +25,23 @@ export default function LineRegistrationField({
               name={fieldObject.key}
               placeholder={fieldObject?.metadata?.placeholder ?? fieldObject.title}
               onVerification={(value: string) => {
+                if (fieldObject?.metadata?.optional != "true") {
+                  if(!value) {
+                    return {
+                      isSuccess: false,
+                      errorMessage: "Поле не может быть пустым"
+                    }
+                  }
+                  else {
+                    return {
+                      isSuccess: true,
+                    }
+                  }
+                }
                 return {
                   isSuccess: true,
                 }
+
               }}
             />
           </div>

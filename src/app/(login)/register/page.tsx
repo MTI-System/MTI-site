@@ -13,8 +13,13 @@ import { redirect, useRouter } from "next/navigation"
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react"
 import { z } from "zod"
 import twclsx from "@/utils/twClassMerge"
-import { useRequestEmailVerificationMutation, useVerifyEmailQuery } from "@/api/users/clientApiInterface"
+import { usersApiClient, useUsersDispatch, useVerifyEmailQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
+import { closeSocket } from "@/api/users/configuration"
+import { useDispatch } from "react-redux"
+import Loading from "@/app/loading"
+import { IoIosCheckmarkCircle } from "react-icons/io"
+import { UsersApiContext } from "@/api/users/clientApiInterface"
 
 interface RegisterFormData {
   email?: string
@@ -40,11 +45,11 @@ const inputClass =
   "h-15 w-full rounded-xl border border-border bg-bg-alt px-4 text-lg text-text-main transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-main"
 const actionButtonClass =
   "bg-accent-primary-alt border border-accent-primary text-accent-primary h-15 w-full rounded-xl font-semibold tracking-wide transition duration-200 outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-main disabled:cursor-not-allowed disabled:opacity-70"
-const inlineGridClass = "grid w-full gap-6 md:gap-[5%] md:grid-cols-[44%_51%]"
+const inlineGridClass = "grid w-full gap-6 md:gap-[2%] md:grid-cols-[46%_52%]"
 const datePickerClass =
   "outline-none flex h-15 w-full items-center justify-between rounded-xl border border-border bg-bg-alt px-4 text-lg text-text-main transition duration-200 focus-within:ring-2 focus-within:ring-accent-primary focus-within:ring-offset-2 focus-within:ring-offset-bg-main"
 const policyCardClass =
-  "flex w-full h-15 flex-col gap-3 rounded-xl border border-border bg-bg-alt p-4 text-sm leading-relaxed text-text-main sm:flex-row sm:items-center sm:justify-between sm:gap-4 select-none"
+  "flex w-full h-15 flex-row items-center gap-3 rounded-xl border border-border bg-bg-alt p-4 text-sm leading-relaxed text-text-main sm:flex-row sm:items-center sm:justify-between sm:gap-4 select-none"
 const checkboxRootClass =
   "flex size-5 items-center justify-center rounded-md border border-border bg-bg-alt transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-main data-checked:border-transparent data-checked:bg-text-main"
 
@@ -54,12 +59,12 @@ export default function Page() {
   const [register, { data, isLoading, error, isSuccess }] = useRegisterMutation()
   const router = useRouter()
   const handleRegister = useCallback(
-    (addData: RegisterFormData) => {
+    (addData?: RegisterFormData) => {
       const fd = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
-        fd.append(key, value)
+        fd.append(key, value as string)
       })
-      Object.entries(addData).forEach(([key, value]) => {
+      Object.entries(addData ?? {}).forEach(([key, value]) => {
         fd.append(key, value)
       })
       console.log("fd", fd)
@@ -99,7 +104,6 @@ export default function Page() {
             if (calculateAge(new Date(data.usersBirthday!!)) < 14) setDisplayedStep(3)
             else {
               setDisplayedStep(4)
-              handleRegister(data)
             }
           }}
           onBack={() => setDisplayedStep(1)}
@@ -116,7 +120,7 @@ export default function Page() {
             console.log("3---", data)
             setFormData((prev) => ({ ...prev, ...data }))
             setDisplayedStep(4)
-            handleRegister(data)
+            // handleRegister(data)
           }}
           onBack={() => setDisplayedStep(2)}
           filledData={formData}
@@ -129,7 +133,13 @@ export default function Page() {
     case 4:
       displayForm = (
         <UsersProviderWrapper>
-          <VerificationStep onStepComplete={() => setDisplayedStep(5)} filledData={formData}></VerificationStep>
+          <VerificationStep
+            onStepComplete={() => {
+              setDisplayedStep(5)
+              handleRegister()
+            }}
+            filledData={formData}
+          ></VerificationStep>
         </UsersProviderWrapper>
       )
       displayedTitle = "ПОДТВЕРДИТЕ EMAIL"
@@ -137,14 +147,14 @@ export default function Page() {
       // TODO: Rewrite description so it handles both cases verification of participant email and both participant and parent emails
       break
     case 5:
+      closeSocket()
       displayForm = (
         <Button
           disabled={isLoading}
           className={twclsx(actionButtonClass, "text-xl md:text-2xl")}
           onClick={() => {
             if (error) {
-              setDisplayedStep(1)
-              setFormData({})
+              handleRegister()
             } else redirect("/")
           }}
         >
@@ -193,8 +203,8 @@ function Step1({
   const [checkLogin, { data: isLoginTaken, isLoading, error, isSuccess }] = useIsLoginTakenMutation()
 
   useEffect(() => {
-    if (!formData) return
-    if (!isSuccess && !isLoading) {
+    if (!formData || isLoading) return
+    if (!isSuccess) {
       setFormErrors({ login: "Не удалось проверить свободность имени пользователя" })
       console.error("Error checking login availability", error)
       return
@@ -328,8 +338,8 @@ function Step2({
   }, [])
 
   useEffect(() => {
-    if (!formData) return
-    if (!isSuccess && !isLoading) {
+    if (!formData || isLoading) return
+    if (!isSuccess) {
       setFormErrors({ email: "Не удалось проверить свободность email" })
       console.error("Error checking email availability", error)
       return
@@ -403,7 +413,7 @@ function Step2({
       <Field.Root name="isAcceptedPolicy" className={fieldRootClass}>
         <Field.Error className={fieldErrorClass} match="customError" />
         <div className={policyCardClass}>
-          <p>
+          <p >
             Я соглашаюсь с{" "}
             <a
               className="text-accent-primary underline underline-offset-4 transition hover:opacity-80"
@@ -638,6 +648,7 @@ function VerificationStep({
   onStepComplete: () => void
   filledData: RegisterFormData
 }) {
+  // const waitTime = 1
   const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ [key: string]: number }>(() => {
     const status: { [key: string]: number } = {}
     if (filledData.email) {
@@ -648,54 +659,118 @@ function VerificationStep({
     }
     return status
   })
-  const [
-    requestEmailVerification,
-    { data: requestResponse, isLoading: isRequestSending, error: requestError, isSuccess: isRequestSuccess },
-  ] = useRequestEmailVerificationMutation()
+  // const dispatch = useUsersDispatch()
+  // const [timeRemaining, setTimeRemaining] = useState(waitTime)
+  const unverifiedList = Object.keys(emailVerificationStatus).filter((email) => emailVerificationStatus[email] === 0)
+  const emailOnVerify = unverifiedList[0]
   const {
     data: verifyEmail,
     isLoading: isVerifyLoading,
     error: verifyError,
     isSuccess: isVerifySuccess,
-  } = useVerifyEmailQuery()
-  const pendingEmailRequesRef = useRef<string | null>(null)
+  } = useVerifyEmailQuery({ email: emailOnVerify })
+
+  // useEffect(() => {
+  //   if (timeRemaining <= 0) return
+
+  //   const timer = setInterval(() => {
+  //     setTimeRemaining((prev) => {
+  //       if (prev <= 1) {
+  //         clearInterval(timer)
+  //         return 0
+  //       }
+  //       return prev - 1
+  //     })
+  //   }, 1000)
+
+  //   return () => clearInterval(timer)
+  // }, [timeRemaining])
 
   useEffect(() => {
-    if (isRequestSuccess) {
+    console.log("isVerifySuccess", isVerifySuccess)
+    console.log("verifyEmail", verifyEmail)
+    console.log("emailOnVerify", emailOnVerify)
+    if (!isVerifySuccess || isVerifyLoading) return
+    if (verifyEmail === "ok") {
       setEmailVerificationStatus((prev) => {
+        if (!emailOnVerify) return prev
         const newStatus = { ...prev }
-        newStatus[pendingEmailRequesRef.current!] = 1
+        newStatus[emailOnVerify] = 1
         return newStatus
       })
-      pendingEmailRequesRef.current = null
+      return
     }
-    const unverifiedList = Object.keys(emailVerificationStatus).filter((email) => emailVerificationStatus[email] === 0)
-    if (unverifiedList.length === 0) return
-    pendingEmailRequesRef.current = unverifiedList[0]
-    requestEmailVerification({ email: pendingEmailRequesRef.current! })
-  }, [isRequestSuccess])
-
-  useEffect(() => {
-    if (!isVerifySuccess) return
     if (!verifyEmail) return
     setEmailVerificationStatus((prev) => {
       const newStatus = { ...prev }
       newStatus[verifyEmail] = 2
       return newStatus
     })
-  }, [isVerifySuccess])
+  }, [verifyEmail])
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+  }
+
   return (
     <div className={formCardClass}>
-      <div className="">
+      <div className="flex flex-col gap-4">
         {Object.entries(emailVerificationStatus).map(([email, status]) => (
-          <div className="flex items-center gap-2" key={email}>
+          <div
+            className="text-text-main border-border flex flex-col items-center gap-2 rounded-2xl border px-2 py-5"
+            key={email}
+          >
             <p>{email}:</p>
             {/* TOFO: Add a button to resend the verification email and add colors in the p below based on the status */}
-            <p>
-              {status === 0 ? "Отправляем сообщение..." : status === 1 ? "Ожидаем подтверждения..." : "Подтверждено"}
-            </p>
+
+            {status === 0 ? (
+              <div>
+                <Loading />
+                <p>Отправляем сообщение</p>
+              </div>
+            ) : status === 1 ? (
+              <div>
+                <Loading />
+                <p>Ожидаем подтверждения</p>
+              </div>
+            ) : (
+              <div>
+                <IoIosCheckmarkCircle className="w-full text-5xl text-green-500" />
+                <p>Подтверждено</p>
+              </div>
+            )}
           </div>
         ))}
+
+        {/* <div className="text-text-main flex items-center justify-center gap-2 text-lg font-semibold">
+          {timeRemaining > 0 ? (
+            <>
+              <span>Не пришло письмо? Отправить ещё одно через:</span>
+              <span className="text-accent-primary">{formatTime(timeRemaining)}</span>
+            </>
+          ) : (
+            <span
+              className="text-accent-primary cursor-pointer"
+              onClick={() => {
+                closeSocket().then(() => {
+                  setTimeRemaining(waitTime)
+                  setEmailVerificationStatus((prev) => {
+                    const newStatuses = { ...prev }
+                    Object.keys(newStatuses).forEach((email) => {
+                      newStatuses[email] = 0
+                    })
+                    return newStatuses
+                  })
+                })
+              }}
+            >
+              Отправить ещё одно письмо
+            </span>
+          )}
+        </div> */}
+        {/* TODO: Make retry send button (commented code not working) */}
       </div>
       <Button
         className={twclsx(actionButtonClass, "text-lg uppercase md:text-xl")}

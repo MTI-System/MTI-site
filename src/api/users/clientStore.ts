@@ -13,3 +13,4 @@ export function makeUsersStoreClient() {
   return store
 }
 export type UsersApiStoreClient = ReturnType<typeof makeUsersStoreClient>
+export type UsersApiDispatch = UsersApiStoreClient["dispatch"]

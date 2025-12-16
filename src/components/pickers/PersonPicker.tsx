@@ -3,6 +3,7 @@ import { useFindUsersQuery } from "@/api/users/clientApiInterface"
 import { AutocompleteWithPreview } from "./AutocompleteWithPreview"
 import { RefObject, useEffect, useRef, useState } from "react"
 import { User } from "@/types/UsersApi"
+import {formatDate} from "@/components/pickers/DatePicker";
 
 export default function PersonPicker({
   label,
@@ -85,15 +86,23 @@ export default function PersonPicker({
               </AutocompleteWithPreview.List>
             </div>
             <div className="flex w-1/2 flex-1 items-center justify-center text-text-main border-l-2 border-gray-200">
-              <p className="w-full p-2 text-center">
+              <div className="w-full p-2 text-center">
                 <AutocompleteWithPreview.Preview>
                   {(preview: User | null) => {
                     return preview
-                      ? `${preview.firstName} ${preview.secondName} ${preview.thirdName}`
+                      ? (
+                        <>
+                          <p>{`${preview.firstName} ${preview.secondName} ${preview.thirdName}`}</p>
+                          {/*<p>Дата рождения: {formatDate(new Date(preview.birthday ?? 0))}</p>*/}
+                          <p>Почта: {preview.email}</p>
+                        </>
+
+
+                      )
                       : "Наведите курсором мыша на элемент чтобы посмотреть превью"
                   }}
                 </AutocompleteWithPreview.Preview>
-              </p>
+              </div>
             </div>
             <AutocompleteWithPreview.Sentinel className="h-4" scrollMargin="0px 0px" />
           </AutocompleteWithPreview.Popup>

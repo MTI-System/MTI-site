@@ -32,10 +32,10 @@ function CheckIcon(props: React.ComponentProps<"svg">) {
 }
 
 
-export default function RegisterRequest({updateCheck, CheckboxText}: {
+export default function RegisterRequest({updateCheck, checkboxText}: {
   updateCheck:
     (isOn: boolean) => void
-  CheckboxText:string
+  checkboxText:string
 }) {
   return (
     <>
@@ -44,7 +44,7 @@ export default function RegisterRequest({updateCheck, CheckboxText}: {
         <Field.Error className={fieldErrorClass} match="customError"/>
         <div className={policyCardClass}>
           <p>
-            {CheckboxText}
+            {checkboxText}
           </p>
           <Field.Item className="shrink-0">
             <Checkbox.Root className={checkboxRootClass} onCheckedChange={updateCheck}>
@@ -58,3 +58,5 @@ export default function RegisterRequest({updateCheck, CheckboxText}: {
     </>
   )
 }
+
+

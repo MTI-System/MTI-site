@@ -6,8 +6,11 @@ import { buildCreateApi, coreModule } from "@reduxjs/toolkit/query"
 import { reactHooksModule } from "@reduxjs/toolkit/query/react"
 
 import { usersBaseQuery, usersReducerPath, defineUsersEndpoints } from "@/api/users/configuration"
+import { UsersApiDispatch } from "./clientStore"
 
 export const UsersApiContext = React.createContext(null as any)
+
+export const useUsersDispatch = createDispatchHook<UsersApiDispatch>(UsersApiContext)
 
 const createApiClient = buildCreateApi(
   coreModule(),
@@ -24,6 +27,13 @@ export const usersApiClient = createApiClient({
   reducerPath: usersReducerPath,
   baseQuery: usersBaseQuery,
   endpoints: defineUsersEndpoints,
+  tagTypes: ["Users"],
 })
 
-export const { useGetUserByIdQuery, useGetUserByAuthIdQuery, useFindUsersQuery, useRequestEmailVerificationMutation, useVerifyEmailQuery } = usersApiClient
+export const {
+  useEditUserMutation,
+  useGetUserByIdQuery,
+  useGetUserByAuthIdQuery,
+  useFindUsersQuery,
+  useVerifyEmailQuery,
+} = usersApiClient

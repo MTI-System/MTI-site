@@ -2,19 +2,40 @@
 import { Forms } from "../forms/index.parts";
 import {User} from "@/types/UsersApi";
 import {Button} from "@/components/ui/Buttons";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Form} from "@base-ui-components/react";
+import {useEditUserMutation} from "@/api/users/clientApiInterface";
+import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
+import {useRouter} from "next/navigation";
 
-export default function UserInformation(
-  {isEditing, user}: {isEditing: boolean, user: User}
-){
+export default (
+  {isEditing, user, refetch}: { isEditing: boolean, user: User, refetch: () => void }
+) => {
   const [isEdit, setIsEditing] = useState(isEditing);
+  const [editUser, {data, isSuccess, isLoading, reset}] = useEditUserMutation()
+  const token = useAppSelector(state=>state.auth.token)
+  const router = useRouter()
+
+  useEffect(() => {
+    setIsEditing(false);
+    if (isSuccess){
+      reset()
+      refetch()
+    }
+  }, [isSuccess])
   return (
     <>
       <Forms.Root isEdit={isEdit} isExpanded={false}>
-          <Forms.Trigger onConfirm={(e)=>console.log("confirm", e.entries().toArray())}>
+          <Forms.Trigger onConfirm={(e)=>{
+            const first = e.get("firstName");
+            const second = e.get("secondName");
+            const third = e.get("thirdName");
+            editUser({token:token,
+              firstName:  typeof first  === "string" ? first  : "",
+              secondName: typeof second === "string" ? second : "",
+              thirdName:  typeof third  === "string" ? third  : "",})
+          }}>
               <Forms.EdiatableItems>
-
                 <div className="flex flex-col gap-2">
                   <div className="border-border bg-bg-main-accent relative h-15 w-full rounded-md border">
                     <p className="text-text-alt absolute h-4 px-2 pt-1 text-[13px]">Фамилия</p>
@@ -36,7 +57,7 @@ export default function UserInformation(
                     <Forms.InputField
                       className="placeholder:text-text-main size-full h-full px-2 pt-4 leading-11 font-bold"
                       type={"text"}
-                      name={"firstName"}
+                      name={"secondName"}
                       defaultValue={user.secondName}
                       // placeholder={fieldObject?.metadata?.placeholder ?? fieldObject.title}
                       onVerification={(value: string) => {
@@ -51,7 +72,7 @@ export default function UserInformation(
                     <Forms.InputField
                       className="placeholder:text-text-main size-full h-full px-2 pt-4 leading-11 font-bold"
                       type={"text"}
-                      name={"firstName"}
+                      name={"thirdName"}
                       defaultValue={user.thirdName}
                       // placeholder={fieldObject?.metadata?.placeholder ?? fieldObject.title}
                       onVerification={(value: string) => {
@@ -63,8 +84,11 @@ export default function UserInformation(
                   </div>
 
                 </div>
-
-                <Button className={"bg-accent-primary/20 border border-accent-primary hover:bg-accent-primary/50 text-accent-primary px-4 py-2 mt-2 rounded-xl w-full"} onClick={()=>{setIsEditing(false)}}>Сохранить</Button>
+                <Forms.ConfirmButton
+                  className="bg-accent-primary/20 border border-accent-primary hover:bg-accent-primary/50 text-accent-primary px-4 py-2 mt-2 rounded-xl w-full">
+                  Сохранить
+                </Forms.ConfirmButton>
+                {/*<Button type="submit" className={"bg-accent-primary/20 border border-accent-primary hover:bg-accent-primary/50 text-accent-primary px-4 py-2 mt-2 rounded-xl w-full"}>Сохранить</Button>*/}
               </Forms.EdiatableItems>
               <Forms.DefaultItems>
                 <div className="flex flex-col gap-2">

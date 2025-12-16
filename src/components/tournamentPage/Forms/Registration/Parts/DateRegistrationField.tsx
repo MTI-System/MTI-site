@@ -25,10 +25,23 @@ export default function DateRegistrationField({
               name={fieldObject.key}
               type={fieldObject?.metadata?.selectMode ?? "single"}
               onVerification={(value: string) => {
-                // TODO: implement verification forfieldObject.metadata.selectableDateRanges
+                if (fieldObject?.metadata?.optional != "true") {
+                  if(!value) {
+                    return {
+                      isSuccess: false,
+                      errorMessage: "Поле не может быть пустым"
+                    }
+                  }
+                  else {
+                    return {
+                      isSuccess: true,
+                    }
+                  }
+                }
                 return {
                   isSuccess: true,
                 }
+
               }}
             />
           }

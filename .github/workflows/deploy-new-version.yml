@@ -2,6 +2,8 @@ name: Deploy new version
 on:
   pull_request:
     branches: ["master"]
+  push:
+    branches: ["master"]
 
 env:
   REGISTRY: docker.io
