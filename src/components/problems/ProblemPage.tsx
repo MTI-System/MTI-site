@@ -107,6 +107,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
                     {primaryVideoMaterial.map((primaryVideoMaterial) => {
                       return (
                         <UniversalPlayer
+                          key={primaryVideoMaterial.id}
                           embedding={primaryVideoMaterial}
                           problemId={problem.id}
                           isModerator={isModerator}

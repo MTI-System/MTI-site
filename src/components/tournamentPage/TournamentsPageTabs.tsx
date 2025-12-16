@@ -29,14 +29,7 @@ export default function TournamentsPageTabs({
   const searchParams = useSearchParams()
   const isModerate = searchParams.get("isModerate") ?? false
   const user = useAppSelector((state) => state.auth.authInfo)
-  const {
-    data: isFormFilled,
-    isLoading,
-    error,
-  } = useIsFormFilledQuery(
-    { tournamentId: tournamentCard.id, formFlag: "registration", userId: user?.user_id!! },
-    { skip: !user },
-  )
+
 
   const infoLinks: LinkInterface[] = [
     {
@@ -63,12 +56,12 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/results/team`,
       title: "Командный зачет",
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
     {
       href: `/tournaments/${tournamentCard.id}/results/personal`,
       title: "Личный зачет",
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
   ]
 
@@ -76,12 +69,12 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/fights/all`,
       title: `Все бои`,
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
     ...tournamentCard.fight_containers_cards.map((container) => ({
       href: `/tournaments/${tournamentCard.id}/fights/${container.id}`,
       title: container.title,
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     })),
   ]
 
@@ -119,6 +112,12 @@ export default function TournamentsPageTabs({
       description: "Конструктор формы заявок",
       isLocked: false,
     },
+    {
+      href: `/tournaments/${tournamentCard.id}/registration`,
+      title: "Заполнить форму",
+      description: "Если вы руководитель",
+      isLocked: tournamentCard.badge.badge_flag !== "REGISTRATION",
+    },
   ]
 
   const staffLinks: LinkInterface[] = [
@@ -138,7 +137,7 @@ export default function TournamentsPageTabs({
 
   return (
     <NavigationMenu.Root className="flex w-full justify-center rounded-lg p-1">
-      <NavigationMenu.List className="bg-bg-alt text-text-main relative flex rounded-2xl">
+      <NavigationMenu.List className="bg-bg-alt text-text-main relative flex rounded-2xl flex-col md:flex-row w-full md:w-auto">
         <NavigationItem hasDescription={true} items={infoLinks} itemTitle="Информация" />
         {isAdmin && (
           <>
@@ -152,7 +151,7 @@ export default function TournamentsPageTabs({
         {tournamentCard.badge.badge_flag === "REGISTRATION" && !isAdmin && (
           <NavigationMenu.Item>
             <Link className={registrationTriggerClassName} href={`/tournaments/${tournamentCard.id}/registration`}>
-              {isLoading ? "..." : isFormFilled ? "посмотреть заявку" : "Регистрация на турнир"}
+              Регистрация на турнир
             </Link>
           </NavigationMenu.Item>
         )}
@@ -219,7 +218,7 @@ function NavigationItem({
 }) {
   return (
     <>
-      <NavigationMenu.Item>
+      <NavigationMenu.Item className="">
         <NavigationMenu.Trigger className={triggerClassName}>
           {itemTitle}
           <NavigationMenu.Icon className="transition-transform duration-200 ease-in-out data-popup-open:rotate-180">
@@ -261,7 +260,7 @@ function NavigationItem({
 }
 
 const triggerClassName =
-  "box-border  flex items-center justify-center gap-1.5 h-10 bg-bg-alt " +
+  "box-border w-full flex items-center justify-center gap-1.5 h-10 bg-bg-alt " +
   "px-2 xs:px-3.5 m-0 rounded-md font-medium text-text-main " +
   "text-[0.925rem] xs:text-base leading-6 select-none no-underline " +
   "hover:bg-hover active:bg-hover data-[popup-open]:bg-hover " +
@@ -282,7 +281,7 @@ const registrationTriggerClassName =
 //   "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 focus-visible:relative"
 
 const contentClassName =
-  "w-fit h-full p-2 xs:w-max xs:min-w-[400px] xs:w-max" +
+  "w-full h-full p-2 xs:w-max xs:min-w-[400px] xs:w-max" +
   "transition-[opacity,transform,translate] duration-[var(--duration)] ease-[var(--easing)] " +
   "data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 " +
   "data-[starting-style]:data-[activation-direction=left]:translate-x-[-50%] " +

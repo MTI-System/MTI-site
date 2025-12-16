@@ -10,26 +10,23 @@ import { useAppDispatch } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import AuthProviderWrapper from "@/api/auth/ClientWrapper"
 import { useLoginMutation } from "@/api/auth/clientApiInterface"
 import LogoWithTT from "@/components/ui/LogoWithTT"
-import { Field, Form } from "@base-ui-components/react"
+import {AlertDialog, Field, Form } from "@base-ui-components/react"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react"
 import LoginLayout from "@/components/login/mainLayout"
 import Link from "next/link"
 
+
 export default function Page() {
   return (
-    <>
-      <AuthProviderWrapper>
-        <Suspense fallback={<Loading />}>
-          <LoginPage />
-        </Suspense>
-      </AuthProviderWrapper>
-    </>
+    <Suspense fallback={<Loading />}>
+      <LoginPage />
+    </Suspense>
   )
 }
 
 function LoginPage() {
   const isErrorInQuery = useRef<boolean>(false)
-  const [formErrors, setFormErrors] = useState<{ username?: string; password?: string}>({})
+  const [formErrors, setFormErrors] = useState<{ username?: string; password?: string }>({})
   const router = useRouter()
 
   const searchParams = useSearchParams()
@@ -58,11 +55,11 @@ function LoginPage() {
 
   async function handleLogin(form: HTMLFormElement) {
     const formData = new FormData(form)
-    const newFormErrors: { username?: string; password?: string; } = {}
+    const newFormErrors: { username?: string; password?: string } = {}
     const email = formData.get("username")
     if (email === "") newFormErrors.username = "Логин не может быть пустым"
     const password = formData.get("password")
-    if (password === "") newFormErrors.password = "Пароль не можетр быть пустым"
+    if (password === "") newFormErrors.password = "Пароль не может быть пустым"
     if (newFormErrors.username || newFormErrors.password) {
       setFormErrors(newFormErrors)
       return
@@ -91,30 +88,29 @@ function LoginPage() {
   return (
     <LoginLayout
       title="ВОЙТИ В АККАУНТ"
-      description="Войдите в аккаунт, чтобы получить доступ к функциям организаторов"
+      description="Войдите в аккаунт, чтобы получить доступ к функциям менеджера турнирной информации"
     >
       <Form className="flex w-full flex-col items-center gap-5" onSubmit={handleSubmit} errors={formErrors}>
         <Field.Root name="username" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Логин</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
+          <Field.Label className="text-text-alt text-lg font-medium">Логин</Field.Label>
+          <Field.Error className="text-md text-accent-warning" match="customError" />
           <Field.Control
             type="username"
-            placeholder="Ваш ник"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
-            
+            placeholder="ВашНик"
+            className="border-border text-text-main focus:outline-accent-primary h-15 w-full rounded-xl border pl-3.5 text-xl focus:outline-2 focus:-outline-offset-1"
           />
         </Field.Root>
         <Field.Root name="password" className="flex w-full flex-col items-start gap-1">
-          <Field.Label className="text-lg font-medium text-gray-900">Пароль</Field.Label>
-          <Field.Error className="text-md text-red-800" match="customError" />
+          <Field.Label className="text-text-alt text-lg font-medium">Пароль</Field.Label>
+          <Field.Error className="text-md text-accent-warning" match="customError" />
           <Field.Control
             type="password"
-            placeholder="Имя Вашего Кота"
-            className="border-border h-15 w-full rounded-xl border pl-3.5 text-xl text-gray-900 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+            placeholder="ИмяВашегоКота"
+            className="border-border text-text-main focus:outline-accent-primary h-15 w-full rounded-xl border pl-3.5 text-xl focus:outline-2 focus:-outline-offset-1"
           />
         </Field.Root>
         <Button
-          className="bg-accent-primary-alt border-accent-primary text-accent-primary h-15 w-full rounded-xl border-2 text-2xl font-bold"
+          className="bg-accent-primary-alt border-accent-primary text-accent-primary disabled:text-inactive disabled:border-inactive disabled:bg-inactive/20 h-15 w-full rounded-xl border-2 text-2xl font-bold transition-colors duration-300"
           disabled={isLoading}
           type="submit"
           onClick={() => {
@@ -124,11 +120,38 @@ function LoginPage() {
         >
           {isLoading ? "ЗАГРУЗКА..." : "ВОЙТИ"}
         </Button>
-        <p>
+        <p className="text-text-main">
           Нет аккаунта?{" "}
           <Link className="text-accent-primary font-medium hover:underline" href="/register">
             Зарегистрируйтесь
           </Link>
+        </p>
+        <p className="text-text-main">
+          Забыли пароль?{" "}
+          <AlertDialog.Root>
+            <AlertDialog.Trigger className="cursor-pointer text-accent-primary font-medium hover:underline">
+              Восстановить
+            </AlertDialog.Trigger>
+            <AlertDialog.Portal>
+              <AlertDialog.Backdrop className="fixed inset-0 min-h-dvh bg-black opacity-20 transition-all duration-150 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 dark:opacity-70 supports-[-webkit-touch-callout:none]:absolute" />
+              <AlertDialog.Popup className="fixed top-1/2 left-1/2 -mt-8 w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-bg-alt p-6 text-text-main outline outline-1 transition-all duration-150 data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 outline-border">
+                <AlertDialog.Title className="-mt-1.5 mb-1 text-lg font-medium">
+                  Восстановление пароля
+                </AlertDialog.Title>
+                <AlertDialog.Description className="mb-6 text-base text-gray-600">
+                  Для сброса пароля напишите в техническую поддержку в телеграмм: <a className="text-accent-primary hover:underline" href="https://t.me/AntonIvanov1111">@AntonIvanov1111</a>
+                </AlertDialog.Description>
+                <div className="flex justify-end gap-4">
+                  <AlertDialog.Close className="flex h-10 items-center justify-center rounded-md border border-border bg-bg-alt px-3.5 text-base font-medium text-text-main select-none hover:bg-bg-alt focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-accent-primary active:bg-bg-main">
+                    Хорошо!
+                  </AlertDialog.Close>
+                </div>
+              </AlertDialog.Popup>
+            </AlertDialog.Portal>
+          </AlertDialog.Root>
+          {/*<Link className="text-accent-primary font-medium hover:underline" href="/register">*/}
+          {/*  Восстановить*/}
+          {/*</Link>*/}
         </p>
       </Form>
     </LoginLayout>

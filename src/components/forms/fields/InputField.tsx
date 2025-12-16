@@ -20,6 +20,7 @@ export function InputField({ onVerification, name, ...rest }: InputFieldProps) {
   useEffect(() => {
     register(() => {
       const result = onVerification(inputRef.current?.value || "")
+      console.log("verif", JSON.stringify(result))
       setVerificationResult(result)
       if (result.isSuccess) {
         setFormField(name, inputRef.current?.value || "")

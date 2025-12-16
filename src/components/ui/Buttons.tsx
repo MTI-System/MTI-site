@@ -16,7 +16,7 @@ type ButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> & 
  */
 export function Button({ children, className = "", style, ...rest }: ButtonProps) {
   return (
-    <button className={twclsx(className)} style={style} {...rest}>
+    <button className={twclsx("cursor-pointer", className)} style={style} {...rest}>
       {children}
     </button>
   )
@@ -69,7 +69,7 @@ export function HoldButton({
   return (
     <button
       className={twclsx(
-        "disabled:bg-inactive/20 disabled:border-inactive disabled:text-bg-main relative overflow-hidden p-2 text-ellipsis border-4 rounded-xl",
+        "cursor-pointer disabled:bg-inactive/20 disabled:border-inactive disabled:text-bg-main relative overflow-hidden p-2 text-ellipsis border-4 rounded-xl",
         className,
       )}
       onPointerDown={() => {
@@ -84,7 +84,7 @@ export function HoldButton({
       ref={target}
       {...rest}
     >
-      <div className="holdOverlay bg-bg-alt absolute top-0 left-[1vw] block h-full w-full opacity-20"></div>
+      <div className="holdOverlay bg-inactive/50 absolute top-0 left-[1vw] block h-full w-full opacity-20"></div>
       {children}
     </button>
   )

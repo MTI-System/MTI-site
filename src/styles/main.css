@@ -3,7 +3,6 @@
 
 @theme {
   /*Colors*/
-  --color-inactive: #dddddd;
   --color-text-on-accent: #e6edf3;
   --color-border: #b2b2b2;
   --color-text-main: #212519;
@@ -24,7 +23,7 @@
   --color-accent-accept: #21b95f;
   --color-accent-accept-alt: #21b95f26;
   --color-bg-main-accent: #ffffff;
-  --color-inactive-color: #ddd;
+  --color-inactive: #3d3d3d;
 }
 
 body.dark,
@@ -40,7 +39,7 @@ body[data-theme="dark"] {
   --color-accent-accept-alt: #32E8751A;
   --color-card-cta-bar: #0a0a0a66;
   --color-bg-main-accent: #1c1c1c;
-  --color-inactive-color: #3d3d3d;
+  --color-inactive: #b9b9b9;
   color-scheme: dark;
 }
 

@@ -8,6 +8,7 @@ import type {Metadata} from "next";
 import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore";
 import {tournamentsApiServer} from "@/api/tournaments/serverApiInterface";
 import {FaCircleCheck} from "react-icons/fa6";
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper";
 
 export async function generateMetadata({
                                          params,
@@ -65,10 +66,11 @@ export default async function RegisterTournamentsPage({ params }: { params: Prom
   return (
     <>
       {isError && <h2>{JSON.stringify(error)}</h2>}
-      {/* {formInfo && !isAdmin && <TournamentRegistrationForm formInfo={formInfo} className={""} isEdit={!isFormFilled} />} */}
+      <TournamentsProviderWrapper>
+        {formInfo && <TournamentRegistrationForm  tournamentId={Number(id)} formInfo={formInfo} className={""} isEdit={!isFormFilled} />}
+        {/*{isAdmin && <h2>Вы администратор турнира</h2>}*/}
+      </TournamentsProviderWrapper>
 
-      {formInfo && <TournamentRegistrationForm tournamentId={Number(id)} formInfo={formInfo} className={""} isEdit={!isFormFilled} />}
-      {isAdmin && <h2>Вы администратор турнира</h2>}
     </>
   )
 }

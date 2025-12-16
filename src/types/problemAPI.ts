@@ -41,6 +41,7 @@ export const ProblemSchema = z.object({
   problem_sections: z.array(ProblemSectionSchema),
   materials: z.array(z.number()),
   sciences: z.array(ScienceShenma),
+  local_number: z.number().optional()
 })
 
 export type ProblemTranslationInterface = z.infer<typeof ProblemTranslationSchema>

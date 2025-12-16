@@ -4,6 +4,7 @@ import { cookies } from "next/headers"
 import { makeAuthStoreServer } from "@/api/auth/serverStore"
 import { authApiServer } from "@/api/auth/serverApiInterface"
 import { redirect } from "next/navigation"
+import UsersProviderWrapper from "@/api/users/ClientWrapper";
 
 export const metadata: Metadata = {
   title: {
@@ -29,13 +30,17 @@ export default async function ProfilePage() {
     }),
   )
   const { data: userAuth, error } = await authPromise
+  console.log("auth is ",userAuth)
   if (error != null) {
     redirect("/login?redirect=profile")
   }
 
   return (
     <>
-      <ProfileMainPage profileData={userAuth!!} />
+      <UsersProviderWrapper>
+        <ProfileMainPage profileData={userAuth!!} />
+      </UsersProviderWrapper>
+
     </>
   )
 }
