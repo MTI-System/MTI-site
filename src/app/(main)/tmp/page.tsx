@@ -1,5 +1,9 @@
 "use client"
-import { useGetAllTournamentCardsQuery, useGetTournamentCardsQuery } from "@/api/tournaments/clientApiInterface"
+import {
+  useGetActionInformationQuery,
+  useGetFightInformationQuery,
+  useGetTeamInTournamentQuery,
+} from "@/api/tournaments/clientApiInterface"
 import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 import { useEffect, useState } from "react"
 
@@ -12,27 +16,28 @@ export default function Page() {
 }
 
 function QueryTest() {
-  // const { data, isLoading, error, isSuccess } = useGetAllTournamentCardsQuery({})
-  const [tt, setTT] = useState(1)
-  const { data, isLoading, error, isSuccess } = useGetTournamentCardsQuery({ tt: tt, year: 2026 })
-
-  useEffect(() => {
-    console.log(data, isLoading, isSuccess, error)
-    if (isLoading) return
-    if (!isSuccess) {
-      console.error(error)
-      return
-    }
-    console.log(data?.length)
-  }, [isLoading])
+  const { data, isLoading, error, isSuccess } = useGetFightInformationQuery({ fightId: 1 })
+  const {
+    data: actionData,
+    isLoading: actionLoading,
+    error: actionError,
+    isSuccess: actionSuccess,
+  } = useGetActionInformationQuery({ actionId: 1 })
+  const {
+    data: teamData,
+    isLoading: teamLoading,
+    error: teamError,
+    isSuccess: teamSuccess,
+  } = useGetTeamInTournamentQuery({ teamId: 1 })
 
   return (
-    <p
-      onClick={() => {
-        setTT((prev) => prev + 1)
-      }}
-    >
-      {data?.length}
-    </p>
+    <div className="flex flex-col gap-2">
+      <p className="text-sm text-gray-500">Fight Information</p>
+      <p>{JSON.stringify(data)}</p>
+      <p className="text-sm text-gray-500">Action Information</p>
+      <p>{JSON.stringify(actionData)}</p>
+      <p className="text-sm text-gray-500">Team Information</p>
+      <p>{JSON.stringify(teamData)}</p>
+    </div>
   )
 }
