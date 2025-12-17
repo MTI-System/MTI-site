@@ -20,14 +20,14 @@
 }
 
 .dropdownContainer.dropdownDisabled .dropdownButton {
-  background-color: var(--inactive-color);
+  background-color: var(--inactive);
 }
 .dropdownButton:hover {
   background-color: var(--hover-color);
 }
 
 .dropdownContainer.dropdownDisabled .dropdownButton:hover {
-  background-color: var(--inactive-color);
+  background-color: var(--inactive);
 }
 
 .dropdownButton .arrowIcon {

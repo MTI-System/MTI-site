@@ -5,8 +5,8 @@
 }
 
 .button:disabled {
-  background-color: var(--inactive-color);
-  border: var(--border-width) solid var(--inactive-color);
+  background-color: var(--inactive);
+  border: var(--border-width) solid var(--inactive);
   color: var(--main-bg);
 }
 .holdButton {

@@ -1,31 +1,31 @@
 "use client"
-import { TournamentCardInterface, TournamentCreationRequest } from "@/types/TournamentsAPI"
-import { CiLocationOn } from "react-icons/ci"
-import { CiClock2 } from "react-icons/ci"
-import { FILES_SERVER } from "@/constants/APIEndpoints"
-import { JSX, useState, useRef, ChangeEvent, useEffect } from "react"
-import { GoPeople } from "react-icons/go"
+import {TournamentCardInterface, TournamentCreationRequest} from "@/types/TournamentsAPI"
+import {CiLocationOn} from "react-icons/ci"
+import {CiClock2} from "react-icons/ci"
+import {FILES_SERVER} from "@/constants/APIEndpoints"
+import {JSX, useState, useRef, ChangeEvent, useEffect} from "react"
+import {GoPeople} from "react-icons/go"
 import Link from "next/link"
-import { Input, Tooltip } from "@base-ui-components/react"
+import {Input, Tooltip} from "@base-ui-components/react"
 import Loading from "@/app/loading"
-import { DateRange } from "react-day-picker"
+import {DateRange} from "react-day-picker"
 
-import DatePicker, { formatDate } from "../pickers/DatePicker"
-import { TournamentCardCallback } from "@/app/(main)/organizators/create/page"
-import { useLoadFileMutation } from "@/api/files/clientApiInterface"
-import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import DatePicker, {formatDate} from "../pickers/DatePicker"
+import {TournamentCardCallback} from "@/app/(main)/organizators/create/page"
+import {useLoadFileMutation} from "@/api/files/clientApiInterface"
+import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore"
 import LocationSelector from "../pickers/LocationPicker/LocationSelector"
 import twclsx from "@/utils/twClassMerge"
-import { IoMdSettings } from "react-icons/io"
+import {IoMdSettings} from "react-icons/io"
 
 export default function TournamentCard({
-  tournamentCard,
-  isExtended = false,
-  isCreate,
-  onUpdateCreate = null,
-  errors = [],
-  isAdmin = false,
-}: {
+                                         tournamentCard,
+                                         isExtended = false,
+                                         isCreate,
+                                         onUpdateCreate = null,
+                                         errors = [],
+                                         isAdmin = false,
+                                       }: {
   tournamentCard?: TournamentCardInterface
   isExtended: boolean
   isCreate: boolean
@@ -61,13 +61,13 @@ export default function TournamentCard({
 }
 
 function CardContent({
-  tournamentCard,
-  isExtended,
-  isCreate,
-  onUpdateCreate,
-  errors = [],
-  isAdmin,
-}: {
+                       tournamentCard,
+                       isExtended,
+                       isCreate,
+                       onUpdateCreate,
+                       errors = [],
+                       isAdmin,
+                     }: {
   tournamentCard?: TournamentCardInterface
   isExtended: boolean
   isCreate: boolean
@@ -84,8 +84,9 @@ function CardContent({
 
   //lazy инициализацию хука))
   const mutationState = isCreate ? useLoadFileMutation() : null
-  const loadFile = mutationState ? mutationState[0] : () => {}
-  const { data: loadedFileName, isLoading, isError, isSuccess, error, reset } = mutationState ? mutationState[1] : {}
+  const loadFile = mutationState ? mutationState[0] : () => {
+  }
+  const {data: loadedFileName, isLoading, isError, isSuccess, error, reset} = mutationState ? mutationState[1] : {}
 
   const currentLoadingImage = useRef<string>("")
   const [loadedImages, setLoadedImages] = useState<{ big: string | null; small: string | null }>({
@@ -147,8 +148,8 @@ function CardContent({
       <div
         className={twclsx(
           "bg-bg-alt border-bg-main flex flex-col overflow-hidden rounded-3xl border-2 transition-all duration-500",
-          { "hover:border-accent-primary h-80 md:h-148": !isExtended },
-          { "h-132 w-full": isExtended },
+          {"hover:border-accent-primary h-80 md:h-148": !isExtended},
+          {"h-132 w-full": isExtended},
         )}
       >
         <div className="relative h-[64%]">
@@ -165,7 +166,7 @@ function CardContent({
                 ref={fileInputRef}
                 onChange={(e) => handleFileSelect(e)}
                 accept="image/*"
-                style={{ display: "none" }}
+                style={{display: "none"}}
               />
               <div
                 onClick={() => handleDivClick("big")}
@@ -177,7 +178,7 @@ function CardContent({
           )}
           {isLoading && (
             <div className="absolute z-1 size-full bg-black/50">
-              <Loading />
+              <Loading/>
             </div>
           )}
 
@@ -189,7 +190,8 @@ function CardContent({
         </div>
 
         <div className="z-1 flex h-0 w-full items-center pl-5">
-          <div className="bg-bg-alt border-border relative mb-6 aspect-square size-20 overflow-hidden rounded-full border">
+          <div
+            className="bg-bg-alt border-border relative mb-6 aspect-square size-20 overflow-hidden rounded-full border">
             <img
               src={FILES_SERVER + (loadedImages.small ?? tournamentCard?.tournament_logo ?? "bigImagePlaceholder.png")}
               loading="lazy"
@@ -208,7 +210,7 @@ function CardContent({
         </div>
         <div className="text-text-main flex h-fit w-full flex-col gap-2 px-2 pt-10 pb-5">
           <Tooltip.Provider delay={150}>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-1">
               {!isCreate && (
                 <h3 className="overflow-hidden pe-5 text-base font-medium text-ellipsis whitespace-nowrap">
                   {tournamentCard?.title ?? "Неизвестный турнир"}
@@ -223,10 +225,10 @@ function CardContent({
                       onChange={(event) => {
                         setErrorsInternal(errorsInternal.filter((error) => error.key !== "title"))
                         if (!onUpdateCreate) return
-                        onUpdateCreate({ title: event.target.value })
+                        onUpdateCreate({title: event.target.value})
                       }}
                       className={twclsx(
-                        "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-10 w-24 rounded-2xl border transition-colors",
+                        "border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 w-[80vw] md:w-[60vw] h-10 pl-2 rounded-2xl border transition-colors",
                         errorsInternal.some((error) => error.key === "title") && "border-red-500",
                       )}
                       placeholder={"Название турнира"}
@@ -234,7 +236,8 @@ function CardContent({
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Positioner sideOffset={10} className="z-10">
-                      <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                      <Tooltip.Popup
+                        className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                         <p className="text-red-500">
                           {errorsInternal.find((error) => error.key === "title")?.message ?? ""}
                         </p>
@@ -245,8 +248,8 @@ function CardContent({
               )}
               <div
                 className={twclsx(
-                  "me-5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-3 transition-colors md:h-7 md:min-w-fit md:border",
-                  { "border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.badge.badge_flag === "ENDED" },
+                  "me-5 flex h-4 w-4 mt-1.5 shrink-0 items-center justify-center rounded-full border-3 transition-colors md:h-7 md:min-w-fit md:border",
+                  {"border-[#ED0F4E] bg-[#ED0F4E]/20 text-[#ED0F4E]": tournamentCard?.badge.badge_flag === "ENDED"},
                   {
                     "border-[#32E875] bg-[#32E875]/20 text-[#32E875]":
                       tournamentCard?.badge.badge_flag === "PROCESSING",
@@ -269,13 +272,15 @@ function CardContent({
                         ? "Запланирован"
                         : tournamentCard?.badge.badge_flag === "REGISTRATION"
                           ? "Регистрация открыта"
-                          : "Неизвестно"}
+                          : tournamentCard?.badge.badge_flag === "REGISTRATION_CLOSED" ?
+                            "Регистрация закрыта"
+                            : "Неизвестно"}
                 </p>
               </div>
             </div>
 
             <div className="text-text-alt flex items-center gap-2">
-              <CiLocationOn className="text-xl" />
+              <CiLocationOn className="text-xl"/>
               {!isCreate && (
                 <p className="text-xs">{tournamentCard?.location.location_text ?? "Местоположение неизвестно"}</p>
               )}
@@ -300,7 +305,8 @@ function CardContent({
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Positioner sideOffset={10} className="z-10">
-                      <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                      <Tooltip.Popup
+                        className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                         <p className="text-red-500">
                           {errorsInternal.find((error) => error.key === "location")?.message ?? ""}
                         </p>
@@ -311,7 +317,7 @@ function CardContent({
               )}
             </div>
             <div className="text-text-alt flex items-center gap-2">
-              <CiClock2 className="text-xl" />
+              <CiClock2 className="text-xl"/>
               {!isCreate && (
                 <p className="text-xs">
                   {formatDate(new Date(tournamentCard?.start_date_timestamp ?? 0))} -{" "}
@@ -345,17 +351,18 @@ function CardContent({
                           (startDate?.getMonth() ?? 0) > 7 ? (pickedYear ?? 0) + 1 : (pickedYear ?? 0)
 
                         onUpdateCreate &&
-                          onUpdateCreate({
-                            start_timestamp: startDate?.getTime(),
-                            end_timestamp: endDate?.getTime(),
-                            year: currentSeasonYear,
-                          })
+                        onUpdateCreate({
+                          start_timestamp: startDate?.getTime(),
+                          end_timestamp: endDate?.getTime(),
+                          year: currentSeasonYear,
+                        })
                       }}
                     />
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Positioner sideOffset={10} className="z-10">
-                      <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                      <Tooltip.Popup
+                        className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                         <p className="text-red-500">
                           {errorsInternal.find((error) => error.key === "start_timestamp")?.message ?? ""}
                         </p>
@@ -380,10 +387,10 @@ function CardContent({
                     onChange={(event) => {
                       setErrorsInternal(errorsInternal.filter((error) => error.key !== "description"))
                       if (!onUpdateCreate) return
-                      onUpdateCreate({ description: event.target.value })
+                      onUpdateCreate({description: event.target.value})
                     }}
                     className={twclsx(
-                      "border-border border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-20 w-full resize-none rounded-2xl border p-2 text-xs transition-colors",
+                      "border-border border-primary-accent bg-primary-accent/20 text-primary-accent hover:bg-primary-accent/50 mt-2 h-20 w-full resize-none rounded-2xl border p-2 text-sm transition-colors",
                       errorsInternal.some((error) => error.key === "description") && "border-red-500",
                     )}
                     placeholder="Описание турнира"
@@ -391,7 +398,8 @@ function CardContent({
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
                   <Tooltip.Positioner sideOffset={10} className="z-10">
-                    <Tooltip.Popup className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+                    <Tooltip.Popup
+                      className="flex origin-(--transform-origin) flex-col rounded-md bg-[canvas] px-2 py-1 text-sm shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
                       <p className="text-red-500">
                         {errorsInternal.find((error) => error.key === "description")?.message ?? ""}
                       </p>

@@ -24,6 +24,7 @@ export const defineRegistrationEndpoints = (
   formsInformation: builder.query({
     query: ({id} : {id: number}) => `get_info_about_forms/${id}`, 
     transformResponse: (response: unknown): TournamentInformationResponseInterface | null => {
+      console.log("info: ", response)
       const parsed = TournamentInformationResponse.safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing registration form: ${parsed.error}`)
@@ -74,7 +75,7 @@ export const defineRegistrationEndpoints = (
   }),
    
   getAnswers: builder.query({
-    query: ({id, token}) => ({
+    query: ({id, token}: {id: number, token: string}) => ({
       url: "get_answers",
       method: "POST",
       body: (()=>{
@@ -113,7 +114,26 @@ export const defineRegistrationEndpoints = (
       return null
     },
   }),
-
+  getUserAnswers: builder.query({
+    query: ({token, tournamentId, formTypeFlag}: {token: string, tournamentId: number, formTypeFlag: string}) =>{
+      const formData = new FormData()
+      formData.set("token", token)
+      formData.set("tournamentId", tournamentId.toString())
+      formData.set("formTypeFlag", formTypeFlag)
+      return {
+        url: "/get_user_answers",
+        method: "POST",
+        body: formData
+      }
+    },
+    transformResponse: (response: unknown): TournamentRegistrationAnswerInterface[] | null => {
+      console.log("getAnswers response: ", response)
+      const parsed = z.array(TournamentRegistrationAnswer).safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing registration form: ${parsed.error}`)
+      return null
+    }
+  }),
 
   getRegistrationForm: builder.query({
     query: ({ id, type }: { id: number; type: string }) => `get_form_for_tournament/${id}/${type}`,

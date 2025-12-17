@@ -17,7 +17,7 @@
   background-color: var(--primary-accent);
 }
 .switchContainer.switchDisabled .switchBackground {
-  background-color: var(--inactive-color);
+  background-color: var(--inactive);
 }
 .switch {
   position: absolute;

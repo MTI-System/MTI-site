@@ -44,6 +44,17 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
       return is_login_taken.data?.result ?? false 
     }
   }),
+  isEmailTaken: builder.mutation({
+    query: ({email}: {email: string}) => ({
+      url: `is_email_taken?email=${email}`,
+      method: "GET"
+    }),
+    transformResponse: (response: string): boolean=> {
+      if (!response) return false
+      const is_email_taken = BooleanResponseSchema.safeParse(response)
+      return is_email_taken.data?.result ?? false 
+    }
+  }),
   fetchPermissions: builder.mutation({
     query: ({ token }: { token: string }) => {
       return {
@@ -65,10 +76,10 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
 
   }),
   personalDataRequests: builder.query({
-    query: ({token, tournamentId}: {token: string, tournamentId: number}) => {
+    query: ({token, neededPd}: {token: string, neededPd: number[]}) => {
       const form = new FormData()
       form.set("token", token)
-      form.set("tournamentId", tournamentId.toString())
+      form.set("requestsIds", neededPd?.toString() ?? "")
       return {
         url: "get_all_actual_personal_data_requests",
         method: "POST",
@@ -95,6 +106,6 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
         method: "POST",
         body: form
       }
-    }
-  })
+    },
+  }),
 })

@@ -1,5 +1,9 @@
 "use client"
-import { useGetAllTournamentCardsQuery, useGetTournamentCardsQuery } from "@/api/tournaments/clientApiInterface"
+import {
+  useGetActionInformationQuery,
+  useGetFightInformationQuery,
+  useGetTeamInTournamentQuery,
+} from "@/api/tournaments/clientApiInterface"
 import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 import { Avatar, Button, Combobox, Form } from "@base-ui-components/react"
 import { useEffect, useId, useState } from "react"

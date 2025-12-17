@@ -23,6 +23,7 @@ export const TournamentRegistrationFormFieldMetadata = z.object({
     )
     .optional(),
   accept: z.string().optional(),
+  optional: z.string().optional(),
 })
 
 export const TournamentRegistrationFormField = z.object({
@@ -49,19 +50,20 @@ export const TournamentRegistrationAnswer = z.object({
   id: z.number(),
   status: z.string(),
   fields: z.array(TournamentRegistrationAnswerField),
-  respondingUser: z.number()
+  respondingUser: z.number(),
+  neededPd: z.array(z.number()).optional()
 })
 
 
 export const TournamentInformationFormResponse = z.object({
-  form_id: z.number(),
+  formId: z.number(),
   title: z.string(),
-  form_type_name: z.string(),
-  form_type_flag: z.string()
+  formTypeName: z.string(),
+  formTypeFlag: z.string()
 })
 
 export const TournamentInformationResponse = z.object({
-  available_forms: z.array(TournamentInformationFormResponse).optional()
+  availableForms: z.array(TournamentInformationFormResponse).optional()
 })
 
 

@@ -22,7 +22,7 @@ export default async function NotificationsButton() {
     <>
       { !error &&
           <Popover.Root>
-              <Popover.Trigger className="aspect-square h-16 rounded-full border-2">
+              <Popover.Trigger className="aspect-square h-16 rounded-full border-2 cursor-pointer">
                   <FaBell className="size-full p-3" style={{width: "100%", height: "100%"}}/>
               </Popover.Trigger>
               <Popover.Portal>

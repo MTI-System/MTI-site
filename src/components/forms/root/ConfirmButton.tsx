@@ -6,10 +6,12 @@ export function ConfirmButton({
   onClick,
   className = "",
   children,
+  disabled = false
 }: {
   onClick?: () => void
   className?: string
   children: ReactNode
+  disabled?: boolean
 }) {
   const { items } = useCardsRoot()
   const submitRef = useRef<HTMLInputElement>(null)
@@ -20,6 +22,7 @@ export function ConfirmButton({
       <button
         type="button"
         className={className}
+        disabled={disabled}
         onClick={() => {
           let isOk = true
           items?.forEach((func) => {

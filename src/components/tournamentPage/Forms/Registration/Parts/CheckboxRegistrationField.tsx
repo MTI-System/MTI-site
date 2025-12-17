@@ -16,11 +16,26 @@ export default function CheckboxRegistrationField({
       <Forms.EdiatableItems>
         <label className="flex items-center gap-2 text-base text-gray-900">
           <Forms.CheckboxField
+            title={fieldObject.title}
             value={fieldObject.key}
-            onVerification={() => {
+            onVerification={(value: string) => {
+              if (fieldObject?.metadata?.optional != "true") {
+                if(!value) {
+                  return {
+                    isSuccess: false,
+                    errorMessage: "Поле не может быть пустым"
+                  }
+                }
+                else {
+                  return {
+                    isSuccess: true,
+                  }
+                }
+              }
               return {
                 isSuccess: true,
               }
+
             }}
             name={fieldObject.key}
           />

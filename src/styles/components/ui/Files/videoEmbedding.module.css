@@ -19,7 +19,7 @@
   z-index: 9;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background-color: var(--inactive-color);
+  background-color: var(--inactive);
   display: flex;
   flex-direction: column;
   justify-content: center;

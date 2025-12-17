@@ -26,15 +26,10 @@ export function ConstructorLayout() {
       fields: fields.map(field=>({
         title: field.fieldName,
         type: field.properties.fieldType,
-        metadata: 
-          Object.entries(field.properties).map(
-            (entrie) => 
-              ({
-                key: entrie[0],
-                value: entrie[1]
-              })
-            
-        ) ?? []
+        metadata: Object.entries({
+          ...(field?.properties ?? {}),
+          optional: (field?.optional),
+        }).map(([key, value]) => ({ key, value }))
       }))
     }})
   }, [fields])
@@ -46,9 +41,9 @@ export function ConstructorLayout() {
   }, [isFormCreating])
 
   const onSubmit = ()=>{
-    if (formInformation?.available_forms?.find((it)=>it.form_type_flag === formType) === undefined){
+    if (formInformation?.availableForms?.find((it)=>it.formTypeFlag === formType) === undefined){
       createForm({token: token, tournamentId: tId, formTypeFlag: formType, formTitle: "Форма регистрации"})
-      return
+      // return
     }
     saveChanges()
   }

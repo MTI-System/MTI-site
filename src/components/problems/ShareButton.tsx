@@ -1,5 +1,5 @@
 "use client"
-import { ComponentProps, useRef, useState } from "react"
+import {ComponentProps, useEffect, useRef, useState} from "react"
 import { FaTimes } from "react-icons/fa"
 import { FaRegCopy } from "react-icons/fa6"
 import { Checkbox, CheckboxGroup, Form, Tooltip, Popover } from "@base-ui-components/react"
@@ -14,6 +14,10 @@ function SearchParamTranscript(flag: string): string {
       return "Год"
     case "sections":
       return "Фильтры разделов наук"
+    case "page":
+      return "Страница просмотра"
+    case "state":
+      return "Фильтр статуса турнира"
     default:
       return "Неизвестный параметр"
   }
@@ -27,7 +31,8 @@ interface EditableSearchParamInterface {
 }
 
 export default function ShareButton() {
-  const searchParams = Object.fromEntries(Array.from(useSearchParams().entries()))
+  const sp = useSearchParams()
+  const searchParams = Object.fromEntries(Array.from(sp.entries()))
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const pathname = usePathname()
   const [editableSearchParams, setEditableSearchParams] = useState<EditableSearchParamInterface[]>(
@@ -40,6 +45,20 @@ export default function ShareButton() {
       }
     }),
   )
+
+  useEffect(() => {
+    const searchParams = Object.fromEntries(Array.from(sp.entries()))
+    setEditableSearchParams(
+      Object.entries(searchParams).map(([key, value]) => {
+        return {
+          key: key,
+          value: value as string,
+          state: true,
+          transcription: SearchParamTranscript(key),
+        }
+      }),
+    )
+  }, [sp])
 
   const getSearchParamsText = function (): string {
     const spObj = new URLSearchParams()
