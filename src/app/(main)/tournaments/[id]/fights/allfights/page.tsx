@@ -1,10 +1,12 @@
 import FightList from "@/components/tournaments/FightList";
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 
-export default async function TournamentsFightsPage() {
+
+export default function Page() {
   return (
-    <>
-      <h1 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main">Раздел боев</h1>
+    <TournamentsProviderWrapper>
       <FightList/>
-    </>
+    </TournamentsProviderWrapper>
   )
 }
+

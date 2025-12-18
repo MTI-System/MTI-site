@@ -1,16 +1,22 @@
-import { FightCard } from "./FightTable";
-
-export default function Fight(){
-    return(
-        <>
-        <FightCard/>
-
-        <ExampleTabs/>
-        </>
-    )
-}
+import {
+  useGetActionInformationQuery,
+  useGetFightInformationQuery,
+  useGetTeamInTournamentQuery,
+} from "@/api/tournaments/clientApiInterface"
 
 import { Tabs } from '@base-ui-components/react/tabs';
+import { FightCard } from "./FightList";
+
+// export default function Fight(){
+//     return(
+//         <>
+//         <h1 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main">Действия боя</h1>
+//         <FightCard />
+
+//         <ExampleTabs/>
+//         </>
+//     )
+// }
 
 export function ExampleTabs() {
   return (
