@@ -1,6 +1,7 @@
 "use client"
 import {
   useGetActionInformationQuery,
+  useGetFightInfoByTournamentQuery,
   useGetFightInformationQuery,
   useGetTeamInTournamentQuery,
 } from "@/api/tournaments/clientApiInterface"
@@ -29,6 +30,12 @@ function QueryTest() {
     error: teamError,
     isSuccess: teamSuccess,
   } = useGetTeamInTournamentQuery({ teamId: 1 })
+  const {
+    data: fightData,
+    isLoading: fightLoading,
+    error: fightError,
+    isSuccess: fightSuccess,
+  } = useGetFightInfoByTournamentQuery({ tournamentId: 119 })
 
   return (
     <div className="flex flex-col gap-2">
@@ -38,6 +45,8 @@ function QueryTest() {
       <p>{JSON.stringify(actionData)}</p>
       <p className="text-sm text-gray-500">Team Information</p>
       <p>{JSON.stringify(teamData)}</p>
+      <p className="text-sm text-gray-500">Fight Information</p>
+      <p>{JSON.stringify(fightData)}</p>
     </div>
   )
 }
