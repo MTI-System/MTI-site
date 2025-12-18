@@ -3,6 +3,8 @@ import { TOURNAMENTS_API } from "@/constants/APIEndpoints"
 import {
   FightActionInterface,
   fightActionSchema,
+  FightInfoByTournamentInterface,
+  fightInfoByTournamentSchema,
   FightInformationInterface,
   fightInformationSchema,
   TeamInTournamentInterface,
@@ -82,6 +84,15 @@ export const defineTournamentsEndpoints = (
       return null
     },
   }),
+  getFightInfoByTournament: builder.query({
+    query: ({ tournamentId }: { tournamentId: number }) => `fights_info_by_tournament/${tournamentId}`,
+    transformResponse: (response: unknown): FightInfoByTournamentInterface | null => {
+      const parsed = fightInfoByTournamentSchema.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing team information: ${parsed.error}`)
+      return null
+    },
+  }),
   getAllTournamentCards: builder.query({
     query: () => `all_tournaments`,
     transformResponse: (response: unknown): TournamentCardInterface[] | null => {
@@ -147,14 +158,14 @@ export const defineTournamentsEndpoints = (
     },
   }),
   closeRegistration: builder.mutation({
-    query: ({tournamentId, token}: {tournamentId: number, token: string}) => {
+    query: ({ tournamentId, token }: { tournamentId: number; token: string }) => {
       const body = new FormData()
       body.set("tournamentId", tournamentId.toString())
       body.set("token", token.toString())
       return {
         url: "close_registration",
         method: "POST",
-        body: body
+        body: body,
       }
     },
     transformResponse: (response: unknown): TournamentCardInterface | null => {
@@ -163,5 +174,5 @@ export const defineTournamentsEndpoints = (
       console.error(`Unexpected response while parsing tournament card: ${parsed.error}`)
       return null
     },
-  })
+  }),
 })
