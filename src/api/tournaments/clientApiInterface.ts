@@ -43,4 +43,5 @@ export const {
   useGetFightInformationQuery,
   useGetActionInformationQuery,
   useGetTeamInTournamentQuery,
+  useGetFightInfoByTournamentQuery
 } = tournamentsApiClient

@@ -2,6 +2,7 @@
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import {
   useGetActionInformationQuery,
+  useGetFightInfoByTournamentQuery,
   useGetFightInformationQuery,
   useGetTeamInTournamentQuery,
 } from "@/api/tournaments/clientApiInterface"
