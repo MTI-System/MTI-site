@@ -122,6 +122,14 @@ export const teamInTournamentSchema = z.object({
   global_team_id: z.number().optional(),
   players: z.array(z.number()),
 })
+export const fightTeamInTournamentShema =     teamInTournamentSchema.omit({ global_team_id: true, players: true }).extend({
+    score: z.number(),
+    coefficient: z.number(),
+    reported_problem: z.number().optional(),
+    reporterScore: z.number().optional(),
+    opponentScore: z.number().optional(),
+    reviewerScore: z.number().optional(),
+  })
 
 export const fightInformationSchema = z.object({
   id: z.number(),
@@ -131,14 +139,7 @@ export const fightInformationSchema = z.object({
   startTime: z.number(),
   jouries: z.array(z.number()),
   teams: z.array(
-    teamInTournamentSchema.omit({ global_team_id: true, players: true }).extend({
-      score: z.number(),
-      coefficient: z.number(),
-      reported_problem: z.number().optional(),
-      reporterScore: z.number().optional(),
-      opponentScore: z.number().optional(),
-      reviewerScore: z.number().optional(),
-    }),
+    fightTeamInTournamentShema
   ),
 })
 
@@ -175,7 +176,7 @@ export type TeamScoreInActionInterface = z.infer<typeof teamScoreInActionSchema>
 export type TeamInTournamentInterface = z.infer<typeof teamInTournamentSchema>
 export type FightInformationInterface = z.infer<typeof fightInformationSchema>
 export type FightInfoByTournamentInterface = z.infer<typeof fightInfoByTournamentSchema>
-
+export type FightTeamInTournamentInterface = z.infer<typeof fightTeamInTournamentShema>
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>
 export type BadgeInterface = z.infer<typeof Badge>

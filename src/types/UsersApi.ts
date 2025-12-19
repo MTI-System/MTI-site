@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const UserSchema = z.object({
   id: z.number(),
-  auth: z.number(),
+  auth: z.number().nullable(),
   firstName: z.string(),
   secondName: z.string(),
   thirdName: z.string(),
