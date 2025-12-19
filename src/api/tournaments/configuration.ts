@@ -1,6 +1,14 @@
 import { EndpointBuilder, fetchBaseQuery } from "@reduxjs/toolkit/query"
 import { TOURNAMENTS_API } from "@/constants/APIEndpoints"
 import {
+  FightActionInterface,
+  fightActionSchema,
+  FightInfoByTournamentInterface,
+  fightInfoByTournamentSchema,
+  FightInformationInterface,
+  fightInformationSchema,
+  TeamInTournamentInterface,
+  teamInTournamentSchema,
   TournamentCard,
   TournamentCardInterface,
   TournamentCreationRequest,
@@ -16,7 +24,6 @@ export const tournamentsBaseQuery = fetchBaseQuery({ baseUrl: TOURNAMENTS_API })
 export const defineTournamentsEndpoints = (
   builder: EndpointBuilder<typeof tournamentsBaseQuery, never, typeof tournamentsReducerPath>,
 ) => ({
-  
   getAvailableStates: builder.query({
     query: ({ year, tt }: { tt: number; year: number }) => `statuses?tournamentTypeId=${tt}&year=${year}`,
     transformResponse: (response: unknown): TournamentStateInterface[] => {
@@ -48,6 +55,52 @@ export const defineTournamentsEndpoints = (
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing tournament cards: ${parsed.error}`)
       return null
+    },
+  }),
+  getFightInformation: builder.query({
+    query: ({ fightId }: { fightId: number }) => `fight_info/${fightId}`,
+    transformResponse: (response: unknown): FightInformationInterface | null => {
+      const parsed = fightInformationSchema.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing fight information: ${parsed.error}`)
+      return null
+    },
+  }),
+  getActionInformation: builder.query({
+    query: ({ actionId }: { actionId: number }) => `action_table/${actionId}`,
+    transformResponse: (response: unknown): FightActionInterface | null => {
+      const parsed = fightActionSchema.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing action information: ${parsed.error}`)
+      return null
+    },
+  }),
+  getTeamInTournament: builder.query({
+    query: ({ teamId }: { teamId: number }) => `team_in_tournament/${teamId}`,
+    transformResponse: (response: unknown): TeamInTournamentInterface | null => {
+      const parsed = teamInTournamentSchema.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing team information: ${parsed.error}`)
+      return null
+    },
+  }),
+  getFightInfoByTournament: builder.query({
+    query: ({ tournamentId }: { tournamentId: number }) => `fights_info_by_tournament/${tournamentId}`,
+    transformResponse: (response: unknown): FightInfoByTournamentInterface | null => {
+      const parsed = fightInfoByTournamentSchema.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing team information: ${parsed.error}`)
+      return null
+    },
+  }),
+  getAllTournamentCards: builder.query({
+    query: () => `all_tournaments`,
+    transformResponse: (response: unknown): TournamentCardInterface[] | null => {
+      return response as any[]
+      // const parsed = TournamentCard.array().safeParse(response)
+      // if (parsed.success) return parsed.data
+      // console.error(`Unexpected response while parsing tournament cards: ${parsed.error}`)
+      // return null
     },
   }),
   getOrganizatorTournaments: builder.mutation({
@@ -105,14 +158,14 @@ export const defineTournamentsEndpoints = (
     },
   }),
   closeRegistration: builder.mutation({
-    query: ({tournamentId, token}: {tournamentId: number, token: string}) => {
+    query: ({ tournamentId, token }: { tournamentId: number; token: string }) => {
       const body = new FormData()
       body.set("tournamentId", tournamentId.toString())
       body.set("token", token.toString())
       return {
         url: "close_registration",
         method: "POST",
-        body: body
+        body: body,
       }
     },
     transformResponse: (response: unknown): TournamentCardInterface | null => {
@@ -121,5 +174,5 @@ export const defineTournamentsEndpoints = (
       console.error(`Unexpected response while parsing tournament card: ${parsed.error}`)
       return null
     },
-  })
+  }),
 })

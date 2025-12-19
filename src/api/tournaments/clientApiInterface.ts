@@ -35,8 +35,13 @@ export const {
   useGetAvailableYearsQuery,
   useGetAvailableTournamentTypesQuery,
   useGetTournamentCardsQuery,
+  useGetAllTournamentCardsQuery,
   useGetOrganizatorTournamentsMutation,
   useGetTournamentCardQuery,
   useGetTournamentTableQuery,
   useAddTournamentMutation,
+  useGetFightInformationQuery,
+  useGetActionInformationQuery,
+  useGetTeamInTournamentQuery,
+  useGetFightInfoByTournamentQuery
 } = tournamentsApiClient

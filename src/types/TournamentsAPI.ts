@@ -116,6 +116,66 @@ export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequest
 //   file_size: string | null
 // }
 
+export const teamInTournamentSchema = z.object({
+  id: z.number(),
+  name: z.string().nonempty(),
+  global_team_id: z.number().optional(),
+  players: z.array(z.number()),
+})
+
+export const fightInformationSchema = z.object({
+  id: z.number(),
+  actions: z.array(z.number()),
+  is_location_link: z.boolean(),
+  location: z.string().nonempty(),
+  startTime: z.number(),
+  jouries: z.array(z.number()),
+  teams: z.array(
+    teamInTournamentSchema.omit({ global_team_id: true, players: true }).extend({
+      score: z.number(),
+      coefficient: z.number(),
+      reported_problem: z.number().optional(),
+      reporterScore: z.number().optional(),
+      opponentScore: z.number().optional(),
+      reviewerScore: z.number().optional(),
+    }),
+  ),
+})
+
+export const teamRoleInActionSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  baseCoefficient: z.number(),
+})
+
+export const teamScoreInActionSchema = z.object({
+  id: z.number(),
+  value: z.number(),
+  jury: z.number(),
+})
+
+export const fightActionSchema = z.object({
+  pickedProblem: z.number().optional(),
+  playerLines: z.array(
+    z.object({
+      role: teamRoleInActionSchema.optional(),
+      playerId: z.number().optional(),
+      team: teamInTournamentSchema,
+      finalScore: z.number(),
+      scores: z.array(teamScoreInActionSchema),
+    }),
+  ),
+})
+
+export const fightInfoByTournamentSchema = z.record(z.string(), z.array(fightInformationSchema))
+
+export type FightActionInterface = z.infer<typeof fightActionSchema>
+export type TeamRoleInActionInterface = z.infer<typeof teamRoleInActionSchema>
+export type TeamScoreInActionInterface = z.infer<typeof teamScoreInActionSchema>
+export type TeamInTournamentInterface = z.infer<typeof teamInTournamentSchema>
+export type FightInformationInterface = z.infer<typeof fightInformationSchema>
+export type FightInfoByTournamentInterface = z.infer<typeof fightInfoByTournamentSchema>
+
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>
 export type BadgeInterface = z.infer<typeof Badge>

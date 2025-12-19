@@ -1,32 +1,52 @@
 "use client"
-import { Forms } from "@/components/forms";
-import CheckboxGroupRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxGroupRegistrationField";
-import CheckboxRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxRegistrationField";
-import { useState } from "react";
+import {
+  useGetActionInformationQuery,
+  useGetFightInfoByTournamentQuery,
+  useGetFightInformationQuery,
+  useGetTeamInTournamentQuery,
+} from "@/api/tournaments/clientApiInterface"
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
+import { useEffect, useState } from "react"
 
-export default function UploadImage() {
-  const [imgSrc, setImgSrc] = useState("");
-  //@ts-ignore
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+export default function Page() {
+  return (
+    <TournamentsProviderWrapper>
+      <QueryTest />
+    </TournamentsProviderWrapper>
+  )
+}
 
-    const url = URL.createObjectURL(file); // временная ссылка на файл
-    console.log("url: ", url)
-    setImgSrc(url);
-  };
+function QueryTest() {
+  const { data, isLoading, error, isSuccess } = useGetFightInformationQuery({ fightId: 1 })
+  const {
+    data: actionData,
+    isLoading: actionLoading,
+    error: actionError,
+    isSuccess: actionSuccess,
+  } = useGetActionInformationQuery({ actionId: 1 })
+  const {
+    data: teamData,
+    isLoading: teamLoading,
+    error: teamError,
+    isSuccess: teamSuccess,
+  } = useGetTeamInTournamentQuery({ teamId: 1 })
+  const {
+    data: fightData,
+    isLoading: fightLoading,
+    error: fightError,
+    isSuccess: fightSuccess,
+  } = useGetFightInfoByTournamentQuery({ tournamentId: 119 })
 
   return (
-    <div>
-      <input type="file" accept="image/*" onChange={handleChange} />
-
-      {imgSrc && (
-        <img
-          src={imgSrc}
-          alt="preview"
-          style={{ maxWidth: "300px", marginTop: 16 }}
-        />
-      )}
+    <div className="flex flex-col gap-2">
+      <p className="text-sm text-gray-500">Fight Information</p>
+      <p>{JSON.stringify(data)}</p>
+      <p className="text-sm text-gray-500">Action Information</p>
+      <p>{JSON.stringify(actionData)}</p>
+      <p className="text-sm text-gray-500">Team Information</p>
+      <p>{JSON.stringify(teamData)}</p>
+      <p className="text-sm text-gray-500">Fight Information</p>
+      <p>{JSON.stringify(fightData)}</p>
     </div>
-  );
+  )
 }
