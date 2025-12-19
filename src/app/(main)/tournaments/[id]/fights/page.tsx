@@ -1,7 +1,9 @@
-export default async function TournamentsFightsPage() {
+import FightNavigation from "@/components/tournamentPage/FightsPage/FightNavigation"
+
+export default async function FightPage({}: {}) {
   return (
     <>
-      <h1>Раздел боев</h1>
+      <FightNavigation />
     </>
   )
 }
