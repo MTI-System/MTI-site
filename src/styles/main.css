@@ -21,9 +21,12 @@
   --color-accent-warning: #fc4747ff;
   --color-accent-warning-alt: #fc47471A;
   --color-accent-accept: #21b95f;
+  --color-accent-secondary: #32E875;
   --color-accent-accept-alt: #21b95f26;
   --color-bg-main-accent: #ffffff;
   --color-inactive: #3d3d3d;
+  --color-warning: #FFD300;
+  --color-negative: #ED0F4E;
 }
 
 body.dark,
