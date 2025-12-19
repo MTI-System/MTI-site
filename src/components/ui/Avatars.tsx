@@ -8,8 +8,8 @@ const Cell = ({juryID}:{juryID: number}) => {
           <Avatar.Root className="uppercase inline-flex size-16 mb-2 items-center justify-center overflow-hidden rounded-full bg-hover align-middle text-base font-medium text-text-main select-none">
           {userData ? userData.firstName[0] : juryID}
           </Avatar.Root>
-          <p>{userData ? userData.firstName : "Aboba"}</p>
-          <p>{userData ? userData.secondName : "Abobovich"}</p>
+          <p>{userData ? userData.firstName : ""}</p>
+          <p>{userData ? userData.secondName : ""}</p>
         </a>
       )
     };
