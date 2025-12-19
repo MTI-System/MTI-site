@@ -12,7 +12,7 @@ export default function FightList({fightsData}:{fightsData: FightInfoByTournamen
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-full">
                 {Object.entries(fightsData).map(([key, itemArr]) =>(
                     itemArr.map((item) =>(
-                        <FightCard key={item.id} cardData={item} />
+                        <FightCard key={item.teams.length} cardData={item} />
                     )
                     )
                 ))}
@@ -21,23 +21,16 @@ export default function FightList({fightsData}:{fightsData: FightInfoByTournamen
     )
 }
 export function FightCard({ cardData }: { cardData: FightInformationInterface}) {
-    // if (isLoading) {
-    // return (
-    //     <div className="border borber-border bg-hover h-103 rounded-2xl p-6 w-full animate-pulse text-center text-text-main items-center">
-    //         loading
-    //         </div>
-    //     )
-    // }
-    // if (!isLoading) {
+    if (cardData.teams.length>0) {
         return (
             <>
-                <div className="border max-w-full bg-bg-alt border-border rounded-2xl py-4 px-7">
+                <div className="border max-w-full min-w-175 bg-bg-alt border-border rounded-2xl py-4 px-7">
 
                     <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase">room</h2>
 
                     <a href='' className='border-b border-border mb-4 md:mb-5 pb-4'>
                         <div className="overflow-x-auto">
-                        <FightTable teams={cardData?.teams || []} />
+                        <FightTable teams={cardData?.teams} />
                         </div>
                     </a>
 
@@ -52,7 +45,18 @@ export function FightCard({ cardData }: { cardData: FightInformationInterface}) 
                 </div>
             </>
         )
-    }
+    }else{
+    return (
+        <>
+            {/* <div className="border max-w-full bg-bg-alt border-border rounded-2xl py-4 px-7">
+
+                <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase text-">пока тут ничего нет</h2>
+
+            </div> */}
+        </>
+    )
+}
+}
 // }
 
 //     return (

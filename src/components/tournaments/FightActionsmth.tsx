@@ -6,37 +6,36 @@ import {
 
 import { Tabs } from '@base-ui-components/react/tabs';
 import { FightCard } from "./FightList";
+import { FightActionInterface } from "@/types/TournamentsAPI";
 
-// export default function Fight(){
-//     return(
-//         <>
-//         <h1 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main">Действия боя</h1>
-//         <FightCard />
+export default function Fight({fightData}:{fightData: FightActionInterface}){
+    return(
+        <>
+        <h1 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main">Действия боя</h1>
+        <ActionTabs />
+        </>
+    )
+}
 
-//         <ExampleTabs/>
-//         </>
-//     )
-// }
-
-export function ExampleTabs() {
+export function ActionTabs() {
   return (
     <Tabs.Root defaultValue="overview">
       <Tabs.List className="mt-6 relative z-0 flex gap-1 px-1 justify-center items-center">
         <Tabs.Tab
           className="flex h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline focus-visible:before:outline-2 data-[active]:text-gray-900"
-          value="overview"
+          value="first_action"
         >
           Действие 1
         </Tabs.Tab>
         <Tabs.Tab
           className="flex h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline focus-visible:before:outline-2 data-[active]:text-gray-900"
-          value="projects"
+          value="second_action"
         >
           Действие 2
         </Tabs.Tab>
         <Tabs.Tab
           className="flex h-8 items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap text-gray-600 outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 before:outline-blue-800 hover:text-gray-900 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline focus-visible:before:outline-2 data-[active]:text-gray-900"
-          value="account"
+          value="third_action"
         >
           Действие 3
         </Tabs.Tab>
@@ -44,19 +43,19 @@ export function ExampleTabs() {
       </Tabs.List>
       <Tabs.Panel
         className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline focus-visible:outline-2"
-        value="overview"
+        value="first_action"
       >
         <FightAction/>
       </Tabs.Panel>
       <Tabs.Panel
         className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline focus-visible:outline-2"
-        value="projects"
+        value="second_action"
       >
         <FightAction/>
       </Tabs.Panel>
       <Tabs.Panel
         className="relative flex h-32 items-center justify-center -outline-offset-1 outline-blue-800 focus-visible:rounded-md focus-visible:outline focus-visible:outline-2"
-        value="account"
+        value="third_action"
       >
         <FightAction/>
       </Tabs.Panel>
@@ -64,24 +63,6 @@ export function ExampleTabs() {
   );
 }
 
-const teams = [//for exampl
-    {
-      "id": 1,
-      "name": "Команда 1",
-      "player": "a",
-    },
-    {
-      "id": 2,
-      "name": "Команда 2",
-      "player": "b",
-    },
-    {
-      "id": 3,
-      "name": "Команда 3",
-      "player": "c",
-    }
-  ]
-const problem =6
 export function FightAction(){
     return(
 <div className="flex mt-30 flex-row w-full">
@@ -90,7 +71,7 @@ export function FightAction(){
       Задача
     </span>
     <code className="text-lg font-bold font-mono text-text-main">
-      {problem}
+      {}
     </code>
   </div>
 
