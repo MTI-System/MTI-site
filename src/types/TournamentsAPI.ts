@@ -167,7 +167,9 @@ export const fightActionSchema = z.object({
   ),
 })
 
-export const fightInfoByTournamentSchema = z.record(z.string(), z.array(fightInformationSchema))
+export const fightContainerInfoSchema = z.array(fightInformationSchema)
+
+export const fightInfoByTournamentSchema = z.record(z.string(), fightContainerInfoSchema)
 
 export type FightActionInterface = z.infer<typeof fightActionSchema>
 export type TeamRoleInActionInterface = z.infer<typeof teamRoleInActionSchema>
@@ -175,6 +177,7 @@ export type TeamScoreInActionInterface = z.infer<typeof teamScoreInActionSchema>
 export type TeamInTournamentInterface = z.infer<typeof teamInTournamentSchema>
 export type FightInformationInterface = z.infer<typeof fightInformationSchema>
 export type FightInfoByTournamentInterface = z.infer<typeof fightInfoByTournamentSchema>
+export type FightContainerInfoInterface = z.infer<typeof fightContainerInfoSchema>
 
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>

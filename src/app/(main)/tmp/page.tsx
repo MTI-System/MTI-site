@@ -4,6 +4,7 @@ import {
   useGetFightInfoByTournamentQuery,
   useGetFightInformationQuery,
   useGetTeamInTournamentQuery,
+  useGetFightContainerInfoQuery
 } from "@/api/tournaments/clientApiInterface"
 import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 import { useEffect, useState } from "react"
@@ -36,6 +37,12 @@ function QueryTest() {
     error: fightError,
     isSuccess: fightSuccess,
   } = useGetFightInfoByTournamentQuery({ tournamentId: 119 })
+  const {
+    data: fightContainerData,
+    isLoading: fightContainerLoading,
+    error: fightContainerError,
+    isSuccess: fightContainerSuccess,
+  } = useGetFightContainerInfoQuery({fightContainerId: 128})
 
   return (
     <div className="flex flex-col gap-2">
@@ -47,6 +54,8 @@ function QueryTest() {
       <p>{JSON.stringify(teamData)}</p>
       <p className="text-sm text-gray-500">Fight Information</p>
       <p>{JSON.stringify(fightData)}</p>
+      <p className="text-sm text-gray-500">Fight Container</p>
+      <p>{JSON.stringify(fightContainerData)}</p>
     </div>
   )
 }

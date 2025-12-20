@@ -3,6 +3,8 @@ import { TOURNAMENTS_API } from "@/constants/APIEndpoints"
 import {
   FightActionInterface,
   fightActionSchema,
+  FightContainerInfoInterface,
+  fightContainerInfoSchema,
   FightInfoByTournamentInterface,
   fightInfoByTournamentSchema,
   FightInformationInterface,
@@ -90,6 +92,15 @@ export const defineTournamentsEndpoints = (
       const parsed = fightInfoByTournamentSchema.safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing team information: ${parsed.error}`)
+      return null
+    },
+  }),
+  getFightContainerInfo: builder.query({
+    query: ({ fightContainerId }: { fightContainerId: number }) => `fight_container_info/${fightContainerId}`,
+    transformResponse: (response: unknown): FightContainerInfoInterface | null => {
+      const parsed = fightContainerInfoSchema.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing fight container information: ${parsed.error}`)
       return null
     },
   }),
