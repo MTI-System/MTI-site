@@ -11,7 +11,7 @@ export default function FightList({fightsData}:{fightsData: FightContainerInfoIn
     return (
         <div className="flex flex-col items-center px-4">
             <h1 className="font-bold mx-auto text-2xl text-center mb-8 text-text-main">Раздел боев</h1>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
                 {fightsData.map((item)  =>(
                         <FightCard key={item.id} cardData={item} />
                 ))}
@@ -24,7 +24,7 @@ export function FightCard({ cardData }: { cardData: FightInformationInterface}) 
     if (cardData.teams.length>0) {
         return (
             <>
-                <div className="border max-w-full min-w-175 bg-bg-alt border-border rounded-2xl py-4 px-7">
+                <div className="border max-w-full bg-bg-alt border-border rounded-2xl py-4 px-7">
 
                     <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase">room</h2>
 

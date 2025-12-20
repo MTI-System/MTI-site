@@ -29,7 +29,7 @@ export default function Fight({
         Действия боя
       </h1>
 
-      <div className="m-5 rounded-2xl border border-border overflow-x-auto">
+      <div className=" rounded-2xl border border-border overflow-x-auto">
         <FightTable teams={fightData.teams} />
       </div>
 
@@ -105,7 +105,7 @@ function FightAction({ actionId }: { actionId: number }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3  gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3  gap-6">
         {actionData.playerLines.map((line) => (
             <div key={line.role?.id} className="flex flex-col flex-1 w-full border border-border rounded-2xl ">
                   <div className="flex flex-col gap-3 flex-none text-center m-2">
