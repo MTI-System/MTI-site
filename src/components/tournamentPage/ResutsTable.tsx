@@ -39,8 +39,8 @@ export default async function ResultsTable({tournamentId}: { tournamentId: numbe
               <tr key={idx}>
 
                  
-                <td className={trStyle + " text-text-main hover:bg-hover cursor-pointer"}>{line.team_name}
-                 {/* <Link href={`@/app/main/tournaments/team`}></Link> */}
+                <td className={trStyle + " text-text-main hover:bg-hover cursor-pointer"}>
+                 <Link href={`/tournaments/${tournamentId}/team/${line.team_id}`}>{line.team_name}</Link>
                 </td>
                 
 
