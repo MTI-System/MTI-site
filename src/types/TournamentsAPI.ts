@@ -178,12 +178,8 @@ export type TeamScoreInActionInterface = z.infer<typeof teamScoreInActionSchema>
 export type TeamInTournamentInterface = z.infer<typeof teamInTournamentSchema>
 export type FightInformationInterface = z.infer<typeof fightInformationSchema>
 export type FightInfoByTournamentInterface = z.infer<typeof fightInfoByTournamentSchema>
-<<<<<<< HEAD
-export type FightTeamInTournamentInterface = z.infer<typeof fightTeamInTournamentShema>
-=======
 export type FightContainerInfoInterface = z.infer<typeof fightContainerInfoSchema>
 
->>>>>>> Serge-branch
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>
 export type BadgeInterface = z.infer<typeof Badge>

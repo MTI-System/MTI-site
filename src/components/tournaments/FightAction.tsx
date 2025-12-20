@@ -15,6 +15,8 @@ import { useGetUserByIdQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
 
 import { FightTable } from "./FightTable"
+import { useGetProblemsByIdQuery } from "@/api/problems/clientApiInterface"
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 
 export default function Fight({
   fightData,
@@ -64,7 +66,9 @@ function ActionTabs({
           className="mt-5"
         >
           <TournamentsProviderWrapper>
+            <ProblemsProviderWrapper>
             <FightAction actionId={id} />
+            </ProblemsProviderWrapper>
           </TournamentsProviderWrapper>
         </Tabs.Panel>
       ))}
@@ -73,32 +77,62 @@ function ActionTabs({
 }
 
 function FightAction({ actionId }: { actionId: number }) {
-  const { data, isLoading, error } =
+  const { data: actionData, isLoading: isActionData, error:actionErr } =
     useGetActionInformationQuery({ actionId })
+    const { data: problemData, isLoading: isProblemLoading, error: problemErr } = useGetProblemsByIdQuery({problemId: actionData?.pickedProblem}, {skip: !actionData || !actionData.pickedProblem})
 
-  if (isLoading) return <p>loading…</p>
-    if (error) {
+  if (isActionData) return <p>loading…</p>
+    if (actionErr) {
     return (
       <div className="p-4">
         <h1 className="text-red-600 text-xl font-bold">Error</h1>
-        <p className="mt-2">{JSON.stringify(error)}</p>
+        <p className="mt-2">{JSON.stringify(actionErr)}</p>
       </div>
     )
   }
-  if (!data) return <p className="text-red-500">Error</p>
+  if (!actionData) return <p className="text-red-500">Error</p>
+  
+
 
   return (
-    <div className="flex w-full gap-6">
-      <div className="w-32 shrink-0 rounded-2xl border border-border p-4 text-center">
-        <div className="mb-1 text-xs uppercase text-text-alt">
+    <div className="flex w-full gap-6 flex-col">
+      <div className="w-full  p-4 text-center">
+        <div className="mb-1 text-sm uppercase text-text-alt">
           Задача
         </div>
-        <div className="text-lg font-bold">
-          {data.pickedProblem}
+        <div className="text-lg font-bold uppercase">
+          {problemData?.global_number+". " + problemData?.problem_translations[0].problem_name}
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-3  gap-6">
+        {actionData.playerLines.map((line) => (
+            <div key={line.role?.id} className="flex flex-col flex-1 w-full border border-border rounded-2xl ">
+                  <div className="flex flex-col gap-3 flex-none text-center m-2">
+
+                    <div className="text-text-alt uppercase bg-">
+                      {line.role?.title ?? "—"}
+                    </div>
+
+                    <div className="font-medium">
+                      {line.team.name}
+                    </div>
+                  
+                  <UsersProviderWrapper>
+                    <UserCell userId={line.playerId} />
+                  </UsersProviderWrapper>
+
+                  <div className="bg-muted/40 px-6 py-4">
+                  <JuryScores scores={line.scores} />
+                </div>
+
+                  </div>
+            </div>
+
+        ))}
+
+      </div>
+      {/* <div className="flex-1">
         <Accordion.Root
           className="flex flex-col overflow-hidden rounded-2xl border border-border"
         >
@@ -139,9 +173,8 @@ function FightAction({ actionId }: { actionId: number }) {
               </Accordion.Panel>
             </Accordion.Item>
           ))}
-        </Accordion.Root>
+        </Accordion.Root> */}
       </div>
-    </div>
   )
 }
 

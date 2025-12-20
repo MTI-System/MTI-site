@@ -3,20 +3,17 @@ import UsersProviderWrapper from "@/api/users/ClientWrapper";
 import { useGetFightInformationQuery } from "@/api/tournaments/clientApiInterface";
 import { FightTable } from "./FightTable";
 import { UserAvatarWithTitleByID } from "../ui/Avatars";
-import { FightInfoByTournamentInterface, FightInformationInterface } from "@/types/TournamentsAPI";
+import { FightContainerInfoInterface, FightInformationInterface } from "@/types/TournamentsAPI";
 import Link from "next/link";
 
 
-export default function FightList({fightData}:{fightData: FightInformationInterface}) {
+export default function FightList({fightsData}:{fightsData: FightContainerInfoInterface}) {
     return (
         <div className="flex flex-col items-center px-4">
             <h1 className="font-bold mx-auto text-2xl text-center mb-8 text-text-main">Раздел боев</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-full">
-                {fightData.map((item)  =>(
-                    itemArr.map(=>(
+                {fightsData.map((item)  =>(
                         <FightCard key={item.id} cardData={item} />
-                    )
-                    )
                 ))}
             </div>
         </div>
@@ -31,7 +28,7 @@ export function FightCard({ cardData }: { cardData: FightInformationInterface}) 
 
                     <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase">room</h2>
 
-                    <Link href={'./' + cardData.id} className='border-b border-border mb-4 md:mb-5 pb-4'>
+                    <Link href={'./fight/' + cardData.id} className='border-b border-border mb-4 md:mb-5 pb-4'>
                         <div className="overflow-x-auto">
                         <FightTable teams={cardData?.teams} />
                         </div>
@@ -51,11 +48,11 @@ export function FightCard({ cardData }: { cardData: FightInformationInterface}) 
     }else{
     return (
         <>
-            <div className="border max-w-full bg-bg-alt border-border rounded-2xl py-4 px-7">
+            {/* <div className="border max-w-full bg-bg-alt border-border rounded-2xl py-4 px-7">
 
                 <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase text-">пока тут ничего нет</h2>
 
-            </div>
+            </div> */}
         </>
     )
 }

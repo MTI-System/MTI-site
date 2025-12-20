@@ -3,11 +3,11 @@ import FightList from "@/components/tournaments/FightList";
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 
-export default async function AllFightPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+export default async function AllFightPage({ params }: { params: Promise<{ fightsId: string }> }) {
+  const { fightsId } = await params
   const store = makeTournamentsStoreServer()
   const { data: fightsData, error, isLoading} = await store.dispatch(
-    tournamentsApiServer.endpoints.getFightInformation.initiate({ fightId: Number(id) }),
+    tournamentsApiServer.endpoints.getFightContainerInfo.initiate({ fightContainerId: Number(fightsId) }),
   )
 
   if (error) {
@@ -27,5 +27,5 @@ export default async function AllFightPage({ params }: { params: Promise<{ id: s
       </div>
     )
   }
-    return <FightList fightData={fightsData}/>
+    return <FightList fightsData={fightsData}/>
 }
