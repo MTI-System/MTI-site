@@ -92,7 +92,7 @@ function CommandMainAvatar({CommandName}:{CommandName:string}) {
         
           className="size-full object-cover"
         />
-        <Avatar.Fallback className="flex size-full items-center justify-center text-base text-xl">
+        <Avatar.Fallback className="flex size-full items-center justify-center  text-3xl">
           {CommandName[0]}
         </Avatar.Fallback>
       </Avatar.Root>
