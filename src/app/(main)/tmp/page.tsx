@@ -47,6 +47,8 @@ export function Page({mainData} :  {mainData : TeamInTournamentInterface}) {
 
       <UserAvatarWithTitleByID PeoplesIDs={mainData.players} changeclassNameAvatar='inline-flex items-center  justify-center overflow-hidden rounded-full size-28 sm:size-28 text-xl'
         changeclassNameTextUnderAvatar='text-xl p-7 '/>
+
+      
       
       {/* <Card />
       <Card />
@@ -71,47 +73,12 @@ export function Page({mainData} :  {mainData : TeamInTournamentInterface}) {
   )
 }
 
-// const Cell = ({juryID, changeAvatar, changeTextUnderAvatar}:{juryID: number, changeAvatar?:string, changeTextUnderAvatar?:string}) => {
-//         const { data: userData, isLoading: userIsLoading} = useGetUserByIdQuery({ id: juryID })
-//         return(
-//         <div className= {twclsx('flex flex-col text-text-main text-center text-wrap justify-center items-center', changeTextUnderAvatar)}>
-//           <Avatar.Root className= {twclsx("uppercase inline-flex size-12 sm:size-12 mb-2 items-center justify-center overflow-hidden rounded-full bg-hover align-middle text-base font-medium text-text-main select-none", changeAvatar)}>
-          
-//           {userData ? userData.firstName[0] : ''}
-          
-//           </Avatar.Root>
-          
-//           {userData? (
-//             <>
-//             {(userData.auth===null)?<p>{userData.secondName} {userData.firstName}. {userData.thirdName}.</p>:<p>{userData.secondName} {userData.firstName} {userData.thirdName}</p>}
-          
-//           </>) : (<>
-//            <p className="animate-pulse flex h-6 w-60 m-1 bg-hover rounded "></p>
-//            </>)}  
-              
-//         </div>
-//       )
-//     };
-
-
-// export function UserAvatarWithTitleByID(
-//   {PeoplesIDs, changeclassNameAvatar, changeclassNameTextUnderAvatar}:{PeoplesIDs: number[]|undefined, changeclassNameAvatar?: string, changeclassNameTextUnderAvatar?: string}) {
-//   return (
-//     <>
-//     {PeoplesIDs?.map((id) => (
-//         <Cell key={id} juryID={id} changeAvatar={changeclassNameAvatar} changeTextUnderAvatar={changeclassNameTextUnderAvatar}/>
-//     ))}
-//     </>
-//   )
-// }
-
-
 function CommandCell( {mainData} :  {mainData : TeamInTournamentInterface} ){
 
   return(
-    <div className="flex flex-wrap items-center justify-around flex-col  gap-2  p-10 font-bold">
+    <div className="flex  flex-wrap items-center justify-center  gap-2  p-10 font-bold">
       <CommandMainAvatar CommandName={mainData.name}/>
-      <h1 className=" flex text-text-main  gap-2 flex-col pt-7 text-4xl">{mainData.name}</h1>
+      <h1 className=" flex text-text-main gap-2 flex-col  text-4xl">{mainData.name}</h1>
     </div>
   )
 }
@@ -120,11 +87,9 @@ function CommandCell( {mainData} :  {mainData : TeamInTournamentInterface} ){
 function CommandMainAvatar({CommandName}:{CommandName:string}) {
   return (
     <div style={{ display: 'flex', gap: 20 }}>
-      <Avatar.Root className="uppercase inline-flex size-35 sm:size-35 mb-2 items-center justify-center overflow-hidden rounded-full bg-hover align-middle text-base font-medium text-text-main select-none">
+      <Avatar.Root className="flex mx-20  flex-col uppercase size-40 sm:size-40 mb-2 items-center justify-center overflow-hidden rounded-full bg-hover align-middle text-base font-medium text-text-main select-none">
         <Avatar.Image
-          
-          width="48"
-          height="48"
+        
           className="size-full object-cover"
         />
         <Avatar.Fallback className="flex size-full items-center justify-center text-base text-xl">

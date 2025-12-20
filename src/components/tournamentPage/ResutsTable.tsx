@@ -2,6 +2,7 @@ import {tournamentsApiServer} from "@/api/tournaments/serverApiInterface"
 import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore"
 import twclsx from "@/utils/twClassMerge";
 import style from "@/styles/gradient.module.css"
+import Link from "next/link";
 
 export default async function ResultsTable({tournamentId}: { tournamentId: number }) {
   const store = makeTournamentsStoreServer()
@@ -36,7 +37,13 @@ export default async function ResultsTable({tournamentId}: { tournamentId: numbe
           {table?.table_lines.map((line, idx) => {
             return (
               <tr key={idx}>
-                <td className={trStyle + " text-text-main hover:bg-hover cursor-pointer"}>{line.team_name}</td>
+
+                 
+                <td className={trStyle + " text-text-main hover:bg-hover cursor-pointer"}>{line.team_name}
+                 {/* <Link href={`@/app/main/tournaments/team`}></Link> */}
+                </td>
+                
+
                 {line.scores.map((score, idx) => (
                   <td
                     key={idx} className={twclsx(trStyle, style.sampledText, " text-text-main hover:bg-hover cursor-pointer")}
