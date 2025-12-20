@@ -10,7 +10,7 @@ export function FightTable({teams}:{teams: {
     }[]
   }) {
   return (
-    <table className="border-b border-border w-full">
+    <table className="border-border w-full">
       <thead>
         <tr className="border-b-border border-b">
           <th className="px-4 py-3 text-center sm:text-sm text-md font-medium text-wrap text-text-main uppercase tracking-wider">Название команды</th>

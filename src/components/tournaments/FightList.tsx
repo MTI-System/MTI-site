@@ -4,15 +4,17 @@ import { useGetFightInformationQuery } from "@/api/tournaments/clientApiInterfac
 import { FightTable } from "./FightTable";
 import { UserAvatarWithTitleByID } from "../ui/Avatars";
 import { FightInfoByTournamentInterface, FightInformationInterface } from "@/types/TournamentsAPI";
+import Link from "next/link";
 
-export default function FightList({fightsData}:{fightsData: FightInfoByTournamentInterface}) {
+
+export default function FightList({fightData}:{fightData: FightInformationInterface}) {
     return (
         <div className="flex flex-col items-center px-4">
             <h1 className="font-bold mx-auto text-2xl text-center mb-8 text-text-main">Раздел боев</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-full">
-                {Object.entries(fightsData).map(([key, itemArr]) =>(
-                    itemArr.map((item) =>(
-                        <FightCard key={item.teams.length} cardData={item} />
+                {fightData.map((item)  =>(
+                    itemArr.map(=>(
+                        <FightCard key={item.id} cardData={item} />
                     )
                     )
                 ))}
@@ -20,6 +22,7 @@ export default function FightList({fightsData}:{fightsData: FightInfoByTournamen
         </div>
     )
 }
+
 export function FightCard({ cardData }: { cardData: FightInformationInterface}) {
     if (cardData.teams.length>0) {
         return (
@@ -28,11 +31,11 @@ export function FightCard({ cardData }: { cardData: FightInformationInterface}) 
 
                     <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase">room</h2>
 
-                    <a href='' className='border-b border-border mb-4 md:mb-5 pb-4'>
+                    <Link href={'./' + cardData.id} className='border-b border-border mb-4 md:mb-5 pb-4'>
                         <div className="overflow-x-auto">
                         <FightTable teams={cardData?.teams} />
                         </div>
-                    </a>
+                    </Link>
 
                     <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase mt-5">jury</h2>
 
@@ -48,11 +51,11 @@ export function FightCard({ cardData }: { cardData: FightInformationInterface}) 
     }else{
     return (
         <>
-            {/* <div className="border max-w-full bg-bg-alt border-border rounded-2xl py-4 px-7">
+            <div className="border max-w-full bg-bg-alt border-border rounded-2xl py-4 px-7">
 
                 <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase text-">пока тут ничего нет</h2>
 
-            </div> */}
+            </div>
         </>
     )
 }

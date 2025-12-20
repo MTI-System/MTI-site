@@ -39,6 +39,7 @@ export const defineTournamentsEndpoints = (
       return [new Date().getFullYear()]
     },
   }),
+  
   getAvailableTournamentTypes: builder.query({
     query: () => "get_available_tt",
     transformResponse: (response: unknown): TournamentTypeIntarface[] | null => {
@@ -57,6 +58,7 @@ export const defineTournamentsEndpoints = (
       return null
     },
   }),
+  
   getFightInformation: builder.query({
     query: ({ fightId }: { fightId: number }) => `fight_info/${fightId}`,
     transformResponse: (response: unknown): FightInformationInterface | null => {
