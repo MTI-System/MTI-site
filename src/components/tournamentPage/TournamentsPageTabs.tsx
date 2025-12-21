@@ -67,7 +67,7 @@ export default function TournamentsPageTabs({
 
   const fightsLinks: LinkInterface[] = [
     {
-      href: `/tournaments/${tournamentCard.id}/fights/all`,
+      href: `/tournaments/${tournamentCard.id}/fights`,
       title: `Все бои`,
       isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },

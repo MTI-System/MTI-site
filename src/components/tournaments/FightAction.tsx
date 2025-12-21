@@ -17,6 +17,8 @@ import UsersProviderWrapper from "@/api/users/ClientWrapper"
 import { FightTable } from "./FightTable"
 import { useGetProblemsByIdQuery } from "@/api/problems/clientApiInterface"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
+import Loading from "@/app/loading"
+import Link from "next/link"
 
 export default function Fight({
   fightData,
@@ -81,7 +83,7 @@ function FightAction({ actionId }: { actionId: number }) {
     useGetActionInformationQuery({ actionId })
     const { data: problemData, isLoading: isProblemLoading, error: problemErr } = useGetProblemsByIdQuery({problemId: actionData?.pickedProblem}, {skip: !actionData || !actionData.pickedProblem})
 
-  if (isActionData) return <p>loading…</p>
+  if (isActionData || isProblemLoading) return <Loading/>
     if (actionErr) {
     return (
       <div className="p-4">
@@ -100,9 +102,9 @@ function FightAction({ actionId }: { actionId: number }) {
         <div className="mb-1 text-sm uppercase text-text-alt">
           Задача
         </div>
-        <div className="text-lg font-bold uppercase">
+        <Link href={`/problems/${problemData?.id}`} className="text-lg font-bold uppercase">
           {problemData?.global_number+". " + problemData?.problem_translations[0].problem_name}
-        </div>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3  gap-6">
