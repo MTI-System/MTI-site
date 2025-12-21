@@ -300,5 +300,21 @@ export const defineTournamentsEndpoints = (
         }
       }
     }
+  }),
+
+  setPlayerToPerformance:  builder.mutation({
+    query: ({token, performanceId, playerId}:
+            {      token: string,
+              performanceId: number,
+            playerId: number}) =>{
+      return {
+        url: `set_player_to_performance/${performanceId}/${playerId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        method: "POST",
+      }
+    }
   })
 })

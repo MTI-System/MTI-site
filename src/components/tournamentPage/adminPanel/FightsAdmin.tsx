@@ -8,7 +8,7 @@ import {Accordion, Form, Select} from "@base-ui-components/react";
 import ActionAdmin from "@/components/tournamentPage/adminPanel/ActionAdmin";
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
 import {
-  useGetTournamentTableQuery,
+  useGetTournamentTableQuery, useSetJuryToFightMutation,
   useSetLinkAndTimestampToFightMutation,
   useSetTeamsToFightMutation
 } from "@/api/tournaments/clientApiInterface";
@@ -48,7 +48,7 @@ export default function FightsAdmin(
   })
   const [addTimestampAndLink, {isLoading: idAddingLoading, isSuccess: idAddingSuccess}] = useSetLinkAndTimestampToFightMutation()
   const [setTeamsToFight, {isLoading: isTeamsSettingLoading, isSuccess: idTeamsSettingSuccess}] = useSetTeamsToFightMutation()
-
+  const [setJuryToFight] = useSetJuryToFightMutation()
   useEffect(() => {
     if (idAddingSuccess) {
       refetch()
@@ -140,7 +140,23 @@ export default function FightsAdmin(
                   </table>
                   <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить команды</button>
                 </form>
+                <form onSubmit={(e)=>{
+                  e.preventDefault();
+                  const form = new FormData(e.currentTarget)
+                  const juries = form.get("juries")?.toString().split(",").map(j=>Number(j))
+                  setJuryToFight({
+                    juries: juries ?? [],
+                    fightId: fight.id,
+                    token: token,
+                  })
+                }}>
+                  <div >
+                    <p>Список жюри:</p>
+                    <input defaultValue={fight.jouries} name="juries" type="text" placeholder="перечислите жюри через запятую без пробела" className="border-border"/>
+                    <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить жюри</button>
+                  </div>
 
+                </form>
               </div>
 
 

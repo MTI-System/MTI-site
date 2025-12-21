@@ -3,7 +3,7 @@
 import {
   useGetActionInformationQuery,
   useGetTournamentTableQuery,
-  useSetDraftResultMutation, useSetJuryToFightMutation, useSetScoresMutation
+  useSetDraftResultMutation, useSetJuryToFightMutation, useSetPlayerToPerformanceMutation, useSetScoresMutation
 } from "@/api/tournaments/clientApiInterface";
 import {useGetProblemsByIdQuery, useGetProblemsQuery} from "@/api/problems/clientApiInterface";
 import Loading from "@/app/loading";
@@ -27,8 +27,9 @@ export default function ActionAdmin({actionId, idx, fight,}: {
     isLoading: isProblemLoading
   } = useGetProblemsByIdQuery({problemId: actionInfo?.pickedProblem ?? 0})
   const [setDraftResult] = useSetDraftResultMutation()
-  const [setJuryToFight] = useSetJuryToFightMutation()
+
   const [setScores] = useSetScoresMutation()
+  const [setPlayer] = useSetPlayerToPerformanceMutation()
   const {data} = useGetProblemsQuery({tournament: "1", year: 2026})
   const problems = data?.map(problem => {
     return {
@@ -59,27 +60,15 @@ export default function ActionAdmin({actionId, idx, fight,}: {
                 <ProblemsProviderWrapper>
                   {data ? <ProblemPicker name="problemId" defaultValue={pickedProblemInfo?.id.toString()} teams={problems}/> : <Loading/>}
                 </ProblemsProviderWrapper>
-                <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить задачу</button>
-              </form>
-            </div>
-            <div>
-              <form onSubmit={(e)=>{
-                e.preventDefault();
-                const form = new FormData(e.currentTarget)
-                const juries = form.get("juries")?.toString().split(",").map(j=>Number(j))
-                setJuryToFight({
-                  juries: juries ?? [],
-                  fightId: fight.id,
-                  token: token,
-                })
-              }}>
-                <div >
-                  <p>Список жюри:</p>
-                  <input name="juries" type="text" placeholder="перечислите жюри через запятую без пробела" className="border-border"/>
-                  <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить жюри</button>
-                </div>
+
+
 
               </form>
+
+
+            </div>
+            <div>
+
             </div>
             <div>
               <Accordion.Root className="flex w-full flex-col justify-center text-text-main">
@@ -96,6 +85,21 @@ export default function ActionAdmin({actionId, idx, fight,}: {
                     <Accordion.Panel
                       className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-text-main transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
                       <div>
+                        <form onSubmit={(e)=>{
+                          e.preventDefault()
+                          const fd = new FormData(e.currentTarget);
+                          const playerId = Number(fd.get("player_id"));
+                          console.log(playerId);
+                          setPlayer({
+                            token: token,
+                            performanceId: playerLine.performanceId,
+                            playerId: playerId
+                          })
+
+                        }}>
+                          <input defaultValue={Number(playerLine.playerId)} name="player_id" placeholder={"id участника"} type="number"/>
+                          <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить участника</button>
+                        </form>
                         <form className="w-full flex flex-col items-center" onSubmit={(e)=>{
                           e.preventDefault()
                           const fd = new FormData(e.currentTarget)
