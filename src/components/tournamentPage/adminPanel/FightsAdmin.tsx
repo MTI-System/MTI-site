@@ -1,10 +1,7 @@
 import {
   FightInformationInterface,
-  FightTeamInTournamentInterface,
-  TeamInTournamentInterface,
-  teamInTournamentSchema
 } from "@/types/TournamentsAPI";
-import {Accordion, Form, Select} from "@base-ui-components/react";
+import {Accordion, Select} from "@base-ui-components/react";
 import ActionAdmin from "@/components/tournamentPage/adminPanel/ActionAdmin";
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
 import {
@@ -13,8 +10,7 @@ import {
   useSetTeamsToFightMutation
 } from "@/api/tournaments/clientApiInterface";
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
-import {useEffect, useRef, useState} from "react";
-import {useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
 
 
 export function tsMsToHHMM(tsMs: number): string {
@@ -152,7 +148,7 @@ export default function FightsAdmin(
                 }}>
                   <div >
                     <p>Список жюри:</p>
-                    <input defaultValue={fight.jouries} name="juries" type="text" placeholder="перечислите жюри через запятую без пробела" className="border-border"/>
+                    <input defaultValue={fight.jouries.join(",")} name="juries" type="text" placeholder="перечислите жюри через запятую без пробела" className="border-border"/>
                     <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить жюри</button>
                   </div>
 

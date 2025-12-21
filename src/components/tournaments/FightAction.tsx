@@ -20,27 +20,8 @@ import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import Loading from "@/app/loading"
 import Link from "next/link"
 
-export default function Fight({
-  fightData,
-}: {
-  fightData: FightInformationInterface
-}) {
-  return (
-    <div className="flex flex-col p-6">
-      <h1 className="mx-auto my-5 text-center text-2xl font-bold text-text-main">
-        Действия боя
-      </h1>
 
-      <div className=" rounded-2xl border border-border overflow-x-auto">
-        <FightTable teams={fightData.teams} />
-      </div>
-
-      <ActionTabs fightData={fightData} />
-    </div>
-  )
-}
-
-function ActionTabs({
+export function ActionTabs({
   fightData,
 }: {
   fightData: FightInformationInterface

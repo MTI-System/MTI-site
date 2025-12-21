@@ -1,7 +1,8 @@
-import Fight from "@/components/tournaments/FightAction";
-
+import { ActionTabs } from "@/components/tournaments/FightAction";
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { FightInformationInterface } from "@/types/TournamentsAPI";
+import { FightTable } from "@/components/tournaments/FightTable";
 
 
 export default async function FightPage({ params }: { params: Promise<{ fightId: string}> }) {
@@ -30,4 +31,25 @@ export default async function FightPage({ params }: { params: Promise<{ fightId:
   }
 
   return <Fight fightData={fightData} />
+}
+
+
+function Fight({
+  fightData,
+}: {
+  fightData: FightInformationInterface
+}) {
+  return (
+    <div className="flex flex-col p-6">
+      <h1 className="mx-auto my-5 text-center text-2xl font-bold text-text-main">
+        Действия боя
+      </h1>
+
+      <div className=" rounded-2xl border border-border overflow-x-auto">
+        <FightTable teams={fightData.teams} />
+      </div>
+
+      <ActionTabs fightData={fightData} />
+    </div>
+  )
 }

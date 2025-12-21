@@ -1,4 +1,7 @@
-export function FightTable({teams}:{teams: {
+import { problemsApiServer } from "@/api/problems/serverApiInterface";
+import { makeProblemsStoreServer } from "@/api/problems/serverStore";
+
+export async function FightTable({teams}:{teams: {
         name: string;
         id: number;
         score: number;
@@ -9,6 +12,13 @@ export function FightTable({teams}:{teams: {
         reviewerScore?: number | undefined;
     }[]
   }) {
+    const store = makeProblemsStoreServer()
+    const problems = await Promise.all(teams.map(async item => {
+      const promise = store.dispatch(problemsApiServer.endpoints.getProblemsById.initiate({problemId: item.reported_problem}))
+      const { data: problemData, error } = await promise
+      return error ? null : problemData
+    
+    }))
   return (
     <table className="border-border w-full">
       <thead>
@@ -23,12 +33,12 @@ export function FightTable({teams}:{teams: {
           </tr>
       </thead>
       <tbody className="divide-y divide-border">
-        {teams.map((item) => (
+        {teams.map((item, index) => (
           <tr key={item.id} className="transition-colors text-text-main">
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.name ? item.name : "-"}</td>
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.score ? item.score : "-"}</td>
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.coefficient? item.coefficient : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm font-medium">{item.reported_problem ? item.reported_problem : "-"}</td>
+            <td className="px-4 py-3 text-center text-sm font-medium">{problems[index] ? problems[index].global_number : "-"}</td>
             <td className="px-4 py-3 text-center text-sm font-medium">{item.reporterScore ? item.reporterScore : "-"}</td>
             <td className="px-4 py-3 text-center text-sm font-medium">{item.opponentScore ? item.opponentScore : "-"}</td>
             <td className="px-4 py-3 text-center text-sm font-medium">{item.reviewerScore ? item.reviewerScore : "-"}</td>
