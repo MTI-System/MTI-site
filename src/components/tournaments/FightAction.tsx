@@ -62,7 +62,7 @@ export function ActionTabs({
 function FightAction({ actionId }: { actionId: number }) {
   const { data: actionData, isLoading: isActionData, error:actionErr } =
     useGetActionInformationQuery({ actionId })
-    const { data: problemData, isLoading: isProblemLoading, error: problemErr } = useGetProblemsByIdQuery({problemId: actionData?.pickedProblem}, {skip: !actionData || !actionData.pickedProblem})
+    const { data: problemData, isLoading: isProblemLoading, error: problemErr } = useGetProblemsByIdQuery({problemId: actionData!!.pickedProblem}, {skip: !actionData?.pickedProblem})
 
   if (isActionData || isProblemLoading) return <Loading/>
     if (actionErr) {

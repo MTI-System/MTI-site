@@ -1,4 +1,3 @@
-"use client"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
 import { useGetFightInformationQuery } from "@/api/tournaments/clientApiInterface"
 import { FightTable } from "./FightTable"

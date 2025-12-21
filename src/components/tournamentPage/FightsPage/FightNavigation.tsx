@@ -19,11 +19,11 @@ export default function FightNavigationWrapper() {
 
 function FightNavigation() {
     const tabs: TabInterface[] = [
-        {
-            title: "Общая информация",
-            value: "summary",
-            icon: "SummaryIcon.svg",
-        },
+        // {
+        //     title: "Общая информация",
+        //     value: "summary",
+        //     icon: "SummaryIcon.svg",
+        // },
         {
             title: "Расписание команд",
             value: "teamTimetable",

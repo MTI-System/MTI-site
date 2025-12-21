@@ -14,10 +14,10 @@ export async function FightTable({teams}:{teams: {
   }) {
     const store = makeProblemsStoreServer()
     const problems = await Promise.all(teams.map(async item => {
+      if (!item.reported_problem) return null
       const promise = store.dispatch(problemsApiServer.endpoints.getProblemsById.initiate({problemId: item.reported_problem}))
       const { data: problemData, error } = await promise
       return error ? null : problemData
-    
     }))
   return (
     <table className="border-border w-full">
