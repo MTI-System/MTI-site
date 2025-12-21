@@ -10,9 +10,9 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
   const { data: table, error } = await promise
   console.log("tournament fetch", table, error)
   // const table = await fetchTournamentTable(tournamentId)
-  const trStyle = "border border-border font-medium bg-transparent"
-  const maxScore = Math.max(...(table?.table_lines.map((l) => Math.max(...l.scores.map((s) => s.score))) ?? [0]))
-  const minScore = Math.min(...(table?.table_lines.map((l) => Math.min(...l.scores.map((s) => s.score))) ?? [0]))
+  const trStyle = "border border-border px-2 py-1 font-medium bg-transparent"
+  const maxScore = Math.max(...table?.table_lines.map(l=>Math.max(...l.scores.map(s=>s.score)))??[0])
+  const minScore = Math.min(...table?.table_lines.map(l=>Math.min(...l.scores.map(s=>s.score).filter(val=>val!==0)))??[0])
 
   // const maxFightsFilled = Math.max(...table?.table_lines.map(l=>l.scores.length)??[0])
   const maxFilledFightsIndex =
