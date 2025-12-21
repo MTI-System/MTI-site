@@ -159,6 +159,7 @@ export const fightActionSchema = z.object({
   pickedProblem: z.number().optional(),
   playerLines: z.array(
     z.object({
+      performanceId: z.number(),
       role: teamRoleInActionSchema.optional(),
       playerId: z.number().optional(),
       team: teamInTournamentSchema,
@@ -179,4 +180,5 @@ export type FightInfoByTournamentInterface = z.infer<typeof fightInfoByTournamen
 export type FightTeamInTournamentInterface = z.infer<typeof fightTeamInTournamentShema>
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>
+export type FightContainerCardInterface = z.infer<typeof FightContainerCard>
 export type BadgeInterface = z.infer<typeof Badge>

@@ -7,64 +7,131 @@ import {
 import {Accordion, Form, Select} from "@base-ui-components/react";
 import ActionAdmin from "@/components/tournamentPage/adminPanel/ActionAdmin";
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
-import {useGetTournamentTableQuery} from "@/api/tournaments/clientApiInterface";
+import {
+  useGetTournamentTableQuery,
+  useSetLinkAndTimestampToFightMutation,
+  useSetTeamsToFightMutation
+} from "@/api/tournaments/clientApiInterface";
+import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
+import {useEffect, useRef, useState} from "react";
+import {useRouter} from "next/navigation";
 
-const toHHMM = (timestampMs: number) => {
-  const d = new Date(timestampMs);
+
+export function tsMsToHHMM(tsMs: number): string {
+  const d = new Date(tsMs);
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");
   return `${hh}:${mm}`;
-};
+}
+
+export function hhmmToTsMs(hhmm: string, baseTsMs: number): number {
+  const m = hhmm.match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) throw new Error(`Bad time format: "${hhmm}"`);
+
+  const hh = Number(m[1]);
+  const mm = Number(m[2]);
+
+  const d = new Date(baseTsMs);
+  d.setHours(hh, mm, 0, 0);
+  return d.getTime();
+}
 
 export default function FightsAdmin(
   {fight, idx, tournamentId}: {fight: FightInformationInterface, idx: number, tournamentId: number}){
-  const {data: fullTableObject} = useGetTournamentTableQuery({id: tournamentId})
+  const {data: fullTableObject, refetch} = useGetTournamentTableQuery({id: tournamentId})
+  const token = useAppSelector(state=>state.auth.token)
   const teams = fullTableObject?.table_lines.map(l => {
     return {
       label: l.team_name,
       value: l.team_id.toString(),
     }
   })
+  const [addTimestampAndLink, {isLoading: idAddingLoading, isSuccess: idAddingSuccess}] = useSetLinkAndTimestampToFightMutation()
+  const [setTeamsToFight, {isLoading: isTeamsSettingLoading, isSuccess: idTeamsSettingSuccess}] = useSetTeamsToFightMutation()
+
+  useEffect(() => {
+    if (idAddingSuccess) {
+      refetch()
+    }
+  }, [idAddingSuccess]);
+  useEffect(() => {
+    if (idTeamsSettingSuccess) {
+      refetch()
+    }
+  }, [idTeamsSettingSuccess]);
   return (
     <>
+
       <Accordion.Root className="flex w-full flex-col justify-center text-gray-900 px-3">
         <Accordion.Item className="border border-border">
           <Accordion.Header>
             <Accordion.Trigger className="group relative flex w-full items-baseline justify-between gap-4 bg-bg-alt py-2 pr-1 pl-3 text-left font-medium hover:bg-hover focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
-              <p className="text-text-main">Комната {idx + 1}</p>
+              <p className="text-text-main">Комната {idx + 1} {fight.id}</p>
               <PlusIcon className="mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45 text-text-main" />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Panel className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-gray-600 transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
             <div className="px-2">
-              <form className="">
+              <form className="" onSubmit={(e)=>{
+                e.preventDefault()
+                const form = new FormData(e.currentTarget)
+                form.set("token", token)
+                //@ts-ignore
+                form.set("fightId", fight.id)
+                const data = Object.fromEntries(form.entries());
+                const hhmm = String(data.timestamp);           // "09:33"
+                (data as any).timestamp = hhmmToTsMs(hhmm, fight.startTime); // ms
+                //@ts-ignore
+                addTimestampAndLink(data)
+                console.log(data)
+              }}>
                 <div className="flex gap-2">
                   <p>Ссылка на комнату: </p>
-                  <input type="url" defaultValue={fight.location}/>
+                  <input type="url" name={"link"} defaultValue={fight.location}/>
                 </div>
                 <div className="flex gap-2">
                   <p>Время начала: </p>
-                  <input type="time" defaultValue={toHHMM(fight.startTime)}/>
+                  <input type="time" name={"timestamp"} defaultValue={tsMsToHHMM(fight.startTime)}/>
                 </div>
                 <button type="submit" className="bg-black/20 cursor-pointer">Сохранить изменения</button>
               </form>
 
               <div>
                 <p className="px-2 mt-2 font-bold">Команды в этой комнате</p>
-                <form>
+                <form onSubmit={(e)=>{
+                  e.preventDefault()
+                  const form = new FormData(e.currentTarget)
+                  const newForm = new FormData()
+                  const data = Object.fromEntries(form.entries());
+
+                  const teamsArr = [data.team1, data.team2]
+                  if (data.team3 !== "") {
+                    teamsArr.push(data.team3)
+                  }
+
+                  newForm.set("token", token)
+
+                  newForm.set("fightId", fight.id.toString())
+                  const finalData = Object.fromEntries(newForm.entries());
+                  //@ts-ignore
+                  finalData.teams = teamsArr
+                  console.log(finalData);
+                  //@ts-ignore
+                  setTeamsToFight(finalData)
+                }}>
                   <table>
                     <tbody>
                     <tr>
                       <th className="flex justify-between">
 
-                          <p>Команда 1</p>
+                          <p>Команда 1<br/>(первый доклад)</p>
                           <TeamsPicker name={"team1"} defaultValue={fight.teams[0]?.id?.toString()} teams={teams ?? []}/>
 
-                          <p>Команда 2</p>
-                          <TeamsPicker name={"team2"} defaultValue={fight.teams[0]?.id?.toString()} teams={teams ?? []}/>
+                          <p>Команда 2<br/>(первое оппонирование)</p>
+                          <TeamsPicker name={"team2"} defaultValue={fight.teams[1]?.id?.toString()} teams={teams ?? []}/>
 
-                          <p>Команда 3</p>
-                          <TeamsPicker name={"team3"} defaultValue={fight.teams[0]?.id?.toString()} teams={teams ?? []}/>
+                          <p>Команда 3<br/>(первое рецензирование)</p>
+                          <TeamsPicker name={"team3"} defaultValue={fight.teams[2]?.id?.toString()} teams={teams ?? []}/>
 
                       </th>
 
@@ -98,10 +165,15 @@ function TeamsPicker(
       value: string
     }[]}
 ){
-
+  const [pickedTeam, setPickedTeam] = useState<string | undefined>(defaultValue)
 
   return (
-    <Select.Root items={teams}>
+    <Select.Root items={teams} onValueChange={(selected)=>{
+      console.log(selected)
+      setPickedTeam(selected ?? "")
+    }}
+     value={pickedTeam ?? ""}>
+      <input name={name} value={pickedTeam ?? ""} onChange={()=>{}} className="hidden"/>
       <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 pr-3 pl-3.5 text-base bg-[canvas] text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
         <Select.Value />
         <Select.Icon className="flex">
