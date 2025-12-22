@@ -34,7 +34,7 @@ export default function ActionAdmin({actionId, idx, fight,}: {
   const problems = data?.map(problem => {
     return {
       value: problem.id.toString(),
-      label: `${problem.global_number}. ${problem.problem_translations[0].problem_name} ${problem.id.toString()}`
+      label: `${problem.global_number}. ${problem.problem_translations[0].problem_name}`
     }
   }) ?? []
   const token = useAppSelector(state=>state.auth.token)
@@ -61,7 +61,7 @@ export default function ActionAdmin({actionId, idx, fight,}: {
                   {data ? <ProblemPicker name="problemId" defaultValue={pickedProblemInfo?.id.toString()} teams={problems}/> : <Loading/>}
                 </ProblemsProviderWrapper>
 
-
+                <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить задачу</button>
 
               </form>
 
@@ -218,6 +218,7 @@ function ProblemPicker(
           </Select.Positioner>
         </Select.Portal>
       </Select.Root>
+
     </div>
 
   )

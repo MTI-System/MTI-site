@@ -62,7 +62,7 @@ export default function FightsAdmin(
         <Accordion.Item className="border border-border">
           <Accordion.Header>
             <Accordion.Trigger className="group relative flex w-full items-baseline justify-between gap-4 bg-bg-alt py-2 pr-1 pl-3 text-left font-medium hover:bg-hover focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
-              <p className="text-text-main">Комната {idx + 1} {fight.id}</p>
+              <p className="text-text-main">Комната {idx + 1}</p>
               <PlusIcon className="mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45 text-text-main" />
             </Accordion.Trigger>
           </Accordion.Header>

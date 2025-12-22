@@ -2,20 +2,9 @@
 
 import { useGetUserByIdQuery } from "@/api/users/clientApiInterface";
 import twclsx from "@/utils/twClassMerge";
+import {EventData} from "@/components/tournamentPage/FightsPage/FightTable";
 
-interface EventData {
-    actions: number[];
-    is_location_link: boolean;
-    location: string;
-    startTime: number;
-    jouries: number[];
-    teams: Array<{
-        id: number;
-        name: string;
-        score: number;
-        coefficient: number;
-    }>;
-}
+
 
 export default function FightTable({ fight, type }: { fight: EventData[], type: 'team' | 'jury' }) {
     const maxTeams = Math.max(...fight.map(room => room.teams.length));
