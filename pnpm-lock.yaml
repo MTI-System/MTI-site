@@ -26,6 +26,9 @@ importers:
       '@fontsource-variable/roboto-mono':
         specifier: ^5.2.8
         version: 5.2.8
+      '@hdcodedev/snowfall':
+        specifier: ^1.0.6
+        version: 1.0.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@reduxjs/toolkit':
         specifier: ^2.10.1
         version: 2.10.1(react-redux@9.2.0(@types/react@19.2.6)(react@19.2.0)(redux@5.0.1))(react@19.2.0)
@@ -71,9 +74,6 @@ importers:
       react-redux:
         specifier: ^9.2.0
         version: 9.2.0(@types/react@19.2.6)(react@19.2.0)(redux@5.0.1)
-      react-snowfall:
-        specifier: ^2.4.0
-        version: 2.4.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-textarea-autosize:
         specifier: ^8.5.9
         version: 8.5.9(@types/react@19.2.6)(react@19.2.0)
@@ -208,6 +208,12 @@ packages:
 
   '@fontsource-variable/roboto-mono@5.2.8':
     resolution: {integrity: sha512-6M2U3wGIUxYNKRrUoKls8BRRIPDA57T8J0agqwyDkiEHrLEEAqptsxcUl3eTm6tnRNEn6yEm4pCefvtnujebDA==}
+
+  '@hdcodedev/snowfall@1.0.6':
+    resolution: {integrity: sha512-0yb/Ibc13fsz1xS2g7+xBt67QHTsZhgvo/yj51vlGLsC9xjZjkeOw0RPuc/iOyJprIV0g8LpIZZS1nyaEbaoow==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -932,9 +938,6 @@ packages:
     peerDependencies:
       react: ^19.2.0
 
-  react-fast-compare@3.2.2:
-    resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
-
   react-icons@5.5.0:
     resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
     peerDependencies:
@@ -954,12 +957,6 @@ packages:
         optional: true
       redux:
         optional: true
-
-  react-snowfall@2.4.0:
-    resolution: {integrity: sha512-KAPMiGnxt11PEgC2pTVrTQsvk5jt1kLUtG+ZamiKLphTZ7GiYT1Aa5kX6jp4jKWq1kqJHchnGT9CDm4g86A5Gg==}
-    peerDependencies:
-      react: "^16.8 ||\_17.x || 18.x || 19.x"
-      react-dom: ^16.8 || 17.x || 18.x || 19.x
 
   react-textarea-autosize@8.5.9:
     resolution: {integrity: sha512-U1DGlIQN5AwgjTyOEnI1oCcMuEr1pv1qOtklB2l4nyMGbHzWrI0eFsYK0zos2YWqAolJyG0IWJaqWmWj5ETh0A==}
@@ -1192,6 +1189,11 @@ snapshots:
   '@fontsource-variable/roboto-flex@5.2.8': {}
 
   '@fontsource-variable/roboto-mono@5.2.8': {}
+
+  '@hdcodedev/snowfall@1.0.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+    dependencies:
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
 
   '@img/colour@1.0.0':
     optional: true
@@ -1725,8 +1727,6 @@ snapshots:
       react: 19.2.0
       scheduler: 0.27.0
 
-  react-fast-compare@3.2.2: {}
-
   react-icons@5.5.0(react@19.2.0):
     dependencies:
       react: 19.2.0
@@ -1741,12 +1741,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.6
       redux: 5.0.1
-
-  react-snowfall@2.4.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
-    dependencies:
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
-      react-fast-compare: 3.2.2
 
   react-textarea-autosize@8.5.9(@types/react@19.2.6)(react@19.2.0):
     dependencies:

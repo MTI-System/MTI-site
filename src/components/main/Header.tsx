@@ -17,7 +17,7 @@ export default async function Header() {
 
   return (
     <>
-      <header className="bg-bg-alt flex justify-between px-5 py-3 transition">
+      <header className="bg-bg-alt flex justify-between px-5 py-3 transition" data-snowfall="ignore">
         <div className="flex h-fit items-center gap-1 font-bold">
           <Link href={"/"} className="flex h-fit items-center">
             <div className="bg-text-main size-16 mask-[url('https://api.mtiyt.ru/files/get/LogoType.svg')] mask-contain mask-center mask-no-repeat"></div>
