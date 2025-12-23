@@ -1,7 +1,28 @@
 const isServer = typeof window === "undefined";
 
-export const protocol = process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ? `http` : `https`
-export const webSocketProtocol = process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ? `ws` : `wss`
+
+export const protocol =
+  isServer ?
+    process.env.NEXT_PUBLIC_IS_LOCAL === "true" ?
+      process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ?
+        "http"
+        : "https"
+      : "http"
+    : process.env.NEXT_PUBLIC_IS_ON_DEV === "true"
+      ? "http"
+      : "https"
+
+export const webSocketProtocol =
+  isServer ?
+    process.env.NEXT_PUBLIC_IS_LOCAL === "true" ?
+      process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ?
+        "ws"
+        : "wss"
+      : "ws"
+    : process.env.NEXT_PUBLIC_IS_ON_DEV === "true"
+      ? "ws"
+      : "wss"
+
 export const GATEWAY_API =
   isServer ?
     process.env.NEXT_PUBLIC_IS_LOCAL === "true" ?
