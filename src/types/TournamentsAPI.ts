@@ -1,4 +1,5 @@
-import { z } from "zod"
+import {z} from "zod"
+import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage";
 
 export const FightContainerCard = z.object({
   id: z.number(),
@@ -17,7 +18,12 @@ export const Badge = z.object({
   badge_title: z.string(),
   badge_flag: z.string(),
 })
-
+export const teamInTournamentSchema = z.object({
+  id: z.number(),
+  name: z.string().nonempty(),
+  global_team_id: z.number().optional(),
+  players: z.array(z.number()),
+})
 export const TournamentCard = z.object({
   id: z.number(),
   title: z.string(),
@@ -32,6 +38,7 @@ export const TournamentCard = z.object({
   start_date_timestamp: z.number(),
   end_date_timestamp: z.number(),
   tournament_type: z.number(),
+  teams: z.array(teamInTournamentSchema),
 })
 
 export const TournamentScoreEntity = z.object({
@@ -116,20 +123,15 @@ export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequest
 //   file_size: string | null
 // }
 
-export const teamInTournamentSchema = z.object({
-  id: z.number(),
-  name: z.string().nonempty(),
-  global_team_id: z.number().optional(),
-  players: z.array(z.number()),
+
+export const fightTeamInTournamentShema = teamInTournamentSchema.omit({global_team_id: true, players: true}).extend({
+  score: z.number(),
+  coefficient: z.number(),
+  reported_problem: z.number().optional(),
+  reporterScore: z.number().optional(),
+  opponentScore: z.number().optional(),
+  reviewerScore: z.number().optional(),
 })
-export const fightTeamInTournamentShema =     teamInTournamentSchema.omit({ global_team_id: true, players: true }).extend({
-    score: z.number(),
-    coefficient: z.number(),
-    reported_problem: z.number().optional(),
-    reporterScore: z.number().optional(),
-    opponentScore: z.number().optional(),
-    reviewerScore: z.number().optional(),
-  })
 
 export const fightInformationSchema = z.object({
   id: z.number(),

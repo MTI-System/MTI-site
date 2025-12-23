@@ -35,7 +35,7 @@ export default function FightTable({ type }: { type: 'jury' | 'team' }) {
             <UsersProviderWrapper>
                 <Accordion.Root multiple className="flex w-full flex-col gap-2.5 justify-center text-text-main">
                     {Object.entries(fightData ?? {}).map(([fightNum, fight]) =>
-                        fight.length > 0 && <FightScheduleTable  key={fightNum} type={type} fight={fight} fightNum={fightNum}/>
+                        fight.length > 0 && <FightScheduleTable  key={fightNum} type={type} fight={fight} fightNum={fightNum} />
                     )}
                 </Accordion.Root>
             </UsersProviderWrapper>

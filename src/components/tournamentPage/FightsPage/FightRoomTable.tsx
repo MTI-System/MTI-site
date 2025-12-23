@@ -22,11 +22,13 @@ export default function FightTable({ fight, type }: { fight: EventData[], type: 
         }).format(date)
     }
 
-    const JuryCell = ({ juryId }: { juryId: number }) => {
+    const JuryCell = ({ juryId, leader }: { juryId: number, leader: boolean }) => {
         const { data: userData, isLoading: userIsLoading, isError: userIsError } = useGetUserByIdQuery({ id: juryId })
         return (
-            <div className="text-center text-text-main px-2 py-2 font-medium">
-                {userIsLoading ? <div className="w-full min-w-50 h-full animate-pulse bg-bg-main min-h-5 rounded-full"></div> : <p className={twclsx("w-full text-xenter", { "text-accent-warning": userIsError })}>{userIsError || !userData ? "Error" : userData.firstName + " " + userData.secondName + " " + userData.thirdName}</p>}
+            <div className="text-center text-text-main px-2 py-2">
+                {userIsLoading ? <div className="w-full min-w-50 h-full animate-pulse bg-bg-main min-h-5 rounded-full"></div> :
+                  <p className={twclsx("w-full text-center", { "text-accent-warning": userIsError, "font-bold": leader })}>{userIsError || !userData ? "Error" :
+                    userData.secondName + " " + userData.firstName + " " + userData.thirdName} {leader ? " (ведущий)" : ""}</p>}
             </div>
         );
     };
@@ -51,8 +53,8 @@ export default function FightTable({ fight, type }: { fight: EventData[], type: 
                     {type === 'jury' && maxJouriesArr.map((item, idx) => {
                         const juryId = fightItem.jouries[idx];
                         return (
-                            <div key={idx} className="border-t border-border">
-                                <JuryCell juryId={juryId} />
+                            <div key={idx} className={twclsx("border-t border-border")}>
+                              {idx < fightItem.jouries.length && <JuryCell leader={idx===0} juryId={juryId}/>}
                             </div>
                         )}
                     )}
