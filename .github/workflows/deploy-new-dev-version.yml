@@ -34,3 +34,5 @@ jobs:
           tags: mof1us/frontend_mti_dev:latest
           load: true
           push: true
+          build-args: |
+            NEXT_PUBLIC_IS_ON_DEV=true

@@ -1,4 +1,5 @@
-import { z } from "zod"
+import {z} from "zod"
+import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage";
 
 export const FightContainerCard = z.object({
   id: z.number(),
@@ -17,7 +18,12 @@ export const Badge = z.object({
   badge_title: z.string(),
   badge_flag: z.string(),
 })
-
+export const teamInTournamentSchema = z.object({
+  id: z.number(),
+  name: z.string().nonempty(),
+  global_team_id: z.number().optional(),
+  players: z.array(z.number()),
+})
 export const TournamentCard = z.object({
   id: z.number(),
   title: z.string(),
@@ -32,6 +38,7 @@ export const TournamentCard = z.object({
   start_date_timestamp: z.number(),
   end_date_timestamp: z.number(),
   tournament_type: z.number(),
+  teams: z.array(teamInTournamentSchema),
 })
 
 export const TournamentScoreEntity = z.object({
@@ -116,6 +123,67 @@ export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequest
 //   file_size: string | null
 // }
 
+
+export const fightTeamInTournamentShema = teamInTournamentSchema.omit({global_team_id: true, players: true}).extend({
+  score: z.number(),
+  coefficient: z.number(),
+  reported_problem: z.number().optional(),
+  reporterScore: z.number().optional(),
+  opponentScore: z.number().optional(),
+  reviewerScore: z.number().optional(),
+})
+
+export const fightInformationSchema = z.object({
+  id: z.number(),
+  actions: z.array(z.number()),
+  is_location_link: z.boolean(),
+  location: z.string().nonempty(),
+  startTime: z.number(),
+  jouries: z.array(z.number()),
+  teams: z.array(
+    fightTeamInTournamentShema
+  ),
+})
+
+export const teamRoleInActionSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  baseCoefficient: z.number(),
+})
+
+export const teamScoreInActionSchema = z.object({
+  id: z.number(),
+  value: z.number(),
+  jury: z.number(),
+})
+
+export const fightActionSchema = z.object({
+  pickedProblem: z.number().optional(),
+  playerLines: z.array(
+    z.object({
+      performanceId: z.number(),
+      role: teamRoleInActionSchema.optional(),
+      playerId: z.number().optional(),
+      team: teamInTournamentSchema,
+      finalScore: z.number(),
+      scores: z.array(teamScoreInActionSchema),
+    }),
+  ),
+})
+
+export const fightContainerInfoSchema = z.array(fightInformationSchema)
+
+export const fightInfoByTournamentSchema = z.record(z.string(), fightContainerInfoSchema)
+
+export type FightActionInterface = z.infer<typeof fightActionSchema>
+export type TeamRoleInActionInterface = z.infer<typeof teamRoleInActionSchema>
+export type TeamScoreInActionInterface = z.infer<typeof teamScoreInActionSchema>
+export type TeamInTournamentInterface = z.infer<typeof teamInTournamentSchema>
+export type FightInformationInterface = z.infer<typeof fightInformationSchema>
+export type FightInfoByTournamentInterface = z.infer<typeof fightInfoByTournamentSchema>
+export type FightContainerInfoInterface = z.infer<typeof fightContainerInfoSchema>
+
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>
+export type FightContainerCardInterface = z.infer<typeof FightContainerCard>
 export type BadgeInterface = z.infer<typeof Badge>

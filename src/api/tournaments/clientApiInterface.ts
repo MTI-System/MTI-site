@@ -35,8 +35,27 @@ export const {
   useGetAvailableYearsQuery,
   useGetAvailableTournamentTypesQuery,
   useGetTournamentCardsQuery,
+  useGetAllTournamentCardsQuery,
   useGetOrganizatorTournamentsMutation,
   useGetTournamentCardQuery,
   useGetTournamentTableQuery,
   useAddTournamentMutation,
+  useGetFightInformationQuery,
+  useGetActionInformationQuery,
+  useGetTeamInTournamentQuery,
+  useGetFightContainerInfoQuery,
+  useGetFightInfoByTournamentQuery,
+  useGetFightContainerCardQuery,
+
+
+  // TMP ADMIN PANEL. DELETE IN FUTURE
+  useAddFightMutation,
+  useSetTeamsToFightMutation, //maked
+  useSetJuryToFightMutation,
+  useSetLinkAndTimestampToFightMutation, // maked
+  useAddActionToFightMutation, // Не хочу это делать
+  useSetDraftResultMutation, // maked
+  useSetScoresMutation,
+  useSetPlayerToPerformanceMutation
+
 } = tournamentsApiClient

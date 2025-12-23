@@ -1,0 +1,220 @@
+version: "3.8"
+
+services:
+  postgresDatabase:
+    image: postgres:17
+    pull_policy: always
+
+    container_name: postgres_database_dev
+    ports:
+      - "5431:5432"
+    networks:
+      mti-dev-network:
+        aliases:
+          - postgres
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASS}
+      PGDATA: /var/lib/postgresql/mti-dev-data/mti-dev-pgdata
+    volumes:
+      - mti-dev-pgdata:/var/lib/postgresql/mti-dev-data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -h localhost -p 5432" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+
+
+  frontend:
+    image: mof1us/frontend_mti_dev:latest
+    pull_policy: always
+    container_name: site_frontend_dev
+    ports:
+      - "5000:3000"
+    networks:
+      mti-dev-network:
+        aliases:
+          - frontend
+    environment:
+      IS_ON_DEV: true
+
+  eurekaServer:
+    image: mof1us/eureka-mti-service-dev:latest
+    pull_policy: always
+    container_name: eureka_server_dev
+    ports:
+      - "5001:8761"
+    networks:
+      mti-dev-network:
+        aliases:
+          - eureka
+
+  eurekaHealth:
+    image: curlimages/curl:8.10.1
+    container_name: eureka_health_dev
+    command: ["sh","-c","sleep infinity"]   # <— держим контейнер живым
+    depends_on:
+      eurekaServer:
+        condition: service_started
+    networks:
+      - mti-dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://eureka:8761/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+
+  gateway:
+    image: mof1us/api-gateway-mti-dev:latest
+    pull_policy: always
+    container_name: gateway_service_dev
+    ports:
+      - "5002:8080"
+    networks:
+      mti-dev-network:
+        aliases:
+          - gateway
+    depends_on:
+      eurekaHealth:
+        condition: service_healthy
+      postgresDatabase:
+        condition: service_healthy
+    environment:
+      EUREKA_SERVER_PORT: 8761
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: AuthMtiDatabase
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASS}
+      EUREKA_SERVER_HOST: eureka
+      JWT_SECRET: ${JWT_SECRET}
+      BACKEND_API_KEY: ${BACKEND_API_KEY}
+
+  problemsService:
+    image: mof1us/problems-mti-service-dev:latest
+    pull_policy: always
+    container_name: problems_service_dev
+    environment:
+      EUREKA_SERVER_PORT: 8761
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ProblemsMtiDatabase
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASS}
+      EUREKA_SERVER_HOST: eureka
+      API_GATEWAY: gateway
+    depends_on:
+      eurekaHealth:
+        condition: service_healthy
+      postgresDatabase:
+        condition: service_healthy
+    networks:
+      - mti-dev-network
+
+
+  materialsService:
+    image: mof1us/material-service-mti-dev:latest
+    pull_policy: always
+    environment:
+      EUREKA_SERVER_PORT: 8761
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: MaterialsMtiDatabase
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASS}
+      EUREKA_SERVER_HOST: eureka
+      API_GATEWAY: gateway
+    depends_on:
+      eurekaHealth:
+        condition: service_healthy
+      postgresDatabase:
+        condition: service_healthy
+    networks:
+      - mti-dev-network
+
+
+  filesService:
+    image: mof1us/files-service-mti:latest
+    pull_policy: always
+    environment:
+      FILE_DIR: /files
+    volumes:
+      - /opt/mti/files:/files:rw
+    networks:
+      - mti-dev-network
+
+
+  notificationsService:
+    image: mof1us/notifications-mti-service-dev:latest
+    pull_policy: always
+    environment:
+      EUREKA_SERVER_PORT: 8761
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: NotificationsMtiDatabaseDev
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASS}
+      EUREKA_SERVER_HOST: eureka
+      API_GATEWAY: gateway
+      BACKEND_API_KEY: ${BACKEND_API_KEY}
+    networks:
+      - mti-dev-network
+
+  usersSevice:
+    image: mof1us/users-service-mti-dev:latest
+    pull_policy: always
+    environment:
+      EUREKA_SERVER_PORT: 8761
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: UsersMtiDatabaseDev
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASS}
+      EUREKA_SERVER_HOST: eureka
+      API_GATEWAY: gateway
+      BACKEND_API_KEY: ${BACKEND_API_KEY}
+    networks:
+      - mti-dev-network
+
+  registrationService:
+    image: mof1us/registration-service-mti-dev:latest
+    pull_policy: always
+    environment:
+      EUREKA_SERVER_PORT: 8761
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: RegistrationMtiDatabaseDev
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASS}
+      EUREKA_SERVER_HOST: eureka
+      API_GATEWAY: gateway
+      BACKEND_API_KEY: ${BACKEND_API_KEY}
+    networks:
+      - mti-dev-network
+
+  tournamentsService:
+    image: mof1us/tournaments-mti-service:latest
+    pull_policy: always
+    environment:
+      EUREKA_SERVER_PORT: 8761
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: TournamentsMtiDatabaseDev
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASS}
+      EUREKA_SERVER_HOST: eureka
+      API_GATEWAY: gateway
+      BACKEND_API_KEY: ${BACKEND_API_KEY}
+    networks:
+      - mti-dev-network
+
+
+networks:
+  mti-dev-network:
+    driver: bridge
+volumes:
+  mti-dev-pgdata: { }
+  mti-files-serverДЕЛО ДРАКДЕЛО ДРАК: { }

@@ -42,7 +42,7 @@ export default function TournamentsPageTabs({
       href: `/tournaments/${tournamentCard.id}/info/teams`,
       title: "Команды",
       description: "Все зарегистрированные команды",
-      isLocked: true,
+      isLocked: tournamentCard.badge.badge_flag !== "PROCESSING",
     },
     {
       href: `/tournaments/${tournamentCard.id}/info/problems`,
@@ -61,14 +61,14 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/results/personal`,
       title: "Личный зачет",
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
+      isLocked: true || tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
   ]
 
   const fightsLinks: LinkInterface[] = [
     {
-      href: `/tournaments/${tournamentCard.id}/fights/all`,
-      title: `Все бои`,
+      href: `/tournaments/${tournamentCard.id}/fights`,
+      title: `Расписание`,
       isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
     ...tournamentCard.fight_containers_cards.map((container) => ({

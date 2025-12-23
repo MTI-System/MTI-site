@@ -1,0 +1,77 @@
+import UsersProviderWrapper from "@/api/users/ClientWrapper"
+import { useGetFightInformationQuery } from "@/api/tournaments/clientApiInterface"
+import { FightTable } from "./FightTable"
+import { UserAvatarWithTitleByID } from "../ui/Avatars"
+import { FightContainerInfoInterface, FightInformationInterface } from "@/types/TournamentsAPI"
+import Link from "next/link"
+
+export default function FightList({ fightsData }: { fightsData: FightContainerInfoInterface }) {
+  return (
+    <div className="flex flex-col items-center px-4">
+      <h1 className="text-text-main mx-auto mb-8 text-center text-2xl font-bold">Раздел боев</h1>
+      <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
+        {fightsData.map((item) => (
+          <FightCard key={item.id} cardData={item} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export function FightCard({ cardData }: { cardData: FightInformationInterface }) {
+  if (cardData.teams.length > 0) {
+    return (
+      <>
+        <div className="bg-bg-alt border-border max-w-full rounded-2xl border px-7 py-4">
+          <Link href={"./fight/" + cardData.id}>
+            <h2 className="text-text-main mx-auto mb-5 text-center text-2xl font-bold uppercase">room</h2>
+          </Link>
+
+          <div className="border-border mb-4 border-b pb-4 md:mb-5">
+            <div className="overflow-x-auto">
+              <FightTable teams={cardData?.teams} />
+            </div>
+          </div>
+
+          <h2 className="text-text-main mx-auto mt-5 mb-5 text-center text-2xl font-bold uppercase">jury</h2>
+
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4 lg:gap-8">
+            <UsersProviderWrapper>
+              <UserAvatarWithTitleByID PeoplesIDs={cardData?.jouries} />
+            </UsersProviderWrapper>
+          </div>
+        </div>
+      </>
+    )
+  } else {
+    return (
+      <>
+        {/* <div className="border max-w-full bg-bg-alt border-border rounded-2xl py-4 px-7">
+
+                <h2 className="font-bold mx-auto text-2xl text-center mb-5 text-text-main uppercase text-">пока тут ничего нет</h2>
+
+            </div> */}
+      </>
+    )
+  }
+}
+// }
+
+//     return (
+//         <div className="border bg-bg-alt border-border rounded-2xl p-4 md:p-6 w-full overflow-hidden">
+//             <h2 className="font-bold text-xl md:text-2xl text-center mb-4 md:mb-5 text-text-main uppercase">room</h2>
+
+//             <div className='border-b border-border mb-4 md:mb-5 pb-4'>
+//                 <div className="overflow-x-auto">
+//                     <FightTable teams={fightData?.teams || []} />
+//                 </div>
+//             </div>
+
+//             <h2 className="font-bold text-xl md:text-2xl text-center mb-4 md:mb-5 text-text-main uppercase">jury</h2>
+
+//             <div className='flex flex-wrap justify-center gap-3 md:gap-4'>
+//                 <UserAvatarWithTitleByID PeoplesIDs={fightData?.jouries} />
+//             </div>
+//         </div>
+//     )
+// }

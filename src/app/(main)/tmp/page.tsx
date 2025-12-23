@@ -1,32 +1,7 @@
-"use client"
-import { Forms } from "@/components/forms";
-import CheckboxGroupRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxGroupRegistrationField";
-import CheckboxRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxRegistrationField";
-import { useState } from "react";
-
-export default function UploadImage() {
-  const [imgSrc, setImgSrc] = useState("");
-  //@ts-ignore
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const url = URL.createObjectURL(file); // временная ссылка на файл
-    console.log("url: ", url)
-    setImgSrc(url);
-  };
-
+export default function Page() {
   return (
     <div>
-      <input type="file" accept="image/*" onChange={handleChange} />
-
-      {imgSrc && (
-        <img
-          src={imgSrc}
-          alt="preview"
-          style={{ maxWidth: "300px", marginTop: 16 }}
-        />
-      )}
+      <h1>Tmp</h1>
     </div>
-  );
+  )
 }
