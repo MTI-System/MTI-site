@@ -14,7 +14,7 @@ export default async function InfoProblemsTournamentPage(
   )
   return (
     <>
-      <h1 className="w-full text-center font-bold text-2xl mb-4">Команды, принимающие участие в турнире</h1>
+      <h1 className="w-full text-center font-bold text-2xl mb-4 text-text-main">Команды, принимающие участие в турнире</h1>
       <div className="flex flex-col gap-2">
         {tournamentCard?.teams.map(t=>(
           <div key={t.id} className="px-10 py-3 border-border rounded-2xl border">

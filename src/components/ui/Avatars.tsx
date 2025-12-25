@@ -24,7 +24,7 @@ const Cell = ({juryID, changeAvatar, changeTextUnderAvatar}:{juryID: number, cha
           
           </Avatar.Root>
           
-          {(userData.auth===null)?<p>{userData.secondName} {userData.firstName}. {userData.thirdName}.</p>:<p>{userData.secondName} {userData.firstName} {userData.thirdName}</p>}
+          {(userData.auth===null)?<p>{userData.secondName} {userData.firstName}. {userData.thirdName ? userData.thirdName + "." : ""}</p>:<p>{userData.secondName} {userData.firstName} {userData.thirdName}</p>}
               
         </div>
       )
