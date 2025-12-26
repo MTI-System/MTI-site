@@ -39,7 +39,7 @@ function FightNavigation() {
     return (
         <>
             <Tabs.Root className="w-full size-full px-3" defaultValue={tabs[0].value}>
-                <Tabs.List className="w-ful border border-border rounded-xl relative z-0 flex flex-col md:flex-row gap-1 overflow-x-auto px-4 py-1 md:py-0">
+                <Tabs.List className="w-ful border border-border rounded-xl relative z-0 flex flex-row md:flex-row gap-1 overflow-x-auto px-4 py-1 md:py-0 ">
 
                     {tabs.map((item, idx) => (
                         <Tabs.Tab key={idx}
