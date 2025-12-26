@@ -83,7 +83,7 @@ function FightAction({ actionId }: { actionId: number }) {
         <div className="mb-1 text-sm uppercase text-text-alt">
           Задача
         </div>
-        <Link href={`/problems/${problemData?.id}`} className="text-lg font-bold uppercase">
+        <Link href={`/problems/${problemData?.id}`} className="text-lg font-bold uppercase text-text-main">
           {problemData?.global_number+". " + problemData?.problem_translations[0].problem_name}
         </Link>
       </div>
@@ -97,7 +97,7 @@ function FightAction({ actionId }: { actionId: number }) {
                       {line.role?.title ?? "—"}
                     </div>
 
-                    <div className="font-medium">
+                    <div className="font-medium text-text-main">
                       {line.team.name}
                     </div>
                   
