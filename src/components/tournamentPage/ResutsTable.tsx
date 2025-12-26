@@ -33,7 +33,7 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                 <td key={idx} className="bg-card-alt border-border text-text-main border font-medium">
                   <Link
                     className="text-text-main hover:bg-hover block h-full w-full cursor-pointer px-2 py-1"
-                    href={`/tournaments/${tournamentId}/fight/${score.fight_container_id}`}
+                    href={`/tournaments/${tournamentId}/fights/${score.fight_container_id}`}
                   >
                     {score.fight_container_name}
                   </Link>
