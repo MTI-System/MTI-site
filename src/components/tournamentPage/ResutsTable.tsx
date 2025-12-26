@@ -22,8 +22,8 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
   return (
     <>
       <h2 className="text-text-main w-full pb-5 text-center text-2xl font-bold">Турнирная таблица</h2>
-      <div className="flex items-center justify-center">
-        <table className="border-border w-full border-separate border-spacing-0 overflow-hidden rounded-xl border">
+      <div className="flex items-start justify-start overflow-x-auto shrink-0">
+        <table className="border-border w-full border-separate border-spacing-0 overflow-hidden rounded-xl border shrink-0">
           <tbody>
             <tr key={0}>
               <td className="bg-card-alt border-border text-text-main border font-bold">
