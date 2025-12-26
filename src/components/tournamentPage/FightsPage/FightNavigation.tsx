@@ -50,7 +50,7 @@ function FightNavigation() {
                         </Tabs.Tab>
                     ))}
 
-                    <Tabs.Indicator className="w-ful absolute top-1/2 left-0 z-[-1] h-6 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-sm bg-gray-100 transition-all duration-200 ease-in-out" />
+                    <Tabs.Indicator className="w-ful absolute top-1/2 left-0 z-[-1] h-6 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-sm bg-bg-main transition-all duration-200 ease-in-out" />
                 </Tabs.List>
 
                 {tabs.map((item, idx) => (
