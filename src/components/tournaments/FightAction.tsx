@@ -186,8 +186,10 @@ function UserCell({ userId }: { userId?: number }) {
 
   return (
     <div className="items-center justify-center text-center text-wrap">
-      {data.secondName} {data.firstName}
-      {data.auth === null ? "." : ""} {data.thirdName}
+      {data.secondName}{" "}
+      {data.auth === null
+        ? `${data.firstName}.${data.thirdName && data.thirdName + "."}`
+        : `${data.firstName} ${data.thirdName}`}
     </div>
   )
 }

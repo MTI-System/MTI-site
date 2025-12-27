@@ -29,10 +29,21 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
         {userIsLoading ? (
           <div className="bg-bg-main h-full min-h-5 w-full min-w-50 animate-pulse rounded-full"></div>
         ) : (
+          // <p className={twclsx("w-full text-center", { "text-accent-warning": userIsError, "font-bold": leader })}>
+          //   {userIsError || !userData
+          //     ? "Error"
+          //     : userData.secondName + " " + userData.firstName + " " + userData.thirdName}{" "}
+          //   {leader ? " (ведущий)" : ""}
+          // </p>
+
           <p className={twclsx("w-full text-center", { "text-accent-warning": userIsError, "font-bold": leader })}>
             {userIsError || !userData
               ? "Error"
-              : userData.secondName + " " + userData.firstName + " " + userData.thirdName}{" "}
+              : userData.secondName +
+                " " +
+                (userData.auth === null
+                  ? `${userData.firstName}.${userData.thirdName && userData.thirdName + "."}`
+                  : `${userData.firstName} ${userData.thirdName}`)}
             {leader ? " (ведущий)" : ""}
           </p>
         )}
