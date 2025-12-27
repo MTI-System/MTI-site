@@ -50,13 +50,14 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
           className={`border-border text-text-main w-full overflow-auto rounded-xl border text-center font-medium md:w-fit md:shrink-0 md:grow md:rounded-none md:border-0 ${fightIdx > 0 ? "md:border-l-border md:border-l" : ""}`}
         >
           {true ? (
-            <Link
+            <a
+              target="_blank"
               href={fightItem.location}
               className="border-border hover:text-text-alt flex items-center justify-center gap-2 border-b p-2 transition-colors"
             >
               <p>Комната {roomNames[fightIdx]}</p>
               <FaExternalLinkAlt />
-            </Link>
+            </a>
           ) : (
             <div className="border-border flex items-center justify-center border-b p-2">{fightItem.location}</div>
           )}
