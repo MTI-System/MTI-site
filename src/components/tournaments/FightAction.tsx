@@ -83,7 +83,7 @@ function FightAction({ actionId }: { actionId: number }) {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {actionData.playerLines.map((line) => (
           <div key={line.role?.id} className="border-border flex w-full flex-1 flex-col rounded-2xl border">
-            <div className="m-2 flex flex-none flex-col gap-3 text-center">
+            <div className="text-text-main m-2 flex flex-none flex-col gap-3 text-center">
               <div className="text-text-alt bg- uppercase">{line.role?.title ?? "—"}</div>
 
               <div className="text-text-main font-medium">{line.team.name}</div>
