@@ -4,9 +4,7 @@ import * as React from "react"
 import { Tabs } from "@base-ui-components/react/tabs"
 import { Accordion } from "@base-ui-components/react/accordion"
 
-import {
-  FightInformationInterface,
-} from "@/types/TournamentsAPI"
+import { FightInformationInterface } from "@/types/TournamentsAPI"
 
 import { useGetActionInformationQuery } from "@/api/tournaments/clientApiInterface"
 import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
@@ -20,12 +18,7 @@ import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import Loading from "@/app/loading"
 import Link from "next/link"
 
-
-export function ActionTabs({
-  fightData,
-}: {
-  fightData: FightInformationInterface
-}) {
+export function ActionTabs({ fightData }: { fightData: FightInformationInterface }) {
   return (
     <Tabs.Root defaultValue={`${fightData.actions[0]}_action`}>
       <Tabs.List className="relative z-0 mt-6 flex justify-center gap-1 px-1">
@@ -33,24 +26,20 @@ export function ActionTabs({
           <Tabs.Tab
             key={id}
             value={`${id}_action`}
-            className="flex h-8 items-center justify-center whitespace-nowrap px-2 text-sm font-medium text-gray-600 outline-none hover:text-gray-900 data-active:text-gray-900"
+            className="text-text-alt hover:text-text-main data-active:text-text-main flex h-8 items-center justify-center px-2 text-sm font-medium whitespace-nowrap transition-colors outline-none"
           >
-            {`Действие ${index+1}`}
+            {`Действие ${index + 1}`}
           </Tabs.Tab>
         ))}
 
-        <Tabs.Indicator className="absolute left-0 top-1/2 z-[-1] h-6 w-(--active-tab-width) -translate-y-1/2 translate-x-(--active-tab-left) rounded-sm bg-gray-100 transition-all duration-200" />
+        <Tabs.Indicator className="bg-bg-main absolute top-1/2 left-0 z-[-1] h-6 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-sm transition-all duration-200" />
       </Tabs.List>
 
       {fightData.actions.map((id) => (
-        <Tabs.Panel
-          key={id}
-          value={`${id}_action`}
-          className="mt-5"
-        >
+        <Tabs.Panel key={id} value={`${id}_action`} className="mt-5">
           <TournamentsProviderWrapper>
             <ProblemsProviderWrapper>
-            <FightAction actionId={id} />
+              <FightAction actionId={id} />
             </ProblemsProviderWrapper>
           </TournamentsProviderWrapper>
         </Tabs.Panel>
@@ -60,60 +49,53 @@ export function ActionTabs({
 }
 
 function FightAction({ actionId }: { actionId: number }) {
-  const { data: actionData, isLoading: isActionData, error:actionErr } =
-    useGetActionInformationQuery({ actionId })
-    const { data: problemData, isLoading: isProblemLoading, error: problemErr } = useGetProblemsByIdQuery({problemId: actionData?.pickedProblem}, {skip: !actionData?.pickedProblem})
+  const { data: actionData, isLoading: isActionData, error: actionErr } = useGetActionInformationQuery({ actionId })
+  const {
+    data: problemData,
+    isLoading: isProblemLoading,
+    error: problemErr,
+  } = useGetProblemsByIdQuery({ problemId: actionData?.pickedProblem }, { skip: !actionData?.pickedProblem })
 
-  if (isActionData || isProblemLoading) return <Loading/>
-    if (actionErr) {
+  if (isActionData || isProblemLoading) return <Loading />
+  if (actionErr) {
     return (
       <div className="p-4">
-        <h1 className="text-red-600 text-xl font-bold">Error</h1>
+        <h1 className="text-xl font-bold text-red-600">Error</h1>
         <p className="mt-2">{JSON.stringify(actionErr)}</p>
       </div>
     )
   }
   if (!actionData) return <p className="text-red-500">Error</p>
-  
-
 
   return (
-    <div className="flex w-full gap-6 flex-col">
-      <div className="w-full  p-4 text-center">
-        <div className="mb-1 text-sm uppercase text-text-alt">
-          Задача
-        </div>
-        <Link href={`/problems/${problemData?.id}`} className="text-lg font-bold uppercase text-text-main">
-          {problemData?.global_number+". " + problemData?.problem_translations[0].problem_name}
-        </Link>
+    <div className="flex w-full flex-col gap-6">
+      <div className="w-full p-4 text-center">
+        <div className="text-text-alt mb-1 text-sm uppercase">Задача</div>
+        {problemData?.id && (
+          <Link href={`/problems/${problemData?.id}`} className="text-text-main text-lg font-bold uppercase">
+            {problemData?.global_number + ". " + problemData?.problem_translations[0].problem_name}
+          </Link>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3  gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {actionData.playerLines.map((line) => (
-            <div key={line.role?.id} className="flex flex-col flex-1 w-full border border-border rounded-2xl ">
-                  <div className="flex flex-col gap-3 flex-none text-center m-2">
+          <div key={line.role?.id} className="border-border flex w-full flex-1 flex-col rounded-2xl border">
+            <div className="m-2 flex flex-none flex-col gap-3 text-center">
+              <div className="text-text-alt bg- uppercase">{line.role?.title ?? "—"}</div>
 
-                    <div className="text-text-alt uppercase bg-">
-                      {line.role?.title ?? "—"}
-                    </div>
+              <div className="text-text-main font-medium">{line.team.name}</div>
 
-                    <div className="font-medium text-text-main">
-                      {line.team.name}
-                    </div>
-                  
-                  <UsersProviderWrapper>
-                    <UserCell userId={line.playerId} />
-                  </UsersProviderWrapper>
+              <UsersProviderWrapper>
+                <UserCell userId={line.playerId} />
+              </UsersProviderWrapper>
 
-                  <div className="bg-muted/40 px-6 py-4">
-                  <JuryScores scores={line.scores} />
-                </div>
-
-                  </div>
+              <div className="bg-muted/40 px-6 py-4">
+                <JuryScores scores={line.scores} />
+              </div>
             </div>
-
+          </div>
         ))}
-
       </div>
       {/* <div className="flex-1">
         <Accordion.Root
@@ -157,26 +139,30 @@ function FightAction({ actionId }: { actionId: number }) {
             </Accordion.Item>
           ))}
         </Accordion.Root> */}
-      </div>
+    </div>
   )
 }
 
-function JuryScores({scores,}: {scores: { id: number; value: number; jury: number }[]}) {
+function JuryScores({ scores }: { scores: { id: number; value: number; jury: number }[] }) {
   if (!scores.length) {
-    return <p className="text-sm text-text-alt">Оценки отсутствуют</p>
+    return <p className="text-text-alt text-sm">Оценки отсутствуют</p>
   }
 
   return (
-    <div className="max-w-md">
+    <div className="text-text-main max-w-md">
       <div className="mb-2 text-sm font-medium">Оценки жюри</div>
 
       <div className="grid grid-cols-2 gap-2">
         {scores.map((score, index) => (
           <div
             key={index}
-            className="flex items-center justify-between rounded-md border border-border bg-background px-3 py-2 text-sm"
+            className="border-border bg-background flex items-center justify-between rounded-md border px-3 py-2 text-sm"
           >
-            <div className="text-text-alt"><UsersProviderWrapper><UserCell userId={score.jury}/></UsersProviderWrapper></div>
+            <div className="text-text-alt">
+              <UsersProviderWrapper>
+                <UserCell userId={score.jury} />
+              </UsersProviderWrapper>
+            </div>
             <div className="font-semibold">{score.value}</div>
           </div>
         ))}
@@ -191,15 +177,13 @@ function UserCell({ userId }: { userId?: number }) {
   const { data, isLoading } = useGetUserByIdQuery({ id: userId })
 
   if (isLoading) {
-    return (
-      <div className="h-5 w-40 animate-pulse rounded bg-hover" />
-    )
+    return <div className="bg-hover h-5 w-40 animate-pulse rounded" />
   }
 
   if (!data) return <span>not found</span>
 
   return (
-    <div className="text-center text-wrap justify-center items-center">
+    <div className="items-center justify-center text-center text-wrap">
       {data.secondName} {data.firstName}
       {data.auth === null ? "." : ""} {data.thirdName}
     </div>
@@ -211,5 +195,5 @@ function CheckIcon(props: React.ComponentProps<"svg">) {
     <svg viewBox="0 0 12 12" fill="currentcolor" {...props}>
       <path d="M6.75 0H5.25V5.25H0V6.75L5.25 6.75V12H6.75V6.75L12 6.75V5.25H6.75V0Z" />
     </svg>
-  );
+  )
 }
