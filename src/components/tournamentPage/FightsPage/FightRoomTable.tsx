@@ -4,6 +4,7 @@ import { useGetUserByIdQuery } from "@/api/users/clientApiInterface"
 import twclsx from "@/utils/twClassMerge"
 import { EventData } from "@/components/tournamentPage/FightsPage/FightTable"
 import Link from "next/link"
+import { FaExternalLinkAlt } from "react-icons/fa"
 
 export default function FightTable({ fight, type }: { fight: EventData[]; type: "team" | "jury" }) {
   const maxTeams = Math.max(...fight.map((room) => room.teams.length))
@@ -51,9 +52,10 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
           {true ? (
             <Link
               href={fightItem.location}
-              className="border-border hover:text-text-alt flex items-center justify-center border-b p-2 transition-colors"
+              className="border-border hover:text-text-alt flex items-center justify-center gap-2 border-b p-2 transition-colors"
             >
-              Комната {roomNames[fightIdx]}
+              <p>Комната {roomNames[fightIdx]}</p>
+              <FaExternalLinkAlt />
             </Link>
           ) : (
             <div className="border-border flex items-center justify-center border-b p-2">{fightItem.location}</div>

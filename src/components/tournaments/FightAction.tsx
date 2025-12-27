@@ -71,10 +71,12 @@ function FightAction({ actionId }: { actionId: number }) {
     <div className="flex w-full flex-col gap-6">
       <div className="w-full p-4 text-center">
         <div className="text-text-alt mb-1 text-sm uppercase">Задача</div>
-        {problemData?.id && (
+        {problemData?.id ? (
           <Link href={`/problems/${problemData?.id}`} className="text-text-main text-lg font-bold uppercase">
             {problemData?.global_number + ". " + problemData?.problem_translations[0].problem_name}
           </Link>
+        ) : (
+          <p className="text-text-main text-lg font-bold uppercase">-</p>
         )}
       </div>
 
