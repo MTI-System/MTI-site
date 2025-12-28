@@ -94,7 +94,10 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
               const juryId = fightItem.jouries[idx]
               return (
                 <div key={idx} className={twclsx("border-border border-t")}>
-                  {idx < fightItem.jouries.length && <JuryCell leader={idx === 0} juryId={juryId} />}
+                  {idx < fightItem.jouries.length && (
+                    <JuryCell leader={idx === 0 && fightItem.id !== 7} juryId={juryId} />
+                    // TMP THING, NEED REMOVAL: fightItem.id !== 7
+                  )}
                 </div>
               )
             })}

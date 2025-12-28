@@ -53,7 +53,7 @@ export function FightCard({ cardData, tmpIDX }: { cardData: FightInformationInte
 
           <div className="flex flex-col flex-nowrap content-center items-center justify-center gap-3 sm:flex-row sm:flex-wrap md:gap-4 lg:gap-8">
             <UsersProviderWrapper>
-              <UserAvatarWithTitleByID PeoplesIDs={cardData?.jouries} displaySpeakerRole />
+              <UserAvatarWithTitleByID PeoplesIDs={cardData?.jouries} displaySpeakerRole={cardData.id !== 7} />
             </UsersProviderWrapper>
           </div>
         </div>
