@@ -39,7 +39,7 @@ const Cell = ({
         {userData ? userData.firstName[0] : ""}
       </Avatar.Root>
 
-      {userData.auth === null ? (
+      {userData.id > 0 && userData.auth === null ? (
         <p>
           {userData.secondName} {userData.firstName}. {userData.thirdName ? userData.thirdName + "." : ""}
         </p>

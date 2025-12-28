@@ -184,7 +184,9 @@ function UserCell({ userId }: { userId?: number }) {
 
   if (!data) return <span>not found</span>
 
-  return (
+  return data.id < 0 ? (
+    <p className="text-accent-warning font-bold">Неявка на бой</p>
+  ) : (
     <div className="items-center justify-center text-center text-wrap">
       {data.secondName}{" "}
       {data.auth === null
