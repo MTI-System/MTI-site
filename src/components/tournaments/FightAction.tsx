@@ -158,7 +158,7 @@ function JuryScores({ scores }: { scores: { id: number; value: number; jury: num
         {scores.map((score, index) => (
           <div
             key={index}
-            className="border-border bg-background flex items-center justify-between rounded-md border px-3 py-2 text-sm"
+            className="border-border bg-background flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm"
           >
             <div className="text-text-alt">
               <UsersProviderWrapper>

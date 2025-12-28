@@ -51,7 +51,7 @@ export function FightCard({ cardData, tmpIDX }: { cardData: FightInformationInte
 
           <h2 className="text-text-main mx-auto mt-5 mb-5 text-center text-2xl font-bold uppercase">Жюри</h2>
 
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4 lg:gap-8">
+          <div className="flex flex-col flex-nowrap content-center items-center justify-center gap-3 sm:flex-row sm:flex-wrap md:gap-4 lg:gap-8">
             <UsersProviderWrapper>
               <UserAvatarWithTitleByID PeoplesIDs={cardData?.jouries} displaySpeakerRole />
             </UsersProviderWrapper>
