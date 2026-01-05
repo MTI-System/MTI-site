@@ -42,7 +42,7 @@ export default function TournamentsPageTabs({
       href: `/tournaments/${tournamentCard.id}/info/teams`,
       title: "Команды",
       description: "Все зарегистрированные команды",
-      isLocked: tournamentCard.badge.badge_flag !== "PROCESSING" && tournamentCard.badge.badge_flag !== "REGISTRATION_CLOSED",
+      isLocked: tournamentCard.badge.badge_flag !== "PROCESSING" && tournamentCard.badge.badge_flag !== "REGISTRATION_CLOSED" && tournamentCard.badge.badge_flag !== "ENDED",
     },
     {
       href: `/tournaments/${tournamentCard.id}/info/problems`,
