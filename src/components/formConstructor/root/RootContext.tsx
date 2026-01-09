@@ -1,10 +1,20 @@
 "use client"
-import { useGetRegistrationFormQuery } from "@/api/registration/clientApiInterface"
+import { registrationApiClient, useGetRegistrationFormQuery } from "@/api/registration/clientApiInterface"
 import Loading from "@/app/loading"
 import { createContext, ReactNode, RefObject, useContext, useEffect, useRef, useState } from "react"
 import { DateRange } from "react-day-picker"
+import { useDispatch } from "react-redux"
 
-export type availableFields = "dropdown" | "text" | "number" | "date" | "file" | "geolocation" | "player" | "coach" | "problems_checkboxes"
+export type availableFields =
+  | "dropdown"
+  | "text"
+  | "number"
+  | "date"
+  | "file"
+  | "geolocation"
+  | "player"
+  | "coach"
+  | "problems_checkboxes"
 
 export type DropdownOption = {
   label: string
@@ -58,7 +68,7 @@ export type ProblemsCheckboxesInputProperties = {
   fieldType: "problems_checkboxes"
 }
 
-export type FieldProperties = 
+export type FieldProperties =
   | DropdownProperties
   | TextInputProperties
   | NumberInputProperties
@@ -84,11 +94,12 @@ type ConstructorRootContextType = {
   setProperties: (properties: FieldProperties, id: number) => void
   changeName: (name: string, id: number) => void
   setOptional: (optional: boolean, id: number) => void
-  getFieldById: (id: number) => Field | null,
+  getFieldById: (id: number) => Field | null
   removeField: (id: number) => void
-  formType: string,
-  tId: number,
+  formType: string
+  tId: number
   counter: RefObject<number>
+  refetchFields: () => void
 }
 
 const ConstructorRootContext = createContext<ConstructorRootContextType | null>(null)
@@ -98,7 +109,7 @@ export function ConstructorRootProvider({
   isExpanded = false,
   children,
   formType,
-  tournamentId
+  tournamentId,
 }: {
   isEdit?: boolean
   isExpanded?: boolean
@@ -106,35 +117,42 @@ export function ConstructorRootProvider({
   formType: string
   tournamentId: number
 }) {
-  const {data, isLoading: isInformationLoading, isSuccess, isError} = useGetRegistrationFormQuery({id: tournamentId, type: formType})
+  const {
+    data,
+    isLoading: isInformationLoading,
+    isSuccess,
+    isError,
+    refetch,
+  } = useGetRegistrationFormQuery({ id: tournamentId, type: formType })
+  console.log(data, isInformationLoading, isSuccess, isError)
   const [fields, setFields] = useState<Field[]>([])
-  const [tId, ] = useState(tournamentId) 
+  const [tId] = useState(tournamentId)
   const counter = useRef(0)
-  useEffect(()=>{
-    if (isInformationLoading==false){
-      
-      if (isSuccess){
-        const initFields = data?.fields?.map((field, idx)=>{
-          return {
-            id: idx,
-            fieldName: field.title,
-            properties: {
-              fieldType: field.type,
-              ...field.metadata
-            },
-            optional: field.metadata?.optional == "true"
-          }
-        }) ?? []
+  useEffect(() => {
+    if (isInformationLoading == false) {
+      if (isSuccess) {
+        const initFields =
+          data?.fields?.map((field, idx) => {
+            return {
+              id: idx,
+              fieldName: field.title,
+              properties: {
+                fieldType: field.type,
+                ...field.metadata,
+              },
+              optional: field.metadata?.optional == "true",
+            }
+          }) ?? []
         counter.current = initFields.length
         console.log("initFields", initFields)
         //@ts-ignore
         setFields(initFields)
       }
-      if(isError){
+      if (isError) {
         setFields([])
       }
     }
-  }, [isInformationLoading])
+  }, [isInformationLoading, data])
 
   const addField = (fieldName: string, id: number, optional: boolean = false) => {
     setFields((prev) => [
@@ -143,15 +161,13 @@ export function ConstructorRootProvider({
         fieldName: fieldName,
         properties: { fieldType: "text" },
         id,
-        optional
+        optional,
       },
     ])
   }
 
   const removeField = (id: number) => {
-    setFields((prev) => [
-      ...prev.filter((field) => field.id !== id)
-    ])
+    setFields((prev) => [...prev.filter((field) => field.id !== id)])
   }
 
   const setFieldType = (type: availableFields, id: number) => {
@@ -196,7 +212,7 @@ export function ConstructorRootProvider({
     )
   }
 
-  const setOptional =  (optional: boolean, id: number)=> {
+  const setOptional = (optional: boolean, id: number) => {
     setFields((prev) =>
       prev.map((val) => {
         if (val.id !== id) return val
@@ -220,11 +236,26 @@ export function ConstructorRootProvider({
 
   return (
     <ConstructorRootContext
-      value={{ getFieldById, fields, addField, setFields, setFieldType, setProperties, changeName, formType, tId, counter, setOptional, removeField}}
+      value={{
+        getFieldById,
+        fields,
+        addField,
+        setFields,
+        setFieldType,
+        setProperties,
+        changeName,
+        formType,
+        tId,
+        counter,
+        setOptional,
+        removeField,
+        refetchFields: () => {
+          refetch()
+        },
+      }}
     >
-
       {!isInformationLoading && children}
-      {isInformationLoading && <Loading/>}
+      {isInformationLoading && <Loading />}
     </ConstructorRootContext>
   )
 }

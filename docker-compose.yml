@@ -18,13 +18,11 @@ services:
     volumes:
       - mti-dev-pgdata:/var/lib/postgresql/mti-dev-data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -h localhost -p 5432" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres -h localhost -p 5432"]
       interval: 5s
       timeout: 3s
       retries: 20
       start_period: 10s
-
-
 
   frontend:
     image: mof1us/frontend_mti_dev:latest
@@ -53,19 +51,18 @@ services:
   eurekaHealth:
     image: curlimages/curl:8.10.1
     container_name: eureka_health_dev
-    command: ["sh","-c","sleep infinity"]   # <— держим контейнер живым
+    command: ["sh", "-c", "sleep infinity"] # <— держим контейнер живым
     depends_on:
       eurekaServer:
         condition: service_started
     networks:
       - mti-dev-network
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://eureka:8761/actuator/health | grep -q '\"status\":\"UP\"'"]
+      test: ["CMD-SHELL", 'curl -fsS http://eureka:8761/actuator/health | grep -q ''"status":"UP"''']
       interval: 5s
       timeout: 3s
       retries: 20
       start_period: 5s
-
 
   gateway:
     image: mof1us/api-gateway-mti-dev:latest
@@ -114,7 +111,6 @@ services:
     networks:
       - mti-dev-network
 
-
   materialsService:
     image: mof1us/material-service-mti-dev:latest
     pull_policy: always
@@ -135,7 +131,6 @@ services:
     networks:
       - mti-dev-network
 
-
   filesService:
     image: mof1us/files-service-mti:latest
     pull_policy: always
@@ -145,7 +140,6 @@ services:
       - /opt/mti/files:/files:rw
     networks:
       - mti-dev-network
-
 
   notificationsService:
     image: mof1us/notifications-mti-service-dev:latest
@@ -211,10 +205,9 @@ services:
     networks:
       - mti-dev-network
 
-
 networks:
   mti-dev-network:
     driver: bridge
 volumes:
-  mti-dev-pgdata: { }
-  mti-files-serverДЕЛО ДРАКДЕЛО ДРАК: { }
+  mti-dev-pgdata: {}
+  mti-files-serverДЕЛО ДРАКДЕЛО ДРАК: {}

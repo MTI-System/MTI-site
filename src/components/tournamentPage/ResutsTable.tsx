@@ -11,8 +11,10 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
   console.log("tournament fetch", table, error)
   // const table = await fetchTournamentTable(tournamentId)
   const trStyle = "border border-border font-medium bg-transparent"
-  const maxScore = Math.max(...table?.table_lines.map(l=>Math.max(...l.scores.map(s=>s.score)))??[0])
-  const minScore = Math.min(...table?.table_lines.map(l=>Math.min(...l.scores.map(s=>s.score).filter(val=>val!==0)))??[0])
+  const maxScore = Math.max(...(table?.table_lines.map((l) => Math.max(...l.scores.map((s) => s.score))) ?? [0]))
+  const minScore = Math.min(
+    ...(table?.table_lines.map((l) => Math.min(...l.scores.map((s) => s.score).filter((val) => val !== 0))) ?? [0]),
+  )
 
   // const maxFightsFilled = Math.max(...table?.table_lines.map(l=>l.scores.length)??[0])
   const maxFilledFightsIndex =
@@ -22,8 +24,8 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
   return (
     <>
       <h2 className="text-text-main w-full pb-5 text-center text-2xl font-bold">Турнирная таблица</h2>
-      <div className="flex items-start justify-start overflow-x-auto shrink-0">
-        <table className="border-border w-full border-separate border-spacing-0 overflow-hidden rounded-xl border shrink-0">
+      <div className="flex shrink-0 items-start justify-start overflow-x-auto">
+        <table className="border-border w-full shrink-0 border-separate border-spacing-0 overflow-hidden rounded-xl border">
           <tbody>
             <tr key={0}>
               <td className="bg-card-alt border-border text-text-main border font-bold">

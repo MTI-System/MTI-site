@@ -1,25 +1,23 @@
 "use client"
 
-import {useEffect, useState} from "react"
+import { useEffect, useState } from "react"
 import Loading from "@/app/loading"
 import NotificationItem from "@/components/notifications/NotificationItem"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
-import {useGetAllNotificationsQuery, useMarkAsReadMutation} from "@/api/notifications/clientApiInterface"
+import { useGetAllNotificationsQuery, useMarkAsReadMutation } from "@/api/notifications/clientApiInterface"
 
 export default function NotificationList() {
   const [isExpanded, setExpanded] = useState(false)
   const userId = useAppSelector((state) => state.auth.authInfo?.user_id)
   const token = useAppSelector((state) => state.auth.token)
-  const [markAsRead, {isSuccess: isMarked, reset}] = useMarkAsReadMutation()
+  const [markAsRead, { isSuccess: isMarked, reset }] = useMarkAsReadMutation()
   const { data, isLoading, isError, isFetching, refetch } = useGetAllNotificationsQuery({
     userId: userId ?? 0,
     param: isExpanded ? "all" : "new",
   })
 
   useEffect(() => {
-    if (isMarked){
-
-
+    if (isMarked) {
       reset()
       refetch()
     }
@@ -46,12 +44,13 @@ export default function NotificationList() {
           {!isFetching && !isError && (
             <div className="flex flex-col gap-2">
               {data?.map((notification) => (
-
-                  <NotificationItem key={notification.id} notification={notification} markAsReaded={()=>{
-                    markAsRead({token: token??"", notificationId: notification.id})
-                  }}/>
-
-
+                <NotificationItem
+                  key={notification.id}
+                  notification={notification}
+                  markAsReaded={() => {
+                    markAsRead({ token: token ?? "", notificationId: notification.id })
+                  }}
+                />
               ))}
             </div>
           )}

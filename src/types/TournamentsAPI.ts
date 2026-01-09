@@ -1,5 +1,5 @@
-import {z} from "zod"
-import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage";
+import { z } from "zod"
+import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage"
 
 export const FightContainerCard = z.object({
   id: z.number(),
@@ -123,8 +123,7 @@ export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequest
 //   file_size: string | null
 // }
 
-
-export const fightTeamInTournamentShema = teamInTournamentSchema.omit({global_team_id: true, players: true}).extend({
+export const fightTeamInTournamentShema = teamInTournamentSchema.omit({ global_team_id: true, players: true }).extend({
   score: z.number(),
   coefficient: z.number(),
   reported_problem: z.number().optional(),
@@ -140,9 +139,7 @@ export const fightInformationSchema = z.object({
   location: z.string().nonempty(),
   startTime: z.number(),
   jouries: z.array(z.number()),
-  teams: z.array(
-    fightTeamInTournamentShema
-  ),
+  teams: z.array(fightTeamInTournamentShema),
 })
 
 export const teamRoleInActionSchema = z.object({

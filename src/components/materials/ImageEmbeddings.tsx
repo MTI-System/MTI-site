@@ -57,10 +57,7 @@ export function ExpandableImage({
 
   return (
     <div
-      className={twclsx(
-        "border-border relative h-full overflow-hidden rounded-2xl border max-w-fit w-full",
-        className,
-      )}
+      className={twclsx("border-border relative h-full w-full max-w-fit overflow-hidden rounded-2xl border", className)}
       onClick={() => {
         setIsExpanded(true)
       }}

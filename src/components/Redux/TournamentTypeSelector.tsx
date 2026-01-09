@@ -34,7 +34,6 @@ export default function TournamentTypeSelector({
   const pathname = usePathname()
   const [hasMounted, setHasMounted] = useState(false)
 
-
   const selectedState = useState<DropdownOptionInterface<string> | null>(
     ttddElements.find((e) => {
       return e.id === initTournamentType
@@ -54,7 +53,7 @@ export default function TournamentTypeSelector({
   }, [tt])
 
   useEffect(() => {
-    if (!cookies.get("mtiyt_tournamentType")){
+    if (!cookies.get("mtiyt_tournamentType")) {
       cookies.set("mtiyt_tournamentType", "1")
     }
     setHasMounted(true)
@@ -75,7 +74,7 @@ export default function TournamentTypeSelector({
         selectionState={selectedState}
         trigger={
           <Tooltip.Provider>
-            <Tooltip.Root disabled={!isTTLocked} >
+            <Tooltip.Root disabled={!isTTLocked}>
               <Tooltip.Trigger render={<div></div>}>
                 <DropdownTrigger className="border-none" disabled={isPending || isTTLocked}>
                   {selectedState[0]?.value}

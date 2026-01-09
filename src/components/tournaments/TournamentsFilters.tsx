@@ -28,7 +28,7 @@ export default function TournamentsFilters({
   const isPending = useAppSelector((state) => state.system.isPending)
   return (
     <>
-      <div className="flex w-full items-center justify-between px-8 md:px-15 lg:px-30 pt-3">
+      <div className="flex w-full items-center justify-between px-8 pt-3 md:px-15 lg:px-30">
         <div className="flex h-fit w-full flex-col content-center items-center gap-5 pt-2 md:flex-row">
           <div className="flex flex-row gap-5">
             <p className="text-text-main text-4xl font-bold">Турниры</p>
@@ -38,27 +38,27 @@ export default function TournamentsFilters({
               className="text-text-main text-4xl font-bold"
             />
           </div>
-          <div className="flex gap-2 flex-col md:flex-row w-full justify-between">
-          <div className="flex gap-2 flex-col md:flex-row w-full">
-            <YearFilter
-              possibleYears={availableYears ?? []}
-              isPending={false}
-              isModerator={false}
-              onSwitchYear={(year: number) => {
-                dispatch(setYear(year))
-              }}
-              defaultValue={year ?? (availableYears ? availableYears[availableYears.length - 1] : 2026)}
-            />
-            <TournamentStateFilter
-              possibleStates={availableStates}
-              isPending={false}
-              onSwitch={(state: TournamentStateFlagsInterface) => {
-                dispatch(setState(state))
-              }}
-              defaultValue={state}
-            />
-          </div>
-          <ShareButton />
+          <div className="flex w-full flex-col justify-between gap-2 md:flex-row">
+            <div className="flex w-full flex-col gap-2 md:flex-row">
+              <YearFilter
+                possibleYears={availableYears ?? []}
+                isPending={false}
+                isModerator={false}
+                onSwitchYear={(year: number) => {
+                  dispatch(setYear(year))
+                }}
+                defaultValue={year ?? (availableYears ? availableYears[availableYears.length - 1] : 2026)}
+              />
+              <TournamentStateFilter
+                possibleStates={availableStates}
+                isPending={false}
+                onSwitch={(state: TournamentStateFlagsInterface) => {
+                  dispatch(setState(state))
+                }}
+                defaultValue={state}
+              />
+            </div>
+            <ShareButton />
           </div>
         </div>
       </div>
@@ -106,14 +106,15 @@ export function TournamentStateFilter({
   ]
   console.log(possibleStates, optionList)
 
-
   return (
     <Dropdown
       trigger={
         <DropdownTrigger
           disabled={isPending}
           rootClassName="min-w-fit"
-          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full flex flex-row justify-between", { "hover:bg-bg-main": isPending })}
+          className={twclsx("bg-bg-alt hover:bg-hover flex h-8 flex-row justify-between rounded-full", {
+            "hover:bg-bg-main": isPending,
+          })}
         >
           {/*{year}*/}
           {optionList.find((o) => o.value === defaultValue)?.children}

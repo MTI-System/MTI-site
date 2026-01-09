@@ -1,4 +1,4 @@
-import AdminPanel from "@/components/tournamentPage/adminPanel/AdminPanel"
+import AdminAssignmentPanel from "@/components/tournamentPage/adminPanel/AdminAssignmentPanel"
 import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 
 export default async function AdminTmpPanelPage({ params }: { params: Promise<{ id: number }> }) {
@@ -6,7 +6,7 @@ export default async function AdminTmpPanelPage({ params }: { params: Promise<{ 
   return (
     <>
       <TournamentsProviderWrapper>
-        <AdminPanel tournamentId={tournamentId} />
+        <AdminAssignmentPanel tournamentId={tournamentId} />
       </TournamentsProviderWrapper>
     </>
   )

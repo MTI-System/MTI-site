@@ -26,13 +26,12 @@ export default function LineRegistrationField({
               placeholder={fieldObject?.metadata?.placeholder ?? fieldObject.title}
               onVerification={(value: string) => {
                 if (fieldObject?.metadata?.optional != "true") {
-                  if(!value) {
+                  if (!value) {
                     return {
                       isSuccess: false,
-                      errorMessage: "Поле не может быть пустым"
+                      errorMessage: "Поле не может быть пустым",
                     }
-                  }
-                  else {
+                  } else {
                     return {
                       isSuccess: true,
                     }
@@ -41,7 +40,6 @@ export default function LineRegistrationField({
                 return {
                   isSuccess: true,
                 }
-
               }}
             />
           </div>
@@ -62,7 +60,6 @@ export default function LineRegistrationField({
             <p className="text-text-main px-2 pt-2 font-bold">{fieldContent}</p>
           </div>
         )}
-
       </Forms.DefaultItems>
     </>
   )

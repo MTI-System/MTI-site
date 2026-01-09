@@ -3,7 +3,7 @@ import { useFindUsersQuery } from "@/api/users/clientApiInterface"
 import { AutocompleteWithPreview } from "./AutocompleteWithPreview"
 import { RefObject, useEffect, useRef, useState } from "react"
 import { User } from "@/types/UsersApi"
-import {formatDate} from "@/components/pickers/DatePicker";
+import { formatDate } from "@/components/pickers/DatePicker"
 
 export default function PersonPicker({
   label,
@@ -17,7 +17,7 @@ export default function PersonPicker({
   selectedValue?: RefObject<User | null>
 }) {
   const [query, setQuery] = useState("")
-  const { data, isFetching, isError } = useFindUsersQuery({ query: query }, {skip: query.length < 1})
+  const { data, isFetching, isError } = useFindUsersQuery({ query: query }, { skip: query.length < 1 })
   const hiddenInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -47,7 +47,6 @@ export default function PersonPicker({
           if (selectedValue) {
             selectedValue.current = item
           }
-
         }
       }}
     >
@@ -77,7 +76,7 @@ export default function PersonPicker({
                 {(user: User) => (
                   <AutocompleteWithPreview.Item
                     key={user.id}
-                    className="flex text-text-main cursor-default py-2 pr-8 pl-4 text-base leading-4 outline-none select-none data-highlighted:relative data-highlighted:z-0 data-highlighted:text-gray-50 data-highlighted:before:absolute data-highlighted:before:inset-x-2 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1] data-highlighted:before:rounded data-highlighted:before:bg-gray-900"
+                    className="text-text-main flex cursor-default py-2 pr-8 pl-4 text-base leading-4 outline-none select-none data-highlighted:relative data-highlighted:z-0 data-highlighted:text-gray-50 data-highlighted:before:absolute data-highlighted:before:inset-x-2 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1] data-highlighted:before:rounded data-highlighted:before:bg-gray-900"
                     value={`${user.firstName} ${user.secondName} ${user.thirdName}`}
                   >
                     {user.firstName} {user.secondName} {user.thirdName}
@@ -85,21 +84,19 @@ export default function PersonPicker({
                 )}
               </AutocompleteWithPreview.List>
             </div>
-            <div className="flex w-1/2 flex-1 items-center justify-center text-text-main border-l-2 border-gray-200">
+            <div className="text-text-main flex w-1/2 flex-1 items-center justify-center border-l-2 border-gray-200">
               <div className="w-full p-2 text-center">
                 <AutocompleteWithPreview.Preview>
                   {(preview: User | null) => {
-                    return preview
-                      ? (
-                        <>
-                          <p>{`${preview.firstName} ${preview.secondName} ${preview.thirdName}`}</p>
-                          {/*<p>Дата рождения: {formatDate(new Date(preview.birthday ?? 0))}</p>*/}
-                          <p>Почта: {preview.email}</p>
-                        </>
-
-
-                      )
-                      : "Наведите курсором мыша на элемент чтобы посмотреть превью"
+                    return preview ? (
+                      <>
+                        <p>{`${preview.firstName} ${preview.secondName} ${preview.thirdName}`}</p>
+                        {/*<p>Дата рождения: {formatDate(new Date(preview.birthday ?? 0))}</p>*/}
+                        <p>Почта: {preview.email}</p>
+                      </>
+                    ) : (
+                      "Наведите курсором мыша на элемент чтобы посмотреть превью"
+                    )
                   }}
                 </AutocompleteWithPreview.Preview>
               </div>

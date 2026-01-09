@@ -30,7 +30,6 @@ export default function TournamentsPageTabs({
   const isModerate = searchParams.get("isModerate") ?? false
   const user = useAppSelector((state) => state.auth.authInfo)
 
-
   const infoLinks: LinkInterface[] = [
     {
       href: `/tournaments/${tournamentCard.id}/info/about`,
@@ -42,7 +41,10 @@ export default function TournamentsPageTabs({
       href: `/tournaments/${tournamentCard.id}/info/teams`,
       title: "Команды",
       description: "Все зарегистрированные команды",
-      isLocked: tournamentCard.badge.badge_flag !== "PROCESSING" && tournamentCard.badge.badge_flag !== "REGISTRATION_CLOSED" && tournamentCard.badge.badge_flag !== "ENDED",
+      isLocked:
+        tournamentCard.badge.badge_flag !== "PROCESSING" &&
+        tournamentCard.badge.badge_flag !== "REGISTRATION_CLOSED" &&
+        tournamentCard.badge.badge_flag !== "ENDED",
     },
     {
       href: `/tournaments/${tournamentCard.id}/info/problems`,
@@ -56,12 +58,19 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/results/team`,
       title: "Командный зачет",
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
+      isLocked:
+        tournamentCard.badge.badge_flag === "FUTURED" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
     {
       href: `/tournaments/${tournamentCard.id}/results/personal`,
       title: "Личный зачет",
-      isLocked: true || tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
+      isLocked:
+        true ||
+        tournamentCard.badge.badge_flag === "FUTURED" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
   ]
 
@@ -69,12 +78,18 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/fights`,
       title: `Расписание`,
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
+      isLocked:
+        tournamentCard.badge.badge_flag === "FUTURED" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
     ...tournamentCard.fight_containers_cards.map((container) => ({
       href: `/tournaments/${tournamentCard.id}/fights/${container.id}`,
       title: container.title,
-      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION" || tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
+      isLocked:
+        tournamentCard.badge.badge_flag === "FUTURED" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     })),
   ]
 
@@ -135,9 +150,24 @@ export default function TournamentsPageTabs({
     },
   ]
 
+  const registrationLinks: LinkInterface[] = [
+    {
+      href: `/tournaments/${tournamentCard.id}/registration`,
+      title: "Заполнить форму",
+      description: "Если вы руководитель",
+      isLocked: tournamentCard.badge.badge_flag !== "REGISTRATION",
+    },
+    {
+      href: `/tournaments/${tournamentCard.id}/registration?jury=true`,
+      title: "Заполнить форму для жюри",
+      description: "Если вы хотите судить турнир",
+      isLocked: tournamentCard.badge.badge_flag !== "REGISTRATION",
+    },
+  ]
+
   return (
     <NavigationMenu.Root className="flex w-full justify-center rounded-lg p-1">
-      <NavigationMenu.List className="bg-bg-alt text-text-main relative flex rounded-2xl flex-col md:flex-row w-full md:w-auto">
+      <NavigationMenu.List className="bg-bg-alt text-text-main relative flex w-full flex-col rounded-2xl md:w-auto md:flex-row">
         <NavigationItem hasDescription={true} items={infoLinks} itemTitle="Информация" />
         {isAdmin && (
           <>
@@ -149,11 +179,19 @@ export default function TournamentsPageTabs({
         <NavigationItem hasDescription={false} items={fightsLinks} itemTitle="Бои" />
         <NavigationItem hasDescription={true} items={statsLinks} itemTitle="Статистика" />
         {tournamentCard.badge.badge_flag === "REGISTRATION" && !isAdmin && (
-          <NavigationMenu.Item>
-            <Link className={registrationTriggerClassName} href={`/tournaments/${tournamentCard.id}/registration`}>
-              Регистрация на турнир
-            </Link>
-          </NavigationMenu.Item>
+          // <NavigationItem hasDescription={true} items={registrationLinks} itemTitle="Регистрация на турнир" className={registrationTriggerClassName}/>
+          <NavigationItem
+            hasDescription={true}
+            items={registrationLinks}
+            itemTitle="Регистрация на турнир"
+            className="bg-accent-primary text-text-main hover:bg-accent-primary/80 active:bg-accent-primary/80 data-[popup-open]:bg-accent-primary/80 shadow-accent-primary rounded-xl shadow-[0_0_20px_0_var(--tw-shadow-color)]"
+          />
+
+          // <NavigationMenu.Item>
+          //   <Link className={registrationTriggerClassName} href={`/tournaments/${tournamentCard.id}/registration`}>
+          //     Регистрация на турнир
+          //   </Link>
+          // </NavigationMenu.Item>
         )}
       </NavigationMenu.List>
 
@@ -211,15 +249,17 @@ function NavigationItem({
   hasDescription,
   items,
   itemTitle,
+  className,
 }: {
   hasDescription: boolean
   items: LinkInterface[]
   itemTitle: string
+  className?: string
 }) {
   return (
     <>
       <NavigationMenu.Item className="">
-        <NavigationMenu.Trigger className={triggerClassName}>
+        <NavigationMenu.Trigger className={twclsx(triggerClassName, className)}>
           {itemTitle}
           <NavigationMenu.Icon className="transition-transform duration-200 ease-in-out data-popup-open:rotate-180">
             <ChevronDownIcon />
@@ -260,7 +300,7 @@ function NavigationItem({
 }
 
 const triggerClassName =
-  "box-border w-full flex items-center justify-center gap-1.5 h-10 bg-bg-alt " +
+  "transition-colors box-border w-full flex items-center justify-center gap-1.5 h-10 bg-bg-alt " +
   "px-2 xs:px-3.5 m-0 rounded-md font-medium text-text-main " +
   "text-[0.925rem] xs:text-base leading-6 select-none no-underline " +
   "hover:bg-hover active:bg-hover data-[popup-open]:bg-hover " +

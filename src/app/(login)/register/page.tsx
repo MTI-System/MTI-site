@@ -413,7 +413,7 @@ function Step2({
       <Field.Root name="isAcceptedPolicy" className={fieldRootClass}>
         <Field.Error className={fieldErrorClass} match="customError" />
         <div className={policyCardClass}>
-          <p >
+          <p>
             Я соглашаюсь с{" "}
             <a
               className="text-accent-primary underline underline-offset-4 transition hover:opacity-80"
