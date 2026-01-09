@@ -184,7 +184,7 @@ export default function TournamentsPageTabs({
             hasDescription={true}
             items={registrationLinks}
             itemTitle="Регистрация на турнир"
-            className="bg-accent-primary text-text-main hover:bg-accent-primary/80 active:bg-accent-primary/80 data-[popup-open]:bg-accent-primary/80 shadow-accent-primary rounded-xl shadow-[0_0_20px_0_var(--tw-shadow-color)]"
+            className="bg-accent-primary text-accent-primary-alt dark:text-text-main hover:bg-accent-primary/80 active:bg-accent-primary/80 data-[popup-open]:bg-accent-primary/80 shadow-accent-primary rounded-xl shadow-[0_0_20px_0_var(--tw-shadow-color)]"
           />
 
           // <NavigationMenu.Item>

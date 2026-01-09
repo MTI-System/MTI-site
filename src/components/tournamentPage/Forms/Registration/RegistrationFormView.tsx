@@ -102,12 +102,16 @@ export default function RegistrationFormView({
                 updateCheck={(isOn: boolean) => {
                   setIsPdAccepted(isOn)
                 }}
-                checkboxText={"Даю согласие на обработку ПД с целью регистрации на турнир " + tournamentCard?.title}
+                checkboxText={
+                  "Даю согласие на обработку ПД с целью регистрации на турнир: '" + tournamentCard?.title + "'"
+                }
               />
-              <p className="text-center text-red-600">
-                Перед тем, как заявка попадет к организатору, необходимо чтобы каждый участник подтвердил её. Это можно
-                будет сделать в уведомлениях.
-              </p>
+              {formInfo?.fields?.find((v) => ("type" in v ? v : v.formField).type === "player") !== undefined && (
+                <p className="text-center text-red-600">
+                  Перед тем, как заявка попадет к организатору, необходимо чтобы каждый участник подтвердил её. Это
+                  можно будет сделать в уведомлениях.
+                </p>
+              )}
               <Forms.ConfirmButton
                 disabled={!isPdAccepted}
                 className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary disabled:bg-bg-alt h-10 cursor-pointer rounded-xl border px-10 font-bold disabled:cursor-not-allowed"
