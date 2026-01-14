@@ -40,14 +40,14 @@ export async function FightTable({teams}:{teams: {
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.score ? item.score : "-"}</td>
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.coefficient? item.coefficient : "-"}</td>
 
-            <td className=" text-center text-sm font-medium hover:bg-hover ">    
-              <Link
-                  className="block h-full w-full cursor-pointer px-4 py-3" 
-                  // href={`/problems/${problems[index] ? problems[index].global_number : "/"}`}>
-                  href={`/${problems[index] ? "problems/" +  problems[index].global_number : "problems/"}`}>
+            <td className=" text-center text-sm font-medium  ">    
+              {problems[index] ?  
+                  <Link
+                  className="block h-full w-full cursor-pointer px-4 py-3 hover:bg-hover " 
+                  href={`/${problems[index] ? "problems/" +  problems[index].id : "problems/"}`}> 
+                  {problems[index].global_number}
+                  </Link>: "-"}
               
-              {problems[index] ? problems[index].global_number : "-"}
-              </Link>
             </td>
 
             <td className="px-4 py-3 text-center text-sm font-medium">{item.reporterScore ? item.reporterScore : "-"}</td>
