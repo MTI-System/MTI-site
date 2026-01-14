@@ -1,5 +1,6 @@
 import { problemsApiServer } from "@/api/problems/serverApiInterface";
 import { makeProblemsStoreServer } from "@/api/problems/serverStore";
+import Link from "next/link";
 
 export async function FightTable({teams}:{teams: {
         name: string;
@@ -38,7 +39,17 @@ export async function FightTable({teams}:{teams: {
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.name ? item.name : "-"}</td>
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.score ? item.score : "-"}</td>
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.coefficient? item.coefficient : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm font-medium">{problems[index] ? problems[index].global_number : "-"}</td>
+
+            <td className=" text-center text-sm font-medium hover:bg-hover ">    
+              <Link
+                  className="block h-full w-full cursor-pointer px-4 py-3" 
+                  // href={`/problems/${problems[index] ? problems[index].global_number : "/"}`}>
+                  href={`/${problems[index] ? "problems/" +  problems[index].global_number : "problems/"}`}>
+              
+              {problems[index] ? problems[index].global_number : "-"}
+              </Link>
+            </td>
+
             <td className="px-4 py-3 text-center text-sm font-medium">{item.reporterScore ? item.reporterScore : "-"}</td>
             <td className="px-4 py-3 text-center text-sm font-medium">{item.opponentScore ? item.opponentScore : "-"}</td>
             <td className="px-4 py-3 text-center text-sm font-medium">{item.reviewerScore ? item.reviewerScore : "-"}</td>
