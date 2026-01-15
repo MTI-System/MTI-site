@@ -34,6 +34,8 @@ jobs:
           tags: mof1us/frontend_mti:latest
           load: true
           push: true
+          build-args: |
+            NEXT_PUBLIC_IS_ON_DEV=false
 
       - name: SHH and restart service
         uses: appleboy/ssh-action@v1

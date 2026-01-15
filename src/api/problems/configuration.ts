@@ -36,7 +36,7 @@ export const defineProblemsEndpoints = (
     },
   }),
   getProblemsById: builder.query({
-    query: ({ problemId }: { problemId: number }) => `get_problem_by_global_id/${problemId}`,
+    query: ({ problemId }: { problemId: number | undefined}) => `get_problem_by_global_id/${problemId}`,
     transformResponse: (response: unknown): ProblemInterface | null => {
       const respJSON = ProblemSchema.safeParse(response)
       if (respJSON.success) return respJSON.data
