@@ -8,6 +8,7 @@ import { DropdownField } from "./fields/DropdownField"
 import { UserPickerField } from "./fields/UserPickerField"
 import {CheckboxField} from "./fields/CheckboxField"
 import { FormTrigger as Trigger } from "./root/FormTrigger"
+import {FileInputField} from "@/components/forms/fields/FileInputField";
 
 export const Forms = {
   UserPickerField,
@@ -20,4 +21,5 @@ export const Forms = {
   Trigger,
   DropdownField,
   CheckboxField,
+  FileInputField,
 }

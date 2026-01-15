@@ -152,7 +152,8 @@ export default function FightsAdmin(
                 }}>
                   <div >
                     <p>Список жюри:</p>
-                    <input defaultValue={fight.jouries} name="juries" type="text" placeholder="перечислите жюри через запятую без пробела" className="border-border"/>
+                    //@ts-ignore
+                    <input defaultValue={fight.jouries.map((a)=>"" + a)} name="juries" type="text" placeholder="перечислите жюри через запятую без пробела" className="border-border"/>
                     <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить жюри</button>
                   </div>
 
