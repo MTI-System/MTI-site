@@ -50,7 +50,9 @@ jobs:
   restart-service:
     needs: build-docker-image-and-push
     runs-on: ubuntu-latest
+
     steps:
+
       - name: SHH and restart service
         uses: appleboy/ssh-action@v1
         with:
@@ -58,7 +60,19 @@ jobs:
           username: ${{ secrets.DEPLOY_SSH_USERNAME }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
+            set -e
+            echo "REMOTE_USER=$(whoami)"
+            echo "ID=$(id)"
+            echo "SYSTEMCTL=$(command -v systemctl)"
+            echo "SUDO_VERSION=$(sudo -V | head -n 1)"
+            echo "--- sudo -l (may require password) ---"
+            sudo -l || true
+            echo "--- sudo -n true ---"
+            sudo -n true && echo "sudo NOPASSWD works" || echo "sudo NOPASSWD DOES NOT work"
+            echo "--- try restart with absolute path ---"
+            sudo -n /usr/bin/systemctl restart mti_production_startup && echo "restart ok" || echo "restart failed"
             sudo systemctl restart mti_production_startup
+  
   
 
   deploy-error:
