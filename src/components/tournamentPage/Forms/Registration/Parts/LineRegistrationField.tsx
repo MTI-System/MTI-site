@@ -18,21 +18,20 @@ export default function LineRegistrationField({
       <Forms.EdiatableItems>
         {
           <div className="border-border bg-bg-main-accent relative h-15 w-full rounded-md border">
-            <p className="text-text-alt absolute h-4 px-2 pt-1 text-[13px]">{fieldObject.title}</p>
+            <p className="text-text-main absolute h-4 px-2 pt-1 text-sm font-bold">{fieldObject.title}</p>
             <Forms.InputField
-              className="placeholder:text-text-main size-full h-full px-2 pt-4 leading-11 font-bold"
+              className="placeholder:text-text-alt size-full h-full px-2 pt-4 leading-11"
               type={fieldObject.type}
               name={fieldObject.key}
               placeholder={fieldObject?.metadata?.placeholder ?? fieldObject.title}
               onVerification={(value: string) => {
                 if (fieldObject?.metadata?.optional != "true") {
-                  if(!value) {
+                  if (!value) {
                     return {
                       isSuccess: false,
-                      errorMessage: "Поле не может быть пустым"
+                      errorMessage: "Поле не может быть пустым",
                     }
-                  }
-                  else {
+                  } else {
                     return {
                       isSuccess: true,
                     }
@@ -41,7 +40,6 @@ export default function LineRegistrationField({
                 return {
                   isSuccess: true,
                 }
-
               }}
             />
           </div>
@@ -62,7 +60,6 @@ export default function LineRegistrationField({
             <p className="text-text-main px-2 pt-2 font-bold">{fieldContent}</p>
           </div>
         )}
-
       </Forms.DefaultItems>
     </>
   )
