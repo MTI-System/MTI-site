@@ -16,6 +16,7 @@ import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import RespondentUser from "@/components/tournamentPage/Forms/Registration/Parts/RespondentUser"
 import RegisterRequest from "@/components/personalDataRequests/RegisterRequest"
 import { useState } from "react"
+import FileRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/FileRegistrationField"
 
 export default function RegistrationFormView({
   formInfo,
@@ -58,6 +59,12 @@ export default function RegistrationFormView({
                     case "number":
                     case "text":
                       return <LineRegistrationField key={field.key} field={fieldObject} />
+                    case "file":
+                      return (
+                        <>
+                          <FileRegistrationField field={fieldObject} />
+                        </>
+                      )
                     case "date":
                       return <DateRegistrationField key={field.key} field={fieldObject} />
                     case "dropdown":
