@@ -36,12 +36,10 @@ export function InputField({ onVerification, name, ...rest }: InputFieldProps) {
         isActive={!(verificationResult?.isSuccess ?? true)}
       >
         <input
-          onWheel={(e) => {
-            e.preventDefault()
-          }}
           name={name}
           className={twclsx({ "border border-red-700": !(verificationResult?.isSuccess ?? true) })}
           ref={inputRef}
+          onWheel={(e) => e.currentTarget.blur()}
           {...rest}
         />
       </ErrorTooltip>
