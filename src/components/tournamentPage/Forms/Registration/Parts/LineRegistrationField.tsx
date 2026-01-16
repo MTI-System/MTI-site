@@ -23,6 +23,8 @@ export default function LineRegistrationField({
               className="placeholder:text-text-alt size-full h-full px-2 pt-4 leading-11"
               type={fieldObject.type}
               name={fieldObject.key}
+              min={fieldObject.metadata?.minValue}
+              max={fieldObject.metadata?.maxValue}
               placeholder={fieldObject?.metadata?.placeholder ?? fieldObject.title}
               onVerification={(value: string) => {
                 if (fieldObject?.metadata?.optional != "true") {

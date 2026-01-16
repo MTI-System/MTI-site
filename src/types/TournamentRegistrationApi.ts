@@ -44,7 +44,7 @@ export const TournamentRegistrationFormInfo = z.object({
 export const TournamentRegistrationAnswerField = z.object({
   id: z.number(),
   formField: TournamentRegistrationFormField,
-  content: z.string(),
+  content: z.string().nullable(),
 })
 
 export const TournamentRegistrationAnswer = z.object({
