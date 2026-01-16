@@ -93,7 +93,7 @@ export default function Page() {
         ></Step1>
       )
       displayedTitle = "СОЗДАЙТЕ АККАУНТ"
-      displayedDescription = "Создайте аккаунт, чтобы получить доступ к функциям менеджера турнирной информации"
+      displayedDescription = "Укажите имя пользователя и пароль для доступа к вашему аккаунту"
       break
     case 2:
       displayForm = (
@@ -110,8 +110,8 @@ export default function Page() {
           filledData={formData}
         ></Step2>
       )
-      displayedTitle = "РАССКАЖИТЕ О СЕБЕ"
-      displayedDescription = "Расскажите нам о себе, чтобы мы могли рекомендовать вам подходящие мероприятия"
+      displayedTitle = "УКАЖИТЕ ВАШИ ДАННЫЕ"
+      displayedDescription = ""
       break
     case 3:
       displayForm = (
@@ -126,7 +126,7 @@ export default function Page() {
           filledData={formData}
         ></Step3>
       )
-      displayedTitle = "НЕБОЛЬШАЯ ЗАМИНКА"
+      displayedTitle = "ОПД НЕСОВЕРШЕННОЛЕТНОЕГО"
       displayedDescription =
         "Вам не исполнилось 14 лет, поэтому для регистрации необходимо, чтобы согласие на обработку персональных данных дал Ваш законный представитель"
       break
@@ -142,8 +142,8 @@ export default function Page() {
           ></VerificationStep>
         </UsersProviderWrapper>
       )
-      displayedTitle = "ПОДТВЕРДИТЕ EMAIL"
-      displayedDescription = "Подтвердите ваш email, чтобы..."
+      displayedTitle = "ПОСЛЕДНИЙ ШАГ"
+      displayedDescription = "Подтвердите, пожалуйста, Ваш(и) емейл, чтоб мы могли убедиться, что это вы"
       // TODO: Rewrite description so it handles both cases verification of participant email and both participant and parent emails
       break
     case 5:
