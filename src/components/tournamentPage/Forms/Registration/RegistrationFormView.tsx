@@ -31,7 +31,7 @@ export default function RegistrationFormView({
   formInfo: TournamentRegistrationFormInfoInterface | TournamentRegistrationAnswerInterface | null
 }) {
   const { data: tournamentCard, isLoading: isTournamentCardLoading } = useGetTournamentCardQuery({ id: tournamentId })
-  const [isPdAccepted, setIsPdAccepted] = useState(false)
+  const [isPdAccepted, setIsPdAccepted] = useState(true)
   const token = useAppSelector((state) => state.auth.token)
   return (
     <>
@@ -97,9 +97,9 @@ export default function RegistrationFormView({
                       )
                     case "title_ni":
                       return (
-                        <div>
+                        <div className="py-2">
                           <p className="text-2xl font-bold">{field.title}</p>
-                          {field.metadata?.subtitle && <p className="text-md pl-2">{field.metadata?.subtitle}</p>}
+                          {field.metadata?.subtitle && <p className="text-md">{field.metadata?.subtitle}</p>}
                         </div>
                       )
                     default:
