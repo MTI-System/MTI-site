@@ -58,7 +58,7 @@ jobs:
           username: ${{ secrets.DEPLOY_SSH_USERNAME }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            sudo systemctl restart mti_startup
+            sudo systemctl restart mti_production_startup
   
 
   deploy-error:
