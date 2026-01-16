@@ -37,7 +37,7 @@ interface RegisterFormData {
 }
 
 const formCardClass =
-  "flex w-full max-w-3xl flex-col gap-6 rounded-2xl bg-bg-alt py-5 overflow-visible max-h-[calc(100vh-6rem)] min-h-[14rem] sm:min-h-[20rem] lg:min-h-[26rem] min-w-[18rem]"
+  "flex w-full max-w-3xl flex-col gap-6 rounded-2xl bg-bg-alt py-5 overflow-visible  sm:min-h-[20rem] lg:min-h-[26rem] min-w-[18rem]"
 const fieldRootClass = "flex w-full flex-col items-start gap-1 text-text-main"
 const fieldLabelClass = "text-sm font-semibold uppercase tracking-wide text-text-alt"
 const fieldErrorClass = "text-sm font-medium text-red-600"
