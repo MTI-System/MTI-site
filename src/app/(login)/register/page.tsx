@@ -1,25 +1,25 @@
 "use client"
-import { useIsEmailTakenMutation, useIsLoginTakenMutation, useRegisterMutation } from "@/api/auth/clientApiInterface"
+import {useIsEmailTakenMutation, useIsLoginTakenMutation, useRegisterMutation} from "@/api/auth/clientApiInterface"
 import LoginLayout from "@/components/login/mainLayout"
 import DatePicker from "@/components/pickers/DatePicker"
-import { Button } from "@/components/ui/Buttons"
-import { FILES_SERVER } from "@/constants/APIEndpoints"
-import { AUTH_TOKEN_KEY_NAME } from "@/constants/CookieKeys"
-import { Checkbox, Field, Form } from "@base-ui-components/react"
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react"
+import {Button} from "@/components/ui/Buttons"
+import {FILES_SERVER} from "@/constants/APIEndpoints"
+import {AUTH_TOKEN_KEY_NAME} from "@/constants/CookieKeys"
+import {Checkbox, Field, Form} from "@base-ui-components/react"
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
 import cookies from "js-cookie"
 import Link from "next/link"
-import { redirect, useRouter } from "next/navigation"
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react"
-import { z } from "zod"
+import {redirect, useRouter} from "next/navigation"
+import {FormEvent, useCallback, useEffect, useRef, useState} from "react"
+import {z} from "zod"
 import twclsx from "@/utils/twClassMerge"
-import { usersApiClient, useUsersDispatch, useVerifyEmailQuery } from "@/api/users/clientApiInterface"
+import {usersApiClient, useUsersDispatch, useVerifyEmailQuery} from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
-import { closeSocket } from "@/api/users/configuration"
-import { useDispatch } from "react-redux"
+// import {closeSocket} from "@/api/users/configuration"
+import {useDispatch} from "react-redux"
 import Loading from "@/app/loading"
-import { IoIosCheckmarkCircle } from "react-icons/io"
-import { UsersApiContext } from "@/api/users/clientApiInterface"
+import {IoIosCheckmarkCircle} from "react-icons/io"
+import {UsersApiContext} from "@/api/users/clientApiInterface"
 
 interface RegisterFormData {
   email?: string
@@ -56,7 +56,7 @@ const checkboxRootClass =
 export default function Page() {
   const [displayedStep, setDisplayedStep] = useState(1)
   const [formData, setFormData] = useState<RegisterFormData>({})
-  const [register, { data, isLoading, error, isSuccess }] = useRegisterMutation()
+  const [register, {data, isLoading, error, isSuccess}] = useRegisterMutation()
   const router = useRouter()
   const handleRegister = useCallback(
     (addData?: RegisterFormData) => {
@@ -68,7 +68,7 @@ export default function Page() {
         fd.append(key, value)
       })
       console.log("fd", fd)
-      register({ formData: fd })
+      register({formData: fd})
     },
     [formData, register],
   )
@@ -86,7 +86,7 @@ export default function Page() {
         <Step1
           onStepComplete={(data) => {
             console.log("1---", data)
-            setFormData((prev) => ({ ...prev, ...data }))
+            setFormData((prev) => ({...prev, ...data}))
             setDisplayedStep(2)
           }}
           filledData={formData}
@@ -100,7 +100,7 @@ export default function Page() {
         <Step2
           onStepComplete={(data) => {
             console.log("2---", data)
-            setFormData((prev) => ({ ...prev, ...data }))
+            setFormData((prev) => ({...prev, ...data}))
             if (calculateAge(new Date(data.usersBirthday!!)) < 14) setDisplayedStep(3)
             else {
               setDisplayedStep(4)
@@ -118,7 +118,7 @@ export default function Page() {
         <Step3
           onStepComplete={(data) => {
             console.log("3---", data)
-            setFormData((prev) => ({ ...prev, ...data }))
+            setFormData((prev) => ({...prev, ...data}))
             setDisplayedStep(4)
             // handleRegister(data)
           }}
@@ -147,7 +147,7 @@ export default function Page() {
       // TODO: Rewrite description so it handles both cases verification of participant email and both participant and parent emails
       break
     case 5:
-      closeSocket()
+      // closeSocket()
       displayForm = (
         <Button
           disabled={isLoading}
@@ -191,32 +191,33 @@ const Step1Schema = z
 type Step1Interface = Omit<z.infer<typeof Step1Schema>, "passwordConfirm">
 
 function Step1({
-  onStepComplete,
-  filledData,
-}: {
+                 onStepComplete,
+                 filledData,
+               }: {
   onStepComplete: (data: Step1Interface) => void
   filledData: RegisterFormData
 }) {
   const [formErrors, setFormErrors] = useState({})
   const [formData, setFormData] = useState<z.infer<typeof Step1Schema> | null>(null)
 
-  const [checkLogin, { data: isLoginTaken, isLoading, error, isSuccess }] = useIsLoginTakenMutation()
+  const [checkLogin, {data: isLoginTaken, isLoading, error, isSuccess}] = useIsLoginTakenMutation()
 
   useEffect(() => {
     if (!formData || isLoading) return
     if (!isSuccess) {
-      setFormErrors({ login: "Не удалось проверить свободность имени пользователя" })
+      setFormErrors({login: "Не удалось проверить свободность имени пользователя"})
       console.error("Error checking login availability", error)
       return
     }
     if (isLoginTaken) {
-      setFormErrors({ login: "Имя пользователя уже занято" })
+      setFormErrors({login: "Имя пользователя уже занято"})
       return
     }
     setFormErrors({})
-    const { passwordConfirm, ...data } = formData
+    const {passwordConfirm, ...data} = formData
     onStepComplete(data)
   }, [isSuccess])
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
@@ -233,19 +234,20 @@ function Step1({
       return
     }
     setFormData(parsedData.data)
-    checkLogin({ login: parsedData.data.login })
+    checkLogin({login: parsedData.data.login})
   }
+
   return (
     <>
       <Form className={formCardClass} onSubmit={handleSubmit} errors={formErrors}>
         <Field.Root name="login" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Имя пользователя</Field.Label>
-          <Field.Error className={fieldErrorClass} match="customError" />
-          <Field.Control type="text" placeholder="ВашНик" className={inputClass} defaultValue={filledData.login} />
+          <Field.Error className={fieldErrorClass} match="customError"/>
+          <Field.Control type="text" placeholder="ВашНик" className={inputClass} defaultValue={filledData.login}/>
         </Field.Root>
         <Field.Root name="password" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Пароль</Field.Label>
-          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Error className={fieldErrorClass} match="customError"/>
           <Field.Control
             type="password"
             placeholder="ИмяВашегоКота"
@@ -255,7 +257,7 @@ function Step1({
         </Field.Root>
         <Field.Root name="passwordConfirm" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Повторите пароль</Field.Label>
-          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Error className={fieldErrorClass} match="customError"/>
           <Field.Control
             type="password"
             placeholder="ИмяВашегоКота"
@@ -302,10 +304,10 @@ type Step2Interface = Omit<
 }
 
 function Step2({
-  onStepComplete,
-  onBack,
-  filledData,
-}: {
+                 onStepComplete,
+                 onBack,
+                 filledData,
+               }: {
   onStepComplete: (data: Step2Interface) => void
   onBack: () => void
   filledData: RegisterFormData
@@ -313,11 +315,12 @@ function Step2({
   const [formData, setFormData] = useState<z.infer<typeof Step2Schema> | null>(null)
   const [formErrors, setFormErrors] = useState({})
   const [birthDate, setBirthDate] = useState<Date | null>(null)
-  const [checkEmailAvailability, { data: isEmailTaken, isLoading, error, isSuccess }] = useIsEmailTakenMutation()
+  const [checkEmailAvailability, {data: isEmailTaken, isLoading, error, isSuccess}] = useIsEmailTakenMutation()
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    const parsedData = Step2Schema.safeParse({ ...Object.fromEntries(formData), usersBirthday: birthDate })
+    const parsedData = Step2Schema.safeParse({...Object.fromEntries(formData), usersBirthday: birthDate})
     if (!parsedData.success) {
       setFormErrors(
         Object.fromEntries(
@@ -330,7 +333,7 @@ function Step2({
       return
     }
     setFormData(parsedData.data)
-    checkEmailAvailability({ email: parsedData.data.email })
+    checkEmailAvailability({email: parsedData.data.email})
   }
 
   useEffect(() => {
@@ -340,17 +343,17 @@ function Step2({
   useEffect(() => {
     if (!formData || isLoading) return
     if (!isSuccess) {
-      setFormErrors({ email: "Не удалось проверить свободность email" })
+      setFormErrors({email: "Не удалось проверить свободность email"})
       console.error("Error checking email availability", error)
       return
     }
     if (isEmailTaken) {
-      setFormErrors({ email: "Email уже занят" })
+      setFormErrors({email: "Email уже занят"})
       return
     }
     setFormErrors({})
-    const { isAcceptedPolicy, isConsentedToDataTransfer, usersBirthday, ...data } = formData
-    onStepComplete({ ...data, usersBirthday: usersBirthday!!.getTime() })
+    const {isAcceptedPolicy, isConsentedToDataTransfer, usersBirthday, ...data} = formData
+    onStepComplete({...data, usersBirthday: usersBirthday!!.getTime()})
   }, [isSuccess])
 
   return (
@@ -358,7 +361,7 @@ function Step2({
       <div className={inlineGridClass}>
         <Field.Root name="usersFirstName" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Имя</Field.Label>
-          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Error className={fieldErrorClass} match="customError"/>
           <Field.Control
             type="text"
             placeholder="Иванов"
@@ -368,7 +371,7 @@ function Step2({
         </Field.Root>
         <Field.Root name="usersSecondName" className={fieldRootClass}>
           <Field.Label className={fieldLabelClass}>Фамилия</Field.Label>
-          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Error className={fieldErrorClass} match="customError"/>
           <Field.Control
             type="text"
             placeholder="Иванов"
@@ -379,7 +382,7 @@ function Step2({
       </div>
       <Field.Root name="usersThirdName" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Отчество (При наличии)</Field.Label>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <Field.Control
           type="text"
           placeholder="Иванович"
@@ -389,7 +392,7 @@ function Step2({
       </Field.Root>
       <Field.Root name="email" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Email</Field.Label>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <Field.Control
           type="text"
           placeholder="email@example.xyz"
@@ -399,7 +402,7 @@ function Step2({
       </Field.Root>
       <Field.Root name="usersBirthday" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Дата Рождения</Field.Label>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <DatePicker
           type="single"
           className={datePickerClass}
@@ -411,7 +414,7 @@ function Step2({
         />
       </Field.Root>
       <Field.Root name="isAcceptedPolicy" className={fieldRootClass}>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <div className={policyCardClass}>
           <p>
             Я соглашаюсь с{" "}
@@ -426,7 +429,7 @@ function Step2({
           <Field.Item className="shrink-0">
             <Checkbox.Root className={checkboxRootClass}>
               <Checkbox.Indicator className="text-bg-alt flex transition data-unchecked:hidden">
-                <CheckIcon className="size-3" />
+                <CheckIcon className="size-3"/>
               </Checkbox.Indicator>
             </Checkbox.Root>
           </Field.Item>
@@ -434,7 +437,7 @@ function Step2({
       </Field.Root>
 
       <Field.Root name="isConsentedToDataTransfer" className={fieldRootClass}>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <div className={policyCardClass}>
           <p>
             Я даю согласие на{" "}
@@ -449,7 +452,7 @@ function Step2({
           <Field.Item className="shrink-0">
             <Checkbox.Root className={checkboxRootClass}>
               <Checkbox.Indicator className="text-bg-alt flex transition data-unchecked:hidden">
-                <CheckIcon className="size-3" />
+                <CheckIcon className="size-3"/>
               </Checkbox.Indicator>
             </Checkbox.Root>
           </Field.Item>
@@ -497,10 +500,10 @@ type Step3Interface = Omit<
 }
 
 function Step3({
-  onStepComplete,
-  onBack,
-  filledData,
-}: {
+                 onStepComplete,
+                 onBack,
+                 filledData,
+               }: {
   onStepComplete: (data: Step3Interface) => void
   onBack: () => void
   filledData: RegisterFormData
@@ -511,7 +514,7 @@ function Step3({
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    const parsedData = Step3Schema.safeParse({ ...Object.fromEntries(formData), parentBirthday: birthDate })
+    const parsedData = Step3Schema.safeParse({...Object.fromEntries(formData), parentBirthday: birthDate})
     if (!parsedData.success) {
       setFormErrors(
         Object.fromEntries(
@@ -524,8 +527,8 @@ function Step3({
       return
     }
     setFormErrors({})
-    const { isAcceptedPolicy, isConsentedToDataTransfer, ...data } = parsedData.data
-    onStepComplete({ ...data, parentBirthday: birthDate!!.getTime() })
+    const {isAcceptedPolicy, isConsentedToDataTransfer, ...data} = parsedData.data
+    onStepComplete({...data, parentBirthday: birthDate!!.getTime()})
   }
 
   return (
@@ -533,7 +536,7 @@ function Step3({
       <div className={inlineGridClass}>
         <Field.Root name="parentFirstName" className={twclsx(fieldRootClass)}>
           <Field.Label className={fieldLabelClass}>Имя законного представителя</Field.Label>
-          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Error className={fieldErrorClass} match="customError"/>
           <Field.Control
             type="text"
             placeholder="Иван"
@@ -543,7 +546,7 @@ function Step3({
         </Field.Root>
         <Field.Root name="parentSecondName" className={twclsx(fieldRootClass)}>
           <Field.Label className={fieldLabelClass}>Фамилия законного представителя</Field.Label>
-          <Field.Error className={fieldErrorClass} match="customError" />
+          <Field.Error className={fieldErrorClass} match="customError"/>
           <Field.Control
             type="text"
             placeholder="Иванов"
@@ -554,7 +557,7 @@ function Step3({
       </div>
       <Field.Root name="parentThirdName" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Отчество законного представителя</Field.Label>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <Field.Control
           type="text"
           placeholder="Иванович"
@@ -564,7 +567,7 @@ function Step3({
       </Field.Root>
       <Field.Root name="parentContact" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Контактная почта законного представителя</Field.Label>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <Field.Control
           type="text"
           placeholder="email@example.xyz"
@@ -574,7 +577,7 @@ function Step3({
       </Field.Root>
       <Field.Root name="parentBirthday" className={fieldRootClass}>
         <Field.Label className={fieldLabelClass}>Дата рождения законного представителя</Field.Label>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <DatePicker
           type="single"
           className={datePickerClass}
@@ -586,7 +589,7 @@ function Step3({
         />
       </Field.Root>
       <Field.Root name="isAcceptedPolicy" className={fieldRootClass}>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <div className={policyCardClass}>
           <p>
             Я(законный представитель) соглашаюсь с{" "}
@@ -601,14 +604,14 @@ function Step3({
           <Field.Item className="shrink-0">
             <Checkbox.Root className={checkboxRootClass}>
               <Checkbox.Indicator className="text-bg-alt flex transition data-unchecked:hidden">
-                <CheckIcon className="size-3" />
+                <CheckIcon className="size-3"/>
               </Checkbox.Indicator>
             </Checkbox.Root>
           </Field.Item>
         </div>
       </Field.Root>
       <Field.Root name="isConsentedToDataTransfer" className={fieldRootClass}>
-        <Field.Error className={fieldErrorClass} match="customError" />
+        <Field.Error className={fieldErrorClass} match="customError"/>
         <div className={policyCardClass}>
           <p>
             Я(законный представитель) даю согласие на{" "}
@@ -623,7 +626,7 @@ function Step3({
           <Field.Item className="shrink-0">
             <Checkbox.Root className={checkboxRootClass}>
               <Checkbox.Indicator className="text-bg-alt flex transition data-unchecked:hidden">
-                <CheckIcon className="size-3" />
+                <CheckIcon className="size-3"/>
               </Checkbox.Indicator>
             </Checkbox.Root>
           </Field.Item>
@@ -642,33 +645,81 @@ function Step3({
 }
 
 function VerificationStep({
-  onStepComplete,
-  filledData,
-}: {
+                            onStepComplete,
+                            filledData,
+                          }: {
   onStepComplete: () => void
   filledData: RegisterFormData
 }) {
   // const waitTime = 1
-  const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ [key: string]: number }>(() => {
-    const status: { [key: string]: number } = {}
-    if (filledData.email) {
-      status[filledData.email] = 0
+  // const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ [key: string]: number }>()
+
+  const [emails, setEmails] = useState<{ [key: string]: number }>(
+  //   {
+  //   "antonivanov@mtiyt.ru": 0,
+  //   "test1@mtiyt.ru": 0,
+  // }
+    () =>
+    {
+      const status: { [key: string]: number } = {}
+      if (filledData.email) {
+        status[filledData.email] = 0
+      }
+      if (filledData.parentContact) {
+        status[filledData.parentContact] = 0
+      }
+      return status
     }
-    if (filledData.parentContact) {
-      status[filledData.parentContact] = 0
-    }
-    return status
-  })
-  // const dispatch = useUsersDispatch()
-  // const [timeRemaining, setTimeRemaining] = useState(waitTime)
-  const unverifiedList = Object.keys(emailVerificationStatus).filter((email) => emailVerificationStatus[email] === 0)
-  const emailOnVerify = unverifiedList[0]
+  )
+  const emailsList = Object.keys(emails)
+  const emailsToVerify = emailsList.filter((email) => emails[email] === 0)
+  const nextEmailToConfirm = emailsToVerify.length !== 0 ? emailsToVerify[0] : emailsList[emailsList.length - 1]
+  const [allMessages, setAllMessages] = useState("")
   const {
     data: verifyEmail,
     isLoading: isVerifyLoading,
     error: verifyError,
     isSuccess: isVerifySuccess,
-  } = useVerifyEmailQuery({ email: emailOnVerify })
+  } = useVerifyEmailQuery({email: nextEmailToConfirm})
+  useEffect(() => {
+    if (!verifyEmail){
+      console.log("Empty state from socket")
+    }
+    else if (verifyEmail.startsWith("registered")){
+      console.log("Session opened")
+    }
+    else if (verifyEmail.startsWith("ok")) {
+      const email = verifyEmail.split(" ")[1]
+      const newEmails = {...emails}
+      newEmails[email] = 1
+      setEmails(newEmails)
+    }
+    else if(emailsList.find((e) => e === verifyEmail)){
+      const email = verifyEmail
+      const newEmails = {...emails}
+      newEmails[email] = 2
+      setEmails(newEmails)
+    }
+    else{
+      console.log("Unknown message " + verifyEmail)
+    }
+
+    setAllMessages(prev => prev + " | " + verifyEmail)
+  }, [verifyEmail])
+
+  // const dispatch = useUsersDispatch()
+  // const [timeRemaining, setTimeRemaining] = useState(waitTime)
+  // const unverifiedList = Object.keys(emailVerificationStatus).filter((email) => emailVerificationStatus[email] === 0)
+  // const emailOnVerify = "antonivanov@mtiyt.ru"
+  // unverifiedList[0] +
+
+
+  // const {
+  //   data: verifyEmail,
+  //   isLoading: isVerifyLoading,
+  //   error: verifyError,
+  //   isSuccess: isVerifySuccess,
+  // } = useVerifyEmailQuery({email: emailOnVerify})
 
   // useEffect(() => {
   //   if (timeRemaining <= 0) return
@@ -686,27 +737,27 @@ function VerificationStep({
   //   return () => clearInterval(timer)
   // }, [timeRemaining])
 
-  useEffect(() => {
-    console.log("isVerifySuccess", isVerifySuccess)
-    console.log("verifyEmail", verifyEmail)
-    console.log("emailOnVerify", emailOnVerify)
-    if (!isVerifySuccess || isVerifyLoading) return
-    if (verifyEmail === "ok") {
-      setEmailVerificationStatus((prev) => {
-        if (!emailOnVerify) return prev
-        const newStatus = { ...prev }
-        newStatus[emailOnVerify] = 1
-        return newStatus
-      })
-      return
-    }
-    if (!verifyEmail) return
-    setEmailVerificationStatus((prev) => {
-      const newStatus = { ...prev }
-      newStatus[verifyEmail] = 2
-      return newStatus
-    })
-  }, [verifyEmail])
+  // useEffect(() => {
+  //   console.log("isVerifySuccess", isVerifySuccess)
+  //   console.log("verifyEmail", verifyEmail)
+  //   console.log("emailOnVerify", emailOnVerify)
+  //   if (!isVerifySuccess || isVerifyLoading) return
+  //   if (verifyEmail === "ok") {
+  //     setEmailVerificationStatus((prev) => {
+  //       if (!emailOnVerify) return prev
+  //       const newStatus = {...prev}
+  //       newStatus[emailOnVerify] = 1
+  //       return newStatus
+  //     })
+  //     return
+  //   }
+  //   if (!verifyEmail) return
+  //   setEmailVerificationStatus((prev) => {
+  //     const newStatus = {...prev}
+  //     newStatus[verifyEmail] = 2
+  //     return newStatus
+  //   })
+  // }, [verifyEmail])
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -717,7 +768,7 @@ function VerificationStep({
   return (
     <div className={formCardClass}>
       <div className="flex flex-col gap-4">
-        {Object.entries(emailVerificationStatus).map(([email, status]) => (
+        {Object.entries(emails).map(([email, status]) => (
           <div
             className="text-text-main border-border flex flex-col items-center gap-2 rounded-2xl border px-2 py-5"
             key={email}
@@ -727,17 +778,17 @@ function VerificationStep({
 
             {status === 0 ? (
               <div>
-                <Loading />
+                <Loading/>
                 <p>Отправляем сообщение</p>
               </div>
             ) : status === 1 ? (
               <div>
-                <Loading />
+                <Loading/>
                 <p>Ожидаем подтверждения</p>
               </div>
             ) : (
               <div>
-                <IoIosCheckmarkCircle className="w-full text-5xl text-green-500" />
+                <IoIosCheckmarkCircle className="w-full text-5xl text-green-500"/>
                 <p>Подтверждено</p>
               </div>
             )}
@@ -775,7 +826,7 @@ function VerificationStep({
       <Button
         className={twclsx(actionButtonClass, "text-lg uppercase md:text-xl")}
         onClick={onStepComplete}
-        disabled={Object.values(emailVerificationStatus).some((status) => status !== 2)}
+        disabled={Object.values(emails).some((status) => status !== 2)}
       >
         ДАЛЕЕ
       </Button>
@@ -792,7 +843,8 @@ function calculateAge(birthday: Date) {
 function CheckIcon(props: React.ComponentProps<"svg">) {
   return (
     <svg fill="currentcolor" width="10" height="10" viewBox="0 0 10 10" {...props}>
-      <path d="M9.1603 1.12218C9.50684 1.34873 9.60427 1.81354 9.37792 2.16038L5.13603 8.66012C5.01614 8.8438 4.82192 8.96576 4.60451 8.99384C4.3871 9.02194 4.1683 8.95335 4.00574 8.80615L1.24664 6.30769C0.939709 6.02975 0.916013 5.55541 1.19372 5.24822C1.47142 4.94102 1.94536 4.91731 2.2523 5.19524L4.36085 7.10461L8.12299 1.33999C8.34934 0.993152 8.81376 0.895638 9.1603 1.12218Z" />
+      <path
+        d="M9.1603 1.12218C9.50684 1.34873 9.60427 1.81354 9.37792 2.16038L5.13603 8.66012C5.01614 8.8438 4.82192 8.96576 4.60451 8.99384C4.3871 9.02194 4.1683 8.95335 4.00574 8.80615L1.24664 6.30769C0.939709 6.02975 0.916013 5.55541 1.19372 5.24822C1.47142 4.94102 1.94536 4.91731 2.2523 5.19524L4.36085 7.10461L8.12299 1.33999C8.34934 0.993152 8.81376 0.895638 9.1603 1.12218Z"/>
     </svg>
   )
 }
