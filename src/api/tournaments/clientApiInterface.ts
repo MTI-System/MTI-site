@@ -43,6 +43,7 @@ export const {
   useGetFightInformationQuery,
   useGetActionInformationQuery,
   useGetTeamInTournamentQuery,
+  useGetFightContainerInfoQuery,
   useGetFightInfoByTournamentQuery,
   useGetFightContainerCardQuery,
 

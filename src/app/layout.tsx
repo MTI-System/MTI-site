@@ -32,10 +32,11 @@ export default async function Template({children}: { children: ReactNode }) {
     <html className="bg-bg-main">
     <head>
       <link rel="icon" href="https://mtiyt.ru/favicon.ico" type="image/x-icon"/>
-      {/*<script defer src="https://metrika.mtiyt.ru/script.js"*/}
-      {/*        data-website-id="8e028138-b03c-4ba1-a1a1-1b00fff2e564"></script>*/}
+      <script defer src="https://metrika.mtiyt.ru/script.js"
+              data-website-id="8e028138-b03c-4ba1-a1a1-1b00fff2e564"></script>
 
     </head>
+
     <StoreProvider
       tt={cookiesStore.get("mtiyt_tournamentType")?.value ?? "ТЮФ"}
       theme={cookiesStore.get("theme")?.value ?? "light"}
@@ -43,7 +44,9 @@ export default async function Template({children}: { children: ReactNode }) {
       tournamentTypes={tournamentTypes}
     >
       <ThemeUpdator/>
-      <LayoutComponent>{children}</LayoutComponent>
+
+        <LayoutComponent>{children}</LayoutComponent>
+
     </StoreProvider>
     </html>
   )
