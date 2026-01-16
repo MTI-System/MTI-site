@@ -11,12 +11,14 @@ import PickPersonRegistrationField
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
 import CheckboxesWithProblems from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxesWithProblems";
 import Loading from "@/app/loading";
-import { Forms } from "@/components/forms";
+import {Forms} from "@/components/forms";
 import {useGetTournamentCardQuery} from "@/api/tournaments/clientApiInterface";
 import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
 import RespondentUser from "@/components/tournamentPage/Forms/Registration/Parts/RespondentUser";
 import RegisterRequest from "@/components/personalDataRequests/RegisterRequest";
 import {useState} from "react";
+import AddFileField from "@/components/materials/AddFileField";
+import FileRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/FileRegistrationField";
 
 export default function RegistrationFormView(
   {formInfo, isEdit, onSubmit, tournamentId}: {
@@ -26,8 +28,7 @@ export default function RegistrationFormView(
     tournamentId: number
     formInfo: TournamentRegistrationFormInfoInterface | TournamentRegistrationAnswerInterface | null,
   }
-
-){
+) {
 
   const {data: tournamentCard, isLoading: isTournamentCardLoading} = useGetTournamentCardQuery({id: tournamentId})
   const [isPdAccepted, setIsPdAccepted] = useState(false)
@@ -43,15 +44,15 @@ export default function RegistrationFormView(
           onSubmit?.(e)
         }}
       >
-
-        {formInfo && "respondingUser" in formInfo && <UsersProviderWrapper><RespondentUser userId={formInfo.respondingUser}/></UsersProviderWrapper>}
+        {formInfo && "respondingUser" in formInfo &&
+            <UsersProviderWrapper><RespondentUser userId={formInfo.respondingUser}/></UsersProviderWrapper>}
         {formInfo?.fields?.map((fieldObject) => {
           const field = "type" in fieldObject ? fieldObject : fieldObject.formField
           return (
             <div key={field.key} className="flex w-full gap-2">
               <span className="w-10 text-red-800">{field?.metadata?.optional != "true" ? "(*)" : ""}</span>
               {
-                (()=>{
+                (() => {
                   switch (field.type) {
                     case "number":
                     case "text":
@@ -61,20 +62,26 @@ export default function RegistrationFormView(
                           field={fieldObject}
                         />
                       )
+                    case "file":
+                      return (
+                        <>
+                          <FileRegistrationField field={fieldObject}/>
+                        </>
+                      )
                     case "date":
                       return <DateRegistrationField key={field.key} field={fieldObject}/>
                     case "dropdown":
                       return <DropdownRegistrationField key={field.key} field={fieldObject}/>
                     case "player":
                       return (
-                        <UsersProviderWrapper key={field.key} >
+                        <UsersProviderWrapper key={field.key}>
                           <PickPersonRegistrationField field={fieldObject}/>
                         </UsersProviderWrapper>
 
                       )
                     case "coach":
                       return (
-                        <UsersProviderWrapper key={field.key} >
+                        <UsersProviderWrapper key={field.key}>
                           <PickPersonRegistrationField field={fieldObject}/>
                         </UsersProviderWrapper>
 
@@ -102,10 +109,13 @@ export default function RegistrationFormView(
 
         {isEdit && (
           <>
-            <RegisterRequest updateCheck={(isOn: boolean) => {setIsPdAccepted(isOn)}}
+            <RegisterRequest updateCheck={(isOn: boolean) => {
+              setIsPdAccepted(isOn)
+            }}
                              checkboxText={"Даю согласие на обработку ПД с целью регистрации на турнир " + tournamentCard?.title}/>
             <p className="text-center text-red-600">
-                Перед тем, как заявка попадет к организатору, необходимо чтобы каждый участник подтвердил её. Это можно будет сделать в уведомлениях.
+              Перед тем, как заявка попадет к организатору, необходимо чтобы каждый участник подтвердил её. Это можно
+              будет сделать в уведомлениях.
             </p>
             <Forms.ConfirmButton
               disabled={!isPdAccepted}

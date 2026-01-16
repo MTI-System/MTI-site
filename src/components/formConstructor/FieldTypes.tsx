@@ -8,7 +8,7 @@ export default function FieldTypes({ setFieldType, defaultValue }: { defaultValu
   const types: { label: string; value: availableFields }[] = [
     { label: "Текст", value: "text" },
     { label: "Число", value: "number" },
-    // { label: "Файл", value: "file" },
+    { label: "Файл", value: "file" },
     // { label: "Геолокация", value: "geolocation" },
     // { label: "Дата", value: "date" },
     { label: "Участник", value: "player" },
