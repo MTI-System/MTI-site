@@ -95,6 +95,13 @@ export default function RegistrationFormView({
                           )}
                         </ProblemsProviderWrapper>
                       )
+                    case "title_ni":
+                      return (
+                        <div>
+                          <p className="text-2xl font-bold">{field.title}</p>
+                          {field.metadata?.subtitle && <p className="text-md pl-2">{field.metadata?.subtitle}</p>}
+                        </div>
+                      )
                     default:
                       return <p>Unknown</p>
                   }

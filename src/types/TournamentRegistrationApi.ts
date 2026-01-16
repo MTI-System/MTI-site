@@ -10,6 +10,7 @@ export const TournamentRegistrationFormFieldMetadata = z.object({
       }
     }),
   ),
+  subtitle: z.string().optional(),
   placeholder: z.string().optional(),
   minValue: z.string().optional(),
   maxValue: z.string().optional(),
@@ -51,22 +52,19 @@ export const TournamentRegistrationAnswer = z.object({
   status: z.string(),
   fields: z.array(TournamentRegistrationAnswerField),
   respondingUser: z.number(),
-  neededPd: z.array(z.number()).optional()
+  neededPd: z.array(z.number()).optional(),
 })
-
 
 export const TournamentInformationFormResponse = z.object({
   formId: z.number(),
   title: z.string(),
   formTypeName: z.string(),
-  formTypeFlag: z.string()
+  formTypeFlag: z.string(),
 })
 
 export const TournamentInformationResponse = z.object({
-  availableForms: z.array(TournamentInformationFormResponse).optional()
+  availableForms: z.array(TournamentInformationFormResponse).optional(),
 })
-
-
 
 export type TournamentRegistrationFormInfoInterface = z.infer<typeof TournamentRegistrationFormInfo>
 export type TournamentInformationResponseInterface = z.infer<typeof TournamentInformationResponse>
