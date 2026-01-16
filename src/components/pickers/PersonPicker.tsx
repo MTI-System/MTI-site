@@ -80,7 +80,7 @@ export default function PersonPicker({
                 {(user: User) => (
                   <AutocompleteWithPreview.Item
                     key={user.id}
-                    className="text-text-main flex cursor-default py-2 pr-8 pl-4 text-base leading-4 outline-none select-none data-highlighted:relative data-highlighted:z-0 data-highlighted:text-gray-50 data-highlighted:before:absolute data-highlighted:before:inset-x-2 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1] data-highlighted:before:rounded"
+                    className="text-text-main data-highlighted:before:bg-hover flex cursor-default py-2 pr-8 pl-4 text-base leading-4 outline-none select-none data-highlighted:relative data-highlighted:z-0 data-highlighted:before:absolute data-highlighted:before:inset-x-2 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1] data-highlighted:before:rounded"
                     value={`${user.firstName} ${user.secondName} ${user.thirdName}`}
                   >
                     {user.firstName} {user.secondName} {user.thirdName}
@@ -96,7 +96,7 @@ export default function PersonPicker({
                       <>
                         <p>{`${preview.firstName} ${preview.secondName} ${preview.thirdName}`}</p>
                         {/*<p>Дата рождения: {formatDate(new Date(preview.birthday ?? 0))}</p>*/}
-                        <p>Почта: {preview.email}</p>
+                        {/* <p>Почта: {preview.email}</p> */}
                       </>
                     ) : (
                       "Наведите курсором мыши на элемент чтобы посмотреть превью"
