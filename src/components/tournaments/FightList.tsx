@@ -30,7 +30,7 @@ export function FightCard({ cardData }: { cardData: FightInformationInterface })
                   stroke="currentColor"
                   fill="currentColor"
                   strokeWidth="0"
-                  viewBox="0 0 512 512"
+                  viewBox="0 0 630 512"
                   className="text-main"
                   height="1em"
                   width="1em"
