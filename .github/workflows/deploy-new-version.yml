@@ -10,11 +10,24 @@ env:
   IMAGE_NAME: mof1us/frontend_mti
 
 jobs:
-  deploy:
+  build-application-and-tests:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+
+      - name: Install pnpm (via npm)
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+  build-docker-image-and-push:
+    runs-on: ubuntu-latest
+    needs: build-application-and-tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,7 +38,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -34,15 +46,29 @@ jobs:
           tags: mof1us/frontend_mti:latest
           load: true
           push: true
-          build-args: |
-            NEXT_PUBLIC_IS_ON_DEV=false
 
+  restart-service:
+    needs: build-docker-image-and-push
+    runs-on: ubuntu-latest
+    steps:
       - name: SHH and restart service
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.DEPLOY_SSH_HOST }}
           username: ${{ secrets.DEPLOY_SSH_USERNAME }}
-          port: ${{ secrets.DEPLOY_SSH_PORT }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            systemctl restart "${{ secrets.DEPLOY_SERVICE_NAME }}"
+            sudo systemctl restart mti_production_startup
+  
+
+  deploy-error:
+    if: ${{ always() && (needs.build-application.result == 'failure' || needs.build-and-push-docker-image.result == 'failure' || needs.restart-service.result == 'failure') }}
+    needs: [ build-application-and-tests, build-docker-image-and-push, restart-service ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send error notification
+        uses: appleboy/telegram-action@v0.1.2
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: "Ошибка при деплое tournaments-mti-service-dev в ветку dev на GitHub Actions. Проверьте логи выполнения."

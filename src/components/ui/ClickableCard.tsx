@@ -10,7 +10,7 @@ interface ClickableCardProps extends LinkProps {
 
 function ClickableCard({ children, className, ...linkProps }: ClickableCardProps) {
   return (
-    <Link {...linkProps} className={clsx("rounded-3xl", className)} draggable={false}>
+    <Link {...linkProps} className={clsx("rounded-3xl", className)} draggable={false} data-snowfall="top">
       {children}
     </Link>
   )
