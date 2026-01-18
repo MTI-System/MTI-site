@@ -43,7 +43,7 @@ export async function FightTable({teams}:{teams: {
             <td className=" text-center text-sm font-medium  ">    
               {problems[index] ?  
                   <Link
-                  className="block h-full w-full cursor-pointer px-4 py-3 hover:bg-hover " 
+                  className="block h-full w-full cursor-pointer px-4 py-3 hover:bg-hover transition-colors" 
                   href={`/${problems[index] ? "problems/" +  problems[index].id : "problems/"}`}> 
                   {problems[index].global_number}
                   </Link>: "-"}
