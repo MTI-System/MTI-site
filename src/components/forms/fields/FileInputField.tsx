@@ -5,17 +5,18 @@ import React, { useEffect, useRef, useState } from "react"
 import { ErrorTooltip } from "../ui/ErrorTooltip"
 import twclsx from "@/utils/twClassMerge"
 
-interface InputFieldProps
+interface FileInputFieldProps
   extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   onVerification: (value: string) => InputVerificationStatus
   name: string
 }
 
-export function InputField({ onVerification, name, ...rest }: InputFieldProps) {
+export function FileInputField({ onVerification, name, ...rest }: FileInputFieldProps) {
   const { register, setFormField } = useCardsRoot()
 
   const inputRef = useRef<HTMLInputElement>(null)
   const [verificationResult, setVerificationResult] = useState<InputVerificationStatus | undefined>(undefined)
+  const [fileName, setFileName] = useState<string>("")
 
   useEffect(() => {
     register(() => {
@@ -23,7 +24,8 @@ export function InputField({ onVerification, name, ...rest }: InputFieldProps) {
       console.log("verif", JSON.stringify(result))
       setVerificationResult(result)
       if (result.isSuccess) {
-        setFormField(name, inputRef.current?.value || "")
+        //@ts-ignore
+        setFormField(name, inputRef.current?.files[0] || "")
       }
       return result
     })
@@ -35,12 +37,21 @@ export function InputField({ onVerification, name, ...rest }: InputFieldProps) {
         errorMessage={verificationResult?.errorMessage ?? "Неизвестная ошибка"}
         isActive={!(verificationResult?.isSuccess ?? true)}
       >
+        <label
+          htmlFor={name}
+          className={twclsx({ "border border-red-700": !(verificationResult?.isSuccess ?? true) }, rest.className)}
+        >
+          {fileName || "Выберите файл"}
+        </label>
         <input
           name={name}
-          className={twclsx({ "border border-red-700": !(verificationResult?.isSuccess ?? true) })}
-          ref={inputRef}
-          onWheel={(e) => e.currentTarget.blur()}
           {...rest}
+          ref={inputRef}
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            setFileName(file?.name ?? "")
+          }}
+          className="hidden"
         />
       </ErrorTooltip>
     </>

@@ -19,7 +19,7 @@ export default function LoginLayout({
   const ttObject = availableTournamentTypes.find((t) => t.id === tt)
 
   return (
-    <div className="bg-bg-main flex h-screen w-screen items-center justify-center select-none">
+    <div className="bg-bg-main flex min-h-fit h-screen w-screen items-center justify-center select-none">
       <div className="flex items-center justify-center">
         <div className="bg-bg-alt flex md:max-h-screen w-screen max-w-160 flex-col items-center justify-center gap-4 overflow-hidden rounded-4xl px-6 py-10 sm:max-h-[90vh]">
           <Link href="/" className="text-5xl font-bold text-text-main">
