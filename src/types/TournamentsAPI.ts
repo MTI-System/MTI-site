@@ -157,10 +157,25 @@ export const teamScoreInActionSchema = z.object({
   jury: z.number(),
 })
 
+const callSchema = z.object({
+  id: z.number(),
+  problemId: z.number(),
+  result: z.boolean()
+})
+
+const draftActionSchema = z.object({
+  id: z.number(),
+  chellenger: teamInTournamentSchema,
+  chellenged: teamInTournamentSchema,
+  calls: z.array(callSchema)
+})
+
 export const fightActionSchema = z.object({
   pickedProblem: z.number().optional(),
+  drafts: draftActionSchema.optional().nullable(),
   playerLines: z.array(
     z.object({
+
       performanceId: z.number(),
       role: teamRoleInActionSchema.optional(),
       playerId: z.number().optional(),
@@ -171,11 +186,14 @@ export const fightActionSchema = z.object({
   ),
 })
 
+
+
 export const fightContainerInfoSchema = z.array(fightInformationSchema)
 
 export const fightInfoByTournamentSchema = z.record(z.string(), fightContainerInfoSchema)
 
 export type FightActionInterface = z.infer<typeof fightActionSchema>
+export type CallInterface = z.infer<typeof callSchema>
 export type TeamRoleInActionInterface = z.infer<typeof teamRoleInActionSchema>
 export type TeamScoreInActionInterface = z.infer<typeof teamScoreInActionSchema>
 export type TeamInTournamentInterface = z.infer<typeof teamInTournamentSchema>
