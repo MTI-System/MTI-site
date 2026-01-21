@@ -17,6 +17,7 @@ import { useGetProblemsByIdQuery } from "@/api/problems/clientApiInterface"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import Loading from "@/app/loading"
 import Link from "next/link"
+import DraftList from "@/components/tournamentPage/FightsPage/DraftList";
 
 export function ActionTabs({ fightData }: { fightData: FightInformationInterface }) {
   return (
@@ -69,7 +70,7 @@ function FightAction({ actionId }: { actionId: number }) {
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="w-full p-4 text-center">
+      <div className="w-full px-4 pt-4 text-center">
         <div className="text-text-alt mb-1 text-sm uppercase">Задача</div>
         {problemData?.id ? (
           <Link href={`/problems/${problemData?.id}`} className="text-text-main text-lg font-bold uppercase">
@@ -78,6 +79,13 @@ function FightAction({ actionId }: { actionId: number }) {
         ) : (
           <p className="text-text-main text-lg font-bold uppercase">-</p>
         )}
+      </div>
+
+      <div className="w-full px-4 text-center">
+          <h3 className="text-text-main text-lg font-bold uppercase">
+            Процедура вызова:
+          </h3>
+          <DraftList actionId={actionId}/>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
