@@ -22,7 +22,7 @@ export const teamInTournamentSchema = z.object({
   id: z.number(),
   name: z.string().nonempty(),
   global_team_id: z.number().optional(),
-  players: z.array(z.number()),
+  players: z.array(z.number()).optional(),
 })
 export const TournamentCard = z.object({
   id: z.number(),
@@ -124,7 +124,8 @@ export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequest
 // }
 
 
-export const fightTeamInTournamentShema = teamInTournamentSchema.omit({global_team_id: true, players: true}).extend({
+export const fightTeamInTournamentShema =
+  teamInTournamentSchema.omit({global_team_id: true, players: true}).extend({
   score: z.number(),
   coefficient: z.number(),
   reported_problem: z.number().optional(),
@@ -142,7 +143,7 @@ export const fightInformationSchema = z.object({
   jouries: z.array(z.number()),
   teams: z.array(
     fightTeamInTournamentShema
-  ),
+  ).optional(),
 })
 
 export const teamRoleInActionSchema = z.object({
@@ -175,7 +176,6 @@ export const fightActionSchema = z.object({
   drafts: draftActionSchema.optional().nullable(),
   playerLines: z.array(
     z.object({
-
       performanceId: z.number(),
       role: teamRoleInActionSchema.optional(),
       playerId: z.number().optional(),
