@@ -64,7 +64,7 @@ export default function ConfirmationPage({ tournamentId }: { tournamentId: numbe
         {filledForms?.map((filledForm, idx) => (
           <Accordion.Item className="border-border overflow-hidden rounded-xl border" key={idx}>
             <Accordion.Header>
-              <Accordion.Trigger className="group bg-ba-main hover:bg-hover relative flex w-full items-baseline justify-between gap-4 py-2 pr-1 pl-3 text-left font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
+              <Accordion.Trigger className="group bg-ba-main hover:bg-hover focus-visible:outline-accent-primary relative flex w-full items-baseline justify-between gap-4 py-2 pr-1 pl-3 text-left font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2">
                 Заявка {idx + 1}
                 <PlusIcon className="mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45" />
               </Accordion.Trigger>

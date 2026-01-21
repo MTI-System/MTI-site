@@ -16,6 +16,7 @@ import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import RespondentUser from "@/components/tournamentPage/Forms/Registration/Parts/RespondentUser"
 import RegisterRequest from "@/components/personalDataRequests/RegisterRequest"
 import { useState } from "react"
+import AddFileField from "@/components/materials/AddFileField"
 import FileRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/FileRegistrationField"
 
 export default function RegistrationFormView({
@@ -30,7 +31,7 @@ export default function RegistrationFormView({
   formInfo: TournamentRegistrationFormInfoInterface | TournamentRegistrationAnswerInterface | null
 }) {
   const { data: tournamentCard, isLoading: isTournamentCardLoading } = useGetTournamentCardQuery({ id: tournamentId })
-  const [isPdAccepted, setIsPdAccepted] = useState(false)
+  const [isPdAccepted, setIsPdAccepted] = useState(true)
   const token = useAppSelector((state) => state.auth.token)
   return (
     <>
@@ -94,6 +95,13 @@ export default function RegistrationFormView({
                           )}
                         </ProblemsProviderWrapper>
                       )
+                    case "title_ni":
+                      return (
+                        <div className="py-2">
+                          <p className="text-2xl font-bold">{field.title}</p>
+                          {field.metadata?.subtitle && <p className="text-md">{field.metadata?.subtitle}</p>}
+                        </div>
+                      )
                     default:
                       return <p>Unknown</p>
                   }
@@ -105,20 +113,14 @@ export default function RegistrationFormView({
 
           {isEdit && (
             <>
-              <RegisterRequest
-                updateCheck={(isOn: boolean) => {
-                  setIsPdAccepted(isOn)
-                }}
-                checkboxText={
-                  "Даю согласие на обработку ПД с целью регистрации на турнир: '" + tournamentCard?.title + "'"
-                }
-              />
-              {formInfo?.fields?.find((v) => ("type" in v ? v : v.formField).type === "player") !== undefined && (
-                <p className="text-center text-red-600">
-                  Перед тем, как заявка попадет к организатору, необходимо чтобы каждый участник подтвердил её. Это
-                  можно будет сделать в уведомлениях.
-                </p>
-              )}
+              {/* <RegisterRequest updateCheck={(isOn: boolean) => {
+              setIsPdAccepted(isOn)
+            }}
+                             checkboxText={"Даю согласие на обработку ПД с целью регистрации на турнир " + tournamentCard?.title}/> */}
+              <p className="text-center text-red-600">
+                Перед тем, как заявка попадет к организатору, необходимо чтобы каждый участник подтвердил её. Это можно
+                будет сделать в уведомлениях.
+              </p>
               <Forms.ConfirmButton
                 disabled={!isPdAccepted}
                 className="bg-accent-primary/30 border-accent-primary hover:bg-accent-primary/50 text-accent-primary disabled:bg-bg-alt h-10 cursor-pointer rounded-xl border px-10 font-bold disabled:cursor-not-allowed"

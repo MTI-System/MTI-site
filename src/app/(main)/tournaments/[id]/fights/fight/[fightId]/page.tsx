@@ -93,7 +93,7 @@ function Fight({ fightData }: { fightData: FightInformationInterface }) {
       <h1 className="text-text-main mx-auto my-5 text-center text-2xl font-bold">Действия боя</h1>
 
       <div className="border-border overflow-x-auto rounded-2xl border">
-        <FightTable teams={fightData.teams} />
+        <FightTable teams={fightData.teams ?? []} />
       </div>
 
       <ActionTabs fightData={fightData} />

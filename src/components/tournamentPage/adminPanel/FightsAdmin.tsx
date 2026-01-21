@@ -138,7 +138,7 @@ export default function FightsAdmin({
                           </p>
                           <TeamsPicker
                             name={"team1"}
-                            defaultValue={fight.teams[0]?.id?.toString()}
+                            defaultValue={fight.teams?.[0]?.id?.toString()}
                             teams={teams ?? []}
                           />
 
@@ -148,7 +148,7 @@ export default function FightsAdmin({
                           </p>
                           <TeamsPicker
                             name={"team2"}
-                            defaultValue={fight.teams[1]?.id?.toString()}
+                            defaultValue={fight.teams?.[1]?.id?.toString()}
                             teams={teams ?? []}
                           />
 
@@ -158,7 +158,7 @@ export default function FightsAdmin({
                           </p>
                           <TeamsPicker
                             name={"team3"}
-                            defaultValue={fight.teams[2]?.id?.toString()}
+                            defaultValue={fight.teams?.[2]?.id?.toString()}
                             teams={teams ?? []}
                           />
                         </th>

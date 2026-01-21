@@ -20,6 +20,7 @@ import CoachFieldConstructor from "../fieldTypesConstructors/CoachFormConstructo
 import DateFieldConstructor from "@/components/formConstructor/fieldTypesConstructors/DatePickerFormConstructor"
 import { Checkbox } from "@base-ui-components/react"
 import { MdDelete, MdDeleteOutline } from "react-icons/md"
+import TitleNIConstructor from "../fieldTypesConstructors/TitleNIConstructor"
 
 export function ConstructorItem({ id, index, field }: { index: number; id: number; field: Field }) {
   const handleRef = useRef<HTMLInputElement | null>(null)
@@ -95,6 +96,8 @@ export function ConstructorItem({ id, index, field }: { index: number; id: numbe
                 <PlayerFieldConstructor id={id} />
               ) : field.properties.fieldType === "coach" ? (
                 <CoachFieldConstructor id={id} />
+              ) : field.properties.fieldType === "title_ni" ? (
+                <TitleNIConstructor id={id} />
               ) : (
                 <p className="text-text-alt text-[22px] font-bold">Неизвестный тип поля</p>
               )}

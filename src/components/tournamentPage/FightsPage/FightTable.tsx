@@ -19,7 +19,7 @@ export interface EventData {
   location: string
   startTime: number
   jouries: number[]
-  teams: Array<{
+  teams?: Array<{
     id: number
     name: string
     score: number

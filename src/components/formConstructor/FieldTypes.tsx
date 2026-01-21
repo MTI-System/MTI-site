@@ -21,6 +21,7 @@ export default function FieldTypes({
     { label: "Руководитель", value: "coach" },
     // { label: "Выбор из списка", value: "dropdown" },
     { label: "Чекбоксы со списком задач текущего года", value: "problems_checkboxes" },
+    { label: "Заголовок", value: "title_ni" },
   ]
   const [defVal] = useState(defaultValue)
 

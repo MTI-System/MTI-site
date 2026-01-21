@@ -72,7 +72,7 @@ export default function Instructions() {
               </span>
               <span className="px-2">Для этого перейдите на страницу турнира и нажмите "Регистрация на турнир".</span>
 
-              <span className="px-2">vВ открывшейся форме заполните поля, выберите задачи и отправьте форму.</span>
+              <span className="px-2">В открывшейся форме заполните поля, выберите задачи и отправьте форму.</span>
               <img className="mt-2 w-screen md:w-[60vw]" src={FILES_SERVER + "img2.png"} alt={"Изображение"} />
               <img className="mb-2 w-screen md:w-[60vw]" src={FILES_SERVER + "img3.png"} alt={"Изображение"} />
               <span className="px-2">Если все сделано верно, Вы увидете подтверждение, что форма заполнена.</span>

@@ -7,7 +7,7 @@ import Link from "next/link"
 import { FaExternalLinkAlt } from "react-icons/fa"
 
 export default function FightTable({ fight, type }: { fight: EventData[]; type: "team" | "jury" }) {
-  const maxTeams = Math.max(...fight.map((room) => room.teams.length))
+  const maxTeams = Math.max(...fight.map((room) => room.teams?.length ?? 0))
   const maxTeamsArr = Array.from({ length: maxTeams })
   const maxJouries = Math.max(...fight.map((room) => room.jouries.length))
   const maxJouriesArr = Array.from({ length: maxJouries })
@@ -78,7 +78,7 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
 
           {type === "team" &&
             maxTeamsArr.map((item, idx) => {
-              const team = fightItem.teams[idx]
+              const team = fightItem.teams?.[idx]
               return (
                 <div
                   key={idx}

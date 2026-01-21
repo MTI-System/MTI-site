@@ -17,6 +17,14 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
   )
 
   // const maxFightsFilled = Math.max(...table?.table_lines.map(l=>l.scores.length)??[0])
+  if (table?.table_lines.length === 0)
+    return (
+      <>
+        <h2 className="text-text-main w-full pb-5 text-center text-2xl font-bold">Турнирная таблица</h2>
+        <p className="text-text-main w-full text-center">Пока нет результатов</p>
+      </>
+    )
+
   const maxFilledFightsIndex =
     table?.table_lines.map((x, i) => [x.scores.length, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1] ?? 0
   const maxFightsFilled = table?.table_lines[maxFilledFightsIndex].scores.length ?? 0

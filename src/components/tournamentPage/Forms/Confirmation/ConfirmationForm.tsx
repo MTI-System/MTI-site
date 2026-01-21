@@ -82,7 +82,7 @@ export function ConfirmationForm({
                         updateCheck={(isOn: boolean) => {
                           changeFlag(idx, isOn)
                         }}
-                        checkboxText={"Даю согласие на передачу персональных данных организатору турнира"}
+                        checkboxText={"Подтверждаю, что все данные заполнены верно"}
                       />
                     )
                 }

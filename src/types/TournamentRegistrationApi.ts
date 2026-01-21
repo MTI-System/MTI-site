@@ -10,6 +10,7 @@ export const TournamentRegistrationFormFieldMetadata = z.object({
       }
     }),
   ),
+  subtitle: z.string().optional(),
   placeholder: z.string().optional(),
   minValue: z.string().optional(),
   maxValue: z.string().optional(),
@@ -43,7 +44,7 @@ export const TournamentRegistrationFormInfo = z.object({
 export const TournamentRegistrationAnswerField = z.object({
   id: z.number(),
   formField: TournamentRegistrationFormField,
-  content: z.string(),
+  content: z.string().nullable(),
 })
 
 export const TournamentRegistrationAnswer = z.object({

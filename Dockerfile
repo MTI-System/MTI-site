@@ -11,6 +11,7 @@ ARG NEXT_PUBLIC_IS_ON_DEV
 ENV NEXT_PUBLIC_IS_ON_DEV=$NEXT_PUBLIC_IS_ON_DEV
 
 RUN pnpm build
+RUN pnpm exec next telemetry disable
 EXPOSE 3000
 
 CMD ["pnpm", "start"]
