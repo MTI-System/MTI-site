@@ -1,113 +1,148 @@
 "use client"
-import { useAddFightMutation, useGetFightInfoByTournamentQuery } from "@/api/tournaments/clientApiInterface"
+import { useGetFightInfoByTournamentQuery, useGetTournamentCardQuery, useSetTeamsToFightMutation } from "@/api/tournaments/clientApiInterface"
 import Loading from "@/app/loading"
-import FightsAdmin from "@/components/tournamentPage/adminPanel/FightsAdmin"
-import { Accordion, Select } from "@base-ui-components/react"
-import FightContainerAdminPanel from "@/components/tournamentPage/adminPanel/FightContainerAdminPanel"
-import { useRouter } from "next/navigation"
+import { Button, Input } from "@base-ui-components/react"
+import AssignmentTeamsTable from "@/components/tournamentPage/adminPanel/AssignmentTeamsTable"
+import { ChangeEvent, useEffect, useMemo, useState } from "react"
+import AssignmentRoomsTable from "./AssignmentRoomsTable"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 
-export default function AdminPanel({ tournamentId }: { tournamentId: number }) {
-  const {
-    data: informationAboutFights,
-    isLoading,
-    isError,
-  } = useGetFightInfoByTournamentQuery({ tournamentId: tournamentId })
-  const router = useRouter()
-  const mockTeams = [
-    { value: 1, label: "Команда 1" },
-    { value: 2, label: "Команда 2" },
-    { value: 3, label: "Команда 3" },
-    { value: 4, label: "Команда 4" },
-    { value: 5, label: "Команда 5" },
-    { value: 6, label: "Команда 6" },
-    { value: 7, label: "Команда 7" },
-    { value: 8, label: "Команда 8" },
-    { value: 9, label: "Команда 9" },
-  ]
+export default function AdminAssignmentPanel({ tournamentId }: { tournamentId: number }) {
+  interface FightData {
+    fight: number;
+    data: number[][];
+  }
+
+  const token = useAppSelector((state) => state.auth.token)
+  const { data: fights, isLoading: isLoadingFights} = useGetFightInfoByTournamentQuery({ tournamentId: tournamentId })
+  const { data: tournamentCard, isLoading: isTournamentCardLoading } = useGetTournamentCardQuery({ id: tournamentId })
+
+
+  //Формируем список команд для выпадашек AssignmentTeamsTable
+  const tournamentTeams = useMemo(() => {
+    if (!tournamentCard?.teams) {
+      return [];
+    }
+    return tournamentCard.teams.map(team => ({
+      value: team.id,
+      label: team.name,
+    }));
+  }, [tournamentCard]);
+
+  //Вспомогательное для фиксации позиций команд
+  const [selections, setSelections] = useState<(number | null)[]>([]);
+  useEffect(() => {
+    setSelections(new Array(tournamentTeams.length).fill(null));
+  }, [tournamentTeams]);
+
+  //Обработка выбора команды
+  const handleChange = (tableIndex: number, teamId: number | null) => {
+    setSelections(prevSelections => {
+      const newSelections = [...prevSelections];
+      newSelections[tableIndex] = teamId;
+      return newSelections;
+    });
+  };
+
+  //Получение команды по ее позициции
+  const getTeamValue = (num: number) => {
+    if (num === 0) {
+      return '-';
+    }
+    const selected = selections[num - 1];
+    return selected ? tournamentTeams.find(team => team.value === selected)?.label || num : num;
+  }
+
+  const [fileData, setFileData] = useState<FightData[] | null>(null);
+
+  const fileParse = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    file.text().then(text => {
+      setFileData(JSON.parse(text));
+    }).catch(err => console.error("Ошибка:", err));
+  };
+  
+  const newData = useMemo(() => {
+    if (!fights || !fileData) return [];
+    const entries = Object.entries(fights);
+
+    return entries.map(([fightId, roomObjects], index) => {
+      const item = fileData[index];
+      const rooms = roomObjects.map((room) => room.id);
+
+      return {
+        fightId,
+        rooms,
+        data: item?.data,
+      };
+    });
+  }, [fights, fileData]);
+
+  const [setTeamsToFight, { isLoading: isTeamsSettingLoading, isSuccess: isTeamsSettingSuccess }] = useSetTeamsToFightMutation();
+
+  const saveAssignment = () => {
+    newData.forEach((fight) => {
+      const rows = fight.data;
+      const numColumns = rows[0].length;
+      const columns: (number | null)[][] = Array.from({ length: numColumns }, () => []);
+
+      rows.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          const value = selections[cell - 1] ?? null;
+          columns[colIndex].push(value);
+        });
+        const data = new FormData()
+        // data.set("token", token)
+        data.set("token", "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2VtYWlsIjoiYW50b29uLnMuaXZhbm92QGdtYWlsLmNvbSIsInVzZXJfaWQiOjE3MSwicmlnaHRzIjpbXSwibG9naW4iOiJtb2YxdXMiLCJzdWIiOiIxNzEiLCJpYXQiOjE3NjgzNzE5MjAsImV4cCI6MTc2ODUxNTkyMH0.fdsptYldQc1y-CgH0ZX_xVqnKrLARuoRwOeXloDJ3Lg")
+        if (fight.rooms[rowIndex]) {
+          const dataToSave = Object.fromEntries(data.entries())
+          //@ts-ignore
+          dataToSave.teams = columns[rowIndex]
+          //@ts-ignore
+          setTeamsToFight(dataToSave)
+        }
+      });
+    });
+  };
+
+  // --------------DELETE LATER-------------
+  const roomNames = ["A", "B", "C"]
+  // ---------------------------------------
+
   return (
     <>
-      {isLoading && <Loading />}
-      <div className="border-border rounded-2xl border">
-        <table>
-          <thead>
-            <tr>
-              <th>№</th>
-              <th>Название команды</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mockTeams.map((team) => (
-              <tr key={team.value}>
-                <td>{team.value}</td>
-                <td>
-                  <Select.Root items={mockTeams}>
-                    <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
-                      <Select.Value />
-                      <Select.Icon className="flex">
-                        <ChevronUpDownIcon />
-                      </Select.Icon>
-                    </Select.Trigger>
-                    <Select.Portal>
-                      <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
-                        <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
-                          <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
-                          <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
-                            {mockTeams.map((team) => (
-                              <Select.Item
-                                key={team.label}
-                                value={team.value}
-                                className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
-                              >
-                                <Select.ItemIndicator className="col-start-1">
-                                  <CheckIcon className="size-3" />
-                                </Select.ItemIndicator>
-                                <Select.ItemText className="col-start-2">{team.label}</Select.ItemText>
-                              </Select.Item>
-                            ))}
-                          </Select.List>
-                          <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
-                        </Select.Popup>
-                      </Select.Positioner>
-                    </Select.Portal>
-                  </Select.Root>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {/* {isError && <p>Ошибка aaa{tournamentId}</p>}
-      {informationAboutFights && (
-        <>
-          <Accordion.Root className="flex w-full flex-col justify-center text-gray-900">
-            {Object.entries(informationAboutFights ?? {}).map(([fightContainerId, fightsInfo]) => (
-              <FightContainerAdminPanel
-                key={fightContainerId}
-                fightContainerId={Number(fightContainerId)}
-                fightsInfo={fightsInfo}
-                tournamentId={tournamentId}
+      {(isLoadingFights || isTournamentCardLoading) && <Loading />}
+
+      {fights && <div className="flex w-full gap-7.5 px-3">
+        <div className="w-[30%] flex flex-col gap-7.5 items-center">
+          <AssignmentTeamsTable teams={tournamentTeams} selections={selections} onChange={handleChange} />
+          <Button className="cursor-pointer bg-accent-primary-alt border-accent-primary text-accent-primary h-fit w-fit py-1 px-2 rounded-xl border text-xl transition-colors duration-300"
+            onClick={() => {
+              saveAssignment()
+            }}>
+            Завершить жеребьёвку
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-7.5 w-[70%] items-center justify-center">
+          {!fileData && <div className="flex flex-col items-center justify-center gap-7.5 text-center text-text-main">Для составления таблицы рассадки необходимо загрузить файл - конфигурацию.
+            <label className="flex flex-col items-center justify-center gap-1 border border-border rounded-2xl w-60 h-15 mb-5">
+              <span className="text-md font-medium text-text-main">Загрузить файл</span>
+              <input
+                type="file"
+                accept=".txt"
+                onChange={fileParse}
+                className="hidden"
               />
-            ))}
-          </Accordion.Root>
-        </>
-      )} */}
+            </label>
+          </div>}
+          {fileData && Object.entries(fights).map(([fightNum, fight], index) => (
+            <AssignmentRoomsTable key={fightNum} fightNum={fightNum} rooms={roomNames} config={newData.find(item => item.fightId == fightNum)} getTeamValue={getTeamValue} />
+          ))}
+        </div>
+      </div>}
     </>
-  )
-}
-
-function ChevronUpDownIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentcolor" strokeWidth="1.5" {...props}>
-      <path d="M0.5 4.5L4 1.5L7.5 4.5" />
-      <path d="M0.5 7.5L4 10.5L7.5 7.5" />
-    </svg>
-  )
-}
-
-function CheckIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg fill="currentcolor" width="10" height="10" viewBox="0 0 10 10" {...props}>
-      <path d="M9.1603 1.12218C9.50684 1.34873 9.60427 1.81354 9.37792 2.16038L5.13603 8.66012C5.01614 8.8438 4.82192 8.96576 4.60451 8.99384C4.3871 9.02194 4.1683 8.95335 4.00574 8.80615L1.24664 6.30769C0.939709 6.02975 0.916013 5.55541 1.19372 5.24822C1.47142 4.94102 1.94536 4.91731 2.2523 5.19524L4.36085 7.10461L8.12299 1.33999C8.34934 0.993152 8.81376 0.895638 9.1603 1.12218Z" />
-    </svg>
   )
 }
