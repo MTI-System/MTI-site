@@ -12,7 +12,7 @@ export default function DateRegistrationField({
 }) {
   const fieldObject = "formField" in field ? field.formField : field
   const fieldContent =
-    "formField" in field ? field.content.split(" ").map((v) => `${formatDate(new Date(Number(v)))}`) : undefined
+    "formField" in field ? field.content?.split(" ").map((v) => `${formatDate(new Date(Number(v)))}`) : undefined
 
   return (
     <>

@@ -1,5 +1,6 @@
-import { problemsApiServer } from "@/api/problems/serverApiInterface"
-import { makeProblemsStoreServer } from "@/api/problems/serverStore"
+import { problemsApiServer } from "@/api/problems/serverApiInterface";
+import { makeProblemsStoreServer } from "@/api/problems/serverStore";
+import Link from "next/link";
 
 export async function FightTable({
   teams,
@@ -55,25 +56,25 @@ export async function FightTable({
       </thead>
       <tbody className="divide-border divide-y">
         {teams.map((item, index) => (
-          <tr key={item.id} className="text-text-main transition-colors">
-            <td className="px-4 py-3 text-center text-sm font-medium sm:text-xs">{item.name ? item.name : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm font-medium sm:text-xs">{item.score ? item.score : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm font-medium sm:text-xs">
-              {item.coefficient ? item.coefficient : "-"}
-            </td>
-            <td className="px-4 py-3 text-center text-sm font-medium">
-              {problems[index] ? problems[index].global_number : "-"}
-            </td>
-            <td className="px-4 py-3 text-center text-sm font-medium">
-              {item.reporterScore ? item.reporterScore : "-"}
-            </td>
-            <td className="px-4 py-3 text-center text-sm font-medium">
-              {item.opponentScore ? item.opponentScore : "-"}
-            </td>
-            <td className="px-4 py-3 text-center text-sm font-medium">
-              {item.reviewerScore ? item.reviewerScore : "-"}
+          <tr key={item.id} className="transition-colors text-text-main">
+            <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.name ? item.name : "-"}</td>
+            <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.score ? item.score : "-"}</td>
+            <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.coefficient? item.coefficient : "-"}</td>
+
+            <td className=" text-center text-sm font-medium  ">    
+              {problems[index] ?  
+                  <Link
+                  className="block h-full w-full cursor-pointer px-4 py-3 hover:bg-hover transition-colors" 
+                  href={`/${problems[index] ? "problems/" +  problems[index].id : "problems/"}`}> 
+                  {problems[index].global_number}
+                  </Link>: "-"}
+              
             </td>
 
+            <td className="px-4 py-3 text-center text-sm font-medium">{item.reporterScore ? item.reporterScore : "-"}</td>
+            <td className="px-4 py-3 text-center text-sm font-medium">{item.opponentScore ? item.opponentScore : "-"}</td>
+            <td className="px-4 py-3 text-center text-sm font-medium">{item.reviewerScore ? item.reviewerScore : "-"}</td>
+            
             {/*TODO: Make this work: */
             /* <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.name ? item.name : "-"}</Link></td>
             <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.score ? item.score : "-"}</Link></td>

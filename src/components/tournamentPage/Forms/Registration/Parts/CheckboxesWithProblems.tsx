@@ -18,7 +18,6 @@ export default function CheckboxesWithProblems({
 }) {
   const fieldObject = "formField" in field ? field.formField : field
   const fieldContent = "formField" in field ? field.content : ""
-  const checkedFields = fieldContent.split(",")
 
   const { data, isLoading } = useGetProblemsQuery({ tournament: ttype, year: year })
   const fieldsProps =
@@ -28,13 +27,13 @@ export default function CheckboxesWithProblems({
         title: item.problem_translations[0].problem_name,
         name: item.id.toString(),
         value: item.id.toString(),
-        isChecked: fieldContent.includes(item.id.toString()),
+        isChecked: fieldContent?.includes(item.id.toString()) ?? false,
       }
     }) ?? []
   return (
     <>
       {isLoading && <Loading />}
-      {!isLoading && (
+      {!isLoading && fieldsProps && (
         <CheckboxGroupRegistrationField
           group={{
             key: fieldObject.key,

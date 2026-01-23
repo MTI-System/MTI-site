@@ -14,13 +14,14 @@ export default function FieldTypes({
   const types: { label: string; value: availableFields }[] = [
     { label: "Текст", value: "text" },
     { label: "Число", value: "number" },
-    // { label: "Файл", value: "file" },
+    { label: "Файл", value: "file" },
     // { label: "Геолокация", value: "geolocation" },
     // { label: "Дата", value: "date" },
     { label: "Участник", value: "player" },
     { label: "Руководитель", value: "coach" },
     // { label: "Выбор из списка", value: "dropdown" },
     { label: "Чекбоксы со списком задач текущего года", value: "problems_checkboxes" },
+    { label: "Заголовок", value: "title_ni" },
   ]
   const [defVal] = useState(defaultValue)
 

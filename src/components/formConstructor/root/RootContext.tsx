@@ -15,6 +15,7 @@ export type availableFields =
   | "player"
   | "coach"
   | "problems_checkboxes"
+  | "title_ni"
 
 export type DropdownOption = {
   label: string
@@ -68,6 +69,11 @@ export type ProblemsCheckboxesInputProperties = {
   fieldType: "problems_checkboxes"
 }
 
+export type TitileNIProperties = {
+  fieldType: "title_ni"
+  subtitle?: string
+}
+
 export type FieldProperties =
   | DropdownProperties
   | TextInputProperties
@@ -78,6 +84,7 @@ export type FieldProperties =
   | PlayerInputProperties
   | CoachInputProperties
   | ProblemsCheckboxesInputProperties
+  | TitileNIProperties
 
 export type Field = {
   id: number
@@ -122,9 +129,7 @@ export function ConstructorRootProvider({
     isLoading: isInformationLoading,
     isSuccess,
     isError,
-    refetch,
   } = useGetRegistrationFormQuery({ id: tournamentId, type: formType })
-  console.log(data, isInformationLoading, isSuccess, isError)
   const [fields, setFields] = useState<Field[]>([])
   const [tId] = useState(tournamentId)
   const counter = useRef(0)
@@ -249,9 +254,6 @@ export function ConstructorRootProvider({
         counter,
         setOptional,
         removeField,
-        refetchFields: () => {
-          refetch()
-        },
       }}
     >
       {!isInformationLoading && children}

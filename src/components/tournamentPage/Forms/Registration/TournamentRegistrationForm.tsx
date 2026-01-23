@@ -3,15 +3,32 @@ import {
   TournamentRegistrationAnswerInterface,
   TournamentRegistrationFormInfoInterface,
 } from "@/types/TournamentRegistrationApi"
-import { useGetUserAnswersQuery, useSubmitFormAnswerMutation } from "@/api/registration/clientApiInterface"
+import { Forms } from "@/components/forms"
+import LineRegistrationField from "./Parts/LineRegistrationField"
+import DateRegistrationField from "./Parts/DateRegistrationField"
+import DropdownRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/DropdownRegistrationField"
+import PickPersonRegistrationField from "./Parts/PickPersonRegistrationField"
+import {
+  useGetUserAnswersQuery,
+  useIsFormFilledQuery,
+  useSubmitFormAnswerMutation,
+} from "@/api/registration/clientApiInterface"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import RespondentUser from "@/components/tournamentPage/Forms/Registration/Parts/RespondentUser"
+import UsersProviderWrapper from "@/api/users/ClientWrapper"
+import { FaCircleCheck } from "react-icons/fa6"
 import { useEffect, useState } from "react"
+import CheckboxGroupRegistrationField from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxGroupRegistrationField"
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
+import CheckboxesWithProblems from "@/components/tournamentPage/Forms/Registration/Parts/CheckboxesWithProblems"
+import { useGetTournamentCardQuery } from "@/api/tournaments/clientApiInterface"
 import Loading from "@/app/loading"
 import { useRouter } from "next/navigation"
 import ApplicationsList from "@/components/tournamentPage/Forms/Registration/ApplicationsList"
 import RegistrationFormView from "@/components/tournamentPage/Forms/Registration/RegistrationFormView"
 
 export default function TournamentRegistrationForm({
+  className,
   isEdit,
   tournamentId,
   formInfo,
@@ -77,6 +94,11 @@ export default function TournamentRegistrationForm({
             <div className="bg-bg-alt/60 absolute z-2 size-full animate-pulse">
               <Loading />
             </div>
+          )}
+          {isError && (
+            <p className="text-accent-warning">
+              Произошла ощибка, проверьте что все поля заполнены правильно и повторите попытку
+            </p>
           )}
           <RegistrationFormView
             formInfo={formInfo}
