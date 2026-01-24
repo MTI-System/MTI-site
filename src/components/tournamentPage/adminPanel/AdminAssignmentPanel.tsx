@@ -14,11 +14,11 @@ export default function AdminAssignmentPanel({ tournamentId }: { tournamentId: n
   }
 
   const token = useAppSelector((state) => state.auth.token)
-  const { data: fights, isLoading: isLoadingFights} = useGetFightInfoByTournamentQuery({ tournamentId: tournamentId })
+  const { data: fights, isLoading: isLoadingFights } = useGetFightInfoByTournamentQuery({ tournamentId: tournamentId })
   const { data: tournamentCard, isLoading: isTournamentCardLoading } = useGetTournamentCardQuery({ id: tournamentId })
 
 
-  //Формируем список команд для выпадашек AssignmentTeamsTable
+  //Формирование списка команд для выпадашек AssignmentTeamsTable
   const tournamentTeams = useMemo(() => {
     if (!tournamentCard?.teams) {
       return [];
@@ -63,7 +63,7 @@ export default function AdminAssignmentPanel({ tournamentId }: { tournamentId: n
       setFileData(JSON.parse(text));
     }).catch(err => console.error("Ошибка:", err));
   };
-  
+
   const newData = useMemo(() => {
     if (!fights || !fileData) return [];
     const entries = Object.entries(fights);
@@ -88,21 +88,22 @@ export default function AdminAssignmentPanel({ tournamentId }: { tournamentId: n
       const numColumns = rows[0].length;
       const columns: (number | null)[][] = Array.from({ length: numColumns }, () => []);
 
-      rows.forEach((row, rowIndex) => {
+      rows.forEach(row => {
         row.forEach((cell, colIndex) => {
-          const value = selections[cell - 1] ?? null;
-          columns[colIndex].push(value);
+          if (selections[cell - 1]) {
+            columns[colIndex].push(selections[cell - 1]);
+          }
         });
-        const data = new FormData()
-        // data.set("token", token)
-        data.set("token", "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2VtYWlsIjoiYW50b29uLnMuaXZhbm92QGdtYWlsLmNvbSIsInVzZXJfaWQiOjE3MSwicmlnaHRzIjpbXSwibG9naW4iOiJtb2YxdXMiLCJzdWIiOiIxNzEiLCJpYXQiOjE3NjgzNzE5MjAsImV4cCI6MTc2ODUxNTkyMH0.fdsptYldQc1y-CgH0ZX_xVqnKrLARuoRwOeXloDJ3Lg")
-        if (fight.rooms[rowIndex]) {
-          const dataToSave = Object.fromEntries(data.entries())
-          //@ts-ignore
-          dataToSave.teams = columns[rowIndex]
-          //@ts-ignore
-          setTeamsToFight(dataToSave)
-        }
+      });
+
+      columns.forEach((colTeams, colIndex) => {
+        if (!fight.rooms[colIndex]) return;
+        const data = new FormData();
+        data.set("token", token)
+        data.set("fightId", fight.rooms[colIndex].toString());
+        const dataToSave = Object.fromEntries(data.entries()) as any;
+        dataToSave.teams = colTeams;
+        setTeamsToFight(dataToSave);
       });
     });
   };
