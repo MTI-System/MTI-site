@@ -203,6 +203,7 @@ export const fightActionSchema = z.object({
       team: teamInTournamentSchema,
       finalScore: z.number(),
       scores: z.array(teamScoreInActionSchema),
+      coefficient: z.number()
     }),
   ),
 })

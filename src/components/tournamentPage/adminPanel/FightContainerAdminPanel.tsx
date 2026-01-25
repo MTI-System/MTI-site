@@ -30,7 +30,6 @@ export default function FightContainerAdminPanel({
             <FightsAdmin key={fight.id} fight={fight} idx={idx} tournamentId={tournamentId} />
           ))}
         </div>
-
         <button
           className="mx-2 my-2 cursor-pointer bg-black/20"
           onClick={() => {
