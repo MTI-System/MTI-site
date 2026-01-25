@@ -71,6 +71,13 @@ export default function TournamentsPageTabs({
         tournamentCard.badge.badge_flag === "REGISTRATION" ||
         tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     },
+    {
+      href: `/tournaments/${tournamentCard.id}/results/teamlogs`,
+      title: "Путевые листы",
+      isLocked:
+        tournamentCard.badge.badge_flag === "FUTURED" ||
+        tournamentCard.badge.badge_flag === "REGISTRATION",
+    }
   ]
 
   const fightsLinks: LinkInterface[] = [

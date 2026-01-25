@@ -160,6 +160,8 @@ export const fightTeamInTournamentShema = teamInTournamentSchema.omit({ global_t
 export const fightInformationSchema = z.object({
   id: z.number(),
   actions: z.array(z.number()),
+  label: z.string().optional(),
+  // label: z.string(),  // UNCOMMENT LATER
   is_location_link: z.boolean(),
   location: z.string().nonempty(),
   startTime: z.number(),

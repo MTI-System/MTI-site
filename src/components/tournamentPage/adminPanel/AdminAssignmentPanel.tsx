@@ -109,7 +109,7 @@ export default function AdminAssignmentPanel({ tournamentId }: { tournamentId: n
   };
 
   // --------------DELETE LATER-------------
-  const roomNames = ["A", "B", "C"]
+  const roomNames = ["A", "B", "C", "D", "E", "F"]
   // ---------------------------------------
 
   return (

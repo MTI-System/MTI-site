@@ -81,9 +81,9 @@ function FightAction({ actionId }: { actionId: number }) {
         )}
       </div>
 
-      <div className="w-full px-4 text-center">
-          <h3 className="text-text-main text-lg font-bold uppercase">
-            Процедура вызова:
+      <div className="w-full text-center">
+          <h3 className="text-text-main text-lg font-bold uppercase py-2">
+            Процедура вызова
           </h3>
           <DraftList actionId={actionId}/>
       </div>

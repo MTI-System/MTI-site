@@ -17,6 +17,8 @@ export interface EventData {
   actions: number[]
   is_location_link: boolean
   location: string
+  label?: string
+  // label: string,  // UNCOMMENT LATER
   startTime: number
   jouries: number[]
   teams?: Array<{

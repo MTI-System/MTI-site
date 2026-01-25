@@ -10,7 +10,7 @@ export default function TeamLog({
   fightsList: { name: string; id: number }[]
 }) {
   return (
-    <div className="text-text-main flex w-full flex-col content-center items-center justify-center gap-4 px-2 py-4">
+    <div className="text-text-main flex w-full flex-col content-center items-center justify-center gap-4 px-2 py-6">
       <p className="w-full text-center text-2xl font-bold">{log.team.name}</p>
       <div className="w-full overflow-x-auto">
         <div className="flex flex-col w-full justify-center items-center gap-6 min-w-fit lg:flex-row lg:items-stretch">

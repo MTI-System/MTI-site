@@ -20,7 +20,7 @@ export default function FightList({ fightsData }: { fightsData: FightContainerIn
 
 export function FightCard({ cardData, tmpIDX }: { cardData: FightInformationInterface; tmpIDX: number }) {
   // --------------DELETE LATER-------------
-  const roomNames = ["A", "B", "C"]
+  const roomNames = ["A", "B", "C", "D", "E", "F"]
   // ---------------------------------------
   if ((cardData.teams?.length ?? 0) > 0) {
     return (
@@ -33,7 +33,8 @@ export function FightCard({ cardData, tmpIDX }: { cardData: FightInformationInte
           <div className="flex w-full flex-col content-center items-center justify-center gap-2 pb-5">
             <Link href={"./fight/" + cardData.id}>
               <h2 className="text-text-main hover:text-text-main/80 mx-auto flex flex-row items-center justify-center gap-3 text-center text-2xl font-bold uppercase transition-colors">
-                Комната {roomNames[tmpIDX]}
+                {cardData.label ?? `Комната ${roomNames[tmpIDX]}`}
+                {/* Комната {cardData.label} // UNCOMMENT LATER*/}
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
