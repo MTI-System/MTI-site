@@ -27,6 +27,10 @@
   --color-inactive: #3d3d3d;
   --color-warning: #FFD300;
   --color-negative: #ED0F4E;
+
+  --color-grade-bad: #6A1B9A;
+  --color-grade-mid: #D81B60;
+  --color-grade-good: #EF6C00;
 }
 
 body.dark,
@@ -43,6 +47,10 @@ body[data-theme="dark"] {
   --color-card-cta-bar: #0a0a0a66;
   --color-bg-main-accent: #1c1c1c;
   --color-inactive: #b9b9b9;
+  
+  --color-grade-bad: #AB47BC;
+  --color-grade-mid: #F06292;
+  --color-grade-good: #FFB74D;
   color-scheme: dark;
 }
 

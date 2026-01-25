@@ -10,7 +10,7 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
   const { data: table, error } = await promise
   console.log("tournament fetch", table, error)
   // const table = await fetchTournamentTable(tournamentId)
-  const trStyle = "border border-border font-medium bg-transparent"
+  const trStyle = "font-medium bg-transparent"
   const maxScore = Math.max(...table?.table_lines.map(l=>Math.max(...l.scores.map(s=>s.score)))??[0])
   const minScore = Math.min(...table?.table_lines.map(l=>Math.min(...l.scores.map(s=>s.score).filter(val=>val!==0)))??[0])
 
@@ -21,34 +21,42 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
 
   return (
     <>
-      <h2 className="text-text-main w-full pb-5 text-center text-2xl font-bold">Турнирная таблица</h2>
-      <div className="flex items-start justify-start overflow-x-auto shrink-0">
-        <table className="border-border w-full border-separate border-spacing-0 overflow-hidden rounded-xl border shrink-0">
-          <tbody>
-            <tr key={0}>
-              <td className="bg-card-alt border-border text-text-main border font-bold">
-                <p className="block h-full w-full px-2 py-1">Название команды</p>
+      <h2 className="text-text-main w-full pb-3 text-center text-2xl font-bold">Турнирная таблица</h2>
+      <div className="flex items-start justify-start overflow-x-auto shrink-0 border-border rounded-2xl border mx-8 my-4">
+        <table className="w-full 0 overflow-hidden">
+          <thead className={twclsx(
+            trStyle,
+            "border-b-border border-b"
+            )}>
+            <tr key={0} className="">
+
+              <td className="bg-card-alt text-text-main font-bold">
+                <p className="flex flex-row h-full w-full px-10 py-4 sm:text-sm text-md lg:text-lg font-medium">КОМАНДА</p>
               </td>
+
               {table?.table_lines[maxFilledFightsIndex].scores.map((score, idx) => (
-                <td key={idx} className="bg-card-alt border-border text-text-main border font-medium">
+                <td key={idx} className="bg-card-alt text-text-main font-medium ">
                   <Link
-                    className="text-text-main hover:bg-hover block h-full w-full cursor-pointer px-2 py-1"
+                    className="text-text-main hover:bg-hover flex flex-row h-full w-full cursor-pointer px-2 py-4 items-center justify-center sm:text-sm text-md lg:text-lg font-medium"
                     href={`/tournaments/${tournamentId}/fights/${score.fight_container_id}`}
                   >
-                    {score.fight_container_name}
+                    {score.fight_container_name.toUpperCase()}
                   </Link>
                 </td>
               ))}
-              <td className="bg-card-alt border-border text-text-main border font-medium">
-                <p className="block h-full w-full px-2 py-1">Итого</p>
+              <td className="bg-card-alt text-text-main font-medium">
+                <p className="flex flex-row h-full w-full text-wrap px-2 py-4 text-end sm:text-sm text-md lg:text-lg font-medium">ИТОГО</p>
               </td>
             </tr>
+            </thead>
+
+            <tbody className="divide-y divide-border">
             {table?.table_lines.map((line, idx) => {
               return (
                 <tr key={idx}>
                   <td className={trStyle}>
                     <Link
-                      className="text-text-main hover:bg-hover block h-full w-full cursor-pointer px-2 py-1"
+                      className="text-text-main hover:bg-hover flex flex-row h-full w-full cursor-pointer px-10 py-2 sm:text-sm text-md lg:text-lg font-medium"
                       href={`/tournaments/${tournamentId}/team/${line.team_id}`}
                     >
                       {line.team_name}
@@ -61,13 +69,17 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                       className={twclsx(
                         trStyle,
                         style.sampledText,
-                        "text-text-main hover:bg-hover cursor-pointer px-2 py-1",
+                        "text-text-main sm:text-sm text-md lg:text-lg cursor-pointer px-2 py-1 text-center rounded-full",
                       )}
-                      style={{ ["--t" as any]: (score.score - minScore) / (maxScore - minScore) }}
+
+                        style={{
+                        ["--t" as any]: (score.score - minScore) / (maxScore - minScore),
+                      }}
                     >
                       {score.score}
                     </td>
                   ))}
+
                   {Array(maxFightsFilled - line.scores.length)
                     .fill(null)
                     .map((_, index) => (
@@ -79,7 +91,7 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                         0
                       </td>
                     ))}
-                  <td className={trStyle + " text-text-main px-2 py-1"}>{line.resultScore}</td>
+                  <td className={trStyle + " text-text-main md:text-lg text-md px-2 py-1"}>{line.resultScore}</td>
                 </tr>
               )
             })}
