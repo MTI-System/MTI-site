@@ -19,6 +19,7 @@ import {
   TournamentCardInterface,
   TournamentCreationRequest,
   TournamentResultsTableEntity,
+  TournamentUserResults,
 } from "@/types/TournamentsAPI"
 import { TournamentTypeIntarface, TournamentTypeSchema } from "@/types/TournamentTypeIntarface"
 import { TournamentStateInterface, tournamentStateSchema } from "@/types/TournamentStateType"
@@ -171,6 +172,15 @@ export const defineTournamentsEndpoints = (
       const parsed = TournamentResultsTableEntity.safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing tournament table: ${parsed.error}`)
+      return null
+    },
+  }),
+  getTournamentUserResults: builder.query({
+    query: ({ id }: { id: number }) => `users_results/${id}`,
+    transformResponse: (response: unknown): TournamentUserResults | null => {
+      const parsed = TournamentUserResults.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing tournament user results table: ${parsed.error}`)
       return null
     },
   }),
