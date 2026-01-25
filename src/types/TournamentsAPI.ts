@@ -1,5 +1,6 @@
-import {z} from "zod"
-import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage";
+import { z } from "zod"
+import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage"
+import { ProblemSchema } from "./problemAPI"
 
 export const FightContainerCard = z.object({
   id: z.number(),
@@ -22,6 +23,7 @@ export const teamInTournamentSchema = z.object({
   id: z.number(),
   name: z.string().nonempty(),
   global_team_id: z.number().optional(),
+  // players: z.array(z.number()).optional(),
   players: z.array(z.number()).optional(),
 })
 export const TournamentCard = z.object({
@@ -123,9 +125,7 @@ export type TournamentCreationRequest = z.infer<typeof TournamentCreationRequest
 //   file_size: string | null
 // }
 
-
-export const fightTeamInTournamentShema =
-  teamInTournamentSchema.omit({global_team_id: true, players: true}).extend({
+export const fightTeamInTournamentShema = teamInTournamentSchema.omit({ global_team_id: true, players: true }).extend({
   score: z.number(),
   coefficient: z.number(),
   reported_problem: z.number().optional(),
@@ -141,9 +141,7 @@ export const fightInformationSchema = z.object({
   location: z.string().nonempty(),
   startTime: z.number(),
   jouries: z.array(z.number()),
-  teams: z.array(
-    fightTeamInTournamentShema
-  ).optional(),
+  teams: z.array(fightTeamInTournamentShema).optional(),
 })
 
 export const teamRoleInActionSchema = z.object({
@@ -161,14 +159,14 @@ export const teamScoreInActionSchema = z.object({
 const callSchema = z.object({
   id: z.number(),
   problemId: z.number(),
-  result: z.boolean()
+  result: z.boolean(),
 })
 
 const draftActionSchema = z.object({
   id: z.number(),
   chellenger: teamInTournamentSchema,
   chellenged: teamInTournamentSchema,
-  calls: z.array(callSchema)
+  calls: z.array(callSchema),
 })
 
 export const fightActionSchema = z.object({
@@ -186,7 +184,42 @@ export const fightActionSchema = z.object({
   ),
 })
 
-
+export const teamLogsSchema = z.object({
+  teams: z.array(
+    z.object({
+      team: teamInTournamentSchema.extend({
+        players: z
+          .array(
+            z.object({
+              id: z.number(),
+              firstName: z.string(),
+              secondName: z.string(),
+              thirdName: z.string().optional(),
+            }),
+          )
+          .optional(),
+      }),
+      reported: z.array(ProblemSchema.nullable()),
+      opposed: z.array(ProblemSchema.nullable()),
+      rejected: z.array(ProblemSchema.nullable()),
+      players: z.array(
+        z.object({
+          id: z.number(),
+          first_name: z.string(),
+          second_name: z.string(),
+          third_name: z.string().optional(),
+          fights: z.array(
+            z.object({
+              fight_id: z.number(),
+              fight_container_title: z.string(),
+              role: z.union([z.literal("REPORTER"), z.literal("OPPONENT"), z.literal("REVIEWER")]),
+            }),
+          ),
+        }),
+      ),
+    }),
+  ),
+})
 
 export const fightContainerInfoSchema = z.array(fightInformationSchema)
 
@@ -205,3 +238,4 @@ export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTable
 export type TournamentCardInterface = z.infer<typeof TournamentCard>
 export type FightContainerCardInterface = z.infer<typeof FightContainerCard>
 export type BadgeInterface = z.infer<typeof Badge>
+export type TeamLogsInterface = z.infer<typeof teamLogsSchema>

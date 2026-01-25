@@ -13,6 +13,8 @@ import {
   fightInformationSchema,
   TeamInTournamentInterface,
   teamInTournamentSchema,
+  TeamLogsInterface,
+  teamLogsSchema,
   TournamentCard,
   TournamentCardInterface,
   TournamentCreationRequest,
@@ -337,6 +339,21 @@ export const defineTournamentsEndpoints = (
         },
         method: "POST",
       }
+    },
+  }),
+
+  getTeamLogs: builder.query({
+    query: ({ id }: { id: number }) => {
+      return {
+        url: `waylist/${id}`,
+        method: "GET",
+      }
+    },
+    transformResponse: (response: unknown): TeamLogsInterface | null => {
+      const parsed = teamLogsSchema.safeParse(response)
+      if (parsed.success) return parsed.data
+      console.error(`Unexpected response while parsing teamlogs: ${parsed.error}`)
+      return null
     },
   }),
 })
