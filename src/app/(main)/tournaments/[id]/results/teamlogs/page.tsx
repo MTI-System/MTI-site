@@ -14,7 +14,7 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
 
   const maxFilledFightsIndex =
     table?.table_lines.map((x, i) => [x.scores.length, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1] ?? 0
-  const fights = table?.table_lines[maxFilledFightsIndex].scores.map((s) => s.fight_container_name) ?? []
+  const fights = table?.table_lines[maxFilledFightsIndex].scores.map((s) => ({name: s.fight_container_name, id: s.fight_container_id})) ?? []
 
   const data: TeamLogsInterface = {
     teams: [
@@ -508,17 +508,17 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
             third_name: "А",
             fights: [
               {
-                fight_id: 89,
+                fight_id: 128,
                 fight_container_title: "1 бой",
                 role: "REVIEWER",
               },
               {
-                fight_id: 89,
+                fight_id: 128,
                 fight_container_title: "1 бой",
                 role: "REPORTER",
               },
               {
-                fight_id: 95,
+                fight_id: 129,
                 fight_container_title: "3 бой",
                 role: "OPPONENT",
               },
@@ -531,7 +531,7 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
             third_name: "А",
             fights: [
               {
-                fight_id: 95,
+                fight_id: 129,
                 fight_container_title: "3 бой",
                 role: "REVIEWER",
               },
@@ -898,7 +898,7 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
               thirdName: "",
             },
             {
-              id: 95,
+              id: 129,
               firstName: "М",
               secondName: "Шубин",
               thirdName: "",
@@ -951,7 +951,7 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
             fights: [],
           },
           {
-            id: 95,
+            id: 129,
             first_name: "М",
             second_name: "Шубин",
             third_name: "",
