@@ -67,7 +67,6 @@ export default function TournamentsPageTabs({
       href: `/tournaments/${tournamentCard.id}/results/personal`,
       title: "Личный зачет",
       isLocked:
-        true ||
         tournamentCard.badge.badge_flag === "FUTURED" ||
         tournamentCard.badge.badge_flag === "REGISTRATION" ||
         tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",

@@ -1,5 +1,5 @@
-import { z } from "zod"
-import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage"
+import {z} from "zod"
+import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage";
 import { ProblemSchema } from "./problemAPI"
 
 export const FightContainerCard = z.object({
@@ -23,7 +23,6 @@ export const teamInTournamentSchema = z.object({
   id: z.number(),
   name: z.string().nonempty(),
   global_team_id: z.number().optional(),
-  // players: z.array(z.number()).optional(),
   players: z.array(z.number()).optional(),
 })
 export const TournamentCard = z.object({
@@ -59,6 +58,30 @@ export const TournamentResultsTableLine = z.object({
 
 export const TournamentResultsTableEntity = z.object({
   table_lines: z.array(TournamentResultsTableLine),
+})
+
+export const TournamentUserResultsTableLine = z.object({
+  user_id: z.number(),
+  team: z.object({
+    id: z.number(),
+    name: z.string(),
+    global_team_id: z.number(),
+    players: z.array(z.number()),
+  }),
+  user_first_name: z.string(),
+  user_second_name: z.string(),
+  user_third_name: z.string(),
+  rep_avg: z.number(),
+  opp_avg: z.number(),
+  rew_avg: z.number(),
+  rep_max: z.number(),
+  opp_max: z.number(),
+  rew_max: z.number(),
+  total_score: z.number()
+})
+
+export const TournamentUserResults = z.object({
+  results: z.array(TournamentUserResultsTableLine),
 })
 
 export const TournamentCreationRequestSchema = z.object({
@@ -159,14 +182,14 @@ export const teamScoreInActionSchema = z.object({
 const callSchema = z.object({
   id: z.number(),
   problemId: z.number(),
-  result: z.boolean(),
+  result: z.boolean()
 })
 
 const draftActionSchema = z.object({
   id: z.number(),
   chellenger: teamInTournamentSchema,
   chellenged: teamInTournamentSchema,
-  calls: z.array(callSchema),
+  calls: z.array(callSchema)
 })
 
 export const fightActionSchema = z.object({
@@ -235,6 +258,7 @@ export type FightInfoByTournamentInterface = z.infer<typeof fightInfoByTournamen
 export type FightContainerInfoInterface = z.infer<typeof fightContainerInfoSchema>
 
 export type TournamentResultsTableEntity = z.infer<typeof TournamentResultsTableEntity>
+export type TournamentUserResults = z.infer<typeof TournamentUserResults>
 export type TournamentCardInterface = z.infer<typeof TournamentCard>
 export type FightContainerCardInterface = z.infer<typeof FightContainerCard>
 export type BadgeInterface = z.infer<typeof Badge>

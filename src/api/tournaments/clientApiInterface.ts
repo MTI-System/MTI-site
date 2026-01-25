@@ -39,6 +39,7 @@ export const {
   useGetOrganizatorTournamentsMutation,
   useGetTournamentCardQuery,
   useGetTournamentTableQuery,
+  useGetTournamentUserResultsQuery,
   useAddTournamentMutation,
   useGetFightInformationQuery,
   useGetActionInformationQuery,
