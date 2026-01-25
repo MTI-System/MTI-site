@@ -91,6 +91,7 @@ function FightAction({ actionId }: { actionId: number }) {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         {actionData.playerLines.map((line) => (
+          <>{line.role?.title && line.role.title !== "Наблюдатель" && (
           <div key={line.role?.id} className="border-border flex w-full flex-1 flex-col rounded-2xl border">
             <div className="text-text-main m-2 flex flex-none flex-col gap-3 text-center items-center justify-center">
               <div className="text-text-alt mt-2 uppercase">{line.role?.title ?? "—"}</div>
@@ -105,7 +106,7 @@ function FightAction({ actionId }: { actionId: number }) {
                 <JuryScores scores={line.scores} />
               </div>
             </div>
-          </div>
+          </div>)}</>
         ))}
       </div>
       {/* <div className="flex-1">
