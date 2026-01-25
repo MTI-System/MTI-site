@@ -13,7 +13,7 @@ export default function DraftList({actionId}: { actionId: number }) {
           <div className="border border-border rounded-2xl overflow-hidden">
               <table className="w-full text-text-main border-collapse border-spacing-0">
                   <thead>
-                  <tr>
+                  <tr className="border-b-border border-b">
                       <th className="border-r border-border px-2 py-1">Вызов</th>
                       <th className="px-2 py-1">Результат</th>
                   </tr>

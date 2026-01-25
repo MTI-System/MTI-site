@@ -25,8 +25,12 @@
   --color-accent-accept-alt: #21b95f26;
   --color-bg-main-accent: #ffffff;
   --color-inactive: #3d3d3d;
-  --color-warning: #ffd300;
-  --color-negative: #ed0f4e;
+  --color-warning: #FFD300;
+  --color-negative: #ED0F4E;
+
+  --color-grade-bad: #f00000;
+  --color-grade-mid: #d37800;
+  --color-grade-good: #17c400;
 }
 
 body.dark,
@@ -43,6 +47,10 @@ body[data-theme="dark"] {
   --color-card-cta-bar: #0a0a0a66;
   --color-bg-main-accent: #1c1c1c;
   --color-inactive: #b9b9b9;
+  
+  --color-grade-bad: #ff1212;
+  --color-grade-mid: #fff700;
+  --color-grade-good: #1ae200;
   color-scheme: dark;
 }
 

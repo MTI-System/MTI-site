@@ -22,7 +22,7 @@ import DraftList from "@/components/tournamentPage/FightsPage/DraftList";
 export function ActionTabs({ fightData }: { fightData: FightInformationInterface }) {
   return (
     <Tabs.Root defaultValue={`${fightData.actions[0]}_action`}>
-      <Tabs.List className="relative z-0 mt-6 flex justify-center gap-1 px-1">
+      <Tabs.List className="relative z-0 mt-10 flex justify-center gap-1 px-1">
         {fightData.actions.map((id, index) => (
           <Tabs.Tab
             key={id}
@@ -71,7 +71,7 @@ function FightAction({ actionId }: { actionId: number }) {
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="w-full px-4 pt-4 text-center">
-        <div className="text-text-alt mb-1 text-sm uppercase">Задача</div>
+        <div className="text-text-alt mb-4 sm:text-xl text-md uppercase">Задача</div>
         {problemData?.id ? (
           <Link href={`/problems/${problemData?.id}`} className="text-text-main text-lg font-bold uppercase">
             {problemData?.global_number + ". " + problemData?.problem_translations[0].problem_name}
@@ -81,18 +81,19 @@ function FightAction({ actionId }: { actionId: number }) {
         )}
       </div>
 
+
       <div className="w-full text-center">
-          <h3 className="text-text-main text-lg font-bold uppercase py-2">
+          <h3 className="text-text-main text-lg font-bold uppercase py-4">
             Процедура вызова
           </h3>
           <DraftList actionId={actionId}/>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         {actionData.playerLines.map((line) => (
           <div key={line.role?.id} className="border-border flex w-full flex-1 flex-col rounded-2xl border">
-            <div className="text-text-main m-2 flex flex-none flex-col gap-3 text-center">
-              <div className="text-text-alt bg- uppercase">{line.role?.title ?? "—"}</div>
+            <div className="text-text-main m-2 flex flex-none flex-col gap-3 text-center items-center justify-center">
+              <div className="text-text-alt mt-2 uppercase">{line.role?.title ?? "—"}</div>
 
               <div className="text-text-main font-medium">{line.team.name}</div>
 
@@ -160,20 +161,20 @@ function JuryScores({ scores }: { scores: { id: number; value: number; jury: num
 
   return (
     <div className="text-text-main max-w-md">
-      <div className="mb-2 text-sm font-medium">Оценки жюри</div>
+      <div className="mb-2 sm:text-sm text-md lg:text-lg font-medium">Оценки жюри</div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
         {scores.map((score, index) => (
           <div
             key={index}
-            className="border-border bg-background flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm"
+            className="border-border bg-background flex flex-wrap items-center justify-between gap-2 rounded-md border px-3 py-2"
           >
-            <div className="text-text-alt">
+            <div className="text-text-alt text-wrap flex-3">
               <UsersProviderWrapper>
-                <UserCell userId={score.jury} />
+                <UserCell userId={score.jury}/>
               </UsersProviderWrapper>
             </div>
-            <div className="font-semibold">{score.value}</div>
+            <div className="font-semibold flex-1">{score.value}</div>
           </div>
         ))}
       </div>
@@ -187,7 +188,7 @@ function UserCell({ userId }: { userId?: number }) {
   const { data, isLoading } = useGetUserByIdQuery({ id: userId })
 
   if (isLoading) {
-    return <div className="bg-hover h-5 w-40 animate-pulse rounded" />
+    return <div className="bg-hover h-5 w-20 animate-pulse rounded" />
   }
 
   if (!data) return <span>not found</span>

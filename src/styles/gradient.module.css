@@ -5,10 +5,10 @@
   initial-value: 0;
 }
 
-:root {
-  --c0: var(--color-negative);
-  --c1: var(--color-warning);
-  --c2: var(--color-accent-secondary);
+body {
+    --c0: var(--color-grade-bad);
+    --c1: var(--color-grade-mid);
+    --c2: var(--color-grade-good);
 }
 
 .sampledText {
