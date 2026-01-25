@@ -51,6 +51,7 @@ export function ActionTabs({ fightData }: { fightData: FightInformationInterface
 
 function FightAction({ actionId }: { actionId: number }) {
   const { data: actionData, isLoading: isActionData, error: actionErr } = useGetActionInformationQuery({ actionId })
+  console.log(actionData)
   const {
     data: problemData,
     isLoading: isProblemLoading,
