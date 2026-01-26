@@ -2,7 +2,7 @@ import { problemsApiServer } from "@/api/problems/serverApiInterface";
 import { makeProblemsStoreServer } from "@/api/problems/serverStore";
 import Link from "next/link";
 
-export async function FightTable({teams}:{teams: {
+export async function FightTable({teams, tournamentId}:{teams: {
         name: string;
         id: number;
         score: number;
@@ -11,7 +11,7 @@ export async function FightTable({teams}:{teams: {
         reporterScore?: number | undefined;
         opponentScore?: number | undefined;
         reviewerScore?: number | undefined;
-    }[]
+    }[], tournamentId: number
   }) {
     const store = makeProblemsStoreServer()
     const problems = await Promise.all(teams.map(async item => {
@@ -20,6 +20,9 @@ export async function FightTable({teams}:{teams: {
       const { data: problemData, error } = await promise
       return error ? null : problemData
     }))
+    const promiseTournament = store.dispatch(problemsApiServer.endpoints.getProblemsForTournament.initiate({tournamentId: tournamentId}))
+    const { data: problemsTournamentData, error: problemsTournamentError } = await promiseTournament
+
   return (
     <table className="border-border w-full">
       <thead>
@@ -45,7 +48,7 @@ export async function FightTable({teams}:{teams: {
                   <Link
                   className="block h-full w-full cursor-pointer px-4 py-3 hover:bg-hover transition-colors" 
                   href={`/${problems[index] ? "problems/" +  problems[index].id : "problems/"}`}> 
-                  {problems[index].global_number}
+                  {problems[index]?.local_number ?? (problemsTournamentData?.find(p => p.id === problems[index]?.id)?.local_number ?? `(${problems[index]?.global_number})`)}
                   </Link>: "-"}
               
             </td>

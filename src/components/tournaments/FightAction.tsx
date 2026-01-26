@@ -13,13 +13,13 @@ import { useGetUserByIdQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
 
 import { FightTable } from "./FightTable"
-import { useGetProblemsByIdQuery } from "@/api/problems/clientApiInterface"
+import { useGetProblemsByIdQuery, useGetProblemsForTournamentQuery } from "@/api/problems/clientApiInterface"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import Loading from "@/app/loading"
 import Link from "next/link"
 import DraftList from "@/components/tournamentPage/FightsPage/DraftList";
 
-export function ActionTabs({ fightData }: { fightData: FightInformationInterface }) {
+export function ActionTabs({ fightData, tournamentId }: { fightData: FightInformationInterface, tournamentId: number }) {
   return (
     <Tabs.Root defaultValue={`${fightData.actions[0]}_action`}>
       <Tabs.List className="relative z-0 mt-10 flex justify-center gap-1 px-1">
@@ -40,7 +40,7 @@ export function ActionTabs({ fightData }: { fightData: FightInformationInterface
         <Tabs.Panel key={id} value={`${id}_action`} className="mt-5">
           <TournamentsProviderWrapper>
             <ProblemsProviderWrapper>
-              <FightAction actionId={id} />
+              <FightAction actionId={id} tournamentId={tournamentId} />
             </ProblemsProviderWrapper>
           </TournamentsProviderWrapper>
         </Tabs.Panel>
@@ -49,7 +49,7 @@ export function ActionTabs({ fightData }: { fightData: FightInformationInterface
   )
 }
 
-function FightAction({ actionId }: { actionId: number }) {
+function FightAction({ actionId, tournamentId }: { actionId: number, tournamentId: number }) {
   const { data: actionData, isLoading: isActionData, error: actionErr } = useGetActionInformationQuery({ actionId })
   console.log(actionData)
   const {
@@ -57,6 +57,13 @@ function FightAction({ actionId }: { actionId: number }) {
     isLoading: isProblemLoading,
     error: problemErr,
   } = useGetProblemsByIdQuery({ problemId: actionData?.pickedProblem }, { skip: !actionData?.pickedProblem })
+  // ------------TMP FOR LOCAL NUMBER--------------------
+  const {
+    data: problemDataTournament,
+    isLoading: isProblemTournamentLoading,
+    error: problemTournamentErr,
+  } = useGetProblemsForTournamentQuery({tournamentId: tournamentId})
+  // ------------TMP FOR LOCAL NUMBER END----------------
 
   if (isActionData || isProblemLoading) return <Loading />
   if (actionErr) {
@@ -67,7 +74,7 @@ function FightAction({ actionId }: { actionId: number }) {
       </div>
     )
   }
-  if (!actionData) return <p className="text-red-500">Error</p>
+  if (!actionData || !problemData || !problemDataTournament) return <p className="text-red-500">Error</p>
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -75,7 +82,7 @@ function FightAction({ actionId }: { actionId: number }) {
         <div className="text-text-alt mb-4 sm:text-xl text-md uppercase">Задача</div>
         {problemData?.id ? (
           <Link href={`/problems/${problemData?.id}`} className="text-text-main text-lg font-bold uppercase">
-            {(problemData?.local_number ?? `(${problemData?.global_number})`) + ". " + problemData?.problem_translations[0].problem_name}
+            {(problemData?.local_number ?? (problemDataTournament?.find(p => p.id === problemData?.id)?.local_number ?? `(${problemData?.global_number})`)) + ". " + problemData?.problem_translations[0].problem_name}
           </Link>
         ) : (
           <p className="text-text-main text-lg font-bold uppercase">-</p>
@@ -87,7 +94,7 @@ function FightAction({ actionId }: { actionId: number }) {
           <h3 className="text-text-main text-lg font-bold uppercase py-4">
             Процедура вызова
           </h3>
-          <DraftList actionId={actionId}/>
+          <DraftList actionId={actionId} tournamentId={tournamentId}/>
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">

@@ -57,8 +57,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function FightPage({ params }: { params: Promise<{ fightId: string }> }) {
-  const { fightId } = await params
+export default async function FightPage({ params }: { params: Promise<{ fightId: string; id: string }> }) {
+  const { fightId, id: tournamentId } = await params
   const store = makeTournamentsStoreServer()
   const {
     data: fightData,
@@ -84,20 +84,19 @@ export default async function FightPage({ params }: { params: Promise<{ fightId:
     )
   }
 
-  return <Fight fightData={fightData} />
+  return <Fight fightData={fightData} tournamentId={Number(tournamentId)} />
 }
 
-function Fight({ fightData }: { fightData: FightInformationInterface }) {
-  console.log(fightData.teams)
+function Fight({ fightData, tournamentId }: { fightData: FightInformationInterface, tournamentId: number }) {
   return (
     <div className="flex flex-col p-6">
       <h1 className="text-text-main mx-auto my-5 text-center text-2xl font-bold">Действия боя</h1>
 
       <div className="border-border overflow-x-auto rounded-2xl border">
-        <FightTable teams={fightData.teams ?? []} />
+        <FightTable teams={fightData.teams ?? []} tournamentId={tournamentId} />
       </div>
 
-      <ActionTabs fightData={fightData} />
+      <ActionTabs fightData={fightData} tournamentId={tournamentId} />
     </div>
   )
 }
