@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     }
   return {
     title: `Результаты | ${data.title} – МТИ`,
-    description: `Таблица с результатами турнира '${data.title}'`,
+    description: `Таблица с результатами командного зачёта участников турнира '${data.title}'`,
   }
 }
 

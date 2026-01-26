@@ -12,7 +12,7 @@ import { cookies } from "next/headers"
 import { makeAuthStoreServer } from "@/api/auth/serverStore"
 import { authApiServer } from "@/api/auth/serverApiInterface"
 import RegistrationProviderWrapper from "@/api/registration/ClientWrapper"
-import AuthProviderWrapper from "@/api/auth/ClientWrapper";
+import AuthProviderWrapper from "@/api/auth/ClientWrapper"
 
 export default async function TournamentPage({
   params,

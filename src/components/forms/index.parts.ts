@@ -6,7 +6,7 @@ import { InputField } from "./fields/InputField"
 import { DatePickerField } from "./fields/DatePickerField"
 import { DropdownField } from "./fields/DropdownField"
 import { UserPickerField } from "./fields/UserPickerField"
-import {CheckboxField} from "./fields/CheckboxField"
+import { CheckboxField } from "./fields/CheckboxField"
 import { FormTrigger as Trigger } from "./root/FormTrigger"
 import {FileInputField} from "@/components/forms/fields/FileInputField";
 

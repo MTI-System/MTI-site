@@ -1,35 +1,35 @@
 /* Опционально, но сильно помогает: типизируем --t как число */
 @property --t {
-    syntax: "<number>";
-    inherits: true;
-    initial-value: 0;
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
 }
 
-:root {
-    --c0: var(--color-negative);
-    --c1: var(--color-warning);
-    --c2: var(--color-accent-secondary);
+body {
+    --c0: var(--color-grade-bad);
+    --c1: var(--color-grade-mid);
+    --c2: var(--color-grade-good);
 }
 
 .sampledText {
-    /* ожидаем --t в диапазоне 0..1 */
-    --t01: clamp(0, var(--t), 1);
+  /* ожидаем --t в диапазоне 0..1 */
+  --t01: clamp(0, var(--t), 1);
 
-    /* Нормируем t для левого и правого сегмента */
-    --u: clamp(0, calc(var(--t01) * 2), 1);          /* для [0..0.5] => 0..1 */
-    --v: clamp(0, calc((var(--t01) - 0.5) * 2), 1);  /* для [0.5..1] => 0..1 */
+  /* Нормируем t для левого и правого сегмента */
+  --u: clamp(0, calc(var(--t01) * 2), 1); /* для [0..0.5] => 0..1 */
+  --v: clamp(0, calc((var(--t01) - 0.5) * 2), 1); /* для [0.5..1] => 0..1 */
 
-    /* “Ступенька”: 0 пока t<0.5, 1 когда t>0.5 (резкий переключатель сегмента) */
-    --k: clamp(0, calc((var(--t01) - 0.5) * 1000), 1);
+  /* “Ступенька”: 0 пока t<0.5, 1 когда t>0.5 (резкий переключатель сегмента) */
+  --k: clamp(0, calc((var(--t01) - 0.5) * 1000), 1);
 
-    /* Цвет на левом сегменте (c0 -> c1) */
-    --left: color-mix(in srgb, var(--c0) calc((1 - var(--u)) * 100%), var(--c1) calc(var(--u) * 100%));
+  /* Цвет на левом сегменте (c0 -> c1) */
+  --left: color-mix(in srgb, var(--c0) calc((1 - var(--u)) * 100%), var(--c1) calc(var(--u) * 100%));
 
-    /* Цвет на правом сегменте (c1 -> c2) */
-    --right: color-mix(in srgb, var(--c1) calc((1 - var(--v)) * 100%), var(--c2) calc(var(--v) * 100%));
+  /* Цвет на правом сегменте (c1 -> c2) */
+  --right: color-mix(in srgb, var(--c1) calc((1 - var(--v)) * 100%), var(--c2) calc(var(--v) * 100%));
 
-    /* Итог: выбираем left или right через k */
-    --colorAtT: color-mix(in srgb, var(--left) calc((1 - var(--k)) * 100%), var(--right) calc(var(--k) * 100%));
+  /* Итог: выбираем left или right через k */
+  --colorAtT: color-mix(in srgb, var(--left) calc((1 - var(--k)) * 100%), var(--right) calc(var(--k) * 100%));
 
-    color: var(--colorAtT);
+  color: var(--colorAtT);
 }

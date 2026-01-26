@@ -13,7 +13,7 @@ import { FILES_SERVER } from "@/constants/APIEndpoints"
 import Link from "next/link"
 import { Right, User } from "@/types/authApi"
 import NoTournaments from "@/components/service/NoTournaments"
-import Forbidden from "@/components/service/Forbidden";
+import Forbidden from "@/components/service/Forbidden"
 
 export default function TournamentCardsSpinner({
   tournamentsCards,

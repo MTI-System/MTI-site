@@ -27,7 +27,7 @@ export default function ProblemsList({
         <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>
       ))}
       {filteredProblems && filteredProblems.length === 0 && (
-        <p className="text-text-alt rounded-xl border border-border bg-bg-main/60 px-4 py-5 text-center text-sm sm:text-base">
+        <p className="text-text-alt border-border bg-bg-main/60 rounded-xl border px-4 py-5 text-center text-sm sm:text-base">
           Для выбранных фильтров задач не нашлось
         </p>
       )}

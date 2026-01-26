@@ -8,7 +8,6 @@ import { cookies } from "next/headers"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 
-
 export default async function Header() {
   const initTT = (await cookies()).get("mtiyt_tournamentType")?.value ?? "1"
   const store = makeTournamentsStoreServer()

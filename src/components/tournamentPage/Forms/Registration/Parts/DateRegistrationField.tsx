@@ -12,7 +12,7 @@ export default function DateRegistrationField({
 }) {
   const fieldObject = "formField" in field ? field.formField : field
   const fieldContent =
-    "formField" in field ? field.content.split(" ").map((v) => `${formatDate(new Date(Number(v)))}`) : undefined
+    "formField" in field ? field.content?.split(" ").map((v) => `${formatDate(new Date(Number(v)))}`) : undefined
 
   return (
     <>
@@ -26,13 +26,12 @@ export default function DateRegistrationField({
               type={fieldObject?.metadata?.selectMode ?? "single"}
               onVerification={(value: string) => {
                 if (fieldObject?.metadata?.optional != "true") {
-                  if(!value) {
+                  if (!value) {
                     return {
                       isSuccess: false,
-                      errorMessage: "Поле не может быть пустым"
+                      errorMessage: "Поле не может быть пустым",
                     }
-                  }
-                  else {
+                  } else {
                     return {
                       isSuccess: true,
                     }
@@ -41,7 +40,6 @@ export default function DateRegistrationField({
                 return {
                   isSuccess: true,
                 }
-
               }}
             />
           }

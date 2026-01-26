@@ -1,5 +1,8 @@
 import { Forms } from "@/components/forms"
-import { TournamentRegistrationAnswerFieldInterface, TournamentRegistrationFormFieldInterface } from "@/types/TournamentRegistrationApi"
+import {
+  TournamentRegistrationAnswerFieldInterface,
+  TournamentRegistrationFormFieldInterface,
+} from "@/types/TournamentRegistrationApi"
 
 export default function DropdownRegistrationField({
   field,
@@ -14,20 +17,21 @@ export default function DropdownRegistrationField({
       <Forms.EdiatableItems>
         {
           <>
-            <label className="flex flex-col gap-1 text-sm leading-5 font-medium text-gray-900">{fieldObject.title}</label>
+            <label className="flex flex-col gap-1 text-sm leading-5 font-medium text-gray-900">
+              {fieldObject.title}
+            </label>
             <Forms.DropdownField
               fields={fieldObject.metadata?.dropdown_options ?? []}
               key={fieldObject.id}
               name={fieldObject.key}
               onVerification={(value: string) => {
                 if (fieldObject?.metadata?.optional != "true") {
-                  if(!value) {
+                  if (!value) {
                     return {
                       isSuccess: false,
-                      errorMessage: "Поле не может быть пустым"
+                      errorMessage: "Поле не может быть пустым",
                     }
-                  }
-                  else {
+                  } else {
                     return {
                       isSuccess: true,
                     }
@@ -36,7 +40,6 @@ export default function DropdownRegistrationField({
                 return {
                   isSuccess: true,
                 }
-
               }}
               type="single"
             />

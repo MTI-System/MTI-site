@@ -1,5 +1,4 @@
 "use client"
-
 import React from "react"
 import { createDispatchHook, createSelectorHook, createStoreHook } from "react-redux"
 import { buildCreateApi, coreModule } from "@reduxjs/toolkit/query"

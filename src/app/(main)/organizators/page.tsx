@@ -13,15 +13,14 @@ import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { TournamentStateFlagsInterface } from "@/types/TournamentStateType"
 import { TournamentsStoreProvider } from "@/components/Redux/tournamentsStoreContext"
 import TournamentListPage from "@/components/tournaments/TournamentListPage"
-import type {Metadata} from "next";
+import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: {
     template: "Организаторам МТИ",
     default: "Организаторам Менеджере Турнирной Информации",
   },
-  description:
-    "Страница с информацией, для организаторов научных турниров",
+  description: "Страница с информацией, для организаторов научных турниров",
   verification: {
     yandex: "aa838087dd1ef992",
   },

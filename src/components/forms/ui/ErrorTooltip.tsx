@@ -1,7 +1,7 @@
 import { Tooltip } from "@base-ui-components/react"
 import React, { ReactNode } from "react"
 import { FaExclamation } from "react-icons/fa"
-import {IoAlertCircleOutline} from "react-icons/io5";
+import { IoAlertCircleOutline } from "react-icons/io5"
 
 export function ErrorTooltip({
   children,
@@ -25,9 +25,8 @@ export function ErrorTooltip({
                   //   {/*<FaExclamation />*/}
                   // </div>
                   <div className="size-5 text-red-800">
-                    <IoAlertCircleOutline  size="100%"/>
+                    <IoAlertCircleOutline size="100%" />
                   </div>
-
                 )}
               </Tooltip.Trigger>
             </div>
