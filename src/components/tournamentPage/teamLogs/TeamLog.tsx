@@ -49,7 +49,9 @@ export default function TeamLog({
                   {p.second_name} {p.first_name} {p.third_name}
                 </td>
                 {fightsList.map((f, idx) => {
-                  const fightRoles = p.fights.filter(pf => pf.fight_id === f.id).map(pf => pf.role)
+                  // TODO: Rewrite for ids not for names
+                  const fightRoles = p.fights.filter(pf => pf.fight_container_title === f.name).map(pf => pf.role)
+                  // console.log(f.id, p.fights)
                   return (<td className="border-border border-l border-t px-2" key={idx}>
                     <div className="flex w-full justify-center items-center gap-1">
                     {fightRoles.length > 0 ? (
@@ -86,7 +88,7 @@ function TasksList({ action, tasks, isFirstRow }: { action: string; tasks: (Prob
             (task) =>
               task && (
                 <div key={task.id} className="flex gap-1 px-2 py-0.25">
-                  <p>{task.local_number ?? `(${task.global_number})`}</p>
+                  <p>{task.local_number ?? `(${task.global_number})`}.</p>
                   {task.problem_translations.length > 0 && <p>{task.problem_translations[0].problem_name}</p>}
                 </div>
               ),
