@@ -11,11 +11,11 @@ export default function DraftList({actionId}: { actionId: number }) {
     <>
       {actionData?.drafts ?
           <div className="border border-border rounded-2xl overflow-hidden">
-              <table className="w-full text-text-main border-collapse ">
+              <table className="w-full text-text-main border-collapse border-spacing-0">
                   <thead>
-                  <tr>
-                      <th className="border border-border px-2 py-1">Вызов</th>
-                      <th className="border border-border px-2 py-1">Результат</th>
+                  <tr className="border-b-border border-b">
+                      <th className="border-r border-border px-2 py-1">Вызов</th>
+                      <th className="px-2 py-1">Результат</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -44,11 +44,11 @@ function DraftItem(
   const {data: problemData} = useGetProblemsByIdQuery({problemId: call.problemId})
   return (
     <>
-      <td className="text-start border border-border">Команда <strong>{chellendger.name}</strong> вызывает
+      <td className="text-start border-r border-border px-2 py-1">Команда <strong>{chellendger.name}</strong> вызывает
         команду <strong>{chellendged.name}</strong> на
         задачу <a className="font-bold hover:text-text-hover" href={`/problems/${problemData?.id}`}>№{problemData?.global_number} {problemData?.problem_translations[0].problem_name}</a></td>
       <td
-        className={twclsx("text-center border border-border", {"text-accent-accept": call.result}, {"text-red-500": !call.result})}>{call.result ? "Принято" : "Отказ"}</td>
+        className={twclsx("text-center px-2 py-1", {"text-accent-accept": call.result}, {"text-red-500": !call.result})}>{call.result ? "Принято" : "Отказ"}</td>
     </>
   )
 }

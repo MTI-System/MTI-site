@@ -1,7 +1,7 @@
 import { TeamLogsInterface } from "@/types/TournamentsAPI"
 import TeamLog from "./TeamLog"
 
-export default function TeamLogsList({ logs, fightsList }: { logs: TeamLogsInterface; fightsList: string[] }) {
+export default function TeamLogsList({ logs, fightsList }: { logs: TeamLogsInterface; fightsList: {name: string; id: number}[] }) {
   return (
     <div className="w-full">
       {logs.teams.map((teamLog, i) => (

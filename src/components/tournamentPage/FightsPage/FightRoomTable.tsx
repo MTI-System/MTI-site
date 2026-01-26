@@ -51,7 +51,7 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
     )
   }
   // --------------DELETE LATER-------------
-  const roomNames = ["A", "B", "C"]
+  const roomNames = ["A", "B", "C", "D", "E", "F"]
   // ---------------------------------------
   return (
     <div className="border-border mt-2 flex h-full w-[75vw] flex-col gap-2 md:mt-0 md:w-full md:flex-row md:gap-0 md:overflow-auto md:border-t">
@@ -66,7 +66,8 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
               href={fightItem.location}
               className="border-border hover:text-text-alt flex items-center justify-center gap-2 border-b p-2 transition-colors"
             >
-              <p>Комната {roomNames[fightIdx]}</p>
+              <p>{fightItem.label ?? `Комната ${roomNames[fightIdx]}`}</p>
+              {/* <p>Комната {fightItem.label}</p>  // UNCOMMENT LATER*/}
               <FaExternalLinkAlt />
             </a>
           ) : (
