@@ -192,7 +192,7 @@ export default function FightsAdmin({
                       name="juries"
                       type="text"
                       placeholder="перечислите жюри через запятую без пробела"
-                      className="border-border"
+                      className="border-border w-full"
                     />
                     <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
                       Сохранить жюри

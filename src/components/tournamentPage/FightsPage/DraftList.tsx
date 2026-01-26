@@ -27,7 +27,7 @@ export default function DraftList({actionId}: { actionId: number }) {
                   </tbody>
               </table>
           </div>:
-        <p>Процедура вызова еще не состоялась</p>
+        <p className="text-text-main">Процедура вызова еще не состоялась</p>
       }
     </>
 
