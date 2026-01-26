@@ -39,6 +39,7 @@ export const defineTournamentsEndpoints = (
       return []
     },
   }),
+
   getAvailableYears: builder.query({
     query: ({ tt }: { tt: number }) => `years?tournamentTypeId=${tt}`,
     transformResponse: (response: unknown): number[] => {
@@ -346,6 +347,35 @@ export const defineTournamentsEndpoints = (
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+        },
+        method: "POST",
+      }
+    },
+  }),
+
+  setPlayerCoeff: builder.mutation({
+    query: ({ token, coeff, performanceId }: { token: string; performanceId: number; coeff: number }) => {
+      return {
+        url: `set_coeff/${performanceId}/${coeff}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }
+    },
+  }),
+
+  setDraftsResults: builder.mutation({
+    query: ({ token, calls, actionId }: { token: string; calls: {problemId: number, result: boolean}[]; actionId: number }) => {
+      return {
+        url: `set_draft_result/${actionId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: {
+          calls: calls
         },
         method: "POST",
       }

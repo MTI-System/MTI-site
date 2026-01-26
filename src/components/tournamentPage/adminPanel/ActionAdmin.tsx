@@ -3,8 +3,8 @@
 import {
   useGetActionInformationQuery,
   useGetTournamentTableQuery,
-  useSetDraftResultMutation,
-  useSetJuryToFightMutation,
+  useSetDraftResultMutation, useSetDraftsResultsMutation,
+  useSetJuryToFightMutation, useSetPlayerCoeffMutation,
   useSetPlayerToPerformanceMutation,
   useSetScoresMutation,
 } from "@/api/tournaments/clientApiInterface"
@@ -12,7 +12,7 @@ import { useGetProblemsByIdQuery, useGetProblemsQuery } from "@/api/problems/cli
 import Loading from "@/app/loading"
 import { Accordion, Select } from "@base-ui-components/react"
 import FightsAdmin from "@/components/tournamentPage/adminPanel/FightsAdmin"
-import { FightInformationInterface } from "@/types/TournamentsAPI"
+import {CallActionInterface, DraftActionInterface, FightInformationInterface} from "@/types/TournamentsAPI"
 import { useGetUserByIdQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
 import { ComponentProps, useState } from "react"
@@ -36,14 +36,7 @@ export default function ActionAdmin({
 
   const [setScores] = useSetScoresMutation()
   const [setPlayer] = useSetPlayerToPerformanceMutation()
-  const { data } = useGetProblemsQuery({ tournament: "1", year: 2026 })
-  const problems =
-    data?.map((problem) => {
-      return {
-        value: problem.id.toString(),
-        label: `${problem.global_number}. ${problem.problem_translations[0].problem_name}`,
-      }
-    }) ?? []
+
   const token = useAppSelector((state) => state.auth.token)
 
   const isLoading = isProblemLoading || isProblemLoading
@@ -84,7 +77,7 @@ export default function ActionAdmin({
 
             {/*  </form>*/}
             {/*</div>*/}
-            <Drafts/>
+            <Drafts defaultValue={actionInfo?.drafts?.calls ?? []} actionId={actionId} />
             <div></div>
             <div>
               <Accordion.Root className="text-text-main flex w-full flex-col justify-center">
@@ -100,7 +93,7 @@ export default function ActionAdmin({
                     </Accordion.Header>
                     <Accordion.Panel className="text-text-main h-[var(--accordion-panel-height)] overflow-hidden text-base transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
                       <div>
-                        <CoeffPicker value={playerLine.coefficient}/>
+                        <CoeffPicker value={playerLine.coefficient} isShown={playerLine?.role?.title==="Докладчик"} performanceId={playerLine?.performanceId}/>
                         <form
                           onSubmit={(e) => {
                             e.preventDefault()
@@ -274,19 +267,29 @@ function ProblemPicker({
   )
 }
 
-function CoeffPicker({
-  value
-                     }:{value: number}){
+function CoeffPicker({value, isShown, performanceId}:{value: number,isShown: boolean, performanceId:number}) {
+  const [setCoeff, {}] = useSetPlayerCoeffMutation()
+  const token = useAppSelector(state=>state.auth.token)
   return (
     <>
-      <p>Коэффициент:</p>
-      <form>
-        <input className="border border-border" type={"number"} defaultValue={value}/>
-        <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
-          Сохранить коэффициент
-        </button>
-      </form>
+      {isShown &&  <>
+          <p>Коэффициент:</p>
+          <form onSubmit={(e)=>{
+            e.preventDefault()
+            setCoeff({
+              performanceId: performanceId,
+              coeff: +(new FormData(e.currentTarget).get("c") ?? "3").toString(),
+              token: token,
+            })
+          }}>
+              <input name={"c"} className="border border-border" type={"number"} defaultValue={value}/>
+              <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                  Сохранить коэффициент
+              </button>
+          </form>
+      </>}
     </>
+
   )
 
 }
@@ -309,40 +312,72 @@ function ChevronUpDownIcon(props: React.ComponentProps<"svg">) {
 }
 
 
-function Drafts(){
-  const [drafts, setDraft] = useState<number[]>([])
+function Drafts({defaultValue, actionId}:{defaultValue: CallActionInterface[], actionId: number}){
+  const [drafts, setDraft] = useState<string[]>([...defaultValue.map(it=>it.problemId.toString())])
+  const { data } = useGetProblemsQuery({ tournament: "1", year: 2026 })
+  const problems =
+    data?.map((problem) => {
+      return {
+        value: problem.id.toString(),
+        label: `${problem.global_number}. ${problem.problem_translations[0].problem_name}`,
+      }
+    }) ?? []
+  const token = useAppSelector(state=>state.auth.token)
 
+  const [setDraftMutation, {}] = useSetDraftsResultsMutation()
   return (
     <>
-      {drafts.map(it=><>
-        <DraftItem/>
-      </>)}
-      <button className="mx-2 my-2 cursor-pointer bg-black/20" onClick={()=>{
-        setDraft(prev => [...prev, 1])
+      <form onSubmit={(e) => {
+        e.preventDefault()
+        const fd = new FormData(e.currentTarget)
+        const calls = fd.entries().toArray().map((it, idx)=>{
+          return {
+            problemId: +it[1].toString(),
+            result: idx === fd.entries().toArray().length - 1
+          }
+        })
+        const request = {
+          token: token,
+          actionId: actionId,
+          calls: calls
+        }
+        setDraftMutation(request)
+        console.log(request)
       }}>
-        Добавить выбор
-      </button>
-      <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
-        Сохранить процедуру выбора
-      </button>
+        {drafts.map((it, idx)=><>
+          <DraftItem name={idx.toString()} defaultValue={it} problems={problems} />
+        </>)}
+        <button className="mx-2 my-2 cursor-pointer bg-black/20" type={"button"} onClick={(e)=>{
+          e.preventDefault();
+          setDraft(prev => [...prev, problems[0].value ?? "-1"])
+        }}>
+          Добавить выбор
+        </button>
+        <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+          Сохранить процедуру выбора
+        </button>
+      </form>
+
 
     </>
   )
 }
 
 
-function DraftItem(){
-  const teams = ["Задача 1"]
+function DraftItem({name, defaultValue, problems}: {name: string, defaultValue: string, problems: {label: string; value: string}[]}) {
+  const teams = [...problems]
+  const [pickedTeam, setPickedTeam] = useState<string | undefined>(defaultValue)
   return (
     <>
       <Select.Root
-        items={[]}
+        items={teams}
         onValueChange={(selected) => {
           console.log(selected)
+          setPickedTeam(selected ?? "-1")
         }}
-        value={ ""}
+        value={pickedTeam}
       >
-        <input name={"aaaa"} value={ ""} onChange={() => {}} className="hidden" />
+        <input name={name} value={pickedTeam} onChange={() => {}} className="hidden" />
         <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
           <Select.Value />
           <Select.Icon className="flex">
@@ -354,18 +389,18 @@ function DraftItem(){
             <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
               <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
               <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
-                {/*{teams.map(({ label, value }) => (*/}
-                {/*  <Select.Item*/}
-                {/*    key={label}*/}
-                {/*    value={value}*/}
-                {/*    className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"*/}
-                {/*  >*/}
-                {/*    <Select.ItemIndicator className="col-start-1">*/}
-                {/*      <CheckIcon className="size-3" />*/}
-                {/*    </Select.ItemIndicator>*/}
-                {/*    <Select.ItemText className="col-start-2">{label}</Select.ItemText>*/}
-                {/*  </Select.Item>*/}
-                {/*))}*/}
+                {teams.map(({ label, value }) => (
+                  <Select.Item
+                    key={label}
+                    value={value}
+                    className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
+                  >
+                    <Select.ItemIndicator className="col-start-1">
+                      <CheckIcon className="size-3" />
+                    </Select.ItemIndicator>
+                    <Select.ItemText className="col-start-2">{label}</Select.ItemText>
+                  </Select.Item>
+                ))}
               </Select.List>
               <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
             </Select.Popup>

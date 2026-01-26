@@ -57,4 +57,6 @@ export const {
   useSetDraftResultMutation, // maked
   useSetScoresMutation,
   useSetPlayerToPerformanceMutation,
+  useSetDraftsResultsMutation,
+  useSetPlayerCoeffMutation,
 } = tournamentsApiClient

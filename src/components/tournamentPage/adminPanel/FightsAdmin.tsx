@@ -116,6 +116,9 @@ export default function FightsAdmin({
                     if (data.team3 !== "") {
                       teamsArr.push(data.team3)
                     }
+                    if (data.team4 !== "") {
+                      teamsArr.push(data.team4)
+                    }
 
                     newForm.set("token", token)
 
@@ -159,6 +162,15 @@ export default function FightsAdmin({
                           <TeamsPicker
                             name={"team3"}
                             defaultValue={fight.teams?.[2]?.id?.toString()}
+                            teams={teams ?? []}
+                          />
+                          <p>
+                            Команда 4<br />
+                            (первое наблюдение)
+                          </p>
+                          <TeamsPicker
+                            name={"team4"}
+                            defaultValue={fight.teams?.[3]?.id?.toString()}
                             teams={teams ?? []}
                           />
                         </th>

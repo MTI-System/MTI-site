@@ -60,7 +60,7 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
           key={fightIdx}
           className={`border-border text-text-main w-full overflow-auto rounded-xl border text-center font-medium md:w-fit md:shrink-0 md:grow md:rounded-none md:border-0 ${fightIdx > 0 ? "md:border-l-border md:border-l" : ""}`}
         >
-          {true ? (
+          {false ? (
             <a
               target="_blank"
               href={fightItem.location}
