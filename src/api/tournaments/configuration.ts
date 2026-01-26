@@ -90,7 +90,7 @@ export const defineTournamentsEndpoints = (
     transformResponse: (response: unknown): TeamInTournamentInterface | null => {
       const parsed = teamInTournamentSchema.safeParse(response)
       if (parsed.success) return parsed.data
-      console.error(`Unexpected response while parsing team information: ${parsed.error}`)
+      console.error(`Unexpected response while parsing team information: ${parsed.error} ${JSON.stringify(response)}`)
       return null
     },
   }),

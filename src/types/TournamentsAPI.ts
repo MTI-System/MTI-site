@@ -1,6 +1,7 @@
 import {z} from "zod"
 import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage";
 import { ProblemSchema } from "./problemAPI"
+import {UserSchema} from "@/types/UsersApi";
 
 export const FightContainerCard = z.object({
   id: z.number(),
@@ -23,7 +24,7 @@ export const teamInTournamentSchema = z.object({
   id: z.number(),
   name: z.string().nonempty(),
   global_team_id: z.number().optional(),
-  players: z.array(z.number()).optional(),
+  players: z.array(UserSchema.or(z.number())).optional(),
 })
 export const TournamentCard = z.object({
   id: z.number(),

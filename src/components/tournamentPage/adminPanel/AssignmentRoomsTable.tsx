@@ -41,13 +41,15 @@ export default function AssignmentRoomsTable({ fightNum, rooms, config, getTeamV
           </tr>
         </thead>
         <tbody>
-          {config && config.data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="text-center">
-              {row.map((cell, colIndex) => (
-                <td className={`text-ellipsis overflow-hidden whitespace-nowrap py-1 px-2 ${colIndex > 0 ? "md:border-l-border md:border-l" : ""}`} key={colIndex}>{getTeamValue(cell)}</td>
-              ))}
-            </tr>
-          ))}
+        {/*{JSON.stringify(config)}*/}
+        {config && config.data.map((row, rowIndex) => (
+          <tr key={rowIndex} className="text-center">
+            {row.map((cell, colIndex) => (
+              <td className={`text-ellipsis overflow-hidden whitespace-nowrap py-1 px-2 ${colIndex > 0 ? "md:border-l-border md:border-l" : ""}`} key={colIndex}>{getTeamValue(cell)}</td>
+            ))}
+          </tr>
+        ))}
+
         </tbody>
       </table>
     </div>
