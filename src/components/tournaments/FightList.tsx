@@ -57,13 +57,19 @@ export function FightCard({ cardData, tmpIDX }: { cardData: FightInformationInte
               </h2>
             </Link>
             {cardData.is_location_link || (
-              <a
+              // <a
+              //   className="text-text-alt hover:text-text-alt/80 flex flex-row content-center items-center justify-center gap-2 transition-colors"
+              //   target="_blank"
+              //   href={cardData.location}
+              // >
+              //   Конференция <FaExternalLinkAlt className="text-sm" />
+              // </a>
+              <p
                 className="text-text-alt hover:text-text-alt/80 flex flex-row content-center items-center justify-center gap-2 transition-colors"
-                target="_blank"
-                href={cardData.location}
+
               >
-                Конференция <FaExternalLinkAlt className="text-sm" />
-              </a>
+                {cardData.location}
+              </p>
             )}
           </div>
 
