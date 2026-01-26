@@ -75,7 +75,7 @@ function FightAction({ actionId }: { actionId: number }) {
         <div className="text-text-alt mb-4 sm:text-xl text-md uppercase">Задача</div>
         {problemData?.id ? (
           <Link href={`/problems/${problemData?.id}`} className="text-text-main text-lg font-bold uppercase">
-            {problemData?.global_number + ". " + problemData?.problem_translations[0].problem_name}
+            {(problemData?.local_number ?? `(${problemData?.local_number})`) + ". " + problemData?.problem_translations[0].problem_name}
           </Link>
         ) : (
           <p className="text-text-main text-lg font-bold uppercase">-</p>

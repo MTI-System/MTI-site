@@ -85,7 +85,7 @@ export function FightCard({ cardData, tmpIDX }: { cardData: FightInformationInte
 
           <div className="flex flex-wrap justify-center gap-3 md:gap-4 lg:gap-8">
             <UsersProviderWrapper>
-              <UserAvatarWithTitleByID PeoplesIDs={cardData?.jouries} />
+              <UserAvatarWithTitleByID PeoplesIDs={cardData?.jouries} displaySpeakerRole />
             </UsersProviderWrapper>
           </div>
         </div>
