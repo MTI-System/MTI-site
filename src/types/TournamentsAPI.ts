@@ -62,12 +62,7 @@ export const TournamentResultsTableEntity = z.object({
 
 export const TournamentUserResultsTableLine = z.object({
   user_id: z.number(),
-  team: z.object({
-    id: z.number(),
-    name: z.string(),
-    global_team_id: z.number(),
-    players: z.array(z.number()),
-  }),
+  team: teamInTournamentSchema,
   user_first_name: z.string(),
   user_second_name: z.string(),
   user_third_name: z.string(),
