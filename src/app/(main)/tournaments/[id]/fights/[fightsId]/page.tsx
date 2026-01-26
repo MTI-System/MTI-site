@@ -55,8 +55,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function AllFightPage({ params }: { params: Promise<{ fightsId: string }> }) {
-  const { fightsId } = await params
+export default async function AllFightPage({ params }: { params: Promise<{ fightsId: string; id: string }> }) {
+  const { fightsId, id: tournamentId } = await params
   const store = makeTournamentsStoreServer()
   const {
     data: fightsData,
@@ -83,5 +83,5 @@ export default async function AllFightPage({ params }: { params: Promise<{ fight
       </div>
     )
   }
-  return <FightList fightsData={fightsData} />
+  return <FightList fightsData={fightsData} tournamentId={Number(tournamentId)} />
 }

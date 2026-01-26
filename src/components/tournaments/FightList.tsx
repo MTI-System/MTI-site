@@ -5,20 +5,20 @@ import { FightContainerInfoInterface, FightInformationInterface } from "@/types/
 import Link from "next/link"
 import { FaExternalLinkAlt } from "react-icons/fa"
 
-export default function FightList({ fightsData }: { fightsData: FightContainerInfoInterface }) {
+export default function FightList({ fightsData, tournamentId }: { fightsData: FightContainerInfoInterface, tournamentId: number }) {
   return (
     <div className="flex flex-col items-center px-4">
       <h1 className="text-text-main mx-auto mb-8 text-center text-2xl font-bold">Раздел боев</h1>
       <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
         {fightsData.map((item, idx) => (
-          <FightCard key={item.id} cardData={item} tmpIDX={idx} />
+          <FightCard key={item.id} cardData={item} tmpIDX={idx} tournamentId={tournamentId} />
         ))}
       </div>
     </div>
   )
 }
 
-export function FightCard({ cardData, tmpIDX }: { cardData: FightInformationInterface; tmpIDX: number }) {
+export function FightCard({ cardData, tmpIDX, tournamentId }: { cardData: FightInformationInterface; tmpIDX: number, tournamentId: number }) {
   // --------------DELETE LATER-------------
   const roomNames = ["A", "B", "C", "D", "E", "F"]
   // ---------------------------------------
@@ -76,7 +76,7 @@ export function FightCard({ cardData, tmpIDX }: { cardData: FightInformationInte
           {cardData?.teams && (
             <div className="border-border mb-4 border-b pb-4 md:mb-5">
               <div className="overflow-x-auto">
-                <FightTable teams={cardData?.teams} />
+                <FightTable teams={cardData?.teams} tournamentId={tournamentId} />
               </div>
             </div>
           )}
