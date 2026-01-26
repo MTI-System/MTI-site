@@ -46,7 +46,7 @@ function DraftItem(
     <>
       <td className="text-start border-r border-border px-2 py-1">Команда <strong>{chellendger.name}</strong> вызывает
         команду <strong>{chellendged.name}</strong> на
-        задачу <a className="font-bold hover:text-text-hover" href={`/problems/${problemData?.id}`}>№{problemData?.global_number} {problemData?.problem_translations[0].problem_name}</a></td>
+        задачу <a className="font-bold hover:text-text-hover" href={`/problems/${problemData?.id}`}>№{problemData?.local_number ?? `(${problemData?.global_number})`} {problemData?.problem_translations[0].problem_name}</a></td>
       <td
         className={twclsx("text-center px-2 py-1", {"text-accent-accept": call.result}, {"text-red-500": !call.result})}>{call.result ? "Принято" : "Отказ"}</td>
     </>
