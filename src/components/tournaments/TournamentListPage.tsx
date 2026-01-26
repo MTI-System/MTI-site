@@ -46,15 +46,14 @@ export default async function TournamentListPage({
       <TournamentsSearchParams searchParams={sp} isNoRefresh={isNoRefresh} />
       <div className="min-h-[70vh] shrink-0">
         <TournamentsFilters availableStates={possibleStates ?? []} availableYears={possibleYears ?? []}>
-            <Suspense fallback={<Loading />}>
-              <TournamentCardsSpinner
-                tournamentsCards={filteredTournaments??[]}
-                isModerating={isOrganizator}
-                currentPage={Number(page)}
-                rights={rights}
-              />
-            </Suspense>
-
+          <Suspense fallback={<Loading />}>
+            <TournamentCardsSpinner
+              tournamentsCards={filteredTournaments ?? []}
+              isModerating={isOrganizator}
+              currentPage={Number(page)}
+              rights={rights}
+            />
+          </Suspense>
         </TournamentsFilters>
       </div>
     </TournamentsStoreProvider>

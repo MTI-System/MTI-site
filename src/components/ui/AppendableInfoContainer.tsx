@@ -31,7 +31,7 @@ interface AppendableInfoContainerProps extends React.HTMLAttributes<HTMLDivEleme
   btnDivClassName?: string
   btnClassName?: string
   editClassName?: string
-  deleteClassName?:string
+  deleteClassName?: string
   confirmClassName?: string
   discardClassName?: string
   addClassName?: string

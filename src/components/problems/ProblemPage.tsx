@@ -58,8 +58,8 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
   const listOfMaterials = allMaterials.filter((mat) => mat.metadata.is_primary !== "true")
 
   return (
-    <div className="py-5 w-full">
-      <div className="bg-bg-alt rounded-2xl pt-5 w-full">
+    <div className="w-full py-5">
+      <div className="bg-bg-alt w-full rounded-2xl pt-5">
         <ProblemTTUpdator newTT={problem.tournament_type ?? 1} />
         <div className="w-full">
           <div className="w-full px-7">
@@ -67,8 +67,8 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
               <ProblemCardContent problem={problem} isEditable={false} />
             </div>
             {(primaryGifMaterial.length > 0 || isModerator) && (
-              <div  className="flex h-full w-full pb-2 sm:overflow-auto">
-                <div className="flex flex-col w-full gap-2 sm:flex-row sm:h-65 sm:w-fit">
+              <div className="flex h-full w-full pb-2 sm:overflow-auto">
+                <div className="flex w-full flex-col gap-2 sm:h-65 sm:w-fit sm:flex-row">
                   {isModerator && (
                     <PendingEmbeddingsList
                       problemId={problem.id}
@@ -103,7 +103,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
             {(primaryVideoMaterial.length > 0 || isModerator) && (
               <ContentContainer containerTitle="Видео">
                 <div className="flex h-full w-full pb-2 sm:overflow-auto">
-                  <div className="flex flex-col w-full gap-2 sm:flex-row sm:h-100 sm:w-fit">
+                  <div className="flex w-full flex-col gap-2 sm:h-100 sm:w-fit sm:flex-row">
                     {primaryVideoMaterial.map((primaryVideoMaterial) => {
                       return (
                         <UniversalPlayer
@@ -137,7 +137,7 @@ async function ProblemPage({ problem }: { problem: ProblemInterface }) {
                 <p className={style.nothingMessage}>У этой задачи пока нет материалов</p>
               )}
               {(listOfMaterials.length > 0 || isModerator) && (
-                <div className="flex gap-2.5 flex-col">
+                <div className="flex flex-col gap-2.5">
                   {listOfMaterials.map((embedding) => (
                     <UniversalEmbedding
                       isModerator={isModerator}

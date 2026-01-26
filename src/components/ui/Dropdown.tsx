@@ -184,7 +184,7 @@ export function DropdownElement<T>(params: DropdownOptionInterface<T>) {
   return (
     <Menu.Item
       className={twclsx(
-        "bg-bg-alt text-text-main px-2 py-0.5 pr-10 transition-colors duration-300 hover:bg-black/10 dark:hover:bg-white/10 in-[.ddtrig]:pr-0",
+        "bg-bg-alt text-text-main px-2 py-0.5 pr-10 transition-colors duration-300 hover:bg-black/10 in-[.ddtrig]:pr-0 dark:hover:bg-white/10",
         { "text-inactive opacity-50": params.inactive },
       )}
       onClick={() => {
@@ -202,7 +202,7 @@ export function DropdownMultiElement<T>(params: DropdownOptionInterface<T>) {
   return (
     <Menu.CheckboxItem
       className={twclsx(
-        "bg-bg-alt text-text-main px-2 py-0.5 transition-colors duration-300 hover:bg-black/10 data-checked:bg-black/4 data-checked:hover:bg-black/7 dark:hover:bg-white/10 dark:data-checked:bg-white/4 dark:data-checked:hover:bg-white/7 in-[.ddtrig]:pr-0",
+        "bg-bg-alt text-text-main px-2 py-0.5 transition-colors duration-300 hover:bg-black/10 in-[.ddtrig]:pr-0 data-checked:bg-black/4 data-checked:hover:bg-black/7 dark:hover:bg-white/10 dark:data-checked:bg-white/4 dark:data-checked:hover:bg-white/7",
         { "text-inactive opacity-50": params.inactive },
       )}
       checked={

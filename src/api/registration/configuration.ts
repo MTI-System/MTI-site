@@ -1,5 +1,3 @@
-
-
 import { EndpointBuilder, fetchBaseQuery } from "@reduxjs/toolkit/query"
 import { REGISTRATION_API } from "@/constants/APIEndpoints"
 import {
@@ -22,14 +20,14 @@ export const defineRegistrationEndpoints = (
   builder: EndpointBuilder<typeof registrationBaseQuery, never, typeof registrationReducerPath>,
 ) => ({
   formsInformation: builder.query({
-    query: ({id} : {id: number}) => `get_info_about_forms/${id}`, 
+    query: ({ id }: { id: number }) => `get_info_about_forms/${id}`,
     transformResponse: (response: unknown): TournamentInformationResponseInterface | null => {
       console.log("info: ", response)
       const parsed = TournamentInformationResponse.safeParse(response)
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing registration form: ${parsed.error}`)
       return null
-    }
+    },
   }),
 
   createForm: builder.mutation({
@@ -37,53 +35,48 @@ export const defineRegistrationEndpoints = (
       token,
       tournamentId,
       formTypeFlag,
-      formTitle
-    } : {
-      token: string,
-      tournamentId: number,
-      formTypeFlag: string,
+      formTitle,
+    }: {
+      token: string
+      tournamentId: number
+      formTypeFlag: string
       formTitle: string
     }) => ({
       url: `create_form`,
-      method: 'POST',
-      body: (()=>{
+      method: "POST",
+      body: (() => {
         const fd = new FormData()
-        fd.set('token', token)
-        fd.set('tournamentId', tournamentId.toString())
-        fd.set('formTypeFlag', formTypeFlag)
-        fd.set('formTitle', formTitle)
-        
+        fd.set("token", token)
+        fd.set("tournamentId", tournamentId.toString())
+        fd.set("formTypeFlag", formTypeFlag)
+        fd.set("formTitle", formTitle)
+
         return fd
-      })()
+      })(),
     }),
-    
   }),
 
   setFields: builder.mutation({
-    query: ({
-      newForm
-    }: {
-      newForm: FormConstructorResponse
-    })=>{
+    query: ({ newForm }: { newForm: FormConstructorResponse }) => {
       console.log("result: ", newForm)
       return {
-      url: "set_from_fields",
-      method: "POST",
-      body: newForm
-    }}
-
+        url: "set_from_fields",
+        method: "POST",
+        body: newForm,
+      }
+    },
   }),
-   
+
   getAnswers: builder.query({
-    query: ({id, token}: {id: number, token: string}) => ({
+    query: ({ id, token }: { id: number; token: string }) => ({
       url: "get_answers",
       method: "POST",
-      body: (()=>{
+      body: (() => {
         const fd = new FormData()
-        fd.set('token', token)
-        fd.set('formId', id.toString())
+        fd.set("token", token)
+        fd.set("formId", id.toString())
         return fd
-      })()
+      })(),
     }),
     transformResponse: (response: unknown): TournamentRegistrationAnswerInterface[] | null => {
       console.log("getAnswers response: ", response)
@@ -95,16 +88,16 @@ export const defineRegistrationEndpoints = (
   }),
 
   getAnswer: builder.query({
-    query: ({tournamentId, formTypeFlag, token}: {tournamentId: number, formTypeFlag:string, token: string}) => ({
+    query: ({ tournamentId, formTypeFlag, token }: { tournamentId: number; formTypeFlag: string; token: string }) => ({
       url: "get_answer",
       method: "POST",
-      body: (()=>{
+      body: (() => {
         const fd = new FormData()
-        fd.set('token', token)
-        fd.set('tournamentId', tournamentId.toString())
-        fd.set('formTypeFlag', formTypeFlag)
+        fd.set("token", token)
+        fd.set("tournamentId", tournamentId.toString())
+        fd.set("formTypeFlag", formTypeFlag)
         return fd
-      })()
+      })(),
     }),
     transformResponse: (response: unknown): TournamentRegistrationAnswerInterface | null => {
       console.log("getAnswers response: ", response)
@@ -115,7 +108,7 @@ export const defineRegistrationEndpoints = (
     },
   }),
   getUserAnswers: builder.query({
-    query: ({token, tournamentId, formTypeFlag}: {token: string, tournamentId: number, formTypeFlag: string}) =>{
+    query: ({ token, tournamentId, formTypeFlag }: { token: string; tournamentId: number; formTypeFlag: string }) => {
       const formData = new FormData()
       formData.set("token", token)
       formData.set("tournamentId", tournamentId.toString())
@@ -123,7 +116,7 @@ export const defineRegistrationEndpoints = (
       return {
         url: "/get_user_answers",
         method: "POST",
-        body: formData
+        body: formData,
       }
     },
     transformResponse: (response: unknown): TournamentRegistrationAnswerInterface[] | null => {
@@ -132,7 +125,7 @@ export const defineRegistrationEndpoints = (
       if (parsed.success) return parsed.data
       console.error(`Unexpected response while parsing registration form: ${parsed.error}`)
       return null
-    }
+    },
   }),
 
   getRegistrationForm: builder.query({
@@ -145,20 +138,18 @@ export const defineRegistrationEndpoints = (
     },
   }),
   isFormFilled: builder.query({
-    query: ({tournamentId, formFlag, userId}: {tournamentId: number,
-      formFlag: string, userId: number
-    }) => ({
+    query: ({ tournamentId, formFlag, userId }: { tournamentId: number; formFlag: string; userId: number }) => ({
       url: `is_form_filled/${tournamentId}/${formFlag}?userId=${userId}`,
-      method: "GET"
+      method: "GET",
     }),
-    transformResponse: (response: string): boolean=> {
+    transformResponse: (response: string): boolean => {
       if (!response) return false
       const is_login_taken = BooleanResponseSchema.safeParse(response)
-      return is_login_taken.data?.result ?? false 
-    }
+      return is_login_taken.data?.result ?? false
+    },
   }),
   submitFormAnswer: builder.mutation({
-    query: ({ formData, formId}: { formData: FormData, formId:number }) => ({
+    query: ({ formData, formId }: { formData: FormData; formId: number }) => ({
       url: `answer_form/${formId}`,
       method: "POST",
       body: formData,

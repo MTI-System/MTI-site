@@ -29,4 +29,4 @@ export const notificationsApiClient = createApiClient({
   endpoints: defineNotificationsEndpoints,
 })
 
-export const {useMarkAsReadMutation, useGetAllNotificationsQuery } = notificationsApiClient
+export const { useMarkAsReadMutation, useGetAllNotificationsQuery } = notificationsApiClient

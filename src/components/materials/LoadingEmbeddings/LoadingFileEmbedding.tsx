@@ -92,7 +92,7 @@ export default function LoadingFileEmbedding({
         />
       </div>
       <div
-        className="after:bg-(--progress-color) absolute right-0 bottom-0 left-0 h-2 after:absolute after:bottom-0 after:left-(--progress-shift) after:h-2 after:w-full after:transition-all after:duration-250 after:ease-in-out after:content-['']"
+        className="absolute right-0 bottom-0 left-0 h-2 after:absolute after:bottom-0 after:left-(--progress-shift) after:h-2 after:w-full after:bg-(--progress-color) after:transition-all after:duration-250 after:ease-in-out after:content-['']"
         style={{ "--progress-shift": `${-100}%`, "--progress-color": "var(--primary-accent)" } as CSSProperties}
         ref={progresRef}
       ></div>

@@ -2,7 +2,7 @@
 import footerStyle from "@/styles/components/sections/app/footer.module.css"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 import { ReactNode } from "react"
-import ColoredTType from "@/components/ui/ColoredTType";
+import ColoredTType from "@/components/ui/ColoredTType"
 
 export default function LogoWithTT({
   logoSize,
@@ -27,7 +27,11 @@ export default function LogoWithTT({
       {/*  {ttObject?.name?.slice(0, -1)}*/}
       {/*  <span style={{ color: ttObject?.color }}>{ttObject?.name?.slice(-1)}</span>*/}
       {/*</p>*/}
-      <ColoredTType ttName={ttObject?.name??"ТЮФ"} ttColor={ttObject?.color??"#000000"} className="text-4xl font-bold"/>
+      <ColoredTType
+        ttName={ttObject?.name ?? "ТЮФ"}
+        ttColor={ttObject?.color ?? "#000000"}
+        className="text-4xl font-bold"
+      />
     </div>
   )
 }

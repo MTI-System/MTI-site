@@ -3,203 +3,392 @@
 import {
   useGetActionInformationQuery,
   useGetTournamentTableQuery,
-  useSetDraftResultMutation, useSetJuryToFightMutation, useSetPlayerToPerformanceMutation, useSetScoresMutation
-} from "@/api/tournaments/clientApiInterface";
-import {useGetProblemsByIdQuery, useGetProblemsQuery} from "@/api/problems/clientApiInterface";
-import Loading from "@/app/loading";
-import {Accordion, Select} from "@base-ui-components/react";
-import FightsAdmin from "@/components/tournamentPage/adminPanel/FightsAdmin";
-import {FightInformationInterface} from "@/types/TournamentsAPI";
-import {useGetUserByIdQuery} from "@/api/users/clientApiInterface";
-import UsersProviderWrapper from "@/api/users/ClientWrapper";
-import {ComponentProps, useState} from "react";
-import ProblemsProviderWrapper from "@/api/problems/ClientWrapper";
-import {useAppSelector} from "@/redux_stores/Global/tournamentTypeRedixStore";
+  useSetDraftResultMutation, useSetDraftsResultsMutation,
+  useSetJuryToFightMutation, useSetPlayerCoeffMutation,
+  useSetPlayerToPerformanceMutation,
+  useSetScoresMutation,
+} from "@/api/tournaments/clientApiInterface"
+import { useGetProblemsByIdQuery, useGetProblemsQuery } from "@/api/problems/clientApiInterface"
+import Loading from "@/app/loading"
+import { Accordion, Select } from "@base-ui-components/react"
+import FightsAdmin from "@/components/tournamentPage/adminPanel/FightsAdmin"
+import {CallActionInterface, DraftActionInterface, FightInformationInterface} from "@/types/TournamentsAPI"
+import { useGetUserByIdQuery } from "@/api/users/clientApiInterface"
+import UsersProviderWrapper from "@/api/users/ClientWrapper"
+import { ComponentProps, useState } from "react"
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
+import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 
-export default function ActionAdmin({actionId, idx, fight,}: {
-  actionId: number,
-  idx: number,
-  fight: FightInformationInterface,
+export default function ActionAdmin({
+  actionId,
+  idx,
+  fight,
+}: {
+  actionId: number
+  idx: number
+  fight: FightInformationInterface
 }) {
-  const {data: actionInfo, isLoading: isActionLoading} = useGetActionInformationQuery({actionId: actionId})
-  const {
-    data: pickedProblemInfo,
-    isLoading: isProblemLoading
-  } = useGetProblemsByIdQuery({problemId: actionInfo?.pickedProblem ?? 0})
+  const { data: actionInfo, isLoading: isActionLoading } = useGetActionInformationQuery({ actionId: actionId })
+  const { data: pickedProblemInfo, isLoading: isProblemLoading } = useGetProblemsByIdQuery({
+    problemId: actionInfo?.pickedProblem ?? 0,
+  })
   const [setDraftResult] = useSetDraftResultMutation()
 
   const [setScores] = useSetScoresMutation()
   const [setPlayer] = useSetPlayerToPerformanceMutation()
-  const {data} = useGetProblemsQuery({tournament: "1", year: 2026})
-  const problems = data?.map(problem => {
-    return {
-      value: problem.id.toString(),
-      label: `${problem.global_number}. ${problem.problem_translations[0].problem_name}`
-    }
-  }) ?? []
-  const token = useAppSelector(state=>state.auth.token)
+
+  const token = useAppSelector((state) => state.auth.token)
 
   const isLoading = isProblemLoading || isProblemLoading
   return (
-    <div className="px-2 border border-border my-2 mx-2">
-      {isLoading && <Loading/>}
+    <div className="border-border mx-2 my-2 border px-2">
+      {isLoading && <Loading />}
       {!isLoading && (
         <>
           <div className="text-text-main">
-            <h2 className="text-xl text-text-main font-bold">Действие {idx + 1}</h2>
+            <h2 className="text-text-main text-xl font-bold">Действие {idx + 1}</h2>
+            {/*<div>*/}
+            {/*  <form*/}
+            {/*    onSubmit={(e) => {*/}
+            {/*      e.preventDefault()*/}
+            {/*      const form = new FormData(e.currentTarget)*/}
+            {/*      form.set("token", token)*/}
+            {/*      form.set("actionId", actionId.toString())*/}
+            {/*      const data = Object.fromEntries(form.entries())*/}
+            {/*      //@ts-ignore*/}
+            {/*      setDraftResult(data)*/}
+            {/*    }}*/}
+            {/*  >*/}
+            {/*    <ProblemsProviderWrapper>*/}
+            {/*      {data ? (*/}
+            {/*        <>*/}
+            {/*          <ProblemPicker name="problemId" defaultValue={pickedProblemInfo?.id.toString()} teams={problems} />*/}
+            {/*        </>*/}
+
+            {/*      ) : (*/}
+            {/*        <Loading />*/}
+            {/*      )}*/}
+            {/*    </ProblemsProviderWrapper>*/}
+
+            {/*    <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">*/}
+            {/*      Сохранить задачу*/}
+            {/*    </button>*/}
+
+
+            {/*  </form>*/}
+            {/*</div>*/}
+            <Drafts defaultValue={actionInfo?.drafts?.calls ?? []} actionId={actionId} />
+            <div></div>
             <div>
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                const form = new FormData(e.currentTarget);
-                form.set("token", token)
-                form.set("actionId", actionId.toString())
-                const data = Object.fromEntries(form.entries());
-                //@ts-ignore
-                setDraftResult(data)
-              }}>
-                <ProblemsProviderWrapper>
-                  {data ? <ProblemPicker name="problemId" defaultValue={pickedProblemInfo?.id.toString()} teams={problems}/> : <Loading/>}
-                </ProblemsProviderWrapper>
-
-                <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить задачу</button>
-
-              </form>
-
-
-            </div>
-            <div>
-
-            </div>
-            <div>
-              <Accordion.Root className="flex w-full flex-col justify-center text-text-main">
+              <Accordion.Root className="text-text-main flex w-full flex-col justify-center">
                 {actionInfo?.playerLines.map((playerLine, idx) => (
-                  <Accordion.Item className="border border-border" key={playerLine.playerId + "player" + idx}>
+                  <Accordion.Item className="border-border border" key={playerLine.playerId + "player" + idx}>
                     <Accordion.Header>
-                      <Accordion.Trigger
-                        className="group relative flex w-full items-baseline justify-between gap-4 bg-bg-alt py-2 pr-1 pl-3 text-left font-medium hover:bg-hover focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
-                        <p>Выступление - {playerLine.team.name} - {playerLine?.role?.title ?? "Роль не определена"}</p>
-                        <PlusIcon
-                          className="mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45 text-text-main"/>
+                      <Accordion.Trigger className="group bg-bg-alt hover:bg-hover relative flex w-full items-baseline justify-between gap-4 py-2 pr-1 pl-3 text-left font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
+                        <p>
+                          Выступление - {playerLine.team.name} - {playerLine?.role?.title ?? "Роль не определена"}
+                        </p>
+                        <PlusIcon className="text-text-main mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45" />
                       </Accordion.Trigger>
                     </Accordion.Header>
-                    <Accordion.Panel
-                      className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-text-main transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
+                    <Accordion.Panel className="text-text-main h-[var(--accordion-panel-height)] overflow-hidden text-base transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
                       <div>
-                        <form onSubmit={(e)=>{
-                          e.preventDefault()
-                          const fd = new FormData(e.currentTarget);
-                          const playerId = Number(fd.get("player_id"));
-                          console.log(playerId);
-                          setPlayer({
-                            token: token,
-                            performanceId: playerLine.performanceId,
-                            playerId: playerId
-                          })
-
-                        }}>
-                          <input defaultValue={Number(playerLine.playerId)} name="player_id" placeholder={"id участника"} type="number"/>
-                          <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить участника</button>
+                        <CoeffPicker value={playerLine.coefficient} isShown={playerLine?.role?.title==="Докладчик"} performanceId={playerLine?.performanceId}/>
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault()
+                            const fd = new FormData(e.currentTarget)
+                            const playerId = Number(fd.get("player_id"))
+                            console.log(playerId)
+                            setPlayer({
+                              token: token,
+                              performanceId: playerLine.performanceId,
+                              playerId: playerId,
+                            })
+                          }}
+                        >
+                          <input
+                            defaultValue={Number(playerLine.playerId)}
+                            name="player_id"
+                            placeholder={"id участника"}
+                            type="number"
+                          />
+                          <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                            Сохранить участника
+                          </button>
                         </form>
-                        <form className="w-full flex flex-col items-center" onSubmit={(e)=>{
-                          e.preventDefault()
-                          const fd = new FormData(e.currentTarget)
-                          console.log(fd.entries().toArray())
-                          setScores({
-                            token: token,
-                            performanceId: playerLine.performanceId,
-                            scores: fd.entries().toArray().map(e=>{
-                              return {
-                                jury: Number(e[0].split("_")[1]),
-                                score: Number(e[1])
-                              }
-                            }),
-                          })
-                        }}>
-                          <table className="w-full border border-border">
-                            <thead className=" w-full">
-                            <tr className="flex justify-between w-full">
-                              <th className="border border-border w-full" scope="col">Жюри</th>
-                              <th className="border border-border w-full" scope="col">Оценка</th>
-                            </tr>
+                        <form
+                          className="flex w-full flex-col items-center"
+                          onSubmit={(e) => {
+                            e.preventDefault()
+                            const fd = new FormData(e.currentTarget)
+                            console.log(fd.entries().toArray())
+                            setScores({
+                              token: token,
+                              performanceId: playerLine.performanceId,
+                              scores: fd
+                                .entries()
+                                .toArray()
+                                .map((e) => {
+                                  return {
+                                    jury: Number(e[0].split("_")[1]),
+                                    score: Number(e[1]),
+                                  }
+                                }),
+                            })
+                          }}
+                        >
+                          <table className="border-border w-full border">
+                            <thead className="w-full">
+                              <tr className="flex w-full justify-between">
+                                <th className="border-border w-full border" scope="col">
+                                  Жюри
+                                </th>
+                                <th className="border-border w-full border" scope="col">
+                                  Оценка
+                                </th>
+                              </tr>
                             </thead>
                             <tbody>
                               <UsersProviderWrapper>
-                                {fight.jouries.map(jury => (
-                                  <JuryRow juryId={jury} key={jury}
-                                           defaultScore={playerLine.scores.find(score => score.jury === jury)?.value}/>
+                                {fight.jouries.map((jury) => (
+                                  <JuryRow
+                                    juryId={jury}
+                                    key={jury}
+                                    defaultScore={playerLine.scores.find((score) => score.jury === jury)?.value}
+                                  />
                                 ))}
                               </UsersProviderWrapper>
-
                             </tbody>
                           </table>
-                          <button className="bg-black/20 my-2 mx-2 cursor-pointer" type="submit">Сохранить оценки
+                          <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                            Сохранить оценки
                           </button>
                         </form>
                       </div>
                     </Accordion.Panel>
                   </Accordion.Item>
-
                 ))}
               </Accordion.Root>
             </div>
           </div>
         </>
-
       )}
     </div>
   )
 }
 
-
-function JuryRow({juryId, defaultScore = 0}: { juryId: number, defaultScore?: number }) {
-  const {data: jury, isLoading} = useGetUserByIdQuery({id: juryId});
+function JuryRow({ juryId, defaultScore = 0 }: { juryId: number; defaultScore?: number }) {
+  const { data: jury, isLoading } = useGetUserByIdQuery({ id: juryId })
   return (
     <>
-      {isLoading && <tr>
+      {isLoading && (
+        <tr>
           <th>
-              <Loading/></th>
-      </tr>}
-      {jury &&
-          <tr className="flex justify-between w-full">
-              <th className="border border-border w-full"
-                  scope="col">{jury.secondName} {jury.firstName} {jury.thirdName}</th>
-              <th className="border border-border w-full" scope="col">
-                  <input className="w-full" type="number" name={`juryScore_${juryId}`} defaultValue={defaultScore}/></th>
-          </tr>
-      }
+            <Loading />
+          </th>
+        </tr>
+      )}
+      {jury && (
+        <tr className="flex w-full justify-between">
+          <th className="border-border w-full border" scope="col">
+            {jury.secondName} {jury.firstName} {jury.thirdName}
+          </th>
+          <th className="border-border w-full border" scope="col">
+            <input className="w-full" type="number" name={`juryScore_${juryId}`} defaultValue={defaultScore} />
+          </th>
+        </tr>
+      )}
     </>
+  )
+}
+
+function ProblemPicker({
+  name,
+  defaultValue,
+  teams,
+}: {
+  name: string
+  defaultValue?: string
+  teams: {
+    label: string
+    value: string
+  }[]
+}) {
+  const [pickedTeam, setPickedTeam] = useState<string | undefined>(defaultValue)
+
+  return (
+    <>
+        <div className="flex gap-2">
+          <p>Выбрана задача: </p>
+          <Select.Root
+            items={teams}
+            onValueChange={(selected) => {
+              console.log(selected)
+              setPickedTeam(selected ?? "")
+            }}
+            value={pickedTeam ?? ""}
+          >
+            <input name={name} value={pickedTeam ?? ""} onChange={() => {}} className="hidden" />
+            <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
+              <Select.Value />
+              <Select.Icon className="flex">
+                <ChevronUpDownIcon />
+              </Select.Icon>
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
+                <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
+                  <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
+                  <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
+                    {teams.map(({ label, value }) => (
+                      <Select.Item
+                        key={label}
+                        value={value}
+                        className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
+                      >
+                        <Select.ItemIndicator className="col-start-1">
+                          <CheckIcon className="size-3" />
+                        </Select.ItemIndicator>
+                        <Select.ItemText className="col-start-2">{label}</Select.ItemText>
+                      </Select.Item>
+                    ))}
+                  </Select.List>
+                  <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
+                </Select.Popup>
+              </Select.Positioner>
+            </Select.Portal>
+          </Select.Root>
+        </div>
+
+    </>
+
 
   )
 }
 
-function ProblemPicker(
-  {name, defaultValue, teams}: {name: string, defaultValue?: string, teams: {
-      label: string,
-      value: string
-    }[]}
-){
-  const [pickedTeam, setPickedTeam] = useState<string | undefined>(defaultValue)
-
+function CoeffPicker({value, isShown, performanceId}:{value: number,isShown: boolean, performanceId:number}) {
+  const [setCoeff, {}] = useSetPlayerCoeffMutation()
+  const token = useAppSelector(state=>state.auth.token)
   return (
-    <div className="flex gap-2">
-      <p>Выбрана задача: </p>
-      <Select.Root items={teams} onValueChange={(selected)=>{
-        console.log(selected)
-        setPickedTeam(selected ?? "")
-      }}
-                   value={pickedTeam ?? ""}>
-        <input name={name} value={pickedTeam ?? ""} onChange={()=>{}} className="hidden"/>
-        <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 pr-3 pl-3.5 text-base bg-[canvas] text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
+    <>
+      {isShown &&  <>
+          <p>Коэффициент:</p>
+          <form onSubmit={(e)=>{
+            e.preventDefault()
+            setCoeff({
+              performanceId: performanceId,
+              coeff: +(new FormData(e.currentTarget).get("c") ?? "3").toString(),
+              token: token,
+            })
+          }}>
+              <input name={"c"} className="border border-border" type={"number"} defaultValue={value}/>
+              <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                  Сохранить коэффициент
+              </button>
+          </form>
+      </>}
+    </>
+
+  )
+
+}
+
+function PlusIcon(props: React.ComponentProps<"svg">) {
+  return (
+    <svg viewBox="0 0 12 12" fill="currentcolor" {...props}>
+      <path d="M6.75 0H5.25V5.25H0V6.75L5.25 6.75V12H6.75V6.75L12 6.75V5.25H6.75V0Z" />
+    </svg>
+  )
+}
+
+function ChevronUpDownIcon(props: React.ComponentProps<"svg">) {
+  return (
+    <svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentcolor" strokeWidth="1.5" {...props}>
+      <path d="M0.5 4.5L4 1.5L7.5 4.5" />
+      <path d="M0.5 7.5L4 10.5L7.5 7.5" />
+    </svg>
+  )
+}
+
+
+function Drafts({defaultValue, actionId}:{defaultValue: CallActionInterface[], actionId: number}){
+  const [drafts, setDraft] = useState<string[]>([...defaultValue.map(it=>it.problemId.toString())])
+  const { data } = useGetProblemsQuery({ tournament: "1", year: 2026 })
+  const problems =
+    data?.map((problem) => {
+      return {
+        value: problem.id.toString(),
+        label: `${problem.global_number}. ${problem.problem_translations[0].problem_name}`,
+      }
+    }) ?? []
+  const token = useAppSelector(state=>state.auth.token)
+
+  const [setDraftMutation, {}] = useSetDraftsResultsMutation()
+  return (
+    <>
+      <form onSubmit={(e) => {
+        e.preventDefault()
+        const fd = new FormData(e.currentTarget)
+        const calls = fd.entries().toArray().map((it, idx)=>{
+          return {
+            problemId: +it[1].toString(),
+            result: idx === fd.entries().toArray().length - 1
+          }
+        })
+        const request = {
+          token: token,
+          actionId: actionId,
+          calls: calls
+        }
+        setDraftMutation(request)
+        console.log(request)
+      }}>
+        {drafts.map((it, idx)=><>
+          <DraftItem name={idx.toString()} defaultValue={it} problems={problems} />
+        </>)}
+        <button className="mx-2 my-2 cursor-pointer bg-black/20" type={"button"} onClick={(e)=>{
+          e.preventDefault();
+          setDraft(prev => [...prev, problems[0].value ?? "-1"])
+        }}>
+          Добавить выбор
+        </button>
+        <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+          Сохранить процедуру выбора
+        </button>
+      </form>
+
+
+    </>
+  )
+}
+
+
+function DraftItem({name, defaultValue, problems}: {name: string, defaultValue: string, problems: {label: string; value: string}[]}) {
+  const teams = [...problems]
+  const [pickedTeam, setPickedTeam] = useState<string | undefined>(defaultValue)
+  return (
+    <>
+      <Select.Root
+        items={teams}
+        onValueChange={(selected) => {
+          console.log(selected)
+          setPickedTeam(selected ?? "-1")
+        }}
+        value={pickedTeam}
+      >
+        <input name={name} value={pickedTeam} onChange={() => {}} className="hidden" />
+        <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
           <Select.Value />
           <Select.Icon className="flex">
             <ChevronUpDownIcon />
           </Select.Icon>
         </Select.Trigger>
         <Select.Portal>
-          <Select.Positioner className="outline-none select-none z-10" sideOffset={8}>
-            <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] bg-clip-padding rounded-md bg-[canvas] text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
-              <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute data-[side=none]:before:top-[-100%] before:left-0 before:h-full before:w-full before:content-['']" />
-              <Select.List className="relative py-1 scroll-py-6 overflow-y-auto max-h-[var(--available-height)]">
+          <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
+            <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
+              <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
+              <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
                 {teams.map(({ label, value }) => (
                   <Select.Item
                     key={label}
@@ -213,48 +402,20 @@ function ProblemPicker(
                   </Select.Item>
                 ))}
               </Select.List>
-              <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] bottom-0 data-[side=none]:before:bottom-[-100%]" />
+              <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
             </Select.Popup>
           </Select.Positioner>
         </Select.Portal>
       </Select.Root>
-
-    </div>
-
+    </>
   )
 }
 
 
-function PlusIcon(props: React.ComponentProps<'svg'>) {
-  return (
-    <svg viewBox="0 0 12 12" fill="currentcolor" {...props}>
-      <path d="M6.75 0H5.25V5.25H0V6.75L5.25 6.75V12H6.75V6.75L12 6.75V5.25H6.75V0Z"/>
-    </svg>
-  );
-}
-
-function ChevronUpDownIcon(props: React.ComponentProps<'svg'>) {
-  return (
-    <svg
-      width="8"
-      height="12"
-      viewBox="0 0 8 12"
-      fill="none"
-      stroke="currentcolor"
-      strokeWidth="1.5"
-      {...props}
-    >
-      <path d="M0.5 4.5L4 1.5L7.5 4.5"/>
-      <path d="M0.5 7.5L4 10.5L7.5 7.5"/>
-    </svg>
-  );
-}
-
-function CheckIcon(props: React.ComponentProps<'svg'>) {
+function CheckIcon(props: React.ComponentProps<"svg">) {
   return (
     <svg fill="currentcolor" width="10" height="10" viewBox="0 0 10 10" {...props}>
-      <path
-        d="M9.1603 1.12218C9.50684 1.34873 9.60427 1.81354 9.37792 2.16038L5.13603 8.66012C5.01614 8.8438 4.82192 8.96576 4.60451 8.99384C4.3871 9.02194 4.1683 8.95335 4.00574 8.80615L1.24664 6.30769C0.939709 6.02975 0.916013 5.55541 1.19372 5.24822C1.47142 4.94102 1.94536 4.91731 2.2523 5.19524L4.36085 7.10461L8.12299 1.33999C8.34934 0.993152 8.81376 0.895638 9.1603 1.12218Z"/>
+      <path d="M9.1603 1.12218C9.50684 1.34873 9.60427 1.81354 9.37792 2.16038L5.13603 8.66012C5.01614 8.8438 4.82192 8.96576 4.60451 8.99384C4.3871 9.02194 4.1683 8.95335 4.00574 8.80615L1.24664 6.30769C0.939709 6.02975 0.916013 5.55541 1.19372 5.24822C1.47142 4.94102 1.94536 4.91731 2.2523 5.19524L4.36085 7.10461L8.12299 1.33999C8.34934 0.993152 8.81376 0.895638 9.1603 1.12218Z" />
     </svg>
-  );
+  )
 }

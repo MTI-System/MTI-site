@@ -1,8 +1,9 @@
 "use client"
-import { useGetRegistrationFormQuery } from "@/api/registration/clientApiInterface"
+import { registrationApiClient, useGetRegistrationFormQuery } from "@/api/registration/clientApiInterface"
 import Loading from "@/app/loading"
 import { createContext, ReactNode, RefObject, useContext, useEffect, useRef, useState } from "react"
 import { DateRange } from "react-day-picker"
+import { useDispatch } from "react-redux"
 
 export type availableFields =
   | "dropdown"
@@ -105,6 +106,7 @@ type ConstructorRootContextType = {
   formType: string
   tId: number
   counter: RefObject<number>
+  refetchFields: () => void
 }
 
 const ConstructorRootContext = createContext<ConstructorRootContextType | null>(null)
@@ -127,6 +129,7 @@ export function ConstructorRootProvider({
     isLoading: isInformationLoading,
     isSuccess,
     isError,
+    refetch,
   } = useGetRegistrationFormQuery({ id: tournamentId, type: formType })
   const [fields, setFields] = useState<Field[]>([])
   const [tId] = useState(tournamentId)
@@ -155,7 +158,7 @@ export function ConstructorRootProvider({
         setFields([])
       }
     }
-  }, [isInformationLoading])
+  }, [isInformationLoading, data])
 
   const addField = (fieldName: string, id: number, optional: boolean = false) => {
     setFields((prev) => [
@@ -252,6 +255,9 @@ export function ConstructorRootProvider({
         counter,
         setOptional,
         removeField,
+        refetchFields: () => {
+          refetch()
+        },
       }}
     >
       {!isInformationLoading && children}

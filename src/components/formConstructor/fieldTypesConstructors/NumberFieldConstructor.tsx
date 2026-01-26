@@ -9,7 +9,7 @@ import { type } from "node:os"
 export default function NumberFieldConstructor({ id }: { id: number }) {
   const { setProperties, getFieldById } = useConstructorRoot()
   const currentProperties = getFieldById(id)?.properties
-  
+
   // if (!(currentProperties && "minValue" in currentProperties && "maxValue" in currentProperties)) {
   //   return <p>error {currentProperties}</p>
   // }
