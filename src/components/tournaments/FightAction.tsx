@@ -74,7 +74,7 @@ function FightAction({ actionId, tournamentId }: { actionId: number, tournamentI
       </div>
     )
   }
-  if (!actionData || !problemData || !problemDataTournament) return <p className="text-red-500">Error</p>
+  if (!actionData || !problemDataTournament) return <p className="text-red-500">Error</p>
 
   return (
     <div className="flex w-full flex-col gap-6">
