@@ -3,6 +3,9 @@ import FightList from "@/components/tournaments/FightList"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { Metadata } from "next"
+import { Fight4Table } from "@/components/tournaments/Fight4Table"
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 
 export async function generateMetadata({
   params,
@@ -66,6 +69,8 @@ export default async function AllFightPage({ params }: { params: Promise<{ fight
     tournamentsApiServer.endpoints.getFightContainerInfo.initiate({ fightContainerId: Number(fightsId) }),
   )
 
+  const mockTeams = [{ team_name: 'Название Команды', team_id: 1, problem_id: 778 }, { team_name: 'Название Команды', team_id: 1, problem_id: 778 }];
+
   if (error) {
     return (
       <div className="p-4">
@@ -83,5 +88,17 @@ export default async function AllFightPage({ params }: { params: Promise<{ fight
       </div>
     )
   }
-  return <FightList fightsData={fightsData} tournamentId={Number(tournamentId)} />
+  return <>
+    {/* return <FightList fightsData={fightsData} tournamentId={Number(tournamentId)} /> */}
+    <div className="flex flex-col gap-5">
+      {true && mockTeams.map((team, index) => (
+
+        <ProblemsProviderWrapper>
+          <TournamentsProviderWrapper key={index}>
+            <Fight4Table team={team} tournamentId={+tournamentId} />
+          </TournamentsProviderWrapper>
+        </ProblemsProviderWrapper>
+      ))}
+    </div>
+  </>
 }
