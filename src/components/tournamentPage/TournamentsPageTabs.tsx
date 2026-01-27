@@ -98,6 +98,11 @@ export default function TournamentsPageTabs({
         tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     })),
   ]
+  if (tournamentCard.id === 10) fightsLinks.push({
+    href: `/tournaments/${tournamentCard.id}/fights/selectedtasks/`,
+    title: `Задачи на 4-й бой`,
+    isLocked: false
+  })
 
   const statsLinks: LinkInterface[] = [
     {

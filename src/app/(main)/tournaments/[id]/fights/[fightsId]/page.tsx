@@ -68,9 +68,6 @@ export default async function AllFightPage({ params }: { params: Promise<{ fight
   } = await store.dispatch(
     tournamentsApiServer.endpoints.getFightContainerInfo.initiate({ fightContainerId: Number(fightsId) }),
   )
-
-  const mockTeams = [{ team_name: 'Название Команды', team_id: 1, problem_id: 778 }, { team_name: 'Название Команды', team_id: 1, problem_id: 778 }];
-
   if (error) {
     return (
       <div className="p-4">
@@ -88,17 +85,5 @@ export default async function AllFightPage({ params }: { params: Promise<{ fight
       </div>
     )
   }
-  return <>
-    {/* return <FightList fightsData={fightsData} tournamentId={Number(tournamentId)} /> */}
-    <div className="flex flex-col gap-5">
-      {true && mockTeams.map((team, index) => (
-
-        <ProblemsProviderWrapper>
-          <TournamentsProviderWrapper key={index}>
-            <Fight4Table team={team} tournamentId={+tournamentId} />
-          </TournamentsProviderWrapper>
-        </ProblemsProviderWrapper>
-      ))}
-    </div>
-  </>
+  return <FightList fightsData={fightsData} tournamentId={Number(tournamentId)} />
 }
