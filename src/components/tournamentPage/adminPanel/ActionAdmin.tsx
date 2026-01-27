@@ -282,7 +282,7 @@ function CoeffPicker({value, isShown, performanceId}:{value: number,isShown: boo
               token: token,
             })
           }}>
-              <input name={"c"} className="border border-border" type={"number"} defaultValue={value}/>
+              <input name={"c"} className="border border-border" type={"number"} defaultValue={value} step="any"/>
               <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
                   Сохранить коэффициент
               </button>

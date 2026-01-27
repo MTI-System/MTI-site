@@ -80,6 +80,7 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                         trStyle,
                         style.sampledText,
                         "text-text-main sm:text-sm text-md lg:text-lg cursor-pointer px-2 py-1 text-center rounded-full",
+                        {"text-text-hover!": (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10}
                       )}
 
                         style={{
@@ -101,7 +102,7 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                         0
                       </td>
                     ))}
-                  <td className={trStyle + " text-text-main md:text-lg text-md px-2 py-1"}>{line.resultScore}</td>
+                  <td className={twclsx(trStyle, "text-text-main md:text-lg text-md px-2 py-1", {"text-text-hover!": (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10})}>{line.resultScore}{(line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10 && " (Вне зачёта)"}</td>
                 </tr>
               )
             })}
