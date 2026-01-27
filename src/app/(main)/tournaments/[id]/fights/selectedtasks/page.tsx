@@ -31,7 +31,7 @@ export default async function SelectedTasksPage({ params }: { params: Promise<{ 
   
           <ProblemsProviderWrapper>
             <TournamentsProviderWrapper key={index}>
-              <Fight4Table team={team}/>
+              <Fight4Table team={team} tournamentId={Number(tournamentId)}/>
             </TournamentsProviderWrapper>
           </ProblemsProviderWrapper>
         ))}
