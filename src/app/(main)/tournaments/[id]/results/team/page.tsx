@@ -1,5 +1,6 @@
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import FinalTable from "@/components/tournamentPage/FinalTable"
 import ResultsTable from "@/components/tournamentPage/ResutsTable"
 import { Metadata } from "next"
 import { Suspense } from "react"
@@ -28,9 +29,20 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function TournamentResultPage({ params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id
+  const store = makeTournamentsStoreServer()
+  const { data, error } = await store.dispatch(
+    tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: Number(id) }),
+  )
+  if (error)
+    return <p>error</p>
+  if (!data)
+    return <p>error</p>
+  const finalFight = data.fight_containers_cards.find(f => f.title.toLowerCase().includes('финал'))
+  console.log("FINAL", finalFight)
   return (
     <>
       <Suspense fallback={<h1>Loading...</h1>}>
+        {finalFight && <FinalTable fightId={finalFight.id} tournamentId={Number(id)} />}
         <ResultsTable tournamentId={Number(id)} />
       </Suspense>
     </>
