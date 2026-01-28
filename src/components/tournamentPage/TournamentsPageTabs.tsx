@@ -80,7 +80,7 @@ export default function TournamentsPageTabs({
     }
   ]
 
-  const fightsLinks: LinkInterface[] = [
+  const fightsLinksPrev: LinkInterface[] = [
     {
       href: `/tournaments/${tournamentCard.id}/fights`,
       title: `Расписание`,
@@ -98,6 +98,10 @@ export default function TournamentsPageTabs({
         tournamentCard.badge.badge_flag === "REGISTRATION_CLOSED",
     })),
   ]
+
+  const finalIndex = fightsLinksPrev.findIndex(link => link.title == 'Финал');
+  const fightsLinks: LinkInterface[] = [...fightsLinksPrev.filter(link => link !== fightsLinksPrev[finalIndex]), fightsLinksPrev[finalIndex]];
+
   if (tournamentCard.id === 10) fightsLinks.push({
     href: `/tournaments/${tournamentCard.id}/fights/selectedtasks/`,
     title: `Задачи на 4-й бой`,
