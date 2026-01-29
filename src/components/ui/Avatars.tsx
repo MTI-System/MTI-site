@@ -72,7 +72,7 @@ export function UserAvatarWithTitleByID({
             changeAvatar={changeclassNameAvatar}
             changeTextUnderAvatar={changeclassNameTextUnderAvatar}
           />
-          {idx === 0 && displaySpeakerRole && (
+          {idx === 0 && displaySpeakerRole && id !== 305 && (
             <p className="text-text-alt border-text-text-alt rounded-4xl border px-2 py-0.5 text-sm">Ведущий</p>
           )}
         </div>
