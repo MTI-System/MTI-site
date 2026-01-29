@@ -22,6 +22,8 @@ export function FightCard({ cardData, tmpIDX, tournamentId }: { cardData: FightI
   // --------------DELETE LATER-------------
   const roomNames = ["A", "B", "C", "D", "E", "F"]
   // ---------------------------------------
+  let jouries = [...cardData.jouries]
+  if (tournamentId === 10 && cardData.id === 44) jouries.unshift(69)
   if ((cardData.teams?.length ?? 0) > 0) {
     return (
       <>
@@ -85,7 +87,7 @@ export function FightCard({ cardData, tmpIDX, tournamentId }: { cardData: FightI
 
           <div className="flex flex-wrap justify-center gap-3 md:gap-4 lg:gap-8">
             <UsersProviderWrapper>
-              <UserAvatarWithTitleByID PeoplesIDs={cardData?.jouries} displaySpeakerRole />
+              <UserAvatarWithTitleByID PeoplesIDs={jouries} displaySpeakerRole />
             </UsersProviderWrapper>
           </div>
         </div>
