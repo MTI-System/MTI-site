@@ -74,10 +74,8 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/results/teamlogs`,
       title: "Путевые листы",
-      isLocked:
-        tournamentCard.badge.badge_flag === "FUTURED" ||
-        tournamentCard.badge.badge_flag === "REGISTRATION",
-    }
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+    },
   ]
 
   const fightsLinksPrev: LinkInterface[] = [
@@ -99,14 +97,18 @@ export default function TournamentsPageTabs({
     })),
   ]
 
-  const finalIndex = fightsLinksPrev.findIndex(link => link.title == 'Финал');
-  const fightsLinks: LinkInterface[] = [...fightsLinksPrev.filter(link => link !== fightsLinksPrev[finalIndex]), fightsLinksPrev[finalIndex]];
+  const finalIndex = fightsLinksPrev.findIndex((link) => link.title == "Финал")
+  const fightsLinks: LinkInterface[] =
+    finalIndex >= 0
+      ? [...fightsLinksPrev.filter((link) => link !== fightsLinksPrev[finalIndex]), fightsLinksPrev[finalIndex]]
+      : fightsLinksPrev.filter((link) => link !== fightsLinksPrev[finalIndex])
 
-  if (tournamentCard.id === 10) fightsLinks.push({
-    href: `/tournaments/${tournamentCard.id}/fights/selectedtasks/`,
-    title: `Задачи на 4-й бой`,
-    isLocked: false
-  })
+  if (tournamentCard.id === 10)
+    fightsLinks.push({
+      href: `/tournaments/${tournamentCard.id}/fights/selectedtasks/`,
+      title: `Задачи на 4-й бой`,
+      isLocked: false,
+    })
 
   const statsLinks: LinkInterface[] = [
     {

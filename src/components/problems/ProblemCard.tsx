@@ -132,10 +132,18 @@ export function ProblemCardContent({
             </div>
           )}
           {!is_edit_page && (
-            <Link href={"/problems/" + problem.id.toString()}>
+            <Link
+              href={
+                (pathname.includes("tournaments") && problem.isHidden
+                  ? pathname.slice(0, getPosition(pathname, "/", 3))
+                  : "") +
+                "/problems/" +
+                problem.id.toString()
+              }
+            >
               <h2
                 className={twclsx("text-text-main text-xl font-bold transition-colors duration-300", {
-                  "hover:text-text-hover flex items-center gap-1": !pathname.startsWith(
+                  "hover:text-text-hover flex items-center gap-1": !pathname.endsWith(
                     "/problems/" + problem.id.toString(),
                   ),
                 })}
@@ -269,6 +277,10 @@ export function ProblemCardContent({
       </div>
     </>
   )
+}
+
+function getPosition(string: string, subString: string, index: number) {
+  return string.split(subString, index).join(subString).length
 }
 
 function EditButtons({

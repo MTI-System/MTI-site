@@ -5,7 +5,13 @@ import { FightContainerInfoInterface, FightInformationInterface } from "@/types/
 import Link from "next/link"
 import { FaExternalLinkAlt } from "react-icons/fa"
 
-export default function FightList({ fightsData, tournamentId }: { fightsData: FightContainerInfoInterface, tournamentId: number }) {
+export default function FightList({
+  fightsData,
+  tournamentId,
+}: {
+  fightsData: FightContainerInfoInterface
+  tournamentId: number
+}) {
   return (
     <div className="flex flex-col items-center px-4">
       <h1 className="text-text-main mx-auto mb-8 text-center text-2xl font-bold">Раздел боев</h1>
@@ -18,12 +24,20 @@ export default function FightList({ fightsData, tournamentId }: { fightsData: Fi
   )
 }
 
-export function FightCard({ cardData, tmpIDX, tournamentId }: { cardData: FightInformationInterface; tmpIDX: number, tournamentId: number }) {
+export function FightCard({
+  cardData,
+  tmpIDX,
+  tournamentId,
+}: {
+  cardData: FightInformationInterface
+  tmpIDX: number
+  tournamentId: number
+}) {
+  let jouries = [...cardData.jouries]
   // --------------DELETE LATER-------------
   const roomNames = ["A", "B", "C", "D", "E", "F"]
-  // ---------------------------------------
-  let jouries = [...cardData.jouries]
   if (tournamentId === 10 && cardData.id === 44) jouries.unshift(69)
+  // ---------------------------------------
   if ((cardData.teams?.length ?? 0) > 0) {
     return (
       <>
@@ -66,10 +80,7 @@ export function FightCard({ cardData, tmpIDX, tournamentId }: { cardData: FightI
               // >
               //   Конференция <FaExternalLinkAlt className="text-sm" />
               // </a>
-              <p
-                className="text-text-alt hover:text-text-alt/80 flex flex-row content-center items-center justify-center gap-2 transition-colors"
-
-              >
+              <p className="text-text-alt hover:text-text-alt/80 flex flex-row content-center items-center justify-center gap-2 transition-colors">
                 {cardData.location}
               </p>
             )}
