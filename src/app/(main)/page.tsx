@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Buttons"
 import type { Metadata } from "next"
 import { FILES_SERVER } from "@/constants/APIEndpoints"
 import { MaskLineForMenuCard } from "@/components/main/MaskLineForCard"
-import {FaLock} from "react-icons/fa";
+import { FaLock } from "react-icons/fa"
 
 export const metadata: Metadata = {
   title: {
@@ -40,30 +40,12 @@ export default async function Home() {
             </div>
           </div>
           <div className="absolute inset-0 z-0 hidden opacity-30 sm:block">
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#ED0F4E]"
-              maskIcon={`${FILES_SERVER}problemMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="-ms-8 h-[33%] bg-[#ED0F4E]"
-              maskIcon={`${FILES_SERVER}problemMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#ED0F4E]"
-              maskIcon={`${FILES_SERVER}problemMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#ED0F4E]"
-              maskIcon={`${FILES_SERVER}problemMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#ED0F4E]"
-              maskIcon={`${FILES_SERVER}problemMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#ED0F4E]"
-              maskIcon={`${FILES_SERVER}problemMask.svg`}
-            />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#ED0F4E]" maskIcon={`${FILES_SERVER}problemMask.svg`} />
+            <MaskLineForMenuCard className="-ms-8 h-[33%] bg-[#ED0F4E]" maskIcon={`${FILES_SERVER}problemMask.svg`} />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#ED0F4E]" maskIcon={`${FILES_SERVER}problemMask.svg`} />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#ED0F4E]" maskIcon={`${FILES_SERVER}problemMask.svg`} />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#ED0F4E]" maskIcon={`${FILES_SERVER}problemMask.svg`} />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#ED0F4E]" maskIcon={`${FILES_SERVER}problemMask.svg`} />
           </div>
         </ClickableCard>
         <ClickableCard
@@ -117,8 +99,8 @@ export default async function Home() {
           className={`bg-bg-alt border-border relative flex h-40 overflow-hidden border transition-opacity hover:opacity-80 sm:row-span-2 sm:h-auto`}
           href={``}
         >
-          <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
-            <FaLock className="text-text-main size-full p-15 md:p-30"/>
+          <div className="absolute z-2 size-full bg-black/10 opacity-0 transition-all hover:opacity-100">
+            <FaLock className="text-text-main size-full p-15 md:p-30" />
             {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
           </div>
           <div className="relative z-1 size-full">
@@ -130,26 +112,17 @@ export default async function Home() {
             </div>
           </div>
           <div className="absolute inset-0 z-0 hidden pt-3 opacity-30 sm:block">
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#A020F0]"
-              maskIcon={`${FILES_SERVER}FightsMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="-ms-8 h-[33%] bg-[#A020F0]"
-              maskIcon={`${FILES_SERVER}FightsMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#A020F0]"
-              maskIcon={`${FILES_SERVER}FightsMask.svg`}
-            />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#A020F0]" maskIcon={`${FILES_SERVER}FightsMask.svg`} />
+            <MaskLineForMenuCard className="-ms-8 h-[33%] bg-[#A020F0]" maskIcon={`${FILES_SERVER}FightsMask.svg`} />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#A020F0]" maskIcon={`${FILES_SERVER}FightsMask.svg`} />
           </div>
         </ClickableCard>
         <ClickableCard
           className={`bg-bg-alt border-border relative flex h-40 overflow-hidden border transition-opacity hover:opacity-80 sm:h-auto`}
           href={``}
         >
-          <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
-            <FaLock className="text-text-main size-full p-15 md:px-30"/>
+          <div className="absolute z-2 size-full bg-black/10 opacity-0 transition-all hover:opacity-100">
+            <FaLock className="text-text-main size-full p-15 md:px-30" />
             {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
           </div>
           <div className="relative z-1 size-full">
@@ -185,8 +158,8 @@ export default async function Home() {
           className={`bg-bg-alt border-border relative flex h-40 overflow-hidden border transition-opacity hover:opacity-80 sm:row-[3/5] sm:h-auto`}
           href={``}
         >
-          <div className="absolute bg-black/10 opacity-0 size-full hover:opacity-100 z-2 transition-all">
-            <FaLock className="size-full text-text-main p-15 md:p-30"/>
+          <div className="absolute z-2 size-full bg-black/10 opacity-0 transition-all hover:opacity-100">
+            <FaLock className="text-text-main size-full p-15 md:p-30" />
             {/*<p className="text-center font-bold text-3xl">Скоро будет готово!</p>*/}
           </div>
           <div className="relative z-1 size-full">
@@ -201,18 +174,9 @@ export default async function Home() {
             </div>
           </div>
           <div className="absolute inset-0 z-0 hidden opacity-30 sm:block">
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#32E875]"
-              maskIcon={`${FILES_SERVER}StatsMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="-ms-8 h-[33%] bg-[#32E875]"
-              maskIcon={`${FILES_SERVER}StatsMask.svg`}
-            />
-            <MaskLineForMenuCard
-              className="ms-6 h-[33%] bg-[#32E875]"
-              maskIcon={`${FILES_SERVER}StatsMask.svg`}
-            />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#32E875]" maskIcon={`${FILES_SERVER}StatsMask.svg`} />
+            <MaskLineForMenuCard className="-ms-8 h-[33%] bg-[#32E875]" maskIcon={`${FILES_SERVER}StatsMask.svg`} />
+            <MaskLineForMenuCard className="ms-6 h-[33%] bg-[#32E875]" maskIcon={`${FILES_SERVER}StatsMask.svg`} />
           </div>
         </ClickableCard>
         <ClickableCard

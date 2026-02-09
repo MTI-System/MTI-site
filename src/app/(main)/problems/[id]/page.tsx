@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { data: tournamentTypes } = await promiseTournaments
   const promise = store.dispatch(problemsApiServer.endpoints.getProblemsById.initiate({ problemId: Number(id) }))
   const { data: problem } = await promise
-  if (!problem) {
+  if (!problem || problem.isHidden) {
     return {
       title: "Задача не найдена – МТИ",
       description: "Запрошенная задача не найдена в системе МТИ.",
@@ -38,7 +38,7 @@ async function ProblemPageMain({ params }: { params: Promise<{ id: string }> }) 
   const store = makeProblemsStoreServer()
   const promise = store.dispatch(problemsApiServer.endpoints.getProblemsById.initiate({ problemId: Number(id) }))
   const { data: problem } = await promise
-  if (!problem) return <NotFound />
+  if (!problem || problem.isHidden) return <NotFound />
   return (
     <>
       <ProblemsReduxProviderWrapper>

@@ -1,7 +1,8 @@
 import { problemsApiServer } from "@/api/problems/serverApiInterface";
 import { makeProblemsStoreServer } from "@/api/problems/serverStore";
+import Link from "next/link";
 
-export async function FightTable({teams}:{teams: {
+export async function FightTable({teams, tournamentId}:{teams: {
         name: string;
         id: number;
         score: number;
@@ -10,7 +11,7 @@ export async function FightTable({teams}:{teams: {
         reporterScore?: number | undefined;
         opponentScore?: number | undefined;
         reviewerScore?: number | undefined;
-    }[]
+    }[], tournamentId: number
   }) {
     const store = makeProblemsStoreServer()
     const problems = await Promise.all(teams.map(async item => {
@@ -19,29 +20,42 @@ export async function FightTable({teams}:{teams: {
       const { data: problemData, error } = await promise
       return error ? null : problemData
     }))
+    const promiseTournament = store.dispatch(problemsApiServer.endpoints.getProblemsForTournament.initiate({tournamentId: tournamentId}))
+    const { data: problemsTournamentData, error: problemsTournamentError } = await promiseTournament
+
   return (
     <table className="border-border w-full">
       <thead>
         <tr className="border-b-border border-b">
-          <th className="px-4 py-3 text-center sm:text-sm text-md font-medium text-wrap text-text-main uppercase tracking-wider">Название команды</th>
-          <th className="px-4 py-3 text-center sm:text-sm text-md font-medium text-wrap text-text-main uppercase tracking-wider">Балл за бой</th>
-          <th className="px-4 py-3 text-center sm:text-sm text-md font-medium text-wrap text-text-main uppercase tracking-wider">к</th>
-          <th className="px-4 py-3 text-center sm:text-sm text-md font-medium text-wrap text-text-main uppercase tracking-wider">Сыгранная задача</th>
-          <th className="px-4 py-3 text-center sm:text-sm text-md font-medium text-wrap text-text-main uppercase tracking-wider">Д</th>
-          <th className="px-4 py-3 text-center sm:text-sm text-md font-medium text-wrap text-text-main uppercase tracking-wider">О</th>
-          <th className="px-4 py-3 text-center sm:text-sm text-md font-medium text-wrap text-text-main uppercase tracking-wider">Р</th>
+          <th className="px-4 py-3 text-center sm:text-xs text-md md:text-lg font-medium text-wrap text-text-main uppercase tracking-wider">Название команды</th>
+          <th className="px-4 py-3 text-center sm:text-xs text-md md:text-lg font-medium text-wrap text-text-main uppercase tracking-wider">Балл за бой</th>
+          <th className="px-4 py-3 text-center sm:text-xs text-md md:text-lg font-medium text-wrap text-text-main uppercase tracking-wider">к</th>
+          <th className="px-4 py-3 text-center sm:text-xs text-md md:text-lg font-medium text-wrap text-text-main uppercase tracking-wider">Сыгранная задача</th>
+          <th className="px-4 py-3 text-center sm:text-xs text-md md:text-lg font-medium text-wrap text-text-main uppercase tracking-wider">Д</th>
+          <th className="px-4 py-3 text-center sm:text-xs text-md md:text-lg font-medium text-wrap text-text-main uppercase tracking-wider">О</th>
+          <th className="px-4 py-3 text-center sm:text-xs text-md md:text-lg font-medium text-wrap text-text-main uppercase tracking-wider">Р</th>
           </tr>
       </thead>
       <tbody className="divide-y divide-border">
         {teams.map((item, index) => (
           <tr key={item.id} className="transition-colors text-text-main">
-            <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.name ? item.name : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.score ? item.score : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium">{item.coefficient? item.coefficient : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm font-medium">{problems[index] ? problems[index].global_number : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm font-medium">{item.reporterScore ? item.reporterScore : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm font-medium">{item.opponentScore ? item.opponentScore : "-"}</td>
-            <td className="px-4 py-3 text-center text-sm font-medium">{item.reviewerScore ? item.reviewerScore : "-"}</td>
+            <td className="px-4 py-3 text-center sm:text-sm text-md lg:text-lg font-medium">{item.name ? item.name : "-"}</td>
+            <td className="px-4 py-3 text-center sm:text-sm text-md lg:text-lg font-medium">{item.score ? item.score : "-"}</td>
+            <td className="px-4 py-3 text-center sm:text-sm text-md lg:text-lg font-medium">{item.coefficient? item.coefficient : "-"}</td>
+
+            <td className="px-4 py-3 text-center sm:text-sm text-md lg:text-lg font-medium">    
+              {problems[index] ?  
+                  <Link
+                  className="block h-full w-full cursor-pointer px-4 py-3 hover:bg-hover transition-colors" 
+                  href={`/${problems[index] ? "problems/" +  problems[index].id : "problems/"}`}> 
+                  {problems[index]?.local_number ?? (problemsTournamentData?.find(p => p.id === problems[index]?.id)?.local_number ?? `(${problems[index]?.global_number})`)}
+                  </Link>: "-"}
+              
+            </td>
+
+            <td className="px-4 py-3 text-center sm:text-sm text-md lg:text-lg font-medium">{item.reporterScore ? item.reporterScore : "-"}</td>
+            <td className="px-4 py-3 text-center sm:text-sm text-md lg:text-lg font-medium">{item.opponentScore ? item.opponentScore : "-"}</td>
+            <td className="px-4 py-3 text-center sm:text-sm text-md lg:text-lg font-medium">{item.reviewerScore ? item.reviewerScore : "-"}</td>
             
             {/*TODO: Make this work: */
             /* <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.name ? item.name : "-"}</Link></td>

@@ -15,7 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-
       - name: Install pnpm (via npm)
         run: npm install -g pnpm
 
@@ -48,8 +47,9 @@ jobs:
           push: true
 
   restart-service:
-    needs: build-docker-image-and-push
+    needs: [build-docker-image-and-push, build-application-and-tests]
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: SHH and restart service
         uses: appleboy/ssh-action@v1
@@ -59,6 +59,7 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
             sudo systemctl restart mti_production_startup
+  
   
 
   deploy-error:

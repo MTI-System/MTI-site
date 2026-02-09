@@ -6,7 +6,7 @@ export function ConfirmButton({
   onClick,
   className = "",
   children,
-  disabled = false
+  disabled = false,
 }: {
   onClick?: () => void
   className?: string

@@ -39,6 +39,7 @@ export const {
   useGetOrganizatorTournamentsMutation,
   useGetTournamentCardQuery,
   useGetTournamentTableQuery,
+  useGetTournamentUserResultsQuery,
   useAddTournamentMutation,
   useGetFightInformationQuery,
   useGetActionInformationQuery,
@@ -46,7 +47,6 @@ export const {
   useGetFightContainerInfoQuery,
   useGetFightInfoByTournamentQuery,
   useGetFightContainerCardQuery,
-
 
   // TMP ADMIN PANEL. DELETE IN FUTURE
   useAddFightMutation,
@@ -56,6 +56,7 @@ export const {
   useAddActionToFightMutation, // Не хочу это делать
   useSetDraftResultMutation, // maked
   useSetScoresMutation,
-  useSetPlayerToPerformanceMutation
-
+  useSetPlayerToPerformanceMutation,
+  useSetDraftsResultsMutation,
+  useSetPlayerCoeffMutation,
 } = tournamentsApiClient

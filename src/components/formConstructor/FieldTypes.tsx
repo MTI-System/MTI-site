@@ -4,7 +4,13 @@ import { FaCheck } from "react-icons/fa6"
 import { availableFields } from "@/components/formConstructor/root/RootContext"
 import { useState } from "react"
 
-export default function FieldTypes({ setFieldType, defaultValue }: { defaultValue: availableFields, setFieldType: (value: availableFields) => void }) {
+export default function FieldTypes({
+  setFieldType,
+  defaultValue,
+}: {
+  defaultValue: availableFields
+  setFieldType: (value: availableFields) => void
+}) {
   const types: { label: string; value: availableFields }[] = [
     { label: "Текст", value: "text" },
     { label: "Число", value: "number" },
@@ -15,15 +21,15 @@ export default function FieldTypes({ setFieldType, defaultValue }: { defaultValu
     { label: "Руководитель", value: "coach" },
     // { label: "Выбор из списка", value: "dropdown" },
     { label: "Чекбоксы со списком задач текущего года", value: "problems_checkboxes" },
+    { label: "Заголовок", value: "title_ni" },
   ]
-  const [defVal, ] = useState(defaultValue)
+  const [defVal] = useState(defaultValue)
 
   return (
     <>
       <Select.Root
         multiple={false}
         items={types}
-
         defaultValue={defVal}
         onValueChange={(value) => {
           // valueRef.current = value

@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next"
-import {PROBLEM_API, TOURNAMENTS_API} from "@/constants/APIEndpoints"
-import {TournamentCardInterface} from "@/types/TournamentsAPI";
+import { PROBLEM_API, TOURNAMENTS_API } from "@/constants/APIEndpoints"
+import { TournamentCardInterface } from "@/types/TournamentsAPI"
 export const dynamic = "force-dynamic"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -54,4 +54,3 @@ interface SitemapResponse {
   problems_ids: number[]
   tt_years: Record<number, number[]>
 }
-

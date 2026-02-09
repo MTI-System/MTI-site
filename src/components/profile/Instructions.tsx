@@ -1,21 +1,16 @@
-import {Tabs} from "@base-ui-components/react";
-import {FILES_SERVER} from "@/constants/APIEndpoints";
-import {Button} from "@/components/ui/Buttons";
-import cookies from "js-cookie";
-import {setAuth} from "@/redux_stores/Global/AuthSlice";
-import React, {startTransition} from "react";
+import { Tabs } from "@base-ui-components/react"
+import { FILES_SERVER } from "@/constants/APIEndpoints"
+import { Button } from "@/components/ui/Buttons"
+import cookies from "js-cookie"
+import { setAuth } from "@/redux_stores/Global/AuthSlice"
+import React, { startTransition } from "react"
 
-export default function Instructions(){
-
+export default function Instructions() {
   return (
     <>
       <p className={"py-5 text-center"}>Ниже представлены разделы с инструкциями в зависимости от вашей роли.</p>
       <div className={"min-h-[50vh] w-full px-2 py-5 md:px-10"}>
-        <Tabs.Root
-          orientation="horizontal"
-          className="border-border size-full rounded-md border"
-          defaultValue="player"
-        >
+        <Tabs.Root orientation="horizontal" className="border-border size-full rounded-md border" defaultValue="player">
           <Tabs.List className="shadow-border relative z-0 flex gap-1 overflow-x-auto px-2 shadow-[inset_0_-1px]">
             <Tabs.Tab
               className="text-text-alt before:outline-accent-primary hover:text-text-main data-active:text-text-main flex h-8 flex-1 cursor-pointer items-center justify-center border-0 px-2 text-sm font-medium break-keep whitespace-nowrap outline-none select-none before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1 focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2"
@@ -54,14 +49,14 @@ export default function Instructions(){
             value="player"
           >
             <p className="flex flex-col items-center py-4 text-center">
-                <span className="px-2">
-                  Для участия в турнире тренер команды должен подать заявку, указав Вас в качестве участника.
-                </span>
+              <span className="px-2">
+                Для участия в турнире тренер команды должен подать заявку, указав Вас в качестве участника.
+              </span>
               <span className="px-2">После подачи заявки Вам придет уведомление о необходимости ее подтвердить.</span>
               <img className="my-2 w-screen md:w-[60vw]" src={FILES_SERVER + "img6.png"} alt={"Изображение"} />
               <span className="px-2">
-                  Нажмите на уведомление, на открывшейся странице внизу подтвердите согласие на передачу информации.
-                </span>
+                Нажмите на уведомление, на открывшейся странице внизу подтвердите согласие на передачу информации.
+              </span>
               <img className="my-2 w-screen md:w-[60vw]" src={FILES_SERVER + "img7.png"} alt={"Изображение"} />
               <span className="px-2">Если все сделано верно, Вы увидете, что заявка подтверждена.</span>
               <img className="my-2 w-screen md:w-[60vw]" src={FILES_SERVER + "img8.png"} alt={"Изображение"} />
@@ -72,13 +67,12 @@ export default function Instructions(){
             value="trainer"
           >
             <p className="flex flex-col items-center py-4 text-center">
-                <span className="px-2">
-                  Вам необходимо зарегистрировать свою команду на турнир и добавить в неё участников в форме
-                  регистрации.
-                </span>
+              <span className="px-2">
+                Вам необходимо зарегистрировать свою команду на турнир и добавить в неё участников в форме регистрации.
+              </span>
               <span className="px-2">Для этого перейдите на страницу турнира и нажмите "Регистрация на турнир".</span>
 
-              <span className="px-2">vВ открывшейся форме заполните поля, выберите задачи и отправьте форму.</span>
+              <span className="px-2">В открывшейся форме заполните поля, выберите задачи и отправьте форму.</span>
               <img className="mt-2 w-screen md:w-[60vw]" src={FILES_SERVER + "img2.png"} alt={"Изображение"} />
               <img className="mb-2 w-screen md:w-[60vw]" src={FILES_SERVER + "img3.png"} alt={"Изображение"} />
               <span className="px-2">Если все сделано верно, Вы увидете подтверждение, что форма заполнена.</span>
@@ -118,7 +112,6 @@ export default function Instructions(){
           </Tabs.Panel>
         </Tabs.Root>
       </div>
-
     </>
   )
 }

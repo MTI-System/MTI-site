@@ -41,14 +41,14 @@ export default function Modal({
       }}
     >
       <div
-        className="bg-bg-alt relative max-h-[90%] max-w-[90%] w-[90%] overflow-auto rounded-2xl p-10 sm:w-auto sm:rounded-4xl"
+        className="bg-bg-alt relative max-h-[90%] w-[90%] max-w-[90%] overflow-auto rounded-2xl p-10 sm:w-auto sm:rounded-4xl"
         onClick={(e) => {
           e.stopPropagation()
         }}
       >
         {!preventClose && (
           <button
-            className="absolute top-4 right-3 size-5 cursor-pointer text-text-main disabled:text-text-alt disabled:cursor-not-allowed"
+            className="text-text-main disabled:text-text-alt absolute top-4 right-3 size-5 cursor-pointer disabled:cursor-not-allowed"
             aria-label="Close modal"
             disabled={preventClose}
             onClick={onCloseInternal}

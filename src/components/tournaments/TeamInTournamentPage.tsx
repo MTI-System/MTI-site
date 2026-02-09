@@ -17,7 +17,14 @@ export default function TeamInTournamentPage({ mainData }: { mainData: TeamInTou
       <UsersProviderWrapper>
         <div className="flex flex-wrap items-center justify-center gap-4 p-6">
           <UserAvatarWithTitleByID
-            PeoplesIDs={mainData.players}
+            PeoplesIDs={mainData.players?.map(it=>{
+              if (typeof it === "number"){
+                return it
+              }
+              else{
+                return it.id
+              }
+            })}
             changeclassNameAvatar="inline-flex items-center  justify-center overflow-hidden rounded-full size-28 sm:size-28 text-xl"
             changeclassNameTextUnderAvatar="text-xl p-7 "
           />

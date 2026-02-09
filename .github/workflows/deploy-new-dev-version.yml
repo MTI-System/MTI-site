@@ -52,7 +52,7 @@ jobs:
             NEXT_PUBLIC_IS_ON_DEV=true
 
   restart-service:
-    needs: build-docker-image-and-push
+    needs: [build-docker-image-and-push, build-application-and-tests]
     runs-on: ubuntu-latest
     steps:
       - name: SHH and restart service
