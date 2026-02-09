@@ -1,5 +1,10 @@
 import { z } from "zod"
 
+export const ProblemContainerSchema = z.object({
+  id: z.number(),
+  label: z.string(),
+})
+
 export const ProblemTranslationSchema = z.object({
   id: z.number(),
   problem_name: z.string(),
@@ -43,6 +48,7 @@ export const ProblemSchema = z.object({
   sciences: z.array(ScienceShenma),
   local_number: z.number().optional(),
   isHidden: z.boolean().optional(),
+  problemContainer: ProblemContainerSchema.nullable()
 })
 
 export type ProblemTranslationInterface = z.infer<typeof ProblemTranslationSchema>
