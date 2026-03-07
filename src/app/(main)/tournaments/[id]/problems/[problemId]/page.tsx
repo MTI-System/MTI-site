@@ -1,0 +1,69 @@
+import ProblemPage from "@/components/problems/ProblemPage"
+import NotFound from "@/components/service/NotFound"
+import { Metadata } from "next"
+import ProblemsReduxProviderWrapper from "@/components/Redux/ProblemsReduxProvider"
+import { makeProblemsStoreServer } from "@/api/problems/serverStore"
+import { problemsApiServer } from "@/api/problems/serverApiInterface"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string; problemId: string }>
+}): Promise<Metadata> {
+  const { id: tournamentId, problemId } = await params
+  const storeTournaments = makeTournamentsStoreServer()
+  const { data, error } = await storeTournaments.dispatch(
+    tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: Number(tournamentId) }),
+  )
+  if (error)
+    return {
+      title: "Ошибка загрузки турнира – МТИ",
+      description: "Не удалось загрузить запрошенный турнир.",
+    }
+  if (!data)
+    return {
+      title: "Турнир не найден – МТИ",
+      description: "Запрошенный турнир не найден в системе МТИ.",
+    }
+  const store = makeProblemsStoreServer()
+  const promiseTournaments = storeTournaments.dispatch(
+    tournamentsApiServer.endpoints.getAvailableTournamentTypes.initiate({}),
+  )
+  const { data: tournamentTypes } = await promiseTournaments
+  const promise = store.dispatch(problemsApiServer.endpoints.getProblemsById.initiate({ problemId: Number(problemId) }))
+  const { data: problem } = await promise
+  if (!problem) {
+    return {
+      title: "Задача не найдена – МТИ",
+      description: "Запрошенная задача не найдена в системе МТИ.",
+    }
+  }
+
+  const ttype = tournamentTypes?.find((t) => t.id === problem.tournament_type)
+
+  return {
+    title: `Задача № ${problem.global_number} | ${data.title} – МТИ`,
+    description: `Задача № ${problem.global_number} · ${problem.problem_translations[0].problem_name} · ${ttype?.longName ?? ""} · ${problem.year} год`,
+    verification: { yandex: "aa838087dd1ef992" },
+  }
+}
+
+export default async function ProblemPageMain({ params }: { params: Promise<{ id: string; problemId: string }> }) {
+  const { problemId } = await params
+  const store = makeProblemsStoreServer()
+  const promise = store.dispatch(problemsApiServer.endpoints.getProblemsById.initiate({ problemId: Number(problemId) }))
+  const { data: problem } = await promise
+  if (!problem) return <NotFound />
+  return (
+    <>
+      <ProblemsProviderWrapper>
+        <ProblemsReduxProviderWrapper>
+          <ProblemPage problem={problem} />
+        </ProblemsReduxProviderWrapper>
+      </ProblemsProviderWrapper>
+    </>
+  )
+}

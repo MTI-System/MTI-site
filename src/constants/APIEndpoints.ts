@@ -27,17 +27,14 @@ export const GATEWAY_API =
   isServer ?
     process.env.NEXT_PUBLIC_IS_LOCAL === "true" ?
       process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ?
-        "://11.0.0.1:5002/"
+        "://vps:5002/"
         : "://api.mtiyt.ru/"
       : "://gateway:8080/"
   : process.env.NEXT_PUBLIC_IS_ON_DEV === "true"
       ? "://11.0.0.1:5002/"
       : "://api.mtiyt.ru/"
 
-export const INLINE_USER_GATEWAY_API =
-      process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ?
-        "://11.0.0.1:5002/"
-        : "://api.mtiyt.ru/"
+export const INLINE_USER_GATEWAY_API = process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ? "://vps:5002/" : "://api.mtiyt.ru/"
 
 
   // process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ? "://11.0.0.1:5002/" : "://api.mtiyt.ru/" // на сервере эта переменная всегда была ://gateway:8080/

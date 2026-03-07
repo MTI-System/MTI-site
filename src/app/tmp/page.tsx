@@ -1,17 +1,24 @@
-"use client"
 import {useVerifyEmailQuery} from "@/api/users/clientApiInterface";
-import UsersProviderWrapper from "@/api/users/ClientWrapper";
-import {useEffect, useState} from "react";
+import Page from "@/app/(main)/problems/page";
 
 export default function TMPSocket() {
-
+  let a = []
+  for (let i = 0; i < 1000; i++){
+    a.push(Math.ceil(Math.random() * 100 + 150))
+  }
   return (
     <>
       <h1> Здесь тестируется сокет, сорян</h1>
-      <UsersProviderWrapper>
-        <SocketComponent/>
-      </UsersProviderWrapper>
+      {/*<UsersProviderWrapper>*/}
+      {/*  <SocketComponent/>*/}
+      {/*</UsersProviderWrapper>*/}
+      {
+        a.map((it)=>{
+          console.log(it)
+          return <Page searchParams={{year: "2025", tt: "1"}}/>
+        })
 
+      }
     </>
   )
 }

@@ -3,6 +3,9 @@ import FightList from "@/components/tournaments/FightList"
 import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import { Metadata } from "next"
+import { Fight4Table } from "@/components/tournaments/Fight4Table"
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
+import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 
 export async function generateMetadata({
   params,
@@ -55,8 +58,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function AllFightPage({ params }: { params: Promise<{ fightsId: string }> }) {
-  const { fightsId } = await params
+export default async function AllFightPage({ params }: { params: Promise<{ fightsId: string; id: string }> }) {
+  const { fightsId, id: tournamentId } = await params
   const store = makeTournamentsStoreServer()
   const {
     data: fightsData,
@@ -65,7 +68,6 @@ export default async function AllFightPage({ params }: { params: Promise<{ fight
   } = await store.dispatch(
     tournamentsApiServer.endpoints.getFightContainerInfo.initiate({ fightContainerId: Number(fightsId) }),
   )
-
   if (error) {
     return (
       <div className="p-4">
@@ -83,5 +85,5 @@ export default async function AllFightPage({ params }: { params: Promise<{ fight
       </div>
     )
   }
-  return <FightList fightsData={fightsData} />
+  return <FightList fightsData={fightsData} tournamentId={Number(tournamentId)} />
 }

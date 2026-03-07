@@ -13,7 +13,7 @@ type ContainerInterface = {
 export default function FightsInformations({ update }: { update: TournamentCardCallback }) {
   const [fightContainers, setFightContainers] = useState<ContainerInterface[]>([])
   return (
-    <div className="w-full h-full flex flex-col gap-2">
+    <div className="flex h-full w-full flex-col gap-2">
       <div className="flex h-fit justify-between">
         <h2 className="text-xl font-medium">Конструктор информации о боях</h2>
         <Popover.Root>
@@ -77,7 +77,7 @@ export default function FightsInformations({ update }: { update: TournamentCardC
           <InputRow />
         </AppendableInfoContainer>
       ))}
-      {fightContainers.length > 0 && <div className="w-full border-2 border-b border-border"></div>}
+      {fightContainers.length > 0 && <div className="border-border w-full border-2 border-b"></div>}
       <AppendableInfoContainer
         key={fightContainers.length + "new"}
         onInfoChange={(info) => {

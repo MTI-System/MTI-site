@@ -7,7 +7,7 @@ import Link from "next/link"
 import { FaExternalLinkAlt } from "react-icons/fa"
 
 export default function FightTable({ fight, type }: { fight: EventData[]; type: "team" | "jury" }) {
-  const maxTeams = Math.max(...fight.map((room) => room.teams.length))
+  const maxTeams = Math.max(...fight.map((room) => room.teams?.length ?? 0))
   const maxTeamsArr = Array.from({ length: maxTeams })
   const maxJouries = Math.max(...fight.map((room) => room.jouries.length))
   const maxJouriesArr = Array.from({ length: maxJouries })
@@ -51,7 +51,7 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
     )
   }
   // --------------DELETE LATER-------------
-  const roomNames = ["A", "B", "C"]
+  const roomNames = ["A", "B", "C", "D", "E", "F"]
   // ---------------------------------------
   return (
     <div className="border-border mt-2 flex h-full w-[75vw] flex-col gap-2 md:mt-0 md:w-full md:flex-row md:gap-0 md:overflow-auto md:border-t">
@@ -60,13 +60,14 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
           key={fightIdx}
           className={`border-border text-text-main w-full overflow-auto rounded-xl border text-center font-medium md:w-fit md:shrink-0 md:grow md:rounded-none md:border-0 ${fightIdx > 0 ? "md:border-l-border md:border-l" : ""}`}
         >
-          {true ? (
+          {false ? (
             <a
               target="_blank"
               href={fightItem.location}
               className="border-border hover:text-text-alt flex items-center justify-center gap-2 border-b p-2 transition-colors"
             >
-              <p>Комната {roomNames[fightIdx]}</p>
+              <p>{fightItem.label ?? `Комната ${roomNames[fightIdx]}`}</p>
+              {/* <p>Комната {fightItem.label}</p>  // UNCOMMENT LATER*/}
               <FaExternalLinkAlt />
             </a>
           ) : (
@@ -78,7 +79,7 @@ export default function FightTable({ fight, type }: { fight: EventData[]; type: 
 
           {type === "team" &&
             maxTeamsArr.map((item, idx) => {
-              const team = fightItem.teams[idx]
+              const team = fightItem.teams?.[idx]
               return (
                 <div
                   key={idx}

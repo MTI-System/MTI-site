@@ -69,7 +69,7 @@ export function HoldButton({
   return (
     <button
       className={twclsx(
-        "cursor-pointer disabled:bg-inactive/20 disabled:border-inactive disabled:text-bg-main relative overflow-hidden p-2 text-ellipsis border-4 rounded-xl",
+        "disabled:bg-inactive/20 disabled:border-inactive disabled:text-bg-main relative cursor-pointer overflow-hidden rounded-xl border-4 p-2 text-ellipsis",
         className,
       )}
       onPointerDown={() => {

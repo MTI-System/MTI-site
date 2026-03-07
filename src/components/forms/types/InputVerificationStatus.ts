@@ -6,7 +6,7 @@ interface InputVerificationStatus {
 
 enum ErrorCode {
   UNDEFINED_VALUE,
-  
+
   //Это по приколу тут //
   WRONG_INPUT_VALUE, //
   ///////////////////////

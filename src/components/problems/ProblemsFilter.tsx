@@ -54,7 +54,7 @@ export default function ProblemFilters({
             className="text-text-main text-4xl font-bold"
           />
         </div>
-        <div className="flex-col flex w-full max-w-full min-w-60 content-start items-start justify-start gap-2 sm:flex-row sm:items-center">
+        <div className="flex w-full max-w-full min-w-60 flex-col content-start items-start justify-start gap-2 sm:flex-row sm:items-center">
           <YearFilter
             possibleYears={possibleYears}
             isPending={isPending}
@@ -83,8 +83,7 @@ function SectionFilter({
 }: {
   possibleSections: ProblemSectionInterface[]
   isPending: boolean
-})
-{
+}) {
   const year = useProblemsSelector((state) => state.problemsPageFilters.year)
   const tt = useAppSelector((state) => state.searchParams.tt)
   const sectionList = useProblemsSelector((state) => state.problemsPageFilters.sectionList)
@@ -171,8 +170,7 @@ export function YearFilter({
   isModerator,
   onSwitchYear,
   defaultValue,
-}:
- {
+}: {
   possibleYears: number[]
   isPending: boolean
   isModerator: boolean
@@ -214,9 +212,11 @@ export function YearFilter({
     <Dropdown
       trigger={
         <DropdownTrigger
-        rootClassName="w-full sm:w-auto"
+          rootClassName="w-full sm:w-auto"
           disabled={isPending}
-          className={twclsx("bg-bg-alt hover:bg-hover h-8 rounded-full flex justify-between", { "hover:bg-bg-main": isPending })}
+          className={twclsx("bg-bg-alt hover:bg-hover flex h-8 justify-between rounded-full", {
+            "hover:bg-bg-main": isPending,
+          })}
         >
           {/*{year}*/}
           {defaultValue}

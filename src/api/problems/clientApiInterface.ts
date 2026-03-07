@@ -27,6 +27,7 @@ export const problemsApiClient = createApiClient({
 
 export const {
   useGetProblemsByIdQuery,
+  useGetProblemsForTournamentQuery,
   useGetProblemsQuery,
   useAddProblemMutation,
   useDeleteProblemMutation,
