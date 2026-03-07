@@ -47,6 +47,7 @@ export const TournamentScoreEntity = z.object({
   fight_container_id: z.number(),
   fight_container_name: z.string(),
   score: z.number(),
+  win_coefficient: z.number(),
 })
 
 export const TournamentResultsTableLine = z.object({
@@ -55,6 +56,8 @@ export const TournamentResultsTableLine = z.object({
   is_unknown_team: z.boolean(),
   scores: z.array(TournamentScoreEntity),
   resultScore: z.number(),
+  opening_score: z.number(),
+  result_win_coefficient: z.number(),
 })
 
 export const TournamentResultsTableEntity = z.object({
@@ -151,6 +154,7 @@ export const fightTeamInTournamentShema = teamInTournamentSchema.omit({ global_t
   reporterScore: z.number().optional(),
   opponentScore: z.number().optional(),
   reviewerScore: z.number().optional(),
+  win_coefficient: z.number().optional()
 })
 
 export const fightInformationSchema = z.object({

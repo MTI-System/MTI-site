@@ -71,10 +71,17 @@ function FightAction({ actionId, tournamentId }: { actionId: number, tournamentI
       <div className="p-4">
         <h1 className="text-xl font-bold text-red-600">Error</h1>
         <p className="mt-2">{JSON.stringify(actionErr)}</p>
+        <p>{actionId}</p>
       </div>
     )
   }
-  if (!actionData || !problemDataTournament) return <p className="text-red-500">Error</p>
+  if (!actionData) return (
+    <>
+      <p className="text-red-500">
+        Error {JSON.stringify(actionData)} {problemDataTournament ? JSON.stringify(problemDataTournament) : "undef"}
+      </p>
+    </>
+  )
 
   return (
     <div className="flex w-full flex-col gap-6">

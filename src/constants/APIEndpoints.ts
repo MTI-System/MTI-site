@@ -27,17 +27,14 @@ export const GATEWAY_API =
   isServer ?
     process.env.NEXT_PUBLIC_IS_LOCAL === "true" ?
       process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ?
-        "://95.163.231.121:5002/"
+        "://vps:5002/"
         : "://api.mtiyt.ru/"
       : "://gateway:8080/"
   : process.env.NEXT_PUBLIC_IS_ON_DEV === "true"
-      ? "://95.163.231.121:5002/"
+      ? "://11.0.0.1:5002/"
       : "://api.mtiyt.ru/"
 
-export const INLINE_USER_GATEWAY_API =
-      process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ?
-        "://95.163.231.121:5002/"
-        : "://api.mtiyt.ru/"
+export const INLINE_USER_GATEWAY_API = process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ? "://vps:5002/" : "://api.mtiyt.ru/"
 
 
   // process.env.NEXT_PUBLIC_IS_ON_DEV === "true" ? "://11.0.0.1:5002/" : "://api.mtiyt.ru/" // на сервере эта переменная всегда была ://gateway:8080/
@@ -46,7 +43,7 @@ export const PROBLEM_API = protocol + GATEWAY_API + "problems/"
 export const FILES_SERVER = protocol + INLINE_USER_GATEWAY_API + "files/get/"
 export const FILES_API = protocol + GATEWAY_API + "files/"
 export const MATERIAL_API = protocol + GATEWAY_API + "materials/"
-export const TOURNAMENTS_API = protocol + GATEWAY_API + "tournaments/"
+export const TOURNAMENTS_API = "http://localhost:8080/"
 export const REGISTRATION_API = protocol + GATEWAY_API + "registration/"
 export const NOTIFICATIONS_API = protocol + GATEWAY_API + "notifications/"
 export const USERS_API = protocol + GATEWAY_API + "users/"

@@ -84,6 +84,9 @@ export const defineTournamentsEndpoints = (
       console.error(`Unexpected response while parsing action information: ${parsed.error}`)
       return null
     },
+    transformErrorResponse: (e: unknown): void => {
+      console.error(e)
+    }
   }),
   getTeamInTournament: builder.query({
     query: ({ teamId }: { teamId: number }) => `team_in_tournament/${teamId}`,
@@ -367,7 +370,15 @@ export const defineTournamentsEndpoints = (
   }),
 
   setDraftsResults: builder.mutation({
-    query: ({ token, calls, actionId }: { token: string; calls: {problemId: number, result: boolean}[]; actionId: number }) => {
+    query: ({
+      token,
+      calls,
+      actionId,
+    }: {
+      token: string
+      calls: { problemId: number; result: boolean }[]
+      actionId: number
+    }) => {
       return {
         url: `set_draft_result/${actionId}`,
         headers: {
@@ -375,7 +386,7 @@ export const defineTournamentsEndpoints = (
           "Content-Type": "application/json",
         },
         body: {
-          calls: calls
+          calls: calls,
         },
         method: "POST",
       }
