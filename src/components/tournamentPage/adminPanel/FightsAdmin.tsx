@@ -97,7 +97,7 @@ export default function FightsAdmin({
               >
                 <div className="flex gap-2">
                   <p>Ссылка на комнату: </p>
-                  <input type="url" name={"link"} defaultValue={fight.location} />
+                  <input type="text" name={"link"} defaultValue={fight.location} />
                 </div>
                 <div className="flex gap-2">
                   <p>Время начала: </p>
