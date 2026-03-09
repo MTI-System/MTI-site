@@ -125,8 +125,15 @@ export default async function Page({
     (section_1, section_2) =>
       section_1.section_science - section_2.section_science || section_1.title.localeCompare(section_2.title),
   )
+
+  const allProblemContainers = [
+    ...new Map(
+      problems?.map(p => [p?.problemContainer?.id, p.problemContainer])
+    ).values()
+  ].sort((a, b) => (a?.id ?? 0) - (b?.id ?? 0))
   return (
     <ProblemsReduxProviderWrapper>
+      {/*{JSON.stringify(allProblemContainers, null, 2)}*/}
       <SearchParamsUpdator searchParams={sp} isNoRefresh={isNoRefresh} />
 
       <ProblemFilters
@@ -141,11 +148,17 @@ export default async function Page({
             {!isUndefYear && (
               <div className="flex flex-col-reverse gap-5 lg:flex-row">
                 <div className="w-full">
-                  <ProblemsList
-                    sectionsFilter={sectionsFilter ?? []}
-                    problems={problems ?? null}
-                    isEditable={isEditable}
-                  />
+                  {allProblemContainers.map(c => {
+                    return (
+                        <ProblemsList
+                          key={c?.id ?? 0}
+                          sectionsFilter={sectionsFilter ?? []}
+                          problems={problems?.filter(pr=>pr?.problemContainer?.id == c?.id) ?? null}
+                          isEditable={isEditable}
+                          listLabel={c?.label}
+                        />
+                    )
+                  })}
                 </div>
                 {currentTournament !== null && (
                   <>
