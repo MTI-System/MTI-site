@@ -5,10 +5,12 @@ export default function ProblemsList({
   problems,
   isEditable,
   sectionsFilter,
+  listLabel
 }: {
   problems: ProblemListInterface | null | undefined
   isEditable: boolean
   sectionsFilter: number[]
+  listLabel?: string
 }) {
   const filteredProblems =
     problems &&
@@ -23,6 +25,7 @@ export default function ProblemsList({
 
   return (
     <div className="flex w-full flex-col gap-4">
+      {listLabel && <h2 className="text-2xl font-medium">{listLabel}</h2>}
       {filteredProblems?.map((problem: ProblemInterface, index: number) => (
         <ProblemCard problem={problem} isEditable={isEditable} key={index + 1}></ProblemCard>
       ))}

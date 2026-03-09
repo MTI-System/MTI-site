@@ -3,14 +3,19 @@ import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
 import twclsx from "@/utils/twClassMerge"
 import style from "@/styles/gradient.module.css"
 import Link from "next/link"
+import React from "react"
 
 export default async function ResultsTable({ tournamentId }: { tournamentId: number }) {
   const store = makeTournamentsStoreServer()
   const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentTable.initiate({ id: tournamentId }))
   const { data: table, error } = await promise
   console.log("tournament fetch", table, error)
+  const { data: tournament, error: tournamentError } = await store.dispatch(
+    tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: tournamentId }),
+  )
+  const isYNT = tournament?.tournament_type === 2
   // const table = await fetchTournamentTable(tournamentId)
-   const trStyle = "font-medium bg-transparent"
+  const trStyle = "font-medium bg-transparent"
   const maxScore = Math.max(...(table?.table_lines.map((l) => Math.max(...l.scores.map((s) => s.score))) ?? [0]))
   const minScore = Math.min(
     ...(table?.table_lines.map((l) => Math.min(...l.scores.map((s) => s.score).filter((val) => val !== 0))) ?? [0]),
@@ -31,66 +36,144 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
 
   return (
     <>
-    <h2 className="text-text-main w-full pb-3 text-center text-2xl font-bold">Турнирная таблица</h2>
-      <div className="flex items-start justify-start overflow-x-auto shrink-0 border-border rounded-2xl border mx-8 my-4">
-        <table className="w-full 0 overflow-hidden">
-          <thead className={twclsx(
-            trStyle,
-            "border-b-border border-b"
-            )}>
+      <h2 className="text-text-main w-full pb-3 text-center text-2xl font-bold">Турнирная таблица</h2>
+      <div className="border-border mx-8 my-4 flex shrink-0 items-start justify-start overflow-x-auto rounded-2xl border">
+        <table className="0 w-full overflow-hidden">
+          <thead className={twclsx(trStyle, "border-b-border border-b")}>
             <tr key={0} className="">
+              <th className="bg-card-alt text-text-main font-bold" rowSpan={isYNT ? 2 : undefined} scope="col">
+                <p className="text-md flex h-full w-full flex-row px-8 py-4 font-medium sm:text-sm lg:text-lg">
+                  КОМАНДА
+                </p>
+              </th>
 
-              <td className="bg-card-alt text-text-main font-bold">
-                <p className="flex flex-row h-full w-full px-10 py-4 sm:text-sm text-md lg:text-lg font-medium">КОМАНДА</p>
-              </td>
+              {isYNT && (
+                <th className="bg-card-alt text-text-main font-bold" rowSpan={isYNT ? 2 : undefined} scope="col">
+                  <p className="text-md h-full w-full px-6 py-4 text-center font-medium sm:text-sm lg:text-lg">ИНТРО</p>
+                </th>
+              )}
 
               {table?.table_lines[maxFilledFightsIndex].scores.map((score, idx) => (
-                <td key={idx} className="bg-card-alt text-text-main font-medium ">
+                <th
+                  key={idx}
+                  className="bg-card-alt text-text-main font-medium"
+                  colSpan={isYNT ? 2 : undefined}
+                  scope="col"
+                >
                   <Link
-                    className="text-text-main hover:bg-hover flex flex-row h-full w-full cursor-pointer px-2 py-4 items-center justify-center sm:text-sm text-md lg:text-lg font-medium"
+                    className="text-text-main hover:bg-hover text-md flex h-full w-full cursor-pointer flex-row items-center justify-center px-2 py-4 font-medium sm:text-sm lg:text-lg"
                     href={`/tournaments/${tournamentId}/fights/${score.fight_container_id}`}
                   >
                     {score.fight_container_name.toUpperCase()}
                   </Link>
-                </td>
+                </th>
               ))}
-              <td className="bg-card-alt text-text-main font-medium">
-                <p className="flex flex-row h-full w-full text-wrap px-2 py-4 text-end sm:text-sm text-md lg:text-lg font-medium">ИТОГО</p>
-              </td>
+              {isYNT && (
+                <th className="bg-card-alt text-text-main font-medium" rowSpan={isYNT ? 2 : undefined} scope="col">
+                  <p className="text-md h-full w-full px-2 py-4 text-center font-medium text-wrap sm:text-sm lg:text-lg">
+                    SV
+                  </p>
+                </th>
+              )}
+              <th className="bg-card-alt text-text-main font-medium" rowSpan={isYNT ? 2 : undefined} scope="col">
+                <p className="text-md flex h-full w-full flex-row px-3 py-4 text-center font-medium text-wrap sm:text-sm lg:text-lg">
+                  ИТОГО
+                </p>
+              </th>
             </tr>
-            </thead>
 
-            <tbody className="divide-y divide-border">
+            {isYNT && (
+              <tr>
+                {table?.table_lines[maxFilledFightsIndex].scores.map((score, idx) => (
+                  <React.Fragment key={idx}>
+                    <th key={idx + "PP"} className="bg-card-alt text-text-main text-center font-medium" scope="col">
+                      V
+                    </th>
+                    <th key={idx} className="bg-card-alt text-text-main text-center font-medium" scope="col">
+                      Балл
+                    </th>
+                  </React.Fragment>
+                ))}
+              </tr>
+            )}
+          </thead>
+
+          <tbody className="divide-border divide-y">
             {table?.table_lines.map((line, idx) => {
               return (
                 <tr key={idx}>
                   <td className={trStyle}>
                     <Link
-                      className="text-text-main hover:bg-hover flex flex-row h-full w-full cursor-pointer px-10 py-2 sm:text-sm text-md lg:text-lg font-medium"
+                      className="text-text-main hover:bg-hover text-md flex h-full w-full cursor-pointer flex-row px-8 py-2 font-medium sm:text-sm lg:text-lg"
                       href={`/tournaments/${tournamentId}/team/${line.team_id}`}
                     >
                       {line.team_name}
                     </Link>
                   </td>
-
-                  {line.scores.map((score, idx) => (
+                  {isYNT && (
                     <td
-                      key={idx}
                       className={twclsx(
                         trStyle,
-                        style.sampledText,
-                        "text-text-main sm:text-sm text-md lg:text-lg cursor-pointer px-2 py-1 text-center rounded-full",
-                        {"text-text-hover!": (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10}
+                        "text-text-main text-md cursor-pointer rounded-full px-2 py-1 text-center sm:text-sm lg:text-lg",
+                        {
+                          "text-text-hover!":
+                            (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10,
+                        },
                       )}
-
-                        style={{
-                        ["--t" as any]: (score.score - minScore) / (maxScore - minScore),
-                      }}
                     >
-                      {score.score}
+                      {line.opening_score}
                     </td>
+                  )}
+                  {line.scores.map((score, idx) => (
+                    <React.Fragment key={idx}>
+                      {isYNT && (
+                        <td
+                          className={twclsx(
+                            trStyle,
+                            style.sampledText,
+                            "text-text-main text-md cursor-pointer rounded-full px-3 py-1 text-center sm:text-sm lg:text-lg",
+                            {
+                              "text-text-hover!":
+                                (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) &&
+                                tournamentId === 10,
+                            },
+                          )}
+                          style={{
+                            ["--t" as any]: score.win_coefficient,
+                          }}
+                        >
+                          {score.win_coefficient}
+                        </td>
+                      )}
+                      <td
+                        className={twclsx(
+                          trStyle,
+                          style.sampledText,
+                          "text-text-main text-md cursor-pointer rounded-full px-4 py-1 text-center sm:text-sm lg:text-lg",
+                          {
+                            "text-text-hover!":
+                              (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) &&
+                              tournamentId === 10,
+                          },
+                        )}
+                        style={{
+                          ["--t" as any]: (score.score - minScore) / (maxScore - minScore),
+                        }}
+                      >
+                        {score.score}
+                      </td>
+                    </React.Fragment>
                   ))}
-
+                  {isYNT && (
+                    <td
+                      className={twclsx(trStyle, "text-text-main text-md px-2 py-1 text-center md:text-lg", {
+                        "text-text-hover!":
+                          (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10,
+                      })}
+                    >
+                      {line.result_win_coefficient}
+                    </td>
+                  )}
                   {Array(maxFightsFilled - line.scores.length)
                     .fill(null)
                     .map((_, index) => (
@@ -102,7 +185,17 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                         0
                       </td>
                     ))}
-                  <td className={twclsx(trStyle, "text-text-main md:text-lg text-md px-2 py-1", {"text-text-hover!": (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10})}>{line.resultScore}{(line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10 && " (Вне зачёта)"}</td>
+                  <td
+                    className={twclsx(trStyle, "text-text-main text-md px-3 py-1 md:text-lg", {
+                      "text-text-hover!":
+                        (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10,
+                    })}
+                  >
+                    {line.resultScore}
+                    {(line.team_id === 52 || line.team_id === 53 || line.team_id === 46) &&
+                      tournamentId === 10 &&
+                      " (Вне зачёта)"}
+                  </td>
                 </tr>
               )
             })}

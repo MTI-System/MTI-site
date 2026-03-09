@@ -3,6 +3,7 @@ import { Accordion, Select } from "@base-ui-components/react"
 import ActionAdmin from "@/components/tournamentPage/adminPanel/ActionAdmin"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import {
+  useGetTournamentCardQuery,
   useGetTournamentTableQuery,
   useSetJuryToFightMutation,
   useSetLinkAndTimestampToFightMutation,
@@ -40,6 +41,7 @@ export default function FightsAdmin({
   tournamentId: number
 }) {
   const { data: fullTableObject, refetch } = useGetTournamentTableQuery({ id: tournamentId })
+  const { data: tournamentInfo, refetch: refetchTournamentInfo } = useGetTournamentCardQuery({ id: tournamentId })
   const token = useAppSelector((state) => state.auth.token)
   const teams = fullTableObject?.table_lines.map((l) => {
     return {
@@ -55,13 +57,16 @@ export default function FightsAdmin({
   useEffect(() => {
     if (idAddingSuccess) {
       refetch()
+      refetchTournamentInfo()
     }
   }, [idAddingSuccess])
   useEffect(() => {
     if (idTeamsSettingSuccess) {
       refetch()
+      refetchTournamentInfo()
     }
   }, [idTeamsSettingSuccess])
+  if (!tournamentInfo) return <>Loading???</>
   return (
     <>
       <Accordion.Root className="flex w-full flex-col justify-center px-3 text-gray-900">
@@ -215,7 +220,7 @@ export default function FightsAdmin({
 
               {fight.actions.map((action, index) => (
                 <ProblemsProviderWrapper key={action}>
-                  <ActionAdmin actionId={action} idx={index} fight={fight} />
+                  <ActionAdmin actionId={action} idx={index} fight={fight} tournamentInfo={tournamentInfo} />
                 </ProblemsProviderWrapper>
               ))}
             </div>

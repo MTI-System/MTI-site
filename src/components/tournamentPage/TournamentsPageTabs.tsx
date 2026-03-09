@@ -15,7 +15,7 @@ interface LinkInterface {
   href: string
   title: string
   description?: string
-  isLocked: boolean
+  isLocked?: boolean
 }
 
 export default function TournamentsPageTabs({
@@ -74,10 +74,8 @@ export default function TournamentsPageTabs({
     {
       href: `/tournaments/${tournamentCard.id}/results/teamlogs`,
       title: "Путевые листы",
-      isLocked:
-        tournamentCard.badge.badge_flag === "FUTURED" ||
-        tournamentCard.badge.badge_flag === "REGISTRATION",
-    }
+      isLocked: tournamentCard.badge.badge_flag === "FUTURED" || tournamentCard.badge.badge_flag === "REGISTRATION",
+    },
   ]
 
   const fightsLinksPrev: LinkInterface[] = [
@@ -99,14 +97,18 @@ export default function TournamentsPageTabs({
     })),
   ]
 
-  const finalIndex = fightsLinksPrev.findIndex(link => link.title == 'Финал');
-  const fightsLinks: LinkInterface[] = [...fightsLinksPrev.filter(link => link !== fightsLinksPrev[finalIndex]), fightsLinksPrev[finalIndex]];
+  const finalIndex = fightsLinksPrev.findIndex((link) => link.title == "Финал")
+  const fightsLinks: LinkInterface[] = [
+    ...fightsLinksPrev.filter((link) => link !== fightsLinksPrev[finalIndex]),
+    fightsLinksPrev[finalIndex],
+  ]
 
-  if (tournamentCard.id === 10) fightsLinks.push({
-    href: `/tournaments/${tournamentCard.id}/fights/selectedtasks/`,
-    title: `Задачи на 4-й бой`,
-    isLocked: false
-  })
+  if (tournamentCard.id === 10)
+    fightsLinks.push({
+      href: `/tournaments/${tournamentCard.id}/fights/selectedtasks/`,
+      title: `Задачи на 4-й бой`,
+      isLocked: false,
+    })
 
   const statsLinks: LinkInterface[] = [
     {
@@ -284,28 +286,32 @@ function NavigationItem({
         <NavigationMenu.Content className={contentClassName}>
           <ul className="flex max-w-[400px] flex-col justify-center">
             {items.map((item) => (
-              <li key={item.href} className="hover:bg-hover rounded-sm transition-colors">
-                <NavigationMenu.Link
-                  closeOnClick
-                  render={({ children }) => (
-                    <Link href={item.isLocked ? "" : item.href} className={linkCardClassName}>
-                      {children}
-                    </Link>
-                  )}
-                >
-                  {/* <Link href={item.isLocked ? "" : item.href} className={linkCardClassName}> */}
-                  <div className="text-text-main flex items-center gap-2">
-                    {item.isLocked && <MdLock />}
-                    <div>
-                      <h3 className="m-0 mb-1 text-base leading-5 font-medium text-nowrap">{item.title}</h3>
-                      {hasDescription && (
-                        <p className="text-text-alt m-0 text-sm leading-5 text-nowrap">{item.description}</p>
+              <>
+                {item && (
+                  <li key={item.href} className="hover:bg-hover rounded-sm transition-colors">
+                    <NavigationMenu.Link
+                      closeOnClick
+                      render={({ children }) => (
+                        <Link href={item.isLocked ? "" : item.href} className={linkCardClassName}>
+                          {children}
+                        </Link>
                       )}
-                    </div>
-                  </div>
-                  {/* </Link> */}
-                </NavigationMenu.Link>
-              </li>
+                    >
+                      {/* <Link href={item.isLocked ? "" : item.href} className={linkCardClassName}> */}
+                      <div className="text-text-main flex items-center gap-2">
+                        {item.isLocked && <MdLock />}
+                        <div>
+                          <h3 className="m-0 mb-1 text-base leading-5 font-medium text-nowrap">{item.title}</h3>
+                          {hasDescription && (
+                            <p className="text-text-alt m-0 text-sm leading-5 text-nowrap">{item.description}</p>
+                          )}
+                        </div>
+                      </div>
+                      {/* </Link> */}
+                    </NavigationMenu.Link>
+                  </li>
+                )}
+              </>
             ))}
           </ul>
         </NavigationMenu.Content>
