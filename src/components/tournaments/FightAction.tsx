@@ -17,9 +17,15 @@ import { useGetProblemsByIdQuery, useGetProblemsForTournamentQuery } from "@/api
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import Loading from "@/app/loading"
 import Link from "next/link"
-import DraftList from "@/components/tournamentPage/FightsPage/DraftList";
+import DraftList from "@/components/tournamentPage/FightsPage/DraftList"
 
-export function ActionTabs({ fightData, tournamentId }: { fightData: FightInformationInterface, tournamentId: number }) {
+export function ActionTabs({
+  fightData,
+  tournamentId,
+}: {
+  fightData: FightInformationInterface
+  tournamentId: number
+}) {
   return (
     <Tabs.Root defaultValue={`${fightData.actions[0]}_action`}>
       <Tabs.List className="relative z-0 mt-10 flex justify-center gap-1 px-1">
@@ -49,9 +55,9 @@ export function ActionTabs({ fightData, tournamentId }: { fightData: FightInform
   )
 }
 
-function FightAction({ actionId, tournamentId }: { actionId: number, tournamentId: number }) {
+function FightAction({ actionId, tournamentId }: { actionId: number; tournamentId: number }) {
   const { data: actionData, isLoading: isActionData, error: actionErr } = useGetActionInformationQuery({ actionId })
-  console.log(actionData)
+  console.log("ACTION DATA", actionData)
   const {
     data: problemData,
     isLoading: isProblemLoading,
@@ -62,7 +68,7 @@ function FightAction({ actionId, tournamentId }: { actionId: number, tournamentI
     data: problemDataTournament,
     isLoading: isProblemTournamentLoading,
     error: problemTournamentErr,
-  } = useGetProblemsForTournamentQuery({tournamentId: tournamentId})
+  } = useGetProblemsForTournamentQuery({ tournamentId: tournamentId })
   // ------------TMP FOR LOCAL NUMBER END----------------
 
   if (isActionData || isProblemLoading) return <Loading />
@@ -75,53 +81,58 @@ function FightAction({ actionId, tournamentId }: { actionId: number, tournamentI
       </div>
     )
   }
-  if (!actionData) return (
-    <>
-      <p className="text-red-500">
-        Error {JSON.stringify(actionData)} {problemDataTournament ? JSON.stringify(problemDataTournament) : "undef"}
-      </p>
-    </>
-  )
+  if (!actionData)
+    return (
+      <>
+        <p className="text-red-500">
+          Error {JSON.stringify(actionData)} {problemDataTournament ? JSON.stringify(problemDataTournament) : "undef"}
+        </p>
+      </>
+    )
 
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="w-full px-4 pt-4 text-center">
-        <div className="text-text-alt mb-4 sm:text-xl text-md uppercase">Задача</div>
+        <div className="text-text-alt text-md mb-4 uppercase sm:text-xl">Задача</div>
         {problemData?.id ? (
           <Link href={`/problems/${problemData?.id}`} className="text-text-main text-lg font-bold uppercase">
-            {(problemData?.local_number ?? (problemDataTournament?.find(p => p.id === problemData?.id)?.local_number ?? `(${problemData?.global_number})`)) + ". " + problemData?.problem_translations[0].problem_name}
+            {(problemData?.local_number ??
+              problemDataTournament?.find((p) => p.id === problemData?.id)?.local_number ??
+              `(${problemData?.global_number})`) +
+              ". " +
+              problemData?.problem_translations[0].problem_name}
           </Link>
         ) : (
           <p className="text-text-main text-lg font-bold uppercase">-</p>
         )}
       </div>
 
-
       <div className="w-full text-center">
-          <h3 className="text-text-main text-lg font-bold uppercase py-4">
-            Процедура вызова
-          </h3>
-          <DraftList actionId={actionId} tournamentId={tournamentId}/>
+        <h3 className="text-text-main py-4 text-lg font-bold uppercase">Процедура вызова</h3>
+        <DraftList actionId={actionId} tournamentId={tournamentId} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         {actionData.playerLines.map((line) => (
-          <>{line.role?.title && line.role.title !== "Наблюдатель" && (
-          <div key={line.role?.id} className="border-border flex w-full flex-1 flex-col rounded-2xl border">
-            <div className="text-text-main m-2 flex flex-none flex-col gap-3 text-center items-center justify-center">
-              <div className="text-text-alt mt-2 uppercase">{line.role?.title ?? "—"}</div>
+          <>
+            {line.role?.title && line.role.title !== "Наблюдатель" && (
+              <div key={line.role?.id} className="border-border flex w-full flex-1 flex-col rounded-2xl border">
+                <div className="text-text-main m-2 flex flex-none flex-col items-center justify-center gap-3 text-center">
+                  <div className="text-text-alt mt-2 uppercase">{line.role?.title ?? "—"}</div>
 
-              <div className="text-text-main font-medium">{line.team.name}</div>
+                  <div className="text-text-main font-medium">{line.team.name}</div>
 
-              <UsersProviderWrapper>
-                <UserCell userId={line.playerId} />
-              </UsersProviderWrapper>
+                  <UsersProviderWrapper>
+                    <UserCell userId={line.playerId} />
+                  </UsersProviderWrapper>
 
-              <div className="bg-muted/40 px-6 py-4">
-                <JuryScores scores={line.scores} />
+                  <div className="bg-muted/40 px-6 py-4">
+                    <JuryScores scores={line.scores} />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>)}</>
+            )}
+          </>
         ))}
       </div>
       {/* <div className="flex-1">
@@ -177,20 +188,20 @@ function JuryScores({ scores }: { scores: { id: number; value: number; jury: num
 
   return (
     <div className="text-text-main max-w-md">
-      <div className="mb-2 sm:text-sm text-md lg:text-lg font-medium">Оценки жюри</div>
+      <div className="text-md mb-2 font-medium sm:text-sm lg:text-lg">Оценки жюри</div>
 
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
         {scores.map((score, index) => (
           <div
             key={index}
             className="border-border bg-background flex flex-wrap items-center justify-between gap-2 rounded-md border px-3 py-2"
           >
-            <div className="text-text-alt text-wrap flex-3">
+            <div className="text-text-alt flex-3 text-wrap">
               <UsersProviderWrapper>
-                <UserCell userId={score.jury}/>
+                <UserCell userId={score.jury} />
               </UsersProviderWrapper>
             </div>
-            <div className="font-semibold flex-1">{score.value}</div>
+            <div className="flex-1 font-semibold">{score.value}</div>
           </div>
         ))}
       </div>

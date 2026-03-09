@@ -86,7 +86,7 @@ export const defineTournamentsEndpoints = (
     },
     transformErrorResponse: (e: unknown): void => {
       console.error(e)
-    }
+    },
   }),
   getTeamInTournament: builder.query({
     query: ({ teamId }: { teamId: number }) => `team_in_tournament/${teamId}`,
