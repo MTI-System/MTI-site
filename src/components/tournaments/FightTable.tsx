@@ -58,7 +58,7 @@ export async function FightTable({
           </th>
           {isYNT && (
             <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-              П.П.
+              V
             </th>
           )}
           {!isYNT && (

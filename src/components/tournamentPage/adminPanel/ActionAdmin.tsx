@@ -3,8 +3,11 @@
 import {
   useGetActionInformationQuery,
   useGetTournamentTableQuery,
-  useSetDraftResultMutation, useSetDraftsResultsMutation,
-  useSetJuryToFightMutation, useSetPlayerCoeffMutation,
+  useSetDraftResultMutation,
+  useSetDraftsResultsMutation,
+  useSetJuryToFightMutation,
+  useSetPlayerCoeffMutation,
+  useSetPlayerPunishmentMutation,
   useSetPlayerToPerformanceMutation,
   useSetScoresMutation,
 } from "@/api/tournaments/clientApiInterface"
@@ -12,10 +15,15 @@ import { useGetProblemsByIdQuery, useGetProblemsQuery } from "@/api/problems/cli
 import Loading from "@/app/loading"
 import { Accordion, Select } from "@base-ui-components/react"
 import FightsAdmin from "@/components/tournamentPage/adminPanel/FightsAdmin"
-import {CallActionInterface, DraftActionInterface, FightInformationInterface} from "@/types/TournamentsAPI"
+import {
+  CallActionInterface,
+  DraftActionInterface,
+  FightInformationInterface,
+  TournamentCardInterface,
+} from "@/types/TournamentsAPI"
 import { useGetUserByIdQuery } from "@/api/users/clientApiInterface"
 import UsersProviderWrapper from "@/api/users/ClientWrapper"
-import { ComponentProps, useState } from "react"
+import { ComponentProps, useEffect, useState } from "react"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
 
@@ -23,19 +31,42 @@ export default function ActionAdmin({
   actionId,
   idx,
   fight,
+  tournamentInfo,
 }: {
   actionId: number
   idx: number
   fight: FightInformationInterface
+  tournamentInfo: TournamentCardInterface
 }) {
   const { data: actionInfo, isLoading: isActionLoading } = useGetActionInformationQuery({ actionId: actionId })
   const { data: pickedProblemInfo, isLoading: isProblemLoading } = useGetProblemsByIdQuery({
     problemId: actionInfo?.pickedProblem ?? 0,
   })
+  const isYNT = tournamentInfo.tournament_type === 2
   const [setDraftResult] = useSetDraftResultMutation()
 
   const [setScores] = useSetScoresMutation()
   const [setPlayer] = useSetPlayerToPerformanceMutation()
+  const [setCoeff] = useSetPlayerCoeffMutation()
+  const [setPunishment] = useSetPlayerPunishmentMutation()
+  const [pun, setPun] = useState<{ nt: number; nr: number; np: number; ny: number }[]>(
+    actionInfo?.playerLines.map((playerLine) => ({
+      nt: playerLine.nt ?? 0,
+      nr: playerLine.nr ?? 0,
+      np: playerLine.np ?? 0,
+      ny: playerLine.ny ?? 0,
+    })) ?? [],
+  )
+  useEffect(() => {
+    setPun(
+      actionInfo?.playerLines.map((playerLine) => ({
+        nt: playerLine.nt ?? 0,
+        nr: playerLine.nr ?? 0,
+        np: playerLine.np ?? 0,
+        ny: playerLine.ny ?? 0,
+      })) ?? [],
+    )
+  }, [actionInfo?.playerLines])
 
   const token = useAppSelector((state) => state.auth.token)
 
@@ -74,11 +105,9 @@ export default function ActionAdmin({
             {/*      Сохранить задачу*/}
             {/*    </button>*/}
 
-
             {/*  </form>*/}
             {/*</div>*/}
             <Drafts defaultValue={actionInfo?.drafts?.calls ?? []} actionId={actionId} />
-            <div></div>
             <div>
               <Accordion.Root className="text-text-main flex w-full flex-col justify-center">
                 {actionInfo?.playerLines.map((playerLine, idx) => (
@@ -93,7 +122,79 @@ export default function ActionAdmin({
                     </Accordion.Header>
                     <Accordion.Panel className="text-text-main h-[var(--accordion-panel-height)] overflow-hidden text-base transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
                       <div>
-                        <CoeffPicker value={playerLine.coefficient} isShown={playerLine?.role?.title==="Докладчик"} performanceId={playerLine?.performanceId}/>
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault()
+                            const fd = new FormData(e.currentTarget)
+                            const coeff = Number(fd.get("c"))
+                            setCoeff({
+                              performanceId: playerLine.performanceId,
+                              coeff: coeff,
+                              token: token,
+                            })
+                          }}
+                        >
+                          <CoeffPicker
+                            value={playerLine.coefficient ?? 3}
+                            name={isYNT ? "Количество карточек" : "Коэффициент"}
+                            isShown={playerLine?.role?.title === "Докладчик"}
+                            setter={(value) => {}}
+                          />
+                          <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                            Сохранить коэффициент
+                          </button>
+                        </form>
+                        {isYNT && (
+                          <>
+                            <CoeffPicker
+                              value={playerLine.nr ?? 0}
+                              name="Нарушение в количестве отказов (nr)"
+                              isShown={playerLine?.role?.title === "Докладчик"}
+                              setter={(value) => {
+                                setPun((prev) => ({ ...prev, [idx]: { ...prev[idx], nr: value } }))
+                              }}
+                            />
+                            <CoeffPicker
+                              value={playerLine.np ?? 0}
+                              name="Нарушение в количестве выступлений на одном бое (np)"
+                              isShown={playerLine?.role?.title === "Докладчик"}
+                              setter={(value) => {
+                                setPun((prev) => ({ ...prev, [idx]: { ...prev[idx], np: value } }))
+                              }}
+                            />
+                            <CoeffPicker
+                              value={playerLine.nt ?? 0}
+                              name="Нарушение в количестве выступлений на всех боях (nt)"
+                              isShown={playerLine?.role?.title === "Докладчик"}
+                              setter={(value) => {
+                                setPun((prev) => ({ ...prev, [idx]: { ...prev[idx], nt: value } }))
+                              }}
+                            />
+                            <CoeffPicker
+                              value={playerLine.ny ?? 0}
+                              name="Нарушение в представлении оригинальных задач (ny)"
+                              isShown={playerLine?.role?.title === "Докладчик"}
+                              setter={(value) => {
+                                setPun((prev) => ({ ...prev, [idx]: { ...prev[idx], ny: value } }))
+                              }}
+                            />
+                            <button
+                              className="mx-2 my-2 cursor-pointer bg-black/20"
+                              onClick={() => {
+                                setPunishment({
+                                  token: token,
+                                  performanceId: playerLine.performanceId,
+                                  nt: pun[idx].nt,
+                                  nr: pun[idx].nr,
+                                  np: pun[idx].np,
+                                  ny: pun[idx].ny,
+                                })
+                              }}
+                            >
+                              Сохранить штрафы
+                            </button>
+                          </>
+                        )}
                         <form
                           onSubmit={(e) => {
                             e.preventDefault()
@@ -219,79 +320,81 @@ function ProblemPicker({
 
   return (
     <>
-        <div className="flex gap-2">
-          <p>Выбрана задача: </p>
-          <Select.Root
-            items={teams}
-            onValueChange={(selected) => {
-              console.log(selected)
-              setPickedTeam(selected ?? "")
-            }}
-            value={pickedTeam ?? ""}
-          >
-            <input name={name} value={pickedTeam ?? ""} onChange={() => {}} className="hidden" />
-            <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
-              <Select.Value />
-              <Select.Icon className="flex">
-                <ChevronUpDownIcon />
-              </Select.Icon>
-            </Select.Trigger>
-            <Select.Portal>
-              <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
-                <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
-                  <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
-                  <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
-                    {teams.map(({ label, value }) => (
-                      <Select.Item
-                        key={label}
-                        value={value}
-                        className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
-                      >
-                        <Select.ItemIndicator className="col-start-1">
-                          <CheckIcon className="size-3" />
-                        </Select.ItemIndicator>
-                        <Select.ItemText className="col-start-2">{label}</Select.ItemText>
-                      </Select.Item>
-                    ))}
-                  </Select.List>
-                  <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
-                </Select.Popup>
-              </Select.Positioner>
-            </Select.Portal>
-          </Select.Root>
-        </div>
-
+      <div className="flex gap-2">
+        <p>Выбрана задача: </p>
+        <Select.Root
+          items={teams}
+          onValueChange={(selected) => {
+            console.log(selected)
+            setPickedTeam(selected ?? "")
+          }}
+          value={pickedTeam ?? ""}
+        >
+          <input name={name} value={pickedTeam ?? ""} onChange={() => {}} className="hidden" />
+          <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
+            <Select.Value />
+            <Select.Icon className="flex">
+              <ChevronUpDownIcon />
+            </Select.Icon>
+          </Select.Trigger>
+          <Select.Portal>
+            <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
+              <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
+                <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
+                <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
+                  {teams.map(({ label, value }) => (
+                    <Select.Item
+                      key={label}
+                      value={value}
+                      className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
+                    >
+                      <Select.ItemIndicator className="col-start-1">
+                        <CheckIcon className="size-3" />
+                      </Select.ItemIndicator>
+                      <Select.ItemText className="col-start-2">{label}</Select.ItemText>
+                    </Select.Item>
+                  ))}
+                </Select.List>
+                <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
+              </Select.Popup>
+            </Select.Positioner>
+          </Select.Portal>
+        </Select.Root>
+      </div>
     </>
-
-
   )
 }
 
-function CoeffPicker({value, isShown, performanceId}:{value: number,isShown: boolean, performanceId:number}) {
-  const [setCoeff, {}] = useSetPlayerCoeffMutation()
-  const token = useAppSelector(state=>state.auth.token)
+function CoeffPicker({
+  value,
+  name,
+  isShown,
+  setter,
+}: {
+  value: number
+  name: string
+  isShown: boolean
+  setter: (value: number) => void
+}) {
   return (
     <>
-      {isShown &&  <>
-          <p>Коэффициент:</p>
-          <form onSubmit={(e)=>{
-            e.preventDefault()
-            setCoeff({
-              performanceId: performanceId,
-              coeff: +(new FormData(e.currentTarget).get("c") ?? "3").toString(),
-              token: token,
-            })
-          }}>
-              <input name={"c"} className="border border-border" type={"number"} defaultValue={value} step="any"/>
-              <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
-                  Сохранить коэффициент
-              </button>
-          </form>
-      </>}
+      {isShown && (
+        <>
+          <p>{name}:</p>
+          <input
+            name={"c"}
+            className="border-border border"
+            type={"number"}
+            defaultValue={value}
+            step="any"
+            onChange={(e) => {
+              setter(Number(e.target.value))
+            }}
+          />
+        </>
+      )}
     </>
-
   )
-
 }
 
 function PlusIcon(props: React.ComponentProps<"svg">) {
@@ -311,9 +414,8 @@ function ChevronUpDownIcon(props: React.ComponentProps<"svg">) {
   )
 }
 
-
-function Drafts({defaultValue, actionId}:{defaultValue: CallActionInterface[], actionId: number}){
-  const [drafts, setDraft] = useState<string[]>([...defaultValue.map(it=>it.problemId.toString())])
+function Drafts({ defaultValue, actionId }: { defaultValue: CallActionInterface[]; actionId: number }) {
+  const [drafts, setDraft] = useState<string[]>([...defaultValue.map((it) => it.problemId.toString())])
   const { data } = useGetProblemsQuery({ tournament: "1", year: 2026 })
   const problems =
     data?.map((problem) => {
@@ -322,49 +424,65 @@ function Drafts({defaultValue, actionId}:{defaultValue: CallActionInterface[], a
         label: `${problem.global_number}. ${problem.problem_translations[0].problem_name}`,
       }
     }) ?? []
-  const token = useAppSelector(state=>state.auth.token)
+  const token = useAppSelector((state) => state.auth.token)
 
   const [setDraftMutation, {}] = useSetDraftsResultsMutation()
   return (
     <>
-      <form onSubmit={(e) => {
-        e.preventDefault()
-        const fd = new FormData(e.currentTarget)
-        const calls = fd.entries().toArray().map((it, idx)=>{
-          return {
-            problemId: +it[1].toString(),
-            result: idx === fd.entries().toArray().length - 1
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          const fd = new FormData(e.currentTarget)
+          const calls = fd
+            .entries()
+            .toArray()
+            .map((it, idx) => {
+              return {
+                problemId: +it[1].toString(),
+                result: idx === fd.entries().toArray().length - 1,
+              }
+            })
+          const request = {
+            token: token,
+            actionId: actionId,
+            calls: calls,
           }
-        })
-        const request = {
-          token: token,
-          actionId: actionId,
-          calls: calls
-        }
-        setDraftMutation(request)
-        console.log(request)
-      }}>
-        {drafts.map((it, idx)=><>
-          <DraftItem name={idx.toString()} defaultValue={it} problems={problems} />
-        </>)}
-        <button className="mx-2 my-2 cursor-pointer bg-black/20" type={"button"} onClick={(e)=>{
-          e.preventDefault();
-          setDraft(prev => [...prev, problems[0].value ?? "-1"])
-        }}>
+          setDraftMutation(request)
+          console.log(request)
+        }}
+      >
+        {drafts.map((it, idx) => (
+          <>
+            <DraftItem name={idx.toString()} defaultValue={it} problems={problems} />
+          </>
+        ))}
+        <button
+          className="mx-2 my-2 cursor-pointer bg-black/20"
+          type={"button"}
+          onClick={(e) => {
+            e.preventDefault()
+            setDraft((prev) => [...prev, problems[0].value ?? "-1"])
+          }}
+        >
           Добавить выбор
         </button>
         <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
           Сохранить процедуру выбора
         </button>
       </form>
-
-
     </>
   )
 }
 
-
-function DraftItem({name, defaultValue, problems}: {name: string, defaultValue: string, problems: {label: string; value: string}[]}) {
+function DraftItem({
+  name,
+  defaultValue,
+  problems,
+}: {
+  name: string
+  defaultValue: string
+  problems: { label: string; value: string }[]
+}) {
   const teams = [...problems]
   const [pickedTeam, setPickedTeam] = useState<string | undefined>(defaultValue)
   return (
@@ -410,7 +528,6 @@ function DraftItem({name, defaultValue, problems}: {name: string, defaultValue: 
     </>
   )
 }
-
 
 function CheckIcon(props: React.ComponentProps<"svg">) {
   return (

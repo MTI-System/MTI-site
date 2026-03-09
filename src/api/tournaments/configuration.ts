@@ -369,6 +369,43 @@ export const defineTournamentsEndpoints = (
     },
   }),
 
+  setPlayerPunishment: builder.mutation({
+    query: ({
+      token,
+      performanceId,
+      nt,
+      nr,
+      np,
+      ny,
+    }: {
+      token: string
+      performanceId: number
+      nt: number
+      nr: number
+      np: number
+      ny: number
+    }) => {
+      return {
+        url: `set_coeffs_ynt/${performanceId}?nt=${nt}&nr=${nr}&np=${np}&ny=${ny}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "POST",
+      }
+    },
+  }),
+  setTeamOpeningScore: builder.mutation({
+    query: ({ token, teamId, score }: { token: string; teamId: number; score: number }) => {
+      return {
+        url: `set_opening_score/${teamId}/${score}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "POST",
+      }
+    },
+  }),
+
   setDraftsResults: builder.mutation({
     query: ({
       token,

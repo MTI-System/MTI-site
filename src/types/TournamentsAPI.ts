@@ -1,7 +1,7 @@
-import {z} from "zod"
-import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage";
+import { z } from "zod"
+import TeamInTournamentPage from "@/components/tournaments/TeamInTournamentPage"
 import { ProblemSchema } from "./problemAPI"
-import {UserSchema} from "@/types/UsersApi";
+import { UserSchema } from "@/types/UsersApi"
 
 export const FightContainerCard = z.object({
   id: z.number(),
@@ -76,7 +76,7 @@ export const TournamentUserResultsTableLine = z.object({
   rep_max: z.number(),
   opp_max: z.number(),
   rew_max: z.number(),
-  total_score: z.number()
+  total_score: z.number(),
 })
 
 export const TournamentUserResults = z.object({
@@ -154,7 +154,7 @@ export const fightTeamInTournamentShema = teamInTournamentSchema.omit({ global_t
   reporterScore: z.number().optional(),
   opponentScore: z.number().optional(),
   reviewerScore: z.number().optional(),
-  win_coefficient: z.number().optional()
+  win_coefficient: z.number().optional(),
 })
 
 export const fightInformationSchema = z.object({
@@ -184,14 +184,14 @@ export const teamScoreInActionSchema = z.object({
 const callSchema = z.object({
   id: z.number(),
   problemId: z.number(),
-  result: z.boolean()
+  result: z.boolean(),
 })
 
 const draftActionSchema = z.object({
   id: z.number(),
   chellenger: teamInTournamentSchema,
   chellenged: teamInTournamentSchema,
-  calls: z.array(callSchema)
+  calls: z.array(callSchema),
 })
 
 export const fightActionSchema = z.object({
@@ -205,7 +205,11 @@ export const fightActionSchema = z.object({
       team: teamInTournamentSchema,
       finalScore: z.number(),
       scores: z.array(teamScoreInActionSchema),
-      coefficient: z.number()
+      coefficient: z.number().optional(),
+      nr: z.number().optional(),
+      np: z.number().optional(),
+      nt: z.number().optional(),
+      ny: z.number().optional(),
     }),
   ),
 })

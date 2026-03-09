@@ -10,7 +10,9 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
   const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentTable.initiate({ id: tournamentId }))
   const { data: table, error } = await promise
   console.log("tournament fetch", table, error)
-  const { data: tournament, error: tournamentError } = await store.dispatch(tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: tournamentId }))
+  const { data: tournament, error: tournamentError } = await store.dispatch(
+    tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: tournamentId }),
+  )
   const isYNT = tournament?.tournament_type === 2
   // const table = await fetchTournamentTable(tournamentId)
   const trStyle = "font-medium bg-transparent"
@@ -45,14 +47,19 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                 </p>
               </th>
 
-              {isYNT && <th className="bg-card-alt text-text-main font-bold" rowSpan={isYNT ? 2 : undefined} scope="col">
-                <p className="text-md h-full w-full px-6 py-4 font-medium sm:text-sm lg:text-lg text-center">
-                  ИНТРО
-                </p>
-              </th>}
+              {isYNT && (
+                <th className="bg-card-alt text-text-main font-bold" rowSpan={isYNT ? 2 : undefined} scope="col">
+                  <p className="text-md h-full w-full px-6 py-4 text-center font-medium sm:text-sm lg:text-lg">ИНТРО</p>
+                </th>
+              )}
 
               {table?.table_lines[maxFilledFightsIndex].scores.map((score, idx) => (
-                <th key={idx} className="bg-card-alt text-text-main font-medium" colSpan={isYNT ? 2 : undefined} scope="col">
+                <th
+                  key={idx}
+                  className="bg-card-alt text-text-main font-medium"
+                  colSpan={isYNT ? 2 : undefined}
+                  scope="col"
+                >
                   <Link
                     className="text-text-main hover:bg-hover text-md flex h-full w-full cursor-pointer flex-row items-center justify-center px-2 py-4 font-medium sm:text-sm lg:text-lg"
                     href={`/tournaments/${tournamentId}/fights/${score.fight_container_id}`}
@@ -61,11 +68,13 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                   </Link>
                 </th>
               ))}
-              {isYNT && <th className="bg-card-alt text-text-main font-medium" rowSpan={isYNT ? 2 : undefined} scope="col">
-                <p className="text-md h-full w-full px-2 py-4 font-medium text-wrap sm:text-sm lg:text-lg text-center">
-                  П.П.
-                </p>
-              </th>}
+              {isYNT && (
+                <th className="bg-card-alt text-text-main font-medium" rowSpan={isYNT ? 2 : undefined} scope="col">
+                  <p className="text-md h-full w-full px-2 py-4 text-center font-medium text-wrap sm:text-sm lg:text-lg">
+                    SV
+                  </p>
+                </th>
+              )}
               <th className="bg-card-alt text-text-main font-medium" rowSpan={isYNT ? 2 : undefined} scope="col">
                 <p className="text-md flex h-full w-full flex-row px-3 py-4 text-center font-medium text-wrap sm:text-sm lg:text-lg">
                   ИТОГО
@@ -73,18 +82,20 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
               </th>
             </tr>
 
-            {isYNT && <tr>
-              {table?.table_lines[maxFilledFightsIndex].scores.map((score, idx) => (
-                <React.Fragment key={idx}>
-                  <th key={idx + "PP"} className="bg-card-alt text-text-main font-medium text-center" scope="col">
-                    П.П.
-                  </th>
-                  <th key={idx} className="bg-card-alt text-text-main font-medium text-center" scope="col">
-                    Балл
-                  </th>
-                </React.Fragment>
-              ))}
-            </tr>}
+            {isYNT && (
+              <tr>
+                {table?.table_lines[maxFilledFightsIndex].scores.map((score, idx) => (
+                  <React.Fragment key={idx}>
+                    <th key={idx + "PP"} className="bg-card-alt text-text-main text-center font-medium" scope="col">
+                      V
+                    </th>
+                    <th key={idx} className="bg-card-alt text-text-main text-center font-medium" scope="col">
+                      Балл
+                    </th>
+                  </React.Fragment>
+                ))}
+              </tr>
+            )}
           </thead>
 
           <tbody className="divide-border divide-y">
@@ -99,37 +110,41 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                       {line.team_name}
                     </Link>
                   </td>
-                  {isYNT && <td
-                    className={twclsx(
-                      trStyle,
-                      "text-text-main text-md cursor-pointer rounded-full px-2 py-1 text-center sm:text-sm lg:text-lg",
-                      {
-                        "text-text-hover!":
-                          (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10,
-                      },
-                    )}
-                  >
-                    {line.opening_score}
-                  </td>}
+                  {isYNT && (
+                    <td
+                      className={twclsx(
+                        trStyle,
+                        "text-text-main text-md cursor-pointer rounded-full px-2 py-1 text-center sm:text-sm lg:text-lg",
+                        {
+                          "text-text-hover!":
+                            (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10,
+                        },
+                      )}
+                    >
+                      {line.opening_score}
+                    </td>
+                  )}
                   {line.scores.map((score, idx) => (
                     <React.Fragment key={idx}>
-                      {isYNT && <td
-                        className={twclsx(
-                          trStyle,
-                          style.sampledText,
-                          "text-text-main text-md cursor-pointer rounded-full px-3 py-1 text-center sm:text-sm lg:text-lg",
-                          {
-                            "text-text-hover!":
-                              (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) &&
-                              tournamentId === 10,
-                          },
-                        )}
-                        style={{
-                          ["--t" as any]: (score.win_coefficient),
-                        }}
-                      >
-                        {score.win_coefficient}
-                      </td>}
+                      {isYNT && (
+                        <td
+                          className={twclsx(
+                            trStyle,
+                            style.sampledText,
+                            "text-text-main text-md cursor-pointer rounded-full px-3 py-1 text-center sm:text-sm lg:text-lg",
+                            {
+                              "text-text-hover!":
+                                (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) &&
+                                tournamentId === 10,
+                            },
+                          )}
+                          style={{
+                            ["--t" as any]: score.win_coefficient,
+                          }}
+                        >
+                          {score.win_coefficient}
+                        </td>
+                      )}
                       <td
                         className={twclsx(
                           trStyle,
@@ -149,14 +164,16 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
                       </td>
                     </React.Fragment>
                   ))}
-                  {isYNT && <td
-                    className={twclsx(trStyle, "text-text-main text-md px-2 py-1 text-center md:text-lg", {
-                      "text-text-hover!":
-                        (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10,
-                    })}
-                  >
-                    {line.result_win_coefficient}
-                  </td>}
+                  {isYNT && (
+                    <td
+                      className={twclsx(trStyle, "text-text-main text-md px-2 py-1 text-center md:text-lg", {
+                        "text-text-hover!":
+                          (line.team_id === 52 || line.team_id === 53 || line.team_id === 46) && tournamentId === 10,
+                      })}
+                    >
+                      {line.result_win_coefficient}
+                    </td>
+                  )}
                   {Array(maxFightsFilled - line.scores.length)
                     .fill(null)
                     .map((_, index) => (
