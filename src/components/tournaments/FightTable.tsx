@@ -104,25 +104,25 @@ export async function FightTable({
             </td>
             {isYNT && (
               <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                {item.win_coefficient ? item.win_coefficient : "-"}
+                {item.win_coefficient !== undefined ? item.win_coefficient : "-"}
               </td>
             )}
             {!isYNT && (
               <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                {item.coefficient ? item.coefficient : "-"}
+                {item.coefficient !== undefined ? item.coefficient : "-"}
               </td>
             )}
 
             {isYNT && (
               <>
                 <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                  {item.nr ? item.nr : "-"}
+                  {item.nr !== undefined ? item.nr : "-"}
                 </td>
                 <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                  {item.np ? item.np : "-"}
+                  {item.np !== undefined ? item.np : "-"}
                 </td>
                 <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                  {item.nt ? item.nt : "-"}
+                  {item.nt !== undefined ? item.nt : "-"}
                 </td>
               </>
             )}
