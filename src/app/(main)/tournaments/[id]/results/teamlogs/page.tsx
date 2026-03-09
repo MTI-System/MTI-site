@@ -30,14 +30,22 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
   const id = (await params).id
   const store = makeTournamentsStoreServer()
   const { data, error } = await store.dispatch(tournamentsApiServer.endpoints.getTeamLogs.initiate({ id: Number(id) }))
-  if (!data) return <p className="text-accent-warning text-xl">Произошла ошибка</p>
+  const tournamentStore = makeTournamentsStoreServer()
+  const { data: tournamentData, error: tournamentError } = await tournamentStore.dispatch(
+    tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: Number(id) }),
+  )
+  if (!data || !tournamentData) return <p className="text-accent-warning text-xl">Произошла ошибка</p>
   const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentTable.initiate({ id: Number(id) }))
   const { data: table, error: tableError } = await promise
   console.log("tournament fetch", table, error)
 
   const maxFilledFightsIndex =
     table?.table_lines.map((x, i) => [x.scores.length, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1] ?? 0
-  const fights = table?.table_lines[maxFilledFightsIndex].scores.map((s) => ({name: s.fight_container_name, id: s.fight_container_id})) ?? []
+  const fights =
+    table?.table_lines[maxFilledFightsIndex].scores.map((s) => ({
+      name: s.fight_container_name,
+      id: s.fight_container_id,
+    })) ?? []
 
   // const data: TeamLogsInterface = {
   //   teams: [
@@ -1149,5 +1157,5 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
   //     },
   //   ],
   // }
-  return <TeamLogsList logs={data} fightsList={fights} />
+  return <TeamLogsList logs={data} fightsList={fights} isYNT={tournamentData.tournament_type === 2} />
 }
