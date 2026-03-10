@@ -214,6 +214,13 @@ export const fightActionSchema = z.object({
   ),
 })
 
+const yellowCardSchema = z.array(
+  z.object({
+    value: z.number(),
+    fight_name: z.string().nullable(),
+  }),
+)
+
 export const teamLogsSchema = z.object({
   teams: z.array(
     z.object({
@@ -229,6 +236,14 @@ export const teamLogsSchema = z.object({
           )
           .optional(),
       }),
+      yellow_cards: z
+        .object({
+          np: yellowCardSchema.optional(),
+          nt: yellowCardSchema.optional(),
+          nr: yellowCardSchema.optional(),
+          ny: yellowCardSchema.optional(),
+        })
+        .optional(),
       reported: z.array(ProblemSchema.nullable()),
       opposed: z.array(ProblemSchema.nullable()),
       rejected: z.array(ProblemSchema.nullable()),
