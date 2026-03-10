@@ -11,7 +11,11 @@ import {
   useSetPlayerToPerformanceMutation,
   useSetScoresMutation,
 } from "@/api/tournaments/clientApiInterface"
-import { useGetProblemsByIdQuery, useGetProblemsQuery } from "@/api/problems/clientApiInterface"
+import {
+  useGetProblemsByIdQuery,
+  useGetProblemsForTournamentQuery,
+  useGetProblemsQuery,
+} from "@/api/problems/clientApiInterface"
 import Loading from "@/app/loading"
 import { Accordion, Select } from "@base-ui-components/react"
 import FightsAdmin from "@/components/tournamentPage/adminPanel/FightsAdmin"
@@ -26,6 +30,7 @@ import UsersProviderWrapper from "@/api/users/ClientWrapper"
 import { ComponentProps, useEffect, useState } from "react"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { useParams, useRouter, useSearchParams } from "next/navigation"
 
 export default function ActionAdmin({
   actionId,
@@ -416,7 +421,10 @@ function ChevronUpDownIcon(props: React.ComponentProps<"svg">) {
 
 function Drafts({ defaultValue, actionId }: { defaultValue: CallActionInterface[]; actionId: number }) {
   const [drafts, setDraft] = useState<string[]>([...defaultValue.map((it) => it.problemId.toString())])
-  const { data } = useGetProblemsQuery({ tournament: "1", year: 2026 })
+  const params = useParams()
+  console.log("params", Number(params.id ?? 0 ))
+  const { data, error } = useGetProblemsForTournamentQuery({ tournamentId: Number(params.id ?? 10) })
+
   const problems =
     data?.map((problem) => {
       return {
