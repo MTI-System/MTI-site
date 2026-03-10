@@ -26,37 +26,55 @@ export function ActionTabs({
   fightData: FightInformationInterface
   tournamentId: number
 }) {
+  const isOpening = fightData.label === "Открытие"
   return (
-    <Tabs.Root defaultValue={`${fightData.actions[0]}_action`}>
-      <Tabs.List className="relative z-0 mt-10 flex justify-center gap-1 px-1">
-        {fightData.actions.map((id, index) => (
-          <Tabs.Tab
-            key={id}
-            value={`${id}_action`}
-            className="text-text-alt hover:text-text-main data-active:text-text-main flex h-8 items-center justify-center px-2 text-sm font-medium whitespace-nowrap transition-colors outline-none"
-          >
-            {`Действие ${index + 1}`}
-          </Tabs.Tab>
-        ))}
+    <>
+      {!isOpening && (
+        <Tabs.Root defaultValue={`${fightData.actions[0]}_action`}>
+          <Tabs.List className="relative z-0 mt-10 flex justify-center gap-1 px-1">
+            {fightData.actions.map((id, index) => (
+              <Tabs.Tab
+                key={id}
+                value={`${id}_action`}
+                className="text-text-alt hover:text-text-main data-active:text-text-main flex h-8 items-center justify-center px-2 text-sm font-medium whitespace-nowrap transition-colors outline-none"
+              >
+                {`Действие ${index + 1}`}
+              </Tabs.Tab>
+            ))}
 
-        <Tabs.Indicator className="bg-bg-main absolute top-1/2 left-0 z-[-1] h-6 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-sm transition-all duration-200" />
-      </Tabs.List>
+            <Tabs.Indicator className="bg-bg-main absolute top-1/2 left-0 z-[-1] h-6 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-sm transition-all duration-200" />
+          </Tabs.List>
 
-      {fightData.actions.map((id) => (
-        <Tabs.Panel key={id} value={`${id}_action`} className="mt-5">
-          <TournamentsProviderWrapper>
-            <ProblemsProviderWrapper>
-              <FightAction actionId={id} tournamentId={tournamentId} />
-            </ProblemsProviderWrapper>
-          </TournamentsProviderWrapper>
-        </Tabs.Panel>
-      ))}
-    </Tabs.Root>
+          {fightData.actions.map((id) => (
+            <Tabs.Panel key={id} value={`${id}_action`} className="mt-5">
+              <TournamentsProviderWrapper>
+                <ProblemsProviderWrapper>
+                  <FightAction actionId={id} tournamentId={tournamentId} label={fightData.label ?? ""} />
+                </ProblemsProviderWrapper>
+              </TournamentsProviderWrapper>
+            </Tabs.Panel>
+          ))}
+        </Tabs.Root>
+      )}
+      {isOpening && (
+        <div className="grid grid-cols-3 gap-3">
+          {fightData.actions.map((id) => (
+              <TournamentsProviderWrapper>
+                <ProblemsProviderWrapper>
+                  <FightAction actionId={id} tournamentId={tournamentId} label={fightData.label ?? ""} />
+                </ProblemsProviderWrapper>
+              </TournamentsProviderWrapper>
+          ))}
+        </div>
+      )}
+    </>
   )
 }
 
-function FightAction({ actionId, tournamentId }: { actionId: number; tournamentId: number }) {
+function FightAction({ actionId, tournamentId, label }: { actionId: number; tournamentId: number, label: string }) {
   const { data: actionData, isLoading: isActionData, error: actionErr } = useGetActionInformationQuery({ actionId })
+
+  const isOpening = label === "Открытие"
   console.log("ACTION DATA", actionData)
   const {
     data: problemData,
@@ -93,7 +111,7 @@ function FightAction({ actionId, tournamentId }: { actionId: number; tournamentI
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="w-full px-4 pt-4 text-center">
-        <div className="text-text-alt text-md mb-4 uppercase sm:text-xl">Задача</div>
+        {!isOpening && <div className="text-text-alt text-md mb-4 uppercase sm:text-xl">Задача</div>}
         {problemData?.id ? (
           <Link href={`/problems/${problemData?.id}`} className="text-text-main text-lg font-bold uppercase">
             {(problemData?.local_number ??
@@ -102,29 +120,35 @@ function FightAction({ actionId, tournamentId }: { actionId: number; tournamentI
               ". " +
               problemData?.problem_translations[0].problem_name}
           </Link>
-        ) : (
+        ) : !isOpening ? (
           <p className="text-text-main text-lg font-bold uppercase">-</p>
+        ) : (
+          <></>
         )}
       </div>
 
-      <div className="w-full text-center">
-        <h3 className="text-text-main py-4 text-lg font-bold uppercase">Процедура вызова</h3>
-        <DraftList actionId={actionId} tournamentId={tournamentId} />
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+      {!isOpening && (
+        <div className="w-full text-center">
+          <h3 className="text-text-main py-4 text-lg font-bold uppercase">Процедура вызова</h3>
+          <DraftList actionId={actionId} tournamentId={tournamentId} />
+        </div>
+      )}
+      <div className="flex gap-5">
         {actionData.playerLines.map((line) => (
           <>
             {line.role?.title && line.role.title !== "Наблюдатель" && (
-              <div key={line.role?.id} className="border-border flex w-full flex-1 flex-col rounded-2xl border">
+              <div key={line.role?.id} className="border-border flex size-full flex-1 flex-col rounded-2xl border">
                 <div className="text-text-main m-2 flex flex-none flex-col items-center justify-center gap-3 text-center">
-                  <div className="text-text-alt mt-2 uppercase">{line.role?.title ?? "—"}</div>
+                  {!isOpening && <div className="text-text-alt mt-2 uppercase">{line.role?.title ?? "—"}</div>}
+                  {isOpening && <div className="text-text-alt mt-2 uppercase">Интро</div>}
 
                   <div className="text-text-main font-medium">{line.team.name}</div>
 
-                  <UsersProviderWrapper>
-                    <UserCell userId={line.playerId} />
-                  </UsersProviderWrapper>
+                  {!isOpening &&
+                    <UsersProviderWrapper>
+                      <UserCell userId={line.playerId} />
+                    </UsersProviderWrapper>
+                  }
 
                   <div className="bg-muted/40 px-6 py-4">
                     <JuryScores scores={line.scores} />
