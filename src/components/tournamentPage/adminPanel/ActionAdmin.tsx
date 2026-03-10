@@ -452,9 +452,8 @@ function Drafts({ defaultValue, actionId }: { defaultValue: CallActionInterface[
         }}
       >
         {drafts.map((it, idx) => (
-          <>
-            <DraftItem name={idx.toString()} defaultValue={it} problems={problems} />
-          </>
+            <DraftItem key={idx} name={idx.toString()} defaultValue={it} problems={problems} />
+
         ))}
         <button
           className="mx-2 my-2 cursor-pointer bg-black/20"
