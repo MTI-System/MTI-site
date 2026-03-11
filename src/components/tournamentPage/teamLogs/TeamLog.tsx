@@ -37,12 +37,12 @@ export default function TeamLog({
                 <thead>
                   <tr>
                     <th className="border-border border-r p-2">
-                      NP
-                      {(log.yellow_cards?.np?.length ?? 0) > 0 && (
+                      NR{" "}
+                      {(log.yellow_cards?.nr?.length ?? 0) > 0 && (
                         <>
                           {" "}
                           (
-                          {log.yellow_cards?.np?.reduce(
+                          {log.yellow_cards?.nr?.reduce(
                             (accumulator, currentValue) => accumulator + currentValue.value,
                             0,
                           )}
@@ -51,12 +51,12 @@ export default function TeamLog({
                       )}
                     </th>
                     <th className="border-border border-r p-2">
-                      NR{" "}
-                      {(log.yellow_cards?.nr?.length ?? 0) > 0 && (
+                      NP
+                      {(log.yellow_cards?.np?.length ?? 0) > 0 && (
                         <>
                           {" "}
                           (
-                          {log.yellow_cards?.nr?.reduce(
+                          {log.yellow_cards?.np?.reduce(
                             (accumulator, currentValue) => accumulator + currentValue.value,
                             0,
                           )}
@@ -83,8 +83,8 @@ export default function TeamLog({
                 <tbody>
                   <tr>
                     <td className="border-border border-t border-r p-2">
-                      {(log.yellow_cards?.np?.length ?? 0) > 0 ? (
-                        log.yellow_cards?.np?.map((val) => (
+                      {(log.yellow_cards?.nr?.length ?? 0) > 0 ? (
+                        log.yellow_cards?.nr?.map((val) => (
                           <p className="text-center">{val.fight_name ?? "Бой не указан"}</p>
                         ))
                       ) : (
@@ -92,8 +92,8 @@ export default function TeamLog({
                       )}
                     </td>
                     <td className="border-border border-t border-r p-2">
-                      {(log.yellow_cards?.nr?.length ?? 0) > 0 ? (
-                        log.yellow_cards?.nr?.map((val) => (
+                      {(log.yellow_cards?.np?.length ?? 0) > 0 ? (
+                        log.yellow_cards?.np?.map((val) => (
                           <p className="text-center">{val.fight_name ?? "Бой не указан"}</p>
                         ))
                       ) : (
