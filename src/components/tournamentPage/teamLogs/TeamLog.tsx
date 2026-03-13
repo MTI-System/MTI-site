@@ -38,12 +38,12 @@ export default function TeamLog({
                 <thead>
                   <tr>
                     <th className="border-border border-r p-2">
-                      NP
-                      {(log.yellow_cards?.np?.length ?? 0) > 0 && (
+                      NR{" "}
+                      {(log.yellow_cards?.nr?.length ?? 0) > 0 && (
                         <>
                           {" "}
                           (
-                          {log.yellow_cards?.np?.reduce(
+                          {log.yellow_cards?.nr?.reduce(
                             (accumulator, currentValue) => accumulator + currentValue.value,
                             0,
                           )}
@@ -52,12 +52,12 @@ export default function TeamLog({
                       )}
                     </th>
                     <th className="border-border border-r p-2">
-                      NR{" "}
-                      {(log.yellow_cards?.nr?.length ?? 0) > 0 && (
+                      NP
+                      {(log.yellow_cards?.np?.length ?? 0) > 0 && (
                         <>
                           {" "}
                           (
-                          {log.yellow_cards?.nr?.reduce(
+                          {log.yellow_cards?.np?.reduce(
                             (accumulator, currentValue) => accumulator + currentValue.value,
                             0,
                           )}
@@ -83,6 +83,21 @@ export default function TeamLog({
                 </thead>
                 <tbody>
                   <tr>
+                      <td className="border-border border-t border-r p-2">
+                      {(log.yellow_cards?.nr?.length ?? 0) > 0 ? (
+                        log.yellow_cards?.nr?.map((val, idx) => (
+                          <React.Fragment key={`np ${idx}`}>
+                            {Array.from({ length: val.value }).map((_, i) => (
+                              <p key={`${idx} - ${i} - nr`} className="text-center">
+                                {val.fight_name ?? "Бой не указан"}
+                              </p>
+                            ))}
+                          </React.Fragment>
+                        ))
+                      ) : (
+                        <p className="text-center">-</p>
+                      )}
+                    </td>
                     <td className="border-border border-t border-r p-2">
                       {(log.yellow_cards?.np?.length ?? 0) > 0 ? (
                         log.yellow_cards?.np?.map((val, idx) => (
@@ -98,21 +113,7 @@ export default function TeamLog({
                         <p className="text-center">-</p>
                       )}
                     </td>
-                    <td className="border-border border-t border-r p-2">
-                      {(log.yellow_cards?.nr?.length ?? 0) > 0 ? (
-                        log.yellow_cards?.nr?.map((val, idx) => (
-                          <React.Fragment key={`np ${idx}`}>
-                            {Array.from({ length: val.value }).map((_, i) => (
-                              <p key={`${idx} - ${i} - nr`} className="text-center">
-                                {val.fight_name ?? "Бой не указан"}
-                              </p>
-                            ))}
-                          </React.Fragment>
-                        ))
-                      ) : (
-                        <p className="text-center">-</p>
-                      )}
-                    </td>
+
                     <td className="border-border border-t p-2">
                       {(log.yellow_cards?.nt?.length ?? 0) > 0 ? (
                         log.yellow_cards?.nt?.map((val, idx) => (
