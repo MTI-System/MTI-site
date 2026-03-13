@@ -34,7 +34,7 @@ export function DatePickerField({
       stringDate = pickedDate.getTime().toString()
     } else {
       if (type == "range") {
-        stringDate =  pickedDate?.from?.getTime().toString() + " " + pickedDate?.to?.getTime().toString()
+        stringDate = pickedDate?.from?.getTime().toString() + " " + pickedDate?.to?.getTime().toString()
       }
     }
     const result = onVerification(stringDate)

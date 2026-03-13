@@ -21,7 +21,7 @@ export default function AboutTournamentPage() {
 
   return (
     <ProblemsProviderWrapper>
-      <div className="w-full px-4 flex flex-col gap-4">
+      <div className="flex w-full flex-col gap-4 px-4">
         {!materials && <Loading />}
         {materials &&
           materials.map((material) => {
@@ -31,7 +31,7 @@ export default function AboutTournamentPage() {
               case "Picture":
                 return (
                   <div key={material.id}>
-                    <h4 className="text-2xl font-bold py-2">{material.title}</h4>
+                    <h4 className="py-2 text-2xl font-bold">{material.title}</h4>
                     <ExpandableImage
                       embedding={material}
                       src={

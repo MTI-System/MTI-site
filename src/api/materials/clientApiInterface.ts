@@ -25,4 +25,9 @@ export const materialsApiClient = createApiClient({
   endpoints: defineMaterialsEndpoints,
 })
 
-export const { useGetMaterialListQuery, useGetAvailableContentTypesQuery, useAddMaterialMutation, useDeleteMaterialMutation } = materialsApiClient
+export const {
+  useGetMaterialListQuery,
+  useGetAvailableContentTypesQuery,
+  useAddMaterialMutation,
+  useDeleteMaterialMutation,
+} = materialsApiClient

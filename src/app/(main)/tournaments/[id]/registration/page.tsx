@@ -4,21 +4,16 @@ import TournamentRegistrationForm from "@/components/tournamentPage/Forms/Regist
 import { authApiServer } from "@/api/auth/serverApiInterface"
 import { cookies } from "next/headers"
 import { makeAuthStoreServer } from "@/api/auth/serverStore"
-import type {Metadata} from "next";
-import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore";
-import {tournamentsApiServer} from "@/api/tournaments/serverApiInterface";
-import {FaCircleCheck} from "react-icons/fa6";
-import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper";
+import type { Metadata } from "next"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
+import TournamentsProviderWrapper from "@/api/tournaments/ClientWrapper"
 
-export async function generateMetadata({
-                                         params,
-                                       }: {
-  params: Promise<{ id: number }>
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: number }> }): Promise<Metadata> {
   const searchP = await params
 
   const store = makeTournamentsStoreServer()
-  const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentCard.initiate({id: searchP.id}))
+  const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: searchP.id }))
   const { data: tournamentCard } = await promise
   const titleText = tournamentCard ? `Заявка · ${tournamentCard.title} – МТИ` : `Турнир – МТИ`
 
@@ -33,16 +28,21 @@ export async function generateMetadata({
   }
 }
 
-
-
-export default async function RegisterTournamentsPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function RegisterTournamentsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ jury: boolean }>
+}) {
   const id = (await params).id
+  const isJury = (await searchParams).jury ?? false
 
   const store = makeRegistrationStoreServer()
   const promise = store.dispatch(
     registrationApiServer.endpoints.getRegistrationForm.initiate({
       id: Number(id),
-      type: "registration",
+      type: isJury ? "jury" : "registration",
     }),
   )
   const { data: formInfo, error, isError } = await promise
@@ -55,7 +55,7 @@ export default async function RegisterTournamentsPage({ params }: { params: Prom
     const authPromise = authStore.dispatch(authApiServer.endpoints.fetchPermissions.initiate({ token: token }))
     const { data: user, error: userError } = await authPromise
     if (user?.rights.find((r) => r.right_flag === `MODERATE_TOURNAMENT_${id}`) !== undefined) isAdmin = true
-    
+
     // if (user) {
     //   const registrationPromise = store.dispatch(registrationApiServer.endpoints.isFormFilled.initiate({ tournamentId: Number(id), formFlag: "registration", userId: user.user_id }))
     //   const { data: isFormFilledData, error: isFormFilledError, isError: isFormFilledIsError } = await registrationPromise
@@ -67,10 +67,16 @@ export default async function RegisterTournamentsPage({ params }: { params: Prom
     <>
       {isError && <h2>{JSON.stringify(error)}</h2>}
       <TournamentsProviderWrapper>
-        {formInfo && <TournamentRegistrationForm  tournamentId={Number(id)} formInfo={formInfo} className={""} isEdit={!isFormFilled} />}
+        {formInfo && (
+          <TournamentRegistrationForm
+            tournamentId={Number(id)}
+            formInfo={formInfo}
+            className={""}
+            isEdit={!isFormFilled}
+          />
+        )}
         {/*{isAdmin && <h2>Вы администратор турнира</h2>}*/}
       </TournamentsProviderWrapper>
-
     </>
   )
 }

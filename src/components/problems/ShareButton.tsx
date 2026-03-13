@@ -1,5 +1,5 @@
 "use client"
-import {ComponentProps, useEffect, useRef, useState} from "react"
+import { ComponentProps, useEffect, useRef, useState } from "react"
 import { FaTimes } from "react-icons/fa"
 import { FaRegCopy } from "react-icons/fa6"
 import { Checkbox, CheckboxGroup, Form, Tooltip, Popover } from "@base-ui-components/react"
@@ -85,7 +85,7 @@ export default function ShareButton() {
   return (
     <div className="relative z-10">
       <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-        <Popover.Trigger className="group text-text-main relative w-auto min-w-[4px] overflow-hidden rounded-xl border-3 border-green-400 dark:border-green-600 bg-green-400/10 px-2 py-2 transition-all duration-300 ease-in-out hover:min-w-30 hover:bg-green-400 dark:hover:bg-green-600">
+        <Popover.Trigger className="group text-text-main relative w-auto min-w-[4px] overflow-hidden rounded-xl border-3 border-green-400 bg-green-400/10 px-2 py-2 transition-all duration-300 ease-in-out hover:min-w-30 hover:bg-green-400 dark:border-green-600 dark:hover:bg-green-600">
           <div className="flex items-center justify-center gap-2">
             {/* Иконка - всегда видима */}
             <span className="opacity-100 transition-all duration-300 group-hover:opacity-0">
@@ -106,8 +106,8 @@ export default function ShareButton() {
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Positioner sideOffset={8} align="end">
-            <Popover.Popup className="origin-(--transform-origin) bg-bg-alt border-border h-fit w-120 rounded-2xl border py-3 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0">
-              <div className="relative px-2 text-text-main">
+            <Popover.Popup className="bg-bg-alt border-border h-fit w-120 origin-(--transform-origin) rounded-2xl border py-3 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0">
+              <div className="text-text-main relative px-2">
                 <FaTimes className="absolute right-0 me-2 cursor-pointer" onClick={() => setIsPopoverOpen(false)} />
                 <h3 className="text-xl">Поделиться ссылкой на страницу!</h3>
                 <div className="my-2 flex w-full items-center justify-between rounded-lg border px-2">
@@ -142,8 +142,8 @@ export default function ShareButton() {
                 </div>
                 <p className="pb-2">
                   Вы можете поделиться страницей с уже отфильтрованными значениями. В данном окне вы можете выбрать
-                  фильтры, которые будут учтены в ссылке. В поисковой строке вашего браузера вы можете скопировать ссылку{" "}
-                  <strong>со всеми параметрами</strong>
+                  фильтры, которые будут учтены в ссылке. В поисковой строке вашего браузера вы можете скопировать
+                  ссылку <strong>со всеми параметрами</strong>
                 </p>
                 <SearchParamCheckBoxes searchParams={editableSearchParams} onChecked={checkBoxHandler} />
               </div>

@@ -17,7 +17,18 @@ interface CheckboxFieldProps extends Omit<Checkbox.Root.Props, "inputRef" | "nam
   disabled?: boolean
 }
 
-export function CheckboxField({ onVerification ,name, title, value, className, disabled=false, is_grouped=false, defaultChecked=false, onChange=(value, is_chacked)=>{}, ...rest }: CheckboxFieldProps) {
+export function CheckboxField({
+  onVerification,
+  name,
+  title,
+  value,
+  className,
+  disabled = false,
+  is_grouped = false,
+  defaultChecked = false,
+  onChange = (value, is_chacked) => {},
+  ...rest
+}: CheckboxFieldProps) {
   const { register, setFormField } = useCardsRoot()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -25,7 +36,7 @@ export function CheckboxField({ onVerification ,name, title, value, className, d
 
   useEffect(() => {
     register(() => {
-      if (!is_grouped){
+      if (!is_grouped) {
         const result = onVerification(inputRef.current?.value || "")
         setVerificationResult(result)
         if (result.isSuccess) {
@@ -35,7 +46,7 @@ export function CheckboxField({ onVerification ,name, title, value, className, d
       }
 
       return {
-        isSuccess: true
+        isSuccess: true,
       }
     })
   }, [])
@@ -51,7 +62,7 @@ export function CheckboxField({ onVerification ,name, title, value, className, d
           disabled={disabled}
           inputRef={inputRef}
           defaultChecked={defaultChecked}
-          onCheckedChange={(e)=>{
+          onCheckedChange={(e) => {
             onChange(name, e)
           }}
           value={value}
@@ -66,7 +77,7 @@ export function CheckboxField({ onVerification ,name, title, value, className, d
             <CheckIcon className="size-3" />
           </Checkbox.Indicator>
         </Checkbox.Root>
-        <p className="ps-2 text-text-main">{title}</p>
+        <p className="text-text-main ps-2">{title}</p>
       </ErrorTooltip>
     </>
   )

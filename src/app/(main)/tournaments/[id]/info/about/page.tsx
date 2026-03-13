@@ -1,20 +1,16 @@
 import MaterialsProviderWrapper from "@/api/materials/ClientWrapper"
 import AboutPage from "@/app/(main)/about/page"
 import AboutTournamentPage from "@/components/tournaments/AboutPage"
-import type {Metadata} from "next";
-import {TOURNAMENT_TYPE_SEARCH_PARAM_NAME} from "@/constants/CookieKeys";
-import {makeTournamentsStoreServer} from "@/api/tournaments/serverStore";
-import {tournamentsApiServer} from "@/api/tournaments/serverApiInterface";
+import type { Metadata } from "next"
+import { TOURNAMENT_TYPE_SEARCH_PARAM_NAME } from "@/constants/CookieKeys"
+import { makeTournamentsStoreServer } from "@/api/tournaments/serverStore"
+import { tournamentsApiServer } from "@/api/tournaments/serverApiInterface"
 
-export async function generateMetadata({
-                                         params,
-                                       }: {
-  params: Promise<{ id: number }>
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: number }> }): Promise<Metadata> {
   const searchP = await params
 
   const store = makeTournamentsStoreServer()
-  const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentCard.initiate({id: searchP.id}))
+  const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: searchP.id }))
   const { data: tournamentCard } = await promise
   const titleText = tournamentCard ? `Информация о турнире · ${tournamentCard.title} – МТИ` : `Турнир – МТИ`
 

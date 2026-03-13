@@ -19,16 +19,16 @@ export default function ApplicationsList({
   return (
     <>
       {/*{JSON.stringify(answers)}*/}
-      <Accordion.Root className="flex w-full max-w-[calc(100vw-8rem)] flex-col justify-center gap-2 text-gray-900">
+      <Accordion.Root className="text-text-main flex w-full max-w-[calc(100vw-8rem)] flex-col justify-center gap-2">
         {answers.map((answer, idx) => (
-          <Accordion.Item key={idx} className="border-b border-gray-200">
+          <Accordion.Item key={idx} className="border-border border-b">
             <Accordion.Header>
-              <Accordion.Trigger className="group relative flex w-full items-baseline justify-between gap-4 bg-gray-50 py-2 pr-1 pl-3 text-left font-medium hover:bg-gray-100 focus-visible:z-1 focus-visible:outline focus-visible:outline-blue-800">
+              <Accordion.Trigger className="group bg-bg-alt hover:bg-hover focus-visible:outline-accent-primary relative flex w-full items-baseline justify-between gap-4 py-2 pr-1 pl-3 text-left font-medium focus-visible:z-1 focus-visible:outline">
                 Заявка {idx + 1}
                 <PlusIcon className="mr-2 size-3 shrink-0 transition-all ease-out group-data-panel-open:scale-110 group-data-panel-open:rotate-45" />
               </Accordion.Trigger>
             </Accordion.Header>
-            <Accordion.Panel className="h-(--accordion-panel-height) overflow-hidden text-base text-gray-600 transition-[height] ease-out data-ending-style:h-0 data-starting-style:h-0">
+            <Accordion.Panel className="text-text-alt h-(--accordion-panel-height) overflow-hidden text-base transition-[height] ease-out data-ending-style:h-0 data-starting-style:h-0">
               <TournamentsProviderWrapper>
                 <>
                   <RegistrationFormView formInfo={answer} isEdit={false} tournamentId={tournamentId} />

@@ -25,12 +25,11 @@ import PickProblemsForTournament from "@/components/organizator/PickProblemsForT
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import FilesProviderWrapper from "@/api/files/ClientWrapper"
 import { useAddTournamentMutation } from "@/api/tournaments/clientApiInterface"
-import {Popover, Toast} from "@base-ui-components/react"
-import ColoredTType from "@/components/ui/ColoredTType";
-import {TournamentTypeIntarface} from "@/types/TournamentTypeIntarface";
+import { Popover, Toast } from "@base-ui-components/react"
+import ColoredTType from "@/components/ui/ColoredTType"
+import { TournamentTypeIntarface } from "@/types/TournamentTypeIntarface"
 
-
-export default function CreateTournamentForm({tt}: {tt: TournamentTypeIntarface}) {
+export default function CreateTournamentForm({ tt }: { tt: TournamentTypeIntarface }) {
   const toastManager = Toast.useToastManager()
 
   const materialsState = useState<MaterialsStateBaseType>([])
@@ -111,11 +110,10 @@ export default function CreateTournamentForm({tt}: {tt: TournamentTypeIntarface}
       {isLoading && <h1>Типо загрузка (потом красиво оформим)</h1>}
       <FilesProviderWrapper>
         <TournamentCard isExtended={true} isCreate={true} onUpdateCreate={updateTournamentHandler} errors={errors} />
-
       </FilesProviderWrapper>
-      <div className="flex gap-2 bg-bg-alt rounded-3xl px-5 py-5 text-xl">
+      <div className="bg-bg-alt flex gap-2 rounded-3xl px-5 py-5 text-xl">
         <p>Создание турнира типа </p>
-        <ColoredTType ttName={tt.name} ttColor={tt.color}/>
+        <ColoredTType ttName={tt.name} ttColor={tt.color} />
         <p>({tt.longName})</p>
         <Popover.Root>
           <Popover.Trigger className="flex size-7 items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-gray-900 select-none hover:bg-gray-100 focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 active:bg-gray-100 data-popup-open:bg-gray-100">
@@ -124,11 +122,9 @@ export default function CreateTournamentForm({tt}: {tt: TournamentTypeIntarface}
           <Popover.Portal>
             <Popover.Positioner sideOffset={8} align={"end"}>
               <Popover.Popup className="origin-(--transform-origin) rounded-lg bg-[canvas] px-6 py-4 text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
-                <Popover.Title className="text-base font-medium">
-                  Тип турнира зафиксирован
-                </Popover.Title>
-                Для изменения типа турира необходимо выбрать его наверху страницы и перезайти на эту страницу создания турнира.
-
+                <Popover.Title className="text-base font-medium">Тип турнира зафиксирован</Popover.Title>
+                Для изменения типа турира необходимо выбрать его наверху страницы и перезайти на эту страницу создания
+                турнира.
               </Popover.Popup>
             </Popover.Positioner>
           </Popover.Portal>
@@ -218,11 +214,11 @@ export default function CreateTournamentForm({tt}: {tt: TournamentTypeIntarface}
 }
 
 function SubmitButton({
-                        newTournamentCardResponse,
-                        materials,
-                        createTournament,
-                        setErrors,
-                      }: {
+  newTournamentCardResponse,
+  materials,
+  createTournament,
+  setErrors,
+}: {
   newTournamentCardResponse: TournamentCreationRequest
   materials: MaterialsStateBaseType
   createTournament: ({ tournamentObject }: { tournamentObject: TournamentCreationRequest }) => void
@@ -300,12 +296,12 @@ function ToastList() {
 }
 
 function LoadingFileEmbedding({
-                                file,
-                                token,
-                                displayTitle,
-                                onUploadComplete,
-                                onUploadCancel,
-                              }: {
+  file,
+  token,
+  displayTitle,
+  onUploadComplete,
+  onUploadCancel,
+}: {
   file: File
   token: string
   displayTitle: string

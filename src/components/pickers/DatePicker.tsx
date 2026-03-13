@@ -77,7 +77,7 @@ export default function DatePicker({
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner className="relative z-2" sideOffset={8} align={"start"}>
-          <Popover.Popup className="origin-(--transform-origin) rounded-lg bg-[canvas] px-6 py-4 text-gray-900 shadow-lg shadow-gray-200 outline-1 outline-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none dark:-outline-offset-1 dark:outline-gray-300">
+          <Popover.Popup className="text-text-main border-border origin-(--transform-origin) rounded-lg border bg-[canvas] px-6 py-4 shadow-lg shadow-gray-200 transition-[transform,scale,opacity] data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0 dark:shadow-none">
             <DayPicker
               mode={type}
               onSelect={setSelected as any}

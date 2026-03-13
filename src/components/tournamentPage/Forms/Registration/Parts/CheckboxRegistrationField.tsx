@@ -20,13 +20,12 @@ export default function CheckboxRegistrationField({
             value={fieldObject.key}
             onVerification={(value: string) => {
               if (fieldObject?.metadata?.optional != "true") {
-                if(!value) {
+                if (!value) {
                   return {
                     isSuccess: false,
-                    errorMessage: "Поле не может быть пустым"
+                    errorMessage: "Поле не может быть пустым",
                   }
-                }
-                else {
+                } else {
                   return {
                     isSuccess: true,
                   }
@@ -35,7 +34,6 @@ export default function CheckboxRegistrationField({
               return {
                 isSuccess: true,
               }
-
             }}
             name={fieldObject.key}
           />
@@ -48,7 +46,7 @@ export default function CheckboxRegistrationField({
             <div className="border-border bg-bg-main-accent h-15 w-full rounded-md border px-2">
               {/* <p className="text-text-alt h-4 px-2 pt-1 text-[13px]">{fieldObject.title}</p>
               <p className="text-text-main px-2 pt-2 font-bold">{fieldContent}</p> */}
-            {/* TODO: Make default items for checkbox */}
+              {/* TODO: Make default items for checkbox */}
             </div>
           </>
         )}

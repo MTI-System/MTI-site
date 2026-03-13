@@ -1,8 +1,8 @@
 import { EndpointBuilder, fetchBaseQuery } from "@reduxjs/toolkit/query"
 import { AUTH_API } from "@/constants/APIEndpoints"
-import {PersonalDataRequest, PersonalDataSchema, Token, TokenSchema, User, UserSchema} from "@/types/authApi"
+import { PersonalDataRequest, PersonalDataSchema, Token, TokenSchema, User, UserSchema } from "@/types/authApi"
 import { BooleanResponseSchema } from "@/types/generalAPITypes"
-import {z} from "zod";
+import { z } from "zod"
 
 export const authReducerPath = "notificationsApi" as const
 
@@ -34,26 +34,26 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
     },
   }),
   isLoginTaken: builder.mutation({
-    query: ({login}: {login: string}) => ({
+    query: ({ login }: { login: string }) => ({
       url: `is_login_taken?login=${login}`,
-      method: "GET"
+      method: "GET",
     }),
-    transformResponse: (response: string): boolean=> {
+    transformResponse: (response: string): boolean => {
       if (!response) return false
       const is_login_taken = BooleanResponseSchema.safeParse(response)
-      return is_login_taken.data?.result ?? false 
-    }
+      return is_login_taken.data?.result ?? false
+    },
   }),
   isEmailTaken: builder.mutation({
-    query: ({email}: {email: string}) => ({
+    query: ({ email }: { email: string }) => ({
       url: `is_email_taken?email=${email}`,
-      method: "GET"
+      method: "GET",
     }),
-    transformResponse: (response: string): boolean=> {
+    transformResponse: (response: string): boolean => {
       if (!response) return false
       const is_email_taken = BooleanResponseSchema.safeParse(response)
-      return is_email_taken.data?.result ?? false 
-    }
+      return is_email_taken.data?.result ?? false
+    },
   }),
   fetchPermissions: builder.mutation({
     query: ({ token }: { token: string }) => {
@@ -73,30 +73,29 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
       }
       return user.data
     },
-
   }),
   personalDataRequests: builder.query({
-    query: ({token, neededPd}: {token: string, neededPd: number[]}) => {
+    query: ({ token, neededPd }: { token: string; neededPd: number[] }) => {
       const form = new FormData()
       form.set("token", token)
       form.set("requestsIds", neededPd?.toString() ?? "")
       return {
         url: "get_all_actual_personal_data_requests",
         method: "POST",
-        body: form
+        body: form,
       }
     },
-    transformResponse: (response: unknown): PersonalDataRequest[] | null =>{
+    transformResponse: (response: unknown): PersonalDataRequest[] | null => {
       const pd = z.array(PersonalDataSchema).safeParse(response)
       console.log(response)
-      if (!pd){
+      if (!pd) {
         return null
       }
       return pd.data ?? null
-    }
+    },
   }),
   personalDAtaRequestGrand: builder.mutation({
-    query: ({pdIds, token}: {pdIds: number[], token: string}) => {
+    query: ({ pdIds, token }: { pdIds: number[]; token: string }) => {
       const form = new FormData()
       form.set("token", token)
       form.set("pdIds", pdIds.toString())
@@ -104,7 +103,7 @@ export const defineAuthEndpoints = (builder: EndpointBuilder<typeof authBaseQuer
       return {
         url: "grant_personal_data_permissions",
         method: "POST",
-        body: form
+        body: form,
       }
     },
   }),
