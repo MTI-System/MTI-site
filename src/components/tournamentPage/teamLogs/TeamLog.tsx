@@ -38,12 +38,12 @@ export default function TeamLog({
                 <thead>
                   <tr>
                     <th className="border-border border-r p-2">
-                      NP
-                      {(log.yellow_cards?.np?.length ?? 0) > 0 && (
+                      NR{" "}
+                      {(log.yellow_cards?.nr?.length ?? 0) > 0 && (
                         <>
                           {" "}
                           (
-                          {log.yellow_cards?.np?.reduce(
+                          {log.yellow_cards?.nr?.reduce(
                             (accumulator, currentValue) => accumulator + currentValue.value,
                             0,
                           )}
@@ -52,12 +52,12 @@ export default function TeamLog({
                       )}
                     </th>
                     <th className="border-border border-r p-2">
-                      NR{" "}
-                      {(log.yellow_cards?.nr?.length ?? 0) > 0 && (
+                      NP
+                      {(log.yellow_cards?.np?.length ?? 0) > 0 && (
                         <>
                           {" "}
                           (
-                          {log.yellow_cards?.nr?.reduce(
+                          {log.yellow_cards?.np?.reduce(
                             (accumulator, currentValue) => accumulator + currentValue.value,
                             0,
                           )}

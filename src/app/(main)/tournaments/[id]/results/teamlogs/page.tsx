@@ -51,7 +51,7 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
       id: s.fight_container_id,
     })) ?? []
 
-  return <>
-    <TeamLogsList logs={data} fightsList={fights} isYNT={tournamentData.tournament_type === 2} />
-  </>
+
+  return <TeamLogsList logs={data} fightsList={fights} isYNT={tournamentData.tournament_type === 2} />
+
 }
