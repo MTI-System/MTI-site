@@ -34,7 +34,11 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
   const { data: tournamentData, error: tournamentError } = await tournamentStore.dispatch(
     tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: Number(id) }),
   )
-  if (!data || !tournamentData) return <p className="text-accent-warning text-xl">Произошла ошибка</p>
+  if (!data || !tournamentData) return (
+    <>
+      <p className="text-accent-warning text-xl">Произошла ошибка {JSON.stringify(error)}</p>
+    </>
+  )
   const promise = store.dispatch(tournamentsApiServer.endpoints.getTournamentTable.initiate({ id: Number(id) }))
   const { data: table, error: tableError } = await promise
   console.log("tournament fetch", table, error)
@@ -47,5 +51,7 @@ export default async function teamLogsPage({ params }: { params: Promise<{ id: s
       id: s.fight_container_id,
     })) ?? []
 
+
   return <TeamLogsList logs={data} fightsList={fights} isYNT={tournamentData.tournament_type === 2} />
+
 }
