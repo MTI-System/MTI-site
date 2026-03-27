@@ -7,6 +7,7 @@ import Link from "next/link"
 export async function FightTable({
   teams,
   tournamentId,
+  fightName,
 }: {
   teams: {
     name: string
@@ -24,7 +25,10 @@ export async function FightTable({
     win_coefficient?: number
   }[]
   tournamentId: number
+  fightName: String
 }) {
+  const isOpening = fightName === "Открытие"
+
   const store = makeProblemsStoreServer()
   const problems = await Promise.all(
     teams.map(async (item) => {
@@ -47,122 +51,169 @@ export async function FightTable({
   const isYNT = tournament?.tournament_type === 2
 
   return (
-    <table className="border-border w-full">
-      <thead>
-        <tr className="border-b-border border-b">
-          <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-            Название команды
-          </th>
-          <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-            Балл за бой
-          </th>
-          {isYNT && (
-            <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-              V
-            </th>
-          )}
-          {!isYNT && (
-            <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-              к
-            </th>
-          )}
-          {isYNT && (
-            <>
+    <>
+      {!isOpening && (
+        <table className="border-border w-full">
+          <thead>
+            <tr className="border-b-border border-b">
               <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-                NR
+                Название команды
               </th>
               <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-                NP
+                Балл за бой
               </th>
-              <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-                NT
-              </th>
-            </>
-          )}
-          <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-            Сыгранная задача
-          </th>
-          <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-            Д
-          </th>
-          <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-            О
-          </th>
-          <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
-            Р
-          </th>
-        </tr>
-      </thead>
-      <tbody className="divide-border divide-y">
-        {teams.map((item, index) => (
-          <tr key={item.id} className="text-text-main transition-colors">
-            <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-              {item.name ? item.name : "-"}
-            </td>
-            <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-              {item.score ? item.score : "-"}
-            </td>
-            {isYNT && (
-              <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                {item.win_coefficient !== undefined ? item.win_coefficient : "-"}
-              </td>
-            )}
-            {!isYNT && (
-              <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                {item.coefficient !== undefined ? item.coefficient : "-"}
-              </td>
-            )}
-
-            {isYNT && (
-              <>
-                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                  {item.nr !== undefined ? item.nr : "-"}
-                </td>
-                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                  {item.np !== undefined ? item.np : "-"}
-                </td>
-                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-                  {item.nt !== undefined ? item.nt : "-"}
-                </td>
-              </>
-            )}
-
-            <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-              {problems[index] ? (
-                <Link
-                  className="hover:bg-hover block h-full w-full cursor-pointer px-4 py-3 transition-colors"
-                  href={`/${problems[index] ? "problems/" + problems[index].id : "problems/"}`}
-                >
-                  {problems[index]?.local_number ??
-                    problemsTournamentData?.find((p) => p.id === problems[index]?.id)?.local_number ??
-                    `(${problems[index]?.global_number})`}
-                </Link>
-              ) : (
-                "-"
+              {isYNT && (
+                <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                  V
+                </th>
               )}
-            </td>
+              {!isYNT && (
+                <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                  к
+                </th>
+              )}
+              {isYNT && (
+                <>
+                  <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                    NR
+                  </th>
+                  <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                    NP
+                  </th>
+                  <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                    NT
+                  </th>
+                </>
+              )}
+              <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                Сыгранная задача
+              </th>
+              <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                Д
+              </th>
+              <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                О
+              </th>
+              <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                Р
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-border divide-y">
+            {teams.map((item, index) => (
+              <tr key={item.id} className="text-text-main transition-colors">
+                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                  {item.name ? item.name : "-"}
+                </td>
+                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                  {item.score ? item.score : "-"}
+                </td>
+                {isYNT && (
+                  <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                    {item.win_coefficient !== undefined ? item.win_coefficient : "-"}
+                  </td>
+                )}
+                {!isYNT && (
+                  <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                    {item.coefficient !== undefined ? item.coefficient : "-"}
+                  </td>
+                )}
 
-            <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-              {item.reporterScore ? item.reporterScore : "-"}
-            </td>
-            <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-              {item.opponentScore ? item.opponentScore : "-"}
-            </td>
-            <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
-              {item.reviewerScore ? item.reviewerScore : "-"}
-            </td>
+                {isYNT && (
+                  <>
+                    <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                      {item.nr !== undefined ? item.nr : "-"}
+                    </td>
+                    <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                      {item.np !== undefined ? item.np : "-"}
+                    </td>
+                    <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                      {item.nt !== undefined ? item.nt : "-"}
+                    </td>
+                  </>
+                )}
 
-            {/*TODO: Make this work: */
-            /* <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.name ? item.name : "-"}</Link></td>
-            <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.score ? item.score : "-"}</Link></td>
-            <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.coefficient? item.coefficient : "-"}</Link></td>
-            <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reported_problem ? item.reported_problem : "-"}</Link></td>
-            <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reporterScore ? item.reporterScore : "-"}</Link></td>
-            <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.opponentScore ? item.opponentScore : "-"}</Link></td>
-            <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reviewerScore ? item.reviewerScore : "-"}</Link></td> */}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                  {problems[index] ? (
+                    <Link
+                      className="hover:bg-hover block h-full w-full cursor-pointer px-4 py-3 transition-colors"
+                      href={`/${problems[index] ? "problems/" + problems[index].id : "problems/"}`}
+                    >
+                      {problems[index]?.local_number ??
+                        problemsTournamentData?.find((p) => p.id === problems[index]?.id)?.local_number ??
+                        `(${problems[index]?.global_number})`}
+                    </Link>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+
+                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                  {item.reporterScore ? item.reporterScore : "-"}
+                </td>
+                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                  {item.opponentScore ? item.opponentScore : "-"}
+                </td>
+                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                  {item.reviewerScore ? item.reviewerScore : "-"}
+                </td>
+
+                {/*TODO: Make this work: */
+                /* <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.name ? item.name : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.score ? item.score : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.coefficient? item.coefficient : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reported_problem ? item.reported_problem : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reporterScore ? item.reporterScore : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.opponentScore ? item.opponentScore : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reviewerScore ? item.reviewerScore : "-"}</Link></td> */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {isOpening && (
+        <table className="border-border w-full">
+          <thead>
+            <tr className="border-b-border border-b">
+              <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                Название команды
+              </th>
+              <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                Штраф, %
+              </th>
+              <th className="text-md text-text-main px-4 py-3 text-center font-medium tracking-wider text-wrap uppercase sm:text-xs md:text-lg">
+                Результат
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-border divide-y">
+            {teams.map((item, index) => (
+              <tr key={item.id} className="text-text-main transition-colors">
+                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                  {item.name ? item.name : "-"}
+                </td>
+                <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                  {item.coefficient ? item.coefficient * 10 : "0"}
+                </td>
+                {isYNT && (
+                  <td className="text-md px-4 py-3 text-center font-medium sm:text-sm lg:text-lg">
+                    {item.win_coefficient !== undefined ? item.score : "-"}
+                  </td>
+                )}
+
+                {/*TODO: Make this work: */
+                /* <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.name ? item.name : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.score ? item.score : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm sm:text-xs font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.coefficient? item.coefficient : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reported_problem ? item.reported_problem : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reporterScore ? item.reporterScore : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.opponentScore ? item.opponentScore : "-"}</Link></td>
+                <td className="px-4 py-3 text-center text-sm font-medium"><Link href={`/tournaments/${tournamentId}/fight/${item.id}`}>{item.reviewerScore ? item.reviewerScore : "-"}</Link></td> */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
   )
 }

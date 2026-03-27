@@ -31,7 +31,7 @@ export default function SearchParamsUpdator({
   }, [isPending])
 
   useEffect(() => {
-    console.log("newsp", searchParams)
+    console.log("newsp", searchParams, "tt:", tt)
     if (searchParams.tt) {
       dispatch(setTT(Number(searchParams.tt)))
     } else if (!tt) {
@@ -58,14 +58,18 @@ export default function SearchParamsUpdator({
   }, [searchParams])
 
   useEffect(() => {
-    console.log("UPDATE SEARCH LINE", sectionFilter)
     if (!isMounted) return
+    let localTournament = tournament
+    if ((searchParams.tt && Number(searchParams.tt) !== tt) || (searchParams.year && Number(searchParams.year) !== year)) {
+      dispatch(setTournamentFilter(null))
+      localTournament = null
+    }
     const params = new URLSearchParams()
     params.set("tt", tt?.toString() ?? "1")
     params.set("year", (year ?? 2025).toString())
     if (sectionFilter) params.set("sections", sectionFilter?.join(",") ?? "")
 
-    if (tournament) params.set("tournament", tournament.toString())
+    if (localTournament) params.set("tournament", localTournament.toString())
     // why this code was here in the first placew idk
     // if (sectionFilter && year === Number(searchParams.year)) {
     //   params.set("sections", sectionFilter?.join(",") ?? "")

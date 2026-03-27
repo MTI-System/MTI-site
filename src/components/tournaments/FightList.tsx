@@ -89,7 +89,7 @@ export function FightCard({
           {cardData?.teams && (
             <div className="border-border mb-4 border-b pb-4 md:mb-5">
               <div className="overflow-x-auto">
-                <FightTable teams={cardData?.teams} tournamentId={tournamentId} />
+                <FightTable teams={cardData?.teams} tournamentId={tournamentId} fightName={cardData.label ?? ""}/>
               </div>
             </div>
           )}
