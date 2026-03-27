@@ -17,16 +17,16 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
   return (
     <>
       <body className="h-screen" data-theme={theme}>
-        <Snowfall
-          // Changes the snowflake color
-          color="#fffafa"
-          // Applied to the canvas element
-          style={{ position: "fixed", zIndex: 10 }}
-          // Controls the number of snowflakes that are created (default 150)
-          snowflakeCount={100}
-          speed={[0.5, 1]}
-          wind={[0.5, 5]}
-        />
+        {/*<Snowfall*/}
+        {/*  // Changes the snowflake color*/}
+        {/*  color="#fffafa"*/}
+        {/*  // Applied to the canvas element*/}
+        {/*  style={{ position: "fixed", zIndex: 10 }}*/}
+        {/*  // Controls the number of snowflakes that are created (default 150)*/}
+        {/*  snowflakeCount={100}*/}
+        {/*  speed={[0.5, 1]}*/}
+        {/*  wind={[0.5, 5]}*/}
+        {/*/>*/}
 
         <AuthProviderWrapper>
           <InitRedux />
