@@ -21,7 +21,7 @@ export default function AboutTournamentPage() {
 
   return (
     <ProblemsProviderWrapper>
-      <div className="flex w-full flex-col gap-4 px-4">
+      <div className="flex w-full flex-col gap-4 px-4 py-4">
         {!materials && <Loading />}
         {materials &&
           materials.map((material) => {
