@@ -110,6 +110,14 @@ export default function TournamentsPageTabs({
       isLocked: false,
     })
 
+  if (tournamentCard.id === 8)
+    fightsLinks.push({
+      href: `/tournaments/${tournamentCard.id}/fights/selectedtasks/`,
+      title: `Задачи на 5-й бой`,
+      isLocked: false,
+    })
+
+
   const statsLinks: LinkInterface[] = [
     {
       href: `/tournaments/${tournamentCard.id}/stats/problems`,
