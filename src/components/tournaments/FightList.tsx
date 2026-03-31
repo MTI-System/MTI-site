@@ -14,7 +14,7 @@ export default function FightList({
 }) {
   return (
     <div className="flex flex-col items-center px-4">
-      <h1 className="text-text-main mx-auto mb-8 text-center text-2xl font-bold">Раздел боев</h1>
+      <h1 className="text-text-main mx-auto mt-3 mb-5 text-center text-2xl font-bold">Раздел боев</h1>
       <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
         {fightsData.map((item, idx) => (
           <FightCard key={item.id} cardData={item} tmpIDX={idx} tournamentId={tournamentId} />
@@ -89,7 +89,7 @@ export function FightCard({
           {cardData?.teams && (
             <div className="border-border mb-4 border-b pb-4 md:mb-5">
               <div className="overflow-x-auto">
-                <FightTable teams={cardData?.teams} tournamentId={tournamentId} fightName={cardData.label ?? ""}/>
+                <FightTable teams={cardData?.teams} tournamentId={tournamentId} fightName={cardData.label ?? ""} />
               </div>
             </div>
           )}
