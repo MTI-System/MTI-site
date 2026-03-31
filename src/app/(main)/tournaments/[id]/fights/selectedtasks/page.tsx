@@ -14,7 +14,9 @@ export default async function SelectedTasksPage({ params }: { params: Promise<{ 
     for (const fight_name in data){
         const fight_data = data[fight_name]
         fight_data.forEach(fight=>{
-            if(fight.id !== 40 && fight.id !== 39 && fight.id !== 38 && fight.id !== 37 && fight.id !== 36 && fight.id !== 35 || !fight.teams) return
+            if((fight.id !== 40 && fight.id !== 39 && fight.id !== 38 && fight.id !== 37 && fight.id !== 36 && fight.id !== 35) && (
+            fight.id !== 101 && fight.id !== 102 && fight.id !== 103 && fight.id !== 104
+          )  || !fight.teams)  return
             fight.teams?.forEach(team => {
                 if (selectedTasksData.find(st=>st.team_id === team.id)) return
                 selectedTasksData = [...selectedTasksData, {
@@ -27,7 +29,7 @@ export default async function SelectedTasksPage({ params }: { params: Promise<{ 
     }
     return (
         <div className="flex flex-col gap-5">
-        {tournamentId === '10' && selectedTasksData.map((team, index) => (
+        {(tournamentId === '10' || tournamentId === '8') && selectedTasksData.map((team, index) => (
   
           <ProblemsProviderWrapper>
             <TournamentsProviderWrapper key={index}>
