@@ -128,10 +128,12 @@ export default function TeamLog({
                       </td>
                     ))}
                   </tr>
-                  {log.players.map((p, idx) => (
+                  {log.players.map((p, idx) => { 
+                    const t_p = log.team?.players?.find(player => player.id === p.id); 
+                    return(
                     <tr className="border-border border-t" key={idx}>
                       <td className="border-border border-t px-2 py-1">
-                        {p.second_name} {p.first_name} {p.third_name}
+                        {t_p?.secondName} {t_p?.firstName} {t_p?.thirdName}
                       </td>
                       {fightsList.map((f, idx) => {
                         // TODO: Rewrite for ids not for names
@@ -170,7 +172,7 @@ export default function TeamLog({
                         )
                       })}
                     </tr>
-                  ))}
+                  )})}
                 </tbody>
               </table>
             </div>
