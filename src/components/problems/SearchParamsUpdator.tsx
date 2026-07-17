@@ -40,7 +40,7 @@ export default function SearchParamsUpdator({
     if (searchParams.year) {
       localDispatch(setYear(Number(searchParams.year)))
     } else if (!year) {
-      localDispatch(setYear(2026))
+      localDispatch(setYear(2027))
     }
     if (searchParams.tournament) {
       localDispatch(setTournamentFilter(Number(searchParams.tournament)))
@@ -60,7 +60,10 @@ export default function SearchParamsUpdator({
   useEffect(() => {
     if (!isMounted) return
     let localTournament = tournament
-    if ((searchParams.tt && Number(searchParams.tt) !== tt) || (searchParams.year && Number(searchParams.year) !== year)) {
+    if (
+      (searchParams.tt && Number(searchParams.tt) !== tt) ||
+      (searchParams.year && Number(searchParams.year) !== year)
+    ) {
       dispatch(setTournamentFilter(null))
       localTournament = null
     }

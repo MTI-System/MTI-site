@@ -7,7 +7,7 @@ interface ProblemsSPState {
 }
 
 const initialState: ProblemsSPState = {
-  year: 2026,
+  year: 2027,
   sectionList: null,
   tournament: null,
 }
