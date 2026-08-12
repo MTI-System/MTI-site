@@ -1,6 +1,7 @@
 import { TeamLogsInterface } from "@/types/TournamentsAPI"
 import { ProblemInterface } from "@/types/problemAPI"
 import twclsx from "@/utils/twClassMerge"
+import React from "react"
 
 export default function TeamLog({
   log,
@@ -82,10 +83,16 @@ export default function TeamLog({
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border-border border-t border-r p-2">
+                      <td className="border-border border-t border-r p-2">
                       {(log.yellow_cards?.nr?.length ?? 0) > 0 ? (
-                        log.yellow_cards?.nr?.map((val) => (
-                          <p className="text-center">{val.fight_name ?? "Бой не указан"}</p>
+                        log.yellow_cards?.nr?.map((val, idx) => (
+                          <React.Fragment key={`np ${idx}`}>
+                            {Array.from({ length: val.value }).map((_, i) => (
+                              <p key={`${idx} - ${i} - nr`} className="text-center">
+                                {val.fight_name ?? "Бой не указан"}
+                              </p>
+                            ))}
+                          </React.Fragment>
                         ))
                       ) : (
                         <p className="text-center">-</p>
@@ -93,17 +100,30 @@ export default function TeamLog({
                     </td>
                     <td className="border-border border-t border-r p-2">
                       {(log.yellow_cards?.np?.length ?? 0) > 0 ? (
-                        log.yellow_cards?.np?.map((val) => (
-                          <p className="text-center">{val.fight_name ?? "Бой не указан"}</p>
+                        log.yellow_cards?.np?.map((val, idx) => (
+                          <React.Fragment key={`np ${idx}`}>
+                            {Array.from({ length: val.value }).map((_, i) => (
+                              <p key={`${idx} - ${i} - np`} className="text-center">
+                                {val.fight_name ?? "Бой не указан"}
+                              </p>
+                            ))}
+                          </React.Fragment>
                         ))
                       ) : (
                         <p className="text-center">-</p>
                       )}
                     </td>
+
                     <td className="border-border border-t p-2">
                       {(log.yellow_cards?.nt?.length ?? 0) > 0 ? (
-                        log.yellow_cards?.nt?.map((val) => (
-                          <p className="text-center">{val.fight_name ?? "Бой не указан"}</p>
+                        log.yellow_cards?.nt?.map((val, idx) => (
+                          <React.Fragment key={`np ${idx}`}>
+                            {Array.from({ length: val.value }).map((_, i) => (
+                              <p key={`${idx} - ${i} - nt`} className="text-center">
+                                {val.fight_name ?? "Бой не указан"}
+                              </p>
+                            ))}
+                          </React.Fragment>
                         ))
                       ) : (
                         <p className="text-center">-</p>
