@@ -67,7 +67,7 @@ export default async function Page({
 
   if (!sp.year) {
     isNoRefresh = true
-    year = "2026"
+    year = "2027"
   }
   if (!tt) {
     isNoRefresh = true
@@ -127,9 +127,7 @@ export default async function Page({
   )
 
   const allProblemContainers = [
-    ...new Map(
-      problems?.map(p => [p?.problemContainer?.id, p.problemContainer])
-    ).values()
+    ...new Map(problems?.map((p) => [p?.problemContainer?.id, p.problemContainer])).values(),
   ].sort((a, b) => (a?.id ?? 0) - (b?.id ?? 0))
   return (
     <ProblemsReduxProviderWrapper>
@@ -138,7 +136,7 @@ export default async function Page({
 
       <ProblemFilters
         possibleSections={availableProblemSections}
-        possibleYears={possibleYears ?? [2026]}
+        possibleYears={possibleYears ?? [2027]}
         isModerator={isEditable}
         possibleTournaments={possibleTournaments}
       >
@@ -148,15 +146,15 @@ export default async function Page({
             {!isUndefYear && (
               <div className="flex flex-col-reverse gap-5 lg:flex-row">
                 <div className="w-full">
-                  {allProblemContainers.map(c => {
+                  {allProblemContainers.map((c) => {
                     return (
-                        <ProblemsList
-                          key={c?.id ?? 0}
-                          sectionsFilter={sectionsFilter ?? []}
-                          problems={problems?.filter(pr=>pr?.problemContainer?.id == c?.id) ?? null}
-                          isEditable={isEditable}
-                          listLabel={c?.label}
-                        />
+                      <ProblemsList
+                        key={c?.id ?? 0}
+                        sectionsFilter={sectionsFilter ?? []}
+                        problems={problems?.filter((pr) => pr?.problemContainer?.id == c?.id) ?? null}
+                        isEditable={isEditable}
+                        listLabel={c?.label}
+                      />
                     )
                   })}
                 </div>
