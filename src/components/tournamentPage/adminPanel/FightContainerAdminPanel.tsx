@@ -1,8 +1,18 @@
-import { Accordion } from "@base-ui-components/react"
+"use client"
+import { Accordion, AlertDialog } from "@base-ui-components/react"
 import FightsAdmin from "@/components/tournamentPage/adminPanel/FightsAdmin"
 import { FightInformationInterface } from "@/types/TournamentsAPI"
-import { useAddFightMutation, useGetFightContainerCardQuery } from "@/api/tournaments/clientApiInterface"
+import {
+  useAddFightMutation,
+  useGetFightContainerCardQuery,
+  useGetFightInfoByTournamentQuery,
+} from "@/api/tournaments/clientApiInterface"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
+import { AdminButton, useAdminFeedback } from "@/components/tournamentPage/adminPanel/adminUi"
+import { useState } from "react"
+
+const accordionTriggerClass =
+  "group bg-bg-accent text-text-main hover:bg-hover relative flex w-full cursor-pointer items-baseline justify-between gap-4 py-3 pr-3 pl-4 text-left text-lg font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-primary"
 
 export default function FightContainerAdminPanel({
   fightsInfo,
@@ -13,34 +23,66 @@ export default function FightContainerAdminPanel({
   fightsInfo: FightInformationInterface[]
   tournamentId: number
 }) {
-  const [addFight] = useAddFightMutation()
+  const [addFight, { isLoading: isAddingFight }] = useAddFightMutation()
   const token = useAppSelector((state) => state.auth.token)
   const { data } = useGetFightContainerCardQuery({ id: fightContainerId })
+  const { refetch } = useGetFightInfoByTournamentQuery({ tournamentId })
+  const { run } = useAdminFeedback()
+  const [addFightOpen, setAddFightOpen] = useState(false)
   return (
-    <Accordion.Item className="border-border border" key={fightContainerId}>
+    <Accordion.Item className="border-border bg-bg-alt overflow-hidden rounded-2xl border" key={fightContainerId}>
       <Accordion.Header>
-        <Accordion.Trigger className="group bg-bg-alt hover:bg-hover relative flex w-full items-baseline justify-between gap-4 py-2 pr-1 pl-3 text-left font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
-          <p className="text-text-main">{data?.title ?? "loading"}</p>
+        <Accordion.Trigger className={accordionTriggerClass}>
+          <p className="text-text-main">{data?.title ?? "Загрузка..."}</p>
           <PlusIcon className="text-text-main mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45" />
         </Accordion.Trigger>
       </Accordion.Header>
-      <Accordion.Panel className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-gray-600 transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
-        <div>
+      <Accordion.Panel className="border-border h-[var(--accordion-panel-height)] overflow-hidden border-t text-base transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0 data-[open]:h-auto">
+        <div className="flex flex-col gap-3 p-3">
           {fightsInfo.map((fight, idx) => (
             <FightsAdmin key={fight.id} fight={fight} idx={idx} tournamentId={tournamentId} />
           ))}
         </div>
-        <button
-          className="mx-2 my-2 cursor-pointer bg-black/20"
-          onClick={() => {
-            addFight({
-              token: token,
-              fightContainerId: Number(fightContainerId),
-            })
-          }}
-        >
+        <AdminButton className="m-4" type="button" onClick={() => setAddFightOpen(true)}>
           Добавить бой
-        </button>
+        </AdminButton>
+        <AlertDialog.Root open={addFightOpen} onOpenChange={setAddFightOpen}>
+          <AlertDialog.Portal>
+            <AlertDialog.Backdrop className="fixed inset-0 min-h-dvh bg-black opacity-20 transition-all duration-150 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 supports-[-webkit-touch-callout:none]:absolute dark:opacity-70" />
+            <AlertDialog.Popup className="bg-bg-alt text-text-main outline-border fixed top-1/2 left-1/2 z-50 -mt-8 w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg p-6 outline outline-1 transition-all duration-150 data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0">
+              <AlertDialog.Title className="-mt-1.5 mb-1 text-lg font-medium">Добавить бой</AlertDialog.Title>
+              <AlertDialog.Description className="text-text-alt mb-6 text-base">
+                Удалить бой через эту админ-панель будет нельзя.
+              </AlertDialog.Description>
+              <div className="flex justify-end gap-3">
+                <AlertDialog.Close
+                  disabled={isAddingFight}
+                  className="border-border bg-bg-alt text-text-main hover:bg-hover focus-visible:outline-accent-primary flex h-10 cursor-pointer items-center justify-center rounded-md border px-3.5 text-base font-medium select-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  Отмена
+                </AlertDialog.Close>
+                <AdminButton
+                  loading={isAddingFight}
+                  onClick={async () => {
+                    const ok = await run(
+                      addFight({
+                        token: token,
+                        fightContainerId: Number(fightContainerId),
+                      }).unwrap(),
+                      { success: "Бой добавлен" },
+                    )
+                    if (ok) {
+                      setAddFightOpen(false)
+                      await refetch()
+                    }
+                  }}
+                >
+                  Добавить
+                </AdminButton>
+              </div>
+            </AlertDialog.Popup>
+          </AlertDialog.Portal>
+        </AlertDialog.Root>
       </Accordion.Panel>
     </Accordion.Item>
   )

@@ -26,29 +26,45 @@ import {
   TournamentCardInterface,
 } from "@/types/TournamentsAPI"
 import { useGetUserByIdQuery } from "@/api/users/clientApiInterface"
-import UsersProviderWrapper from "@/api/users/ClientWrapper"
-import { ComponentProps, useEffect, useState } from "react"
+import { ComponentProps, useEffect, useRef, useState } from "react"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
-import { useParams, useRouter, useSearchParams } from "next/navigation"
+import { useParams } from "next/navigation"
+import PersonPicker from "@/components/pickers/PersonPicker"
+import { AdminButton, adminButtonClass, useAdminFeedback } from "@/components/tournamentPage/adminPanel/adminUi"
+const adminInputClass =
+  "bg-bg-alt text-text-main border-border h-10 w-full max-w-xs rounded-md border px-3 text-base focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-accent-primary"
+const selectTriggerClass =
+  "border-border bg-bg-alt text-text-main hover:bg-hover flex h-10 w-full max-w-2xl min-w-36 items-center justify-between gap-3 rounded-md border pr-3 pl-3.5 text-base select-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-accent-primary data-[popup-open]:bg-hover"
+const selectPopupClass =
+  "group border-border bg-bg-alt text-text-main min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md border bg-clip-padding shadow-lg outline-none transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none"
+const selectItemClass =
+  "grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-text-main data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-hover pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
 
 export default function ActionAdmin({
   actionId,
   idx,
   fight,
+  juryIds,
   tournamentInfo,
 }: {
   actionId: number
   idx: number
   fight: FightInformationInterface
+  juryIds?: number[]
   tournamentInfo: TournamentCardInterface
 }) {
-  const { data: actionInfo, isLoading: isActionLoading } = useGetActionInformationQuery({ actionId: actionId })
+  const { data: actionInfo, isLoading: isActionLoading, refetch: refetchAction } = useGetActionInformationQuery({
+    actionId: actionId,
+  })
   const { data: pickedProblemInfo, isLoading: isProblemLoading } = useGetProblemsByIdQuery({
     problemId: actionInfo?.pickedProblem ?? 0,
   })
   const isYNT = tournamentInfo.tournament_type === 2
-  const [setDraftResult] = useSetDraftResultMutation()
+  const { run } = useAdminFeedback()
+  const [savingKey, setSavingKey] = useState<string | null>(null)
+  const [openPerformances, setOpenPerformances] = useState<Array<number | string>>([])
+  const [scoreDrafts, setScoreDrafts] = useState<Record<number, Record<number, number>>>({})
 
   const [setScores] = useSetScoresMutation()
   const [setPlayer] = useSetPlayerToPerformanceMutation()
@@ -74,10 +90,80 @@ export default function ActionAdmin({
   }, [actionInfo?.playerLines])
 
   const token = useAppSelector((state) => state.auth.token)
+  const resolvedJuryIds = juryIds ?? fight.jouries
+  const juryKey = resolvedJuryIds.join(",")
+  const scoreDraftsRef = useRef(scoreDrafts)
+  scoreDraftsRef.current = scoreDrafts
+  const previousJuryIdsRef = useRef<number[] | null>(null)
+  useEffect(() => {
+    if (!actionInfo) return
+    const nextJuryIds = juryKey
+      .split(",")
+      .map((id) => Number(id))
+      .filter((id) => Number.isFinite(id) && id > 0)
+    setScoreDrafts((prev) => {
+      const next: Record<number, Record<number, number>> = {}
+      for (const line of actionInfo.playerLines) {
+        const prevRow = prev[line.performanceId] ?? {}
+        const row: Record<number, number> = {}
+        for (const juryId of nextJuryIds) {
+          row[juryId] =
+            prevRow[juryId] ?? scoreForJury(line.scores, juryId) ?? 0
+        }
+        next[line.performanceId] = row
+      }
+      return next
+    })
+  }, [actionInfo, juryKey])
+
+  useEffect(() => {
+    if (!actionInfo) return
+    const nextJuryIds = juryKey
+      .split(",")
+      .map((id) => Number(id))
+      .filter((id) => Number.isFinite(id) && id > 0)
+    if (previousJuryIdsRef.current === null) {
+      previousJuryIdsRef.current = nextJuryIds
+      return
+    }
+    const previousJuryIds = previousJuryIdsRef.current
+    previousJuryIdsRef.current = nextJuryIds
+    const removedJuryIds = previousJuryIds.filter((id) => !nextJuryIds.includes(id))
+    if (removedJuryIds.length === 0) return
+    let cancelled = false
+    const persist = async () => {
+      try {
+        await Promise.all(
+          actionInfo.playerLines.map((line) =>
+            setScores({
+              token,
+              performanceId: line.performanceId,
+              scores: nextJuryIds.map((jury) => ({
+                jury,
+                score: Math.max(
+                  0,
+                  scoreDraftsRef.current[line.performanceId]?.[jury] ??
+                    scoreForJury(line.scores, jury) ??
+                    0,
+                ),
+              })),
+            }).unwrap(),
+          ),
+        )
+        if (!cancelled) await refetchAction()
+      } catch (error) {
+        console.error("Failed to persist scores after jury change", error)
+      }
+    }
+    void persist()
+    return () => {
+      cancelled = true
+    }
+  }, [actionInfo, juryKey, token, setScores, refetchAction])
 
   const isLoading = isProblemLoading || isProblemLoading
   return (
-    <div className="border-border mx-2 my-2 border px-2">
+    <div className="border-border bg-bg-alt rounded-2xl border p-3">
       {isLoading && <Loading />}
       {!isLoading && (
         <>
@@ -106,55 +192,75 @@ export default function ActionAdmin({
             {/*      )}*/}
             {/*    </ProblemsProviderWrapper>*/}
 
-            {/*    <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">*/}
+            {/*    <button className={adminButtonClass} type="submit">*/}
             {/*      Сохранить задачу*/}
             {/*    </button>*/}
 
             {/*  </form>*/}
             {/*</div>*/}
-            <Drafts defaultValue={actionInfo?.drafts?.calls ?? []} actionId={actionId} />
+            <Drafts
+              defaultValue={actionInfo?.drafts?.calls ?? []}
+              actionId={actionId}
+              onSaved={refetchAction}
+            />
             <div>
-              <Accordion.Root className="text-text-main flex w-full flex-col justify-center">
+              <Accordion.Root
+                className="text-text-main flex w-full flex-col gap-2"
+                value={openPerformances}
+                onValueChange={(next) => setOpenPerformances((next ?? []).filter((item) => item != null))}
+              >
                 {actionInfo?.playerLines.map((playerLine, idx) => (
-                  <Accordion.Item className="border-border border" key={playerLine.playerId + "player" + idx}>
+                  <Accordion.Item
+                    className="border-border overflow-hidden rounded-2xl border"
+                    key={playerLine.performanceId}
+                    value={playerLine.performanceId}
+                  >
                     <Accordion.Header>
-                      <Accordion.Trigger className="group bg-bg-alt hover:bg-hover relative flex w-full items-baseline justify-between gap-4 py-2 pr-1 pl-3 text-left font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
+                      <Accordion.Trigger className="group bg-bg-accent text-text-main hover:bg-hover relative flex w-full cursor-pointer items-baseline justify-between gap-4 py-3 pr-3 pl-4 text-left font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-primary">
                         <p>
                           Выступление - {playerLine.team.name} - {playerLine?.role?.title ?? "Роль не определена"}
                         </p>
                         <PlusIcon className="text-text-main mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45" />
                       </Accordion.Trigger>
                     </Accordion.Header>
-                    <Accordion.Panel className="text-text-main h-[var(--accordion-panel-height)] overflow-hidden text-base transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
-                      <div>
+                    <Accordion.Panel className="text-text-main h-[var(--accordion-panel-height)] overflow-hidden border-t border-border text-base transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0 data-[open]:h-auto">
+                      <div className="flex flex-col gap-3 p-3">
                         <form
-                          onSubmit={(e) => {
+                          className="flex flex-col items-start gap-2"
+                          onSubmit={async (e) => {
                             e.preventDefault()
                             const fd = new FormData(e.currentTarget)
                             const coeff = Number(fd.get("c"))
-                            setCoeff({
-                              performanceId: playerLine.performanceId,
-                              coeff: coeff,
-                              token: token,
-                            })
+                            const key = `coeff-${playerLine.performanceId}`
+                            setSavingKey(key)
+                            const ok = await run(
+                              setCoeff({
+                                performanceId: playerLine.performanceId,
+                                coeff: coeff,
+                                token: token,
+                              }).unwrap(),
+                              { success: "Коэффициент сохранён" },
+                            )
+                            if (ok) await refetchAction()
+                            setSavingKey(null)
                           }}
                         >
                           <CoeffPicker
                             value={playerLine.coefficient ?? 3}
                             name={isYNT ? "Количество карточек" : "Коэффициент"}
-                            isShown={playerLine?.role?.title === "Докладчик"}
+                            isShown
                             setter={(value) => {}}
                           />
-                          <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                          <AdminButton type="submit" loading={savingKey === `coeff-${playerLine.performanceId}`}>
                             Сохранить коэффициент
-                          </button>
+                          </AdminButton>
                         </form>
                         {isYNT && (
                           <>
                             <CoeffPicker
                               value={playerLine.nr ?? 0}
                               name="Нарушение в количестве отказов (nr)"
-                              isShown={playerLine?.role?.title === "Докладчик"}
+                              isShown
                               setter={(value) => {
                                 setPun((prev) => ({ ...prev, [idx]: { ...prev[idx], nr: value } }))
                               }}
@@ -162,7 +268,7 @@ export default function ActionAdmin({
                             <CoeffPicker
                               value={playerLine.np ?? 0}
                               name="Нарушение в количестве выступлений на одном бое (np)"
-                              isShown={playerLine?.role?.title === "Докладчик"}
+                              isShown
                               setter={(value) => {
                                 setPun((prev) => ({ ...prev, [idx]: { ...prev[idx], np: value } }))
                               }}
@@ -170,7 +276,7 @@ export default function ActionAdmin({
                             <CoeffPicker
                               value={playerLine.nt ?? 0}
                               name="Нарушение в количестве выступлений на всех боях (nt)"
-                              isShown={playerLine?.role?.title === "Докладчик"}
+                              isShown
                               setter={(value) => {
                                 setPun((prev) => ({ ...prev, [idx]: { ...prev[idx], nt: value } }))
                               }}
@@ -178,98 +284,132 @@ export default function ActionAdmin({
                             <CoeffPicker
                               value={playerLine.ny ?? 0}
                               name="Нарушение в представлении оригинальных задач (ny)"
-                              isShown={playerLine?.role?.title === "Докладчик"}
+                              isShown
                               setter={(value) => {
                                 setPun((prev) => ({ ...prev, [idx]: { ...prev[idx], ny: value } }))
                               }}
                             />
-                            <button
-                              className="mx-2 my-2 cursor-pointer bg-black/20"
-                              onClick={() => {
-                                setPunishment({
-                                  token: token,
-                                  performanceId: playerLine.performanceId,
-                                  nt: pun[idx].nt,
-                                  nr: pun[idx].nr,
-                                  np: pun[idx].np,
-                                  ny: pun[idx].ny,
-                                })
+                            <AdminButton
+                              type="button"
+                              loading={savingKey === `punish-${playerLine.performanceId}`}
+                              onClick={async () => {
+                                const key = `punish-${playerLine.performanceId}`
+                                setSavingKey(key)
+                                const ok = await run(
+                                  setPunishment({
+                                    token: token,
+                                    performanceId: playerLine.performanceId,
+                                    nt: pun[idx].nt,
+                                    nr: pun[idx].nr,
+                                    np: pun[idx].np,
+                                    ny: pun[idx].ny,
+                                  }).unwrap(),
+                                  { success: "Штрафы сохранены" },
+                                )
+                                if (ok) await refetchAction()
+                                setSavingKey(null)
                               }}
                             >
                               Сохранить штрафы
-                            </button>
+                            </AdminButton>
                           </>
                         )}
                         <form
-                          onSubmit={(e) => {
+                          className="flex flex-col items-start gap-2"
+                          onSubmit={async (e) => {
                             e.preventDefault()
                             const fd = new FormData(e.currentTarget)
                             const playerId = Number(fd.get("player_id"))
-                            console.log(playerId)
-                            setPlayer({
-                              token: token,
-                              performanceId: playerLine.performanceId,
-                              playerId: playerId,
-                            })
+                            const key = `player-${playerLine.performanceId}`
+                            setSavingKey(key)
+                            const ok = await run(
+                              setPlayer({
+                                token: token,
+                                performanceId: playerLine.performanceId,
+                                playerId: playerId,
+                              }).unwrap(),
+                              { success: "Участник сохранён" },
+                            )
+                            if (ok) await refetchAction()
+                            setSavingKey(null)
                           }}
                         >
-                          <input
-                            defaultValue={Number(playerLine.playerId)}
+                          <PersonPicker
+                            label="Участник"
+                            placeholder="Найдите участника"
                             name="player_id"
-                            placeholder={"id участника"}
-                            type="number"
+                            defaultUserId={playerLine.playerId}
                           />
-                          <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                          <AdminButton type="submit" loading={savingKey === `player-${playerLine.performanceId}`}>
                             Сохранить участника
-                          </button>
+                          </AdminButton>
                         </form>
                         <form
-                          className="flex w-full flex-col items-center"
-                          onSubmit={(e) => {
+                          className="flex w-full flex-col items-start gap-2"
+                          onSubmit={async (e) => {
                             e.preventDefault()
                             const fd = new FormData(e.currentTarget)
-                            console.log(fd.entries().toArray())
-                            setScores({
-                              token: token,
-                              performanceId: playerLine.performanceId,
-                              scores: fd
-                                .entries()
-                                .toArray()
-                                .map((e) => {
-                                  return {
-                                    jury: Number(e[0].split("_")[1]),
-                                    score: Number(e[1]),
-                                  }
-                                }),
-                            })
+                            const key = `scores-${playerLine.performanceId}`
+                            setSavingKey(key)
+                            const ok = await run(
+                              setScores({
+                                token: token,
+                                performanceId: playerLine.performanceId,
+                                scores: fd
+                                  .entries()
+                                  .toArray()
+                                  .filter(([name]) => String(name).startsWith("juryScore_"))
+                                  .map((entry) => {
+                                    const score = Number(entry[1])
+                                    return {
+                                      jury: Number(entry[0].split("_")[1]),
+                                      score: Number.isFinite(score) ? Math.max(0, score) : 0,
+                                    }
+                                  }),
+                              }).unwrap(),
+                              { success: "Оценки сохранены" },
+                            )
+                            if (ok) await refetchAction()
+                            setSavingKey(null)
                           }}
                         >
-                          <table className="border-border w-full border">
-                            <thead className="w-full">
-                              <tr className="flex w-full justify-between">
-                                <th className="border-border w-full border" scope="col">
+                          <table className="border-border w-full table-fixed border-collapse overflow-hidden rounded-xl border">
+                            <thead>
+                              <tr>
+                                <th className="border-border w-1/2 border px-3 py-2 text-left text-sm font-medium" scope="col">
                                   Жюри
                                 </th>
-                                <th className="border-border w-full border" scope="col">
+                                <th className="border-border w-1/2 border px-3 py-2 text-left text-sm font-medium" scope="col">
                                   Оценка
                                 </th>
                               </tr>
                             </thead>
                             <tbody>
-                              <UsersProviderWrapper>
-                                {fight.jouries.map((jury) => (
-                                  <JuryRow
-                                    juryId={jury}
-                                    key={jury}
-                                    defaultScore={playerLine.scores.find((score) => score.jury === jury)?.value}
-                                  />
-                                ))}
-                              </UsersProviderWrapper>
+                              {resolvedJuryIds.map((jury) => (
+                                <JuryRow
+                                  juryId={jury}
+                                  key={jury}
+                                  score={
+                                    scoreDrafts[playerLine.performanceId]?.[jury] ??
+                                    scoreForJury(playerLine.scores, jury) ??
+                                    0
+                                  }
+                                  onScoreChange={(value) => {
+                                    setScoreDrafts((prev) => ({
+                                      ...prev,
+                                      [playerLine.performanceId]: {
+                                        ...(prev[playerLine.performanceId] ?? {}),
+                                        [jury]: value,
+                                      },
+                                    }))
+                                  }}
+                                />
+                              ))}
                             </tbody>
                           </table>
-                          <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                          <AdminButton type="submit" loading={savingKey === `scores-${playerLine.performanceId}`}>
                             Сохранить оценки
-                          </button>
+                          </AdminButton>
                         </form>
                       </div>
                     </Accordion.Panel>
@@ -284,28 +424,45 @@ export default function ActionAdmin({
   )
 }
 
-function JuryRow({ juryId, defaultScore = 0 }: { juryId: number; defaultScore?: number }) {
+function scoreForJury(scores: { jury: number; value: number }[], juryId: number) {
+  return scores.find((score) => Number(score.jury) === Number(juryId))?.value
+}
+
+function JuryRow({
+  juryId,
+  score,
+  onScoreChange,
+}: {
+  juryId: number
+  score: number
+  onScoreChange: (score: number) => void
+}) {
   const { data: jury, isLoading } = useGetUserByIdQuery({ id: juryId })
   return (
-    <>
-      {isLoading && (
-        <tr>
-          <th>
-            <Loading />
-          </th>
-        </tr>
-      )}
-      {jury && (
-        <tr className="flex w-full justify-between">
-          <th className="border-border w-full border" scope="col">
-            {jury.secondName} {jury.firstName} {jury.thirdName}
-          </th>
-          <th className="border-border w-full border" scope="col">
-            <input className="w-full" type="number" name={`juryScore_${juryId}`} defaultValue={defaultScore} />
-          </th>
-        </tr>
-      )}
-    </>
+    <tr>
+      <td className="border-border text-text-main w-1/2 border px-3 py-2 text-left text-sm">
+        {isLoading
+          ? "Загрузка..."
+          : jury
+            ? `${jury.secondName} ${jury.firstName} ${jury.thirdName}`
+            : `ID ${juryId}`}
+      </td>
+      <td className="border-border w-1/2 border">
+        <input
+          className="bg-bg-alt text-text-main h-10 w-full border-0 px-3 text-base focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-accent-primary"
+          type="number"
+          name={`juryScore_${juryId}`}
+          min={0}
+          step="any"
+          inputMode="decimal"
+          value={Number.isFinite(score) ? score : 0}
+          onChange={(e) => {
+            const next = e.target.value === "" ? 0 : Number(e.target.value)
+            onScoreChange(Number.isFinite(next) ? Math.max(0, next) : 0)
+          }}
+        />
+      </td>
+    </tr>
   )
 }
 
@@ -326,7 +483,7 @@ function ProblemPicker({
   return (
     <>
       <div className="flex gap-2">
-        <p>Выбрана задача: </p>
+        <p className="text-text-main">Выбрана задача: </p>
         <Select.Root
           items={teams}
           onValueChange={(selected) => {
@@ -336,7 +493,7 @@ function ProblemPicker({
           value={pickedTeam ?? ""}
         >
           <input name={name} value={pickedTeam ?? ""} onChange={() => {}} className="hidden" />
-          <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
+          <Select.Trigger className={selectTriggerClass}>
             <Select.Value />
             <Select.Icon className="flex">
               <ChevronUpDownIcon />
@@ -344,14 +501,14 @@ function ProblemPicker({
           </Select.Trigger>
           <Select.Portal>
             <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
-              <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
-                <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
+              <Select.Popup className={selectPopupClass}>
+                <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-bg-alt text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
                 <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
                   {teams.map(({ label, value }) => (
                     <Select.Item
                       key={label}
                       value={value}
-                      className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
+                      className={selectItemClass}
                     >
                       <Select.ItemIndicator className="col-start-1">
                         <CheckIcon className="size-3" />
@@ -360,7 +517,7 @@ function ProblemPicker({
                     </Select.Item>
                   ))}
                 </Select.List>
-                <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
+                <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-bg-alt text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
               </Select.Popup>
             </Select.Positioner>
           </Select.Portal>
@@ -385,10 +542,10 @@ function CoeffPicker({
     <>
       {isShown && (
         <>
-          <p>{name}:</p>
+          <p className="text-text-main text-sm font-medium">{name}:</p>
           <input
             name={"c"}
-            className="border-border border"
+            className={adminInputClass}
             type={"number"}
             defaultValue={value}
             step="any"
@@ -419,11 +576,33 @@ function ChevronUpDownIcon(props: React.ComponentProps<"svg">) {
   )
 }
 
-function Drafts({ defaultValue, actionId }: { defaultValue: CallActionInterface[]; actionId: number }) {
-  const [drafts, setDraft] = useState<string[]>([...defaultValue.map((it) => it.problemId.toString())])
+function callsFromDraftForm(form: HTMLFormElement, skipName?: string) {
+  return [...new FormData(form).entries()]
+    .filter(([name]) => name.startsWith("draft-") && name !== skipName)
+    .map((entry, idx, arr) => ({
+      problemId: Number(entry[1]),
+      result: idx === arr.length - 1,
+    }))
+    .filter((call) => Number.isFinite(call.problemId) && call.problemId > 0)
+}
+
+function Drafts({
+  defaultValue,
+  actionId,
+  onSaved,
+}: {
+  defaultValue: CallActionInterface[]
+  actionId: number
+  onSaved?: () => Promise<unknown> | unknown
+}) {
+  const [drafts, setDraft] = useState<{ key: string; problemId: string }[]>(() =>
+    defaultValue.map((it) => ({
+      key: `call-${it.id}`,
+      problemId: it.problemId.toString(),
+    })),
+  )
   const params = useParams()
-  console.log("params", Number(params.id ?? 0 ))
-  const { data, error } = useGetProblemsForTournamentQuery({ tournamentId: Number(params.id ?? 10) })
+  const { data } = useGetProblemsForTournamentQuery({ tournamentId: Number(params.id ?? 10) })
 
   const problems =
     data?.map((problem) => {
@@ -434,48 +613,75 @@ function Drafts({ defaultValue, actionId }: { defaultValue: CallActionInterface[
     }) ?? []
   const token = useAppSelector((state) => state.auth.token)
 
-  const [setDraftMutation, {}] = useSetDraftsResultsMutation()
+  const [setDraftMutation, { isLoading: isSavingDrafts }] = useSetDraftsResultsMutation()
+  const { run } = useAdminFeedback()
+  const [removingKey, setRemovingKey] = useState<string | null>(null)
+
+  const persistCalls = async (calls: { problemId: number; result: boolean }[], success: string) => {
+    const ok = await run(
+      setDraftMutation({
+        token: token,
+        actionId: actionId,
+        calls: calls,
+      }).unwrap(),
+      { success },
+    )
+    if (ok) await onSaved?.()
+    return ok
+  }
+
   return (
     <>
       <form
-        onSubmit={(e) => {
+        className="mb-4 flex flex-col items-start gap-2"
+        onSubmit={async (e) => {
           e.preventDefault()
-          const fd = new FormData(e.currentTarget)
-          const calls = fd
-            .entries()
-            .toArray()
-            .map((it, idx) => {
-              return {
-                problemId: +it[1].toString(),
-                result: idx === fd.entries().toArray().length - 1,
-              }
-            })
-          const request = {
-            token: token,
-            actionId: actionId,
-            calls: calls,
-          }
-          setDraftMutation(request)
-          console.log(request)
+          await persistCalls(callsFromDraftForm(e.currentTarget), "Процедура выбора сохранена")
         }}
       >
-        {drafts.map((it, idx) => (
-            <DraftItem key={idx} name={idx.toString()} defaultValue={it} problems={problems} />
-
+        {drafts.map((item) => (
+          <div key={item.key} className="flex flex-wrap items-end gap-2">
+            <DraftItem name={`draft-${item.key}`} defaultValue={item.problemId} problems={problems} />
+            <button
+              type="button"
+              className="border-border text-text-alt hover:bg-hover hover:text-text-main h-10 cursor-pointer rounded-md border px-3 text-sm disabled:cursor-not-allowed disabled:opacity-70"
+              disabled={isSavingDrafts || removingKey === item.key}
+              onClick={async (e) => {
+                const form = e.currentTarget.form
+                if (!form) return
+                setRemovingKey(item.key)
+                const ok = await persistCalls(callsFromDraftForm(form, `draft-${item.key}`), "Выбор удалён")
+                if (ok) {
+                  setDraft((prev) => prev.filter((draft) => draft.key !== item.key))
+                }
+                setRemovingKey(null)
+              }}
+            >
+              Удалить выбор
+            </button>
+          </div>
         ))}
-        <button
-          className="mx-2 my-2 cursor-pointer bg-black/20"
-          type={"button"}
-          onClick={(e) => {
-            e.preventDefault()
-            setDraft((prev) => [...prev, problems[0].value ?? "-1"])
-          }}
-        >
-          Добавить выбор
-        </button>
-        <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
-          Сохранить процедуру выбора
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            className={adminButtonClass}
+            type={"button"}
+            onClick={(e) => {
+              e.preventDefault()
+              setDraft((prev) => [
+                ...prev,
+                {
+                  key: `call-new-${Date.now()}`,
+                  problemId: problems[0]?.value ?? "-1",
+                },
+              ])
+            }}
+          >
+            Добавить выбор
+          </button>
+          <AdminButton type="submit" loading={isSavingDrafts && removingKey == null}>
+            Сохранить процедуру выбора
+          </AdminButton>
+        </div>
       </form>
     </>
   )
@@ -497,13 +703,12 @@ function DraftItem({
       <Select.Root
         items={teams}
         onValueChange={(selected) => {
-          console.log(selected)
           setPickedTeam(selected ?? "-1")
         }}
         value={pickedTeam}
       >
         <input name={name} value={pickedTeam} onChange={() => {}} className="hidden" />
-        <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
+        <Select.Trigger className={selectTriggerClass}>
           <Select.Value />
           <Select.Icon className="flex">
             <ChevronUpDownIcon />
@@ -511,14 +716,14 @@ function DraftItem({
         </Select.Trigger>
         <Select.Portal>
           <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
-            <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
-              <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
+            <Select.Popup className={selectPopupClass}>
+              <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-bg-alt text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
               <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
                 {teams.map(({ label, value }) => (
                   <Select.Item
                     key={label}
                     value={value}
-                    className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
+                    className={selectItemClass}
                   >
                     <Select.ItemIndicator className="col-start-1">
                       <CheckIcon className="size-3" />
@@ -527,7 +732,7 @@ function DraftItem({
                   </Select.Item>
                 ))}
               </Select.List>
-              <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
+              <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-bg-alt text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
             </Select.Popup>
           </Select.Positioner>
         </Select.Portal>
