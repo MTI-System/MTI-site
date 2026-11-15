@@ -1,3 +1,2 @@
-ignoredBuiltDependencies:
-  - sharp
-  - "@tailwindcss/oxide"
+allowBuilds:
+  sharp: true

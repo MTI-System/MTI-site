@@ -3,6 +3,7 @@ import { Accordion, Select } from "@base-ui-components/react"
 import ActionAdmin from "@/components/tournamentPage/adminPanel/ActionAdmin"
 import ProblemsProviderWrapper from "@/api/problems/ClientWrapper"
 import {
+  useGetFightInfoByTournamentQuery,
   useGetTournamentCardQuery,
   useGetTournamentTableQuery,
   useSetJuryToFightMutation,
@@ -10,7 +11,19 @@ import {
   useSetTeamsToFightMutation,
 } from "@/api/tournaments/clientApiInterface"
 import { useAppSelector } from "@/redux_stores/Global/tournamentTypeRedixStore"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import PersonPicker from "@/components/pickers/PersonPicker"
+import { AdminButton, adminButtonClass, useAdminFeedback } from "@/components/tournamentPage/adminPanel/adminUi"
+const adminInputClass =
+  "bg-bg-alt text-text-main border-border h-10 rounded-md border px-3 text-base focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-accent-primary"
+const accordionTriggerClass =
+  "group bg-bg-accent text-text-main hover:bg-hover relative flex w-full cursor-pointer items-baseline justify-between gap-4 py-3 pr-3 pl-4 text-left font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-primary"
+const selectTriggerClass =
+  "border-border bg-bg-alt text-text-main hover:bg-hover flex h-10 w-full min-w-36 items-center justify-between gap-3 rounded-md border pr-3 pl-3.5 text-base select-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-accent-primary data-[popup-open]:bg-hover"
+const selectPopupClass =
+  "group border-border bg-bg-alt text-text-main min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md border bg-clip-padding shadow-lg outline-none transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none"
+const selectItemClass =
+  "grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-text-main data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-hover pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
 
 export function tsMsToHHMM(tsMs: number): string {
   const d = new Date(tsMs)
@@ -31,6 +44,13 @@ export function hhmmToTsMs(hhmm: string, baseTsMs: number): number {
   return d.getTime()
 }
 
+const teamSlots = [
+  { name: "team1", title: "Команда 1", hint: "первый доклад", index: 0 },
+  { name: "team2", title: "Команда 2", hint: "первое оппонирование", index: 1 },
+  { name: "team3", title: "Команда 3", hint: "первое рецензирование", index: 2 },
+  { name: "team4", title: "Команда 4", hint: "первое наблюдение", index: 3 },
+] as const
+
 export default function FightsAdmin({
   fight,
   idx,
@@ -40,48 +60,43 @@ export default function FightsAdmin({
   idx: number
   tournamentId: number
 }) {
-  const { data: fullTableObject, refetch } = useGetTournamentTableQuery({ id: tournamentId })
-  const { data: tournamentInfo, refetch: refetchTournamentInfo } = useGetTournamentCardQuery({ id: tournamentId })
+  const { data: fullTableObject } = useGetTournamentTableQuery({ id: tournamentId })
+  const { data: tournamentInfo } = useGetTournamentCardQuery({ id: tournamentId })
+  const { refetch: refetchFights } = useGetFightInfoByTournamentQuery({ tournamentId })
   const token = useAppSelector((state) => state.auth.token)
+  const { run } = useAdminFeedback()
   const teams = fullTableObject?.table_lines.map((l) => {
     return {
       label: l.team_name,
       value: l.team_id.toString(),
     }
   })
-  const [addTimestampAndLink, { isLoading: idAddingLoading, isSuccess: idAddingSuccess }] =
-    useSetLinkAndTimestampToFightMutation()
-  const [setTeamsToFight, { isLoading: isTeamsSettingLoading, isSuccess: idTeamsSettingSuccess }] =
-    useSetTeamsToFightMutation()
-  const [setJuryToFight] = useSetJuryToFightMutation()
-  useEffect(() => {
-    if (idAddingSuccess) {
-      refetch()
-      refetchTournamentInfo()
-    }
-  }, [idAddingSuccess])
-  useEffect(() => {
-    if (idTeamsSettingSuccess) {
-      refetch()
-      refetchTournamentInfo()
-    }
-  }, [idTeamsSettingSuccess])
-  if (!tournamentInfo) return <>Loading???</>
+  const [addTimestampAndLink, { isLoading: isSavingLink }] = useSetLinkAndTimestampToFightMutation()
+  const [setTeamsToFight, { isLoading: isSavingTeams }] = useSetTeamsToFightMutation()
+  const [setJuryToFight, { isLoading: isSavingJury }] = useSetJuryToFightMutation()
+  const [jurySlots, setJurySlots] = useState<{ key: string; userId?: number }[]>(() =>
+    fight.jouries.map((userId) => ({
+      key: `jury-${fight.id}-${userId}-${Math.random().toString(36).slice(2, 8)}`,
+      userId,
+    })),
+  )
+  const [juryIds, setJuryIds] = useState<number[]>(() => [...fight.jouries])
+  if (!tournamentInfo) return <p className="text-text-alt px-2 py-2">Загрузка...</p>
   return (
     <>
-      <Accordion.Root className="flex w-full flex-col justify-center px-3 text-gray-900">
-        <Accordion.Item className="border-border border">
+      <Accordion.Root className="text-text-main flex w-full flex-col justify-center">
+        <Accordion.Item className="border-border bg-bg-main overflow-hidden rounded-2xl border">
           <Accordion.Header>
-            <Accordion.Trigger className="group bg-bg-alt hover:bg-hover relative flex w-full items-baseline justify-between gap-4 py-2 pr-1 pl-3 text-left font-medium focus-visible:z-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-800">
+            <Accordion.Trigger className={accordionTriggerClass}>
               <p className="text-text-main">Комната {idx + 1}</p>
               <PlusIcon className="text-text-main mr-2 size-3 shrink-0 transition-all ease-out group-data-[panel-open]:scale-110 group-data-[panel-open]:rotate-45" />
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel className="h-[var(--accordion-panel-height)] overflow-hidden text-base text-gray-600 transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
-            <div className="px-2">
+          <Accordion.Panel className="h-[var(--accordion-panel-height)] overflow-hidden border-t border-border text-base transition-[height] ease-out data-[ending-style]:h-0 data-[starting-style]:h-0 data-[open]:h-auto">
+            <div className="flex flex-col gap-6 p-4">
               <form
-                className=""
-                onSubmit={(e) => {
+                className="flex flex-col gap-3"
+                onSubmit={async (e) => {
                   e.preventDefault()
                   const form = new FormData(e.currentTarget)
                   form.set("token", token)
@@ -90,28 +105,37 @@ export default function FightsAdmin({
                   const data = Object.fromEntries(form.entries())
                   const hhmm = String(data.timestamp) // "09:33"
                   ;(data as any).timestamp = hhmmToTsMs(hhmm, fight.startTime) // ms
-                  //@ts-ignore
-                  addTimestampAndLink(data)
-                  console.log(data)
+                  const ok = await run(
+                    //@ts-ignore
+                    addTimestampAndLink(data).unwrap(),
+                    { success: "Комната сохранена" },
+                  )
+                  if (ok) await refetchFights()
                 }}
               >
-                <div className="flex gap-2">
-                  <p>Ссылка на комнату: </p>
-                  <input type="text" name={"link"} defaultValue={fight.location} />
-                </div>
-                <div className="flex gap-2">
-                  <p>Время начала: </p>
-                  <input type="time" name={"timestamp"} defaultValue={tsMsToHHMM(fight.startTime)} />
-                </div>
-                <button type="submit" className="cursor-pointer bg-black/20">
+                <label className="text-text-main flex flex-col gap-1 text-sm font-medium">
+                  Ссылка на комнату
+                  <input className={`${adminInputClass} w-full`} type="text" name={"link"} defaultValue={fight.location} />
+                </label>
+                <label className="text-text-main flex w-fit flex-col gap-1 text-sm font-medium">
+                  Время начала
+                  <input
+                    className={`${adminInputClass} w-40`}
+                    type="time"
+                    name={"timestamp"}
+                    defaultValue={tsMsToHHMM(fight.startTime)}
+                  />
+                </label>
+                <AdminButton type="submit" loading={isSavingLink}>
                   Сохранить изменения
-                </button>
+                </AdminButton>
               </form>
 
-              <div>
-                <p className="mt-2 px-2 font-bold">Команды в этой комнате</p>
+              <div className="flex flex-col gap-3">
+                <p className="text-text-main font-semibold">Команды в этой комнате</p>
                 <form
-                  onSubmit={(e) => {
+                  className="flex flex-col gap-3"
+                  onSubmit={async (e) => {
                     e.preventDefault()
                     const form = new FormData(e.currentTarget)
                     const newForm = new FormData()
@@ -131,96 +155,122 @@ export default function FightsAdmin({
                     const finalData = Object.fromEntries(newForm.entries())
                     //@ts-ignore
                     finalData.teams = teamsArr
-                    console.log(finalData)
-                    //@ts-ignore
-                    setTeamsToFight(finalData)
+                    const ok = await run(
+                      //@ts-ignore
+                      setTeamsToFight(finalData).unwrap(),
+                      { success: "Команды сохранены" },
+                    )
+                    if (ok) await refetchFights()
                   }}
                 >
-                  <table>
-                    <tbody>
-                      <tr>
-                        <th className="flex justify-between">
-                          <p>
-                            Команда 1<br />
-                            (первый доклад)
-                          </p>
-                          <TeamsPicker
-                            name={"team1"}
-                            defaultValue={fight.teams?.[0]?.id?.toString()}
-                            teams={teams ?? []}
-                          />
-
-                          <p>
-                            Команда 2<br />
-                            (первое оппонирование)
-                          </p>
-                          <TeamsPicker
-                            name={"team2"}
-                            defaultValue={fight.teams?.[1]?.id?.toString()}
-                            teams={teams ?? []}
-                          />
-
-                          <p>
-                            Команда 3<br />
-                            (первое рецензирование)
-                          </p>
-                          <TeamsPicker
-                            name={"team3"}
-                            defaultValue={fight.teams?.[2]?.id?.toString()}
-                            teams={teams ?? []}
-                          />
-                          <p>
-                            Команда 4<br />
-                            (первое наблюдение)
-                          </p>
-                          <TeamsPicker
-                            name={"team4"}
-                            defaultValue={fight.teams?.[3]?.id?.toString()}
-                            teams={teams ?? []}
-                          />
-                        </th>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {teamSlots.map((slot) => (
+                      <label key={slot.name} className="text-text-main flex flex-col gap-1 text-sm font-medium">
+                        {slot.title}
+                        <span className="text-text-alt text-xs font-normal">{slot.hint}</span>
+                        <TeamsPicker
+                          name={slot.name}
+                          defaultValue={fight.teams?.[slot.index]?.id?.toString()}
+                          teams={teams ?? []}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                  <AdminButton type="submit" loading={isSavingTeams}>
                     Сохранить команды
-                  </button>
+                  </AdminButton>
                 </form>
                 <form
-                  onSubmit={(e) => {
+                  className="flex flex-col gap-3"
+                  onSubmit={async (e) => {
                     e.preventDefault()
                     const form = new FormData(e.currentTarget)
                     const juries = form
-                      .get("juries")
-                      ?.toString()
-                      .split(",")
-                      .map((j) => Number(j))
-                    setJuryToFight({
-                      juries: juries ?? [],
-                      fightId: fight.id,
-                      token: token,
-                    })
+                      .getAll("juries")
+                      .map((juryId) => Number(juryId))
+                      .filter((juryId) => Number.isFinite(juryId) && juryId > 0)
+                    const ok = await run(
+                      setJuryToFight({
+                        juries,
+                        fightId: fight.id,
+                        token: token,
+                      }).unwrap(),
+                      { success: "Жюри сохранены" },
+                    )
+                    if (ok) {
+                      setJuryIds(juries)
+                      await refetchFights()
+                    }
                   }}
                 >
-                  <div>
-                    <p>Список жюри:</p>
-                    <input
-                      defaultValue={fight.jouries.join(",")}
-                      name="juries"
-                      type="text"
-                      placeholder="перечислите жюри через запятую без пробела"
-                      className="border-border w-full"
-                    />
-                    <button className="mx-2 my-2 cursor-pointer bg-black/20" type="submit">
-                      Сохранить жюри
-                    </button>
+                  <div className="flex flex-col gap-3">
+                    <p className="text-text-main font-semibold">Жюри</p>
+                    {jurySlots.map((slot, slotIndex) => (
+                      <div key={slot.key} className="flex flex-wrap items-end gap-2">
+                        <PersonPicker
+                          label={`Жюри ${slotIndex + 1}`}
+                          placeholder="Найдите человека"
+                          name="juries"
+                          defaultUserId={slot.userId}
+                        />
+                        <button
+                          type="button"
+                          className="border-border text-text-alt hover:bg-hover hover:text-text-main h-10 cursor-pointer rounded-md border px-3 text-sm disabled:cursor-not-allowed disabled:opacity-70"
+                          disabled={isSavingJury}
+                          onClick={async (e) => {
+                            const form = e.currentTarget.form
+                            if (!form) return
+                            const remaining = new FormData(form)
+                              .getAll("juries")
+                              .map((juryId) => Number(juryId))
+                              .filter((_, index) => index !== slotIndex)
+                              .filter((juryId) => Number.isFinite(juryId) && juryId > 0)
+                            const ok = await run(
+                              setJuryToFight({
+                                juries: remaining,
+                                fightId: fight.id,
+                                token: token,
+                              }).unwrap(),
+                              { success: "Жюри удалены" },
+                            )
+                            if (ok) {
+                              setJurySlots((prev) => prev.filter((item) => item.key !== slot.key))
+                              setJuryIds(remaining)
+                              await refetchFights()
+                            }
+                          }}
+                        >
+                          Удалить
+                        </button>
+                      </div>
+                    ))}
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        className={adminButtonClass}
+                        onClick={() => {
+                          setJurySlots((prev) => [...prev, { key: `jury-${fight.id}-new-${Date.now()}` }])
+                        }}
+                      >
+                        Добавить жюри
+                      </button>
+                      <AdminButton type="submit" loading={isSavingJury}>
+                        Сохранить жюри
+                      </AdminButton>
+                    </div>
                   </div>
                 </form>
               </div>
 
               {fight.actions.map((action, index) => (
                 <ProblemsProviderWrapper key={action}>
-                  <ActionAdmin actionId={action} idx={index} fight={fight} tournamentInfo={tournamentInfo} />
+                  <ActionAdmin
+                    actionId={action}
+                    idx={index}
+                    fight={fight}
+                    juryIds={juryIds}
+                    tournamentInfo={tournamentInfo}
+                  />
                 </ProblemsProviderWrapper>
               ))}
             </div>
@@ -255,7 +305,7 @@ function TeamsPicker({
       value={pickedTeam ?? ""}
     >
       <input name={name} value={pickedTeam ?? ""} onChange={() => {}} className="hidden" />
-      <Select.Trigger className="flex h-10 min-w-36 items-center justify-between gap-3 rounded-md border border-gray-200 bg-[canvas] pr-3 pl-3.5 text-base text-gray-900 select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 data-[popup-open]:bg-gray-100">
+      <Select.Trigger className={selectTriggerClass}>
         <Select.Value />
         <Select.Icon className="flex">
           <ChevronUpDownIcon />
@@ -263,15 +313,11 @@ function TeamsPicker({
       </Select.Trigger>
       <Select.Portal>
         <Select.Positioner className="z-10 outline-none select-none" sideOffset={8}>
-          <Select.Popup className="group min-w-[var(--anchor-width)] origin-[var(--transform-origin)] rounded-md bg-[canvas] bg-clip-padding text-gray-900 shadow-lg shadow-gray-200 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)] data-[side=none]:data-[ending-style]:transition-none data-[starting-style]:scale-90 data-[starting-style]:opacity-0 data-[side=none]:data-[starting-style]:scale-100 data-[side=none]:data-[starting-style]:opacity-100 data-[side=none]:data-[starting-style]:transition-none dark:shadow-none dark:outline-gray-300">
-            <Select.ScrollUpArrow className="top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
+          <Select.Popup className={selectPopupClass}>
+            <Select.ScrollUpArrow className="bg-bg-alt top-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:top-[-100%]" />
             <Select.List className="relative max-h-[var(--available-height)] scroll-py-6 overflow-y-auto py-1">
               {teams.map(({ label, value }) => (
-                <Select.Item
-                  key={label}
-                  value={value}
-                  className="grid cursor-default grid-cols-[0.75rem_1fr] items-center gap-2 py-2 pr-4 pl-2.5 text-sm leading-4 outline-none select-none group-data-[side=none]:pr-12 group-data-[side=none]:text-base group-data-[side=none]:leading-4 data-[highlighted]:relative data-[highlighted]:z-0 data-[highlighted]:text-gray-50 data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-gray-900 pointer-coarse:py-2.5 pointer-coarse:text-[0.925rem]"
-                >
+                <Select.Item key={label} value={value} className={selectItemClass}>
                   <Select.ItemIndicator className="col-start-1">
                     <CheckIcon className="size-3" />
                   </Select.ItemIndicator>
@@ -279,7 +325,7 @@ function TeamsPicker({
                 </Select.Item>
               ))}
             </Select.List>
-            <Select.ScrollDownArrow className="bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md bg-[canvas] text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
+            <Select.ScrollDownArrow className="bg-bg-alt bottom-0 z-[1] flex h-4 w-full cursor-default items-center justify-center rounded-md text-center text-xs before:absolute before:left-0 before:h-full before:w-full before:content-[''] data-[side=none]:before:bottom-[-100%]" />
           </Select.Popup>
         </Select.Positioner>
       </Select.Portal>
