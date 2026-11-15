@@ -37,7 +37,7 @@ export default async function InfoProblemsTournamentPage({ params }: { params: P
   const { data: problems, isLoading, isError, error } = await promise
   return (
     <>
-      <h1 className="text-text-main mx-auto mb-5 text-center text-2xl font-bold">Задачи на турнире</h1>
+      <h1 className="text-text-main mx-auto mt-3 mb-5 text-center text-2xl font-bold">Задачи на турнире</h1>
       {isError && <div>Ошибка загрузки задач: {JSON.stringify(error)}</div>}
       <ProblemsList problems={problems} isEditable={false} sectionsFilter={[]} />
     </>

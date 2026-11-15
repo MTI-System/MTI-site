@@ -33,7 +33,7 @@ export default async function InfoProblemsTournamentPage({ params }: { params: P
   )
   return (
     <>
-      <h1 className="text-text-main mb-4 w-full text-center text-2xl font-bold">
+      <h1 className="text-text-main mt-3 mb-5 w-full text-center text-2xl font-bold">
         Команды, принимающие участие в турнире
       </h1>
       <div className="flex flex-col gap-2">

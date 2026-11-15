@@ -33,12 +33,9 @@ export default async function TournamentResultPage({ params }: { params: Promise
   const { data, error } = await store.dispatch(
     tournamentsApiServer.endpoints.getTournamentCard.initiate({ id: Number(id) }),
   )
-  if (error)
-    return <p>error</p>
-  if (!data)
-    return <p>error</p>
-  const finalFight = data.fight_containers_cards.find(f => f.title.toLowerCase().includes('финал'))
-  console.log("FINAL", finalFight)
+  if (error) return <p>error</p>
+  if (!data) return <p>error</p>
+  const finalFight = data.fight_containers_cards.find((f) => f.title.toLowerCase().includes("финал"))
   return (
     <>
       <Suspense fallback={<h1>Loading...</h1>}>

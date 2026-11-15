@@ -15,7 +15,7 @@ export default function TeamLogsList({
       {logs.teams.map((teamLog, i) => (
         <div key={teamLog.team.id}>
           <TeamLog log={teamLog} fightsList={fightsList} isYNT={isYNT} />
-          {i !== logs.teams.length - 1 && <div className="border-border w-full border"></div>}
+          {i !== logs.teams.length - 1 && <div className="border-border mx-2 border"></div>}
         </div>
       ))}
     </div>

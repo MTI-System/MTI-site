@@ -36,8 +36,8 @@ export default async function ResultsTable({ tournamentId }: { tournamentId: num
 
   return (
     <>
-      <h2 className="text-text-main w-full pb-3 text-center text-2xl font-bold">Турнирная таблица</h2>
-      <div className="border-border mx-8 my-4 flex shrink-0 items-start justify-start overflow-x-auto rounded-2xl border">
+      <h2 className="text-text-main w-full pt-2.75 pb-3 text-center text-2xl font-bold">Турнирная таблица</h2>
+      <div className="border-border mx-0.5 flex shrink-0 items-start justify-start overflow-x-auto rounded-2xl border sm:mx-5">
         <table className="0 w-full overflow-hidden">
           <thead className={twclsx(trStyle, "border-b-border border-b")}>
             <tr key={0} className="">
